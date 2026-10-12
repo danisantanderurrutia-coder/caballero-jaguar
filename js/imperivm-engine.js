@@ -653,6 +653,7 @@ const imperivmEngine = {
     ];
 
     const bienestarItems = [
+      { id: "terapia", title: "🏛️ Terapia Estoica & Diálogo", img: "assets/banner_construccion_filosofia.jpg", type: "terapia" },
       { id: "ayurveda", title: "🌿 Hábitos Digestivos & Hierbas", img: IMPERIVM_MEDIA.bitacora_ayurveda, type: "bitacora" },
       { id: "masajes", title: "💆 Alivio Muscular & Fascia", img: IMPERIVM_MEDIA.bitacora_masajes, type: "bitacora" },
       { id: "meditacion", title: "🧘 Meditación & Respiración", img: IMPERIVM_MEDIA.bitacora_meditacion, type: "bitacora" }
@@ -708,6 +709,8 @@ const imperivmEngine = {
               clickHandler = `imperivmEngine.openBitacoraDrawer('${it.id}');`;
             } else if (it.type === 'finanzas') {
               clickHandler = `imperivmEngine.openUnifiedFinanceDrawer();`;
+            } else if (it.type === 'terapia') {
+              clickHandler = `therapyStoic.open();`;
             } else if (it.type === 'datemaster') {
               clickHandler = `launchDateMasterApex(event);`;
             }

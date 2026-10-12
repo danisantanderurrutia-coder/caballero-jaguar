@@ -897,66 +897,17 @@ function generateDateIdea() {
   if (display) display.innerText = randomIdea;
 }
 
-// --- PSICOTERAPIA IA ---
-let activeTherapistKey = "addictions";
-
+// --- TERAPIA ESTOICA (Puente / Compatibilidad) ---
 function selectTherapist(key) {
-  activeTherapistKey = key;
-  const btns = document.querySelectorAll(".therapist-card-btn");
-  btns.forEach(b => b.classList.remove("active"));
-  if (event && event.currentTarget) event.currentTarget.classList.add("active");
-
-  const therapist = THERAPIST_PROFILES[key];
-  const headerName = document.getElementById("active-therapist-name");
-  const headerRole = document.getElementById("active-therapist-role");
-
-  if (headerName) headerName.innerText = `${therapist.avatar} ${therapist.name}`;
-  if (headerRole) headerRole.innerText = therapist.role;
-
-  renderTherapyChat();
+  if (window.therapyStoic) window.therapyStoic.open();
 }
 
 function renderTherapyChat() {
-  const container = document.getElementById("therapy-chat-messages");
-  if (!container) return;
-
-  container.innerHTML = "";
-  const history = appState.chatHistories.therapist[activeTherapistKey] || [];
-  const therapist = THERAPIST_PROFILES[activeTherapistKey];
-
-  if (history.length === 0) {
-    container.innerHTML = `<div class="chat-bubble bot">${therapist.greeting}</div>`;
-  } else {
-    history.forEach(msg => {
-      const bubble = document.createElement("div");
-      bubble.className = `chat-bubble ${msg.sender}`;
-      bubble.innerText = msg.text;
-      container.appendChild(bubble);
-    });
-  }
-  container.scrollTop = container.scrollHeight;
+  // Manejado por js/therapy-stoic.js
 }
 
 function sendTherapyMessage() {
-  const input = document.getElementById("therapy-user-input");
-  if (!input || !input.value.trim()) return;
-
-  const userText = input.value.trim();
-  input.value = "";
-
-  if (!appState.chatHistories.therapist[activeTherapistKey]) {
-    appState.chatHistories.therapist[activeTherapistKey] = [];
-  }
-
-  appState.chatHistories.therapist[activeTherapistKey].push({ sender: "user", text: userText });
-  renderTherapyChat();
-
-  setTimeout(() => {
-    const botResponse = getTherapeuticResponse(activeTherapistKey, userText);
-    appState.chatHistories.therapist[activeTherapistKey].push({ sender: "bot", text: botResponse });
-    saveAppState();
-    renderTherapyChat();
-  }, 500);
+  if (window.therapyStoic) window.therapyStoic.submit();
 }
 
 // --- PROYECTOS DE VIDA: GRILLA DE 3 COLUMNAS CON BARRA DE PROGRESO Y +1 TAREA ---
