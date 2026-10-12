@@ -1044,26 +1044,64 @@ const imperivmEngine = {
   },
 
   renderMaestriaCards() {
+    const st = (typeof reyJaguarState !== "undefined") ? reyJaguarState : (window.reyJaguarState || null);
+    const items = (st && Array.isArray(st.inventory)) ? st.inventory : [];
+    const unlockedItems = items.filter(i => i.unlocked).length;
+    const titles = (st && Array.isArray(st.titles)) ? st.titles : [];
+    const counterTitles = (st && Array.isArray(st.counterTitles)) ? st.counterTitles : [];
+    const titlesOn = titles.filter(t => t.unlocked).length;
+    const counterOn = counterTitles.filter(t => t.unlocked).length;
+
     return `
-      <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openBitacoraDrawer('progresion');">
-        <div class="imperivm-card-media"><img src="${IMPERIVM_MEDIA.bitacora_progresion}" alt="Sistema de Hábitos"></div>
-        <div class="imperivm-card-body"><h4 class="imperivm-card-title">📜 Sistema de Hábitos</h4></div>
+      <!-- TARJETA 1: HÁBITOS & REGLAS DE EXPERIENCIA (UNIFICADAS) -->
+      <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openHabitosYReglasModal();">
+        <div class="imperivm-card-media">
+          <img src="${IMPERIVM_MEDIA.bitacora_progresion}" alt="Sistema de Hábitos y Reglas">
+          <div style="position: absolute; top: 10px; left: 10px; background: rgba(14,18,29,0.88); border: 1px solid var(--imperivm-border-gold); border-radius: 4px; padding: 2px 8px; font-size: 0.68rem; color: var(--imperivm-text-gold); font-weight: 700;">
+            📜 PILARES & XP
+          </div>
+        </div>
+        <div class="imperivm-card-body" style="padding: 14px;">
+          <h4 class="imperivm-card-title" style="margin: 0 0 6px 0; font-size: 1.05rem;">📜 Sistema de Hábitos & Reglas de Rango</h4>
+          <p style="font-size: 0.78rem; color: var(--imperivm-text-muted); line-height: 1.45; margin: 0 0 12px 0;">
+            Los 5 Pilares de Maestría, dinámica de XP, tope blando de 600 XP y Cursus Honorum sincronizados con el motor único.
+          </p>
+          <div style="display: flex; gap: 8px; align-items: center; margin-top: auto;">
+            <button class="imperivm-card-action-btn" style="flex: 1; padding: 7px 10px; font-size: 0.72rem;" onclick="event.stopPropagation(); imperivmEngine.openHabitosYReglasModal('reglas');">
+              ⚡ Reglas & XP
+            </button>
+            <button class="imperivm-card-action-btn" style="flex: 1; padding: 7px 10px; font-size: 0.72rem;" onclick="event.stopPropagation(); imperivmEngine.openHabitosYReglasModal('habitos');">
+              📜 5 Pilares
+            </button>
+          </div>
+        </div>
       </div>
-      <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openTitlesModal('virtudes');">
-        <div class="imperivm-card-media"><img src="assets/jaguar_logo_renaissance.jpg" alt="Títulos de Maestría"></div>
-        <div class="imperivm-card-body"><h4 class="imperivm-card-title">👑 Títulos de Maestría</h4></div>
-      </div>
-      <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openTitlesModal('sombras');">
-        <div class="imperivm-card-media"><img src="${IMPERIVM_MEDIA.vespera}" alt="Contratítulos"></div>
-        <div class="imperivm-card-body"><h4 class="imperivm-card-title">💧 Contratítulos de Vulnerabilidad</h4></div>
-      </div>
-      <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openRulesModal();">
-        <div class="imperivm-card-media"><img src="${IMPERIVM_MEDIA.legado_kcd}" alt="Reglas de XP"></div>
-        <div class="imperivm-card-body"><h4 class="imperivm-card-title">🏛️ Reglas de Experiencia & Rango</h4></div>
-      </div>
-      <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openArmamentariumModal();">
-        <div class="imperivm-card-media"><img src="${IMPERIVM_MEDIA.objetos_grid}" alt="Armamentum Imperial"></div>
-        <div class="imperivm-card-body"><h4 class="imperivm-card-title">🎒 Armamentum Imperial</h4></div>
+
+      <!-- TARJETA 2: TÍTULOS, CONTRATÍTULOS & ARMAMENTUM -->
+      <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openTitlesModal();">
+        <div class="imperivm-card-media">
+          <img src="assets/jaguar_logo_renaissance.jpg" alt="Títulos, Contratítulos y Armamentum">
+          <div style="position: absolute; top: 10px; left: 10px; background: rgba(14,18,29,0.88); border: 1px solid var(--imperivm-border-gold); border-radius: 4px; padding: 2px 8px; font-size: 0.68rem; color: var(--imperivm-text-gold); font-weight: 700;">
+            👑 VIRTUDES & SOMBRAS
+          </div>
+          <div style="position: absolute; bottom: 8px; right: 10px; background: rgba(0,0,0,0.85); border: 1px solid var(--imperivm-border-gold); border-radius: 4px; padding: 3px 8px; font-size: 0.68rem; color: #FFF; font-weight: 600;">
+            🎒 ${unlockedItems}/48 Objetos
+          </div>
+        </div>
+        <div class="imperivm-card-body" style="padding: 14px;">
+          <h4 class="imperivm-card-title" style="margin: 0 0 6px 0; font-size: 1.05rem;">👑 Títulos, Contratítulos & Armamentum</h4>
+          <p style="font-size: 0.78rem; color: var(--imperivm-text-muted); line-height: 1.45; margin: 0 0 12px 0;">
+            ${titlesOn}/${titles.length} Virtudes arriba, ${counterOn}/${counterTitles.length} Sombras abajo y acceso directo al pedestal del Armamentum Imperial.
+          </p>
+          <div style="display: flex; gap: 8px; align-items: center; margin-top: auto;">
+            <button class="imperivm-card-action-btn" style="flex: 1; padding: 7px 10px; font-size: 0.72rem;" onclick="event.stopPropagation(); imperivmEngine.openTitlesModal();">
+              👑 Títulos & Sombras
+            </button>
+            <button class="imperivm-card-action-btn" style="flex: 1; padding: 7px 10px; font-size: 0.72rem; color: var(--imperivm-text-gold); border-color: var(--imperivm-border-gold);" onclick="event.stopPropagation(); imperivmEngine.openArmamentariumModal();">
+              🎒 Armamentum ▶
+            </button>
+          </div>
+        </div>
       </div>
     `;
   },
@@ -1685,11 +1723,17 @@ const imperivmEngine = {
     this.openDrawer();
   },
 
-  // --- MODAL DE TÍTULOS Y CONTRATÍTULOS ---
-  openTitlesModal(type = "virtudes") {
+  // --- MODAL UNIFICADO: TÍTULOS DE MAESTRÍA, CONTRATÍTULOS & ARMAMENTUM ---
+  openTitlesModal() {
     const st = (typeof reyJaguarState !== "undefined") ? reyJaguarState : (window.reyJaguarState || null);
     const titles = (st && Array.isArray(st.titles)) ? st.titles : [];
     const counterTitles = (st && Array.isArray(st.counterTitles)) ? st.counterTitles : [];
+    const items = (st && Array.isArray(st.inventory)) ? st.inventory : [];
+    const unlockedItems = items.filter(i => i.unlocked).length;
+    const equippedItems = items.filter(i => i.equipped).length;
+
+    const titlesOn = titles.filter(t => t.unlocked).length;
+    const counterOn = counterTitles.filter(t => t.unlocked).length;
 
     const drawer = document.getElementById("imperivm-drawer");
     const backdrop = document.getElementById("imperivm-drawer-backdrop");
@@ -1699,70 +1743,113 @@ const imperivmEngine = {
     if (!drawer || !backdrop || !body) return;
 
     if (tabsBar) tabsBar.style.display = "none";
+    drawer.scrollTop = 0;
+    titleEl.textContent = "👑 CÓDICE DE VIRTUDES, SOMBRAS & ARMAMENTUM";
 
-    if (type === "virtudes") {
-      titleEl.textContent = "👑 TÍTULOS DE MAESTRÍA MASCULINA";
-      body.innerHTML = `
-        <div style="display: flex; flex-direction: column; gap: 16px;">
-          <p style="font-size: 0.82rem; color: var(--imperivm-text-muted); line-height: 1.5; margin: 0;">
-            Los 6 títulos nobles consagran las virtudes del Caballero Jaguar en la ciencia, la docencia, la soberanía marcial y la presencia tántrica.
+    body.innerHTML = `
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+
+        <!-- BANNER DE ACCESO DIRECTO AL ARMAMENTUM -->
+        <div style="background: linear-gradient(135deg, rgba(184,134,11,0.18) 0%, rgba(20,24,36,0.95) 100%); border: 1.5px solid var(--imperivm-border-gold); border-radius: 8px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 18px rgba(0,0,0,0.5);">
+          <div>
+            <div style="font-size: 0.7rem; color: var(--imperivm-text-gold); font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase;">
+              PEDESTAL DE ARMAS & VESTIDURAS
+            </div>
+            <div style="font-size: 1rem; color: #FFF; font-weight: 700; margin: 2px 0;">
+              🎒 Armamentum Imperial (48 Objetos)
+            </div>
+            <div style="font-size: 0.76rem; color: var(--imperivm-text-muted);">
+              ${unlockedItems}/48 desbloqueados · ${equippedItems} equipados en servicio activo
+            </div>
+          </div>
+          <button class="btn-imperivm-primary" style="padding: 8px 16px; font-size: 0.8rem;" onclick="imperivmEngine.openArmamentariumModal();">
+            <span>Ver Inventario ▶</span>
+          </button>
+        </div>
+
+        <!-- SECCIÓN 1 (ARRIBA): TÍTULOS DE MAESTRÍA MASCULINA -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <h4 style="font-family: var(--imperivm-font-title); font-size: 1.1rem; color: #FFF; margin: 0; display: flex; align-items: center; gap: 8px;">
+              <span>👑 TÍTULOS DE MAESTRÍA MASCULINA</span>
+              <span class="badge-tag badge-gold" style="font-size: 0.7rem;">${titlesOn}/${titles.length} CONSAGRADOS</span>
+            </h4>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--imperivm-text-muted); line-height: 1.45; margin: 0 0 12px 0;">
+            Los 6 títulos nobles consagran las virtudes del Caballero Jaguar en ciencia, docencia, soberanía marcial y presencia tántrica (+40 XP al consagrar).
           </p>
 
           <div style="display: flex; flex-direction: column; gap: 10px;">
             ${titles.map(t => `
-              <div style="background: rgba(255,255,255,0.04); border: 1px solid ${t.unlocked ? 'var(--imperivm-border-gold)' : 'var(--imperivm-border)'}; border-radius: 8px; padding: 14px;">
+              <div style="background: rgba(255,255,255,0.04); border: 1px solid ${t.unlocked ? 'var(--imperivm-border-gold)' : 'var(--imperivm-border)'}; border-radius: 8px; padding: 12px 14px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                   <span class="badge-tag ${t.unlocked ? 'badge-gold' : 'badge-pink'}" style="font-size: 0.68rem;">
                     ${t.unlocked ? '⚡ CONSAGRADO' : 'PENDIENTE'}
                   </span>
-                  <button class="imperivm-card-action-btn" onclick="imperivmEngine.toggleTitleStatus('${t.id}', 'titles'); imperivmEngine.openTitlesModal('virtudes');">
+                  <button class="imperivm-card-action-btn" onclick="imperivmEngine.toggleTitleStatus('${t.id}', 'titles'); imperivmEngine.openTitlesModal();">
                     ${t.unlocked ? 'Desconsagrar' : 'Consagrar (+40 XP)'}
                   </button>
                 </div>
-                <h5 style="color: #FFF; margin: 0 0 4px 0; font-size: 1rem;">${t.name}</h5>
-                <p style="font-size: 0.78rem; color: var(--imperivm-text-muted); margin: 0;">${t.desc}</p>
+                <h5 style="color: #FFF; margin: 0 0 4px 0; font-size: 0.96rem;">${t.name}</h5>
+                <p style="font-size: 0.78rem; color: var(--imperivm-text-muted); margin: 0; line-height: 1.4;">${t.desc}</p>
               </div>
             `).join('')}
           </div>
-
-          <button class="btn-imperivm-secondary" onclick="imperivmEngine.closeDrawer();">Cerrar</button>
         </div>
-      `;
-    } else {
-      titleEl.textContent = "💧 CONTRATÍTULOS DE VULNERABILIDAD";
-      body.innerHTML = `
-        <div style="display: flex; flex-direction: column; gap: 16px;">
-          <p style="font-size: 0.82rem; color: var(--imperivm-text-muted); line-height: 1.5; margin: 0;">
-            Los 5 contratítulos rescatan la integración de la sombra, la ternura masculina, el cuidado del hogar y el desarme del ego competitivo.
+
+        <!-- SEPARACIÓN VISUAL ARRIBA / ABAJO -->
+        <div style="margin: 18px 0 10px 0; border-top: 1px dashed rgba(244,143,177,0.45); padding-top: 16px; text-align: center; position: relative;">
+          <span style="background: #0E121D; padding: 5px 16px; border: 1px solid rgba(244,143,177,0.6); border-radius: 14px; font-size: 0.72rem; letter-spacing: 1.5px; color: #F48FB1; text-transform: uppercase; font-family: var(--imperivm-font-title);">
+            💧 Integración de la Sombra & Vulnerabilidad Consciente
+          </span>
+        </div>
+
+        <!-- SECCIÓN 2 (ABAJO): CONTRATÍTULOS DE VULNERABILIDAD -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <h4 style="font-family: var(--imperivm-font-title); font-size: 1.1rem; color: #FFF; margin: 0; display: flex; align-items: center; gap: 8px;">
+              <span>💧 CONTRATÍTULOS DE VULNERABILIDAD</span>
+              <span class="badge-tag badge-pink" style="font-size: 0.7rem;">${counterOn}/${counterTitles.length} INTEGRADOS</span>
+            </h4>
+          </div>
+          <p style="font-size: 0.8rem; color: var(--imperivm-text-muted); line-height: 1.45; margin: 0 0 12px 0;">
+            Los 5 contratítulos rescatan la integración de la sombra, la ternura masculina, el cuidado del hogar y el desarme consciente del ego competitivo (+40 XP al integrar).
           </p>
 
           <div style="display: flex; flex-direction: column; gap: 10px;">
             ${counterTitles.map(ct => `
-              <div style="background: rgba(255,255,255,0.04); border: 1px solid ${ct.unlocked ? '#F48FB1' : 'var(--imperivm-border)'}; border-radius: 8px; padding: 14px;">
+              <div style="background: rgba(255,255,255,0.04); border: 1px solid ${ct.unlocked ? '#F48FB1' : 'var(--imperivm-border)'}; border-radius: 8px; padding: 12px 14px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                   <span class="badge-tag ${ct.unlocked ? 'badge-pink' : 'badge-gold'}" style="font-size: 0.68rem;">
                     ${ct.unlocked ? '💧 INTEGRADO' : 'POR INTEGRAR'}
                   </span>
-                  <button class="imperivm-card-action-btn" onclick="imperivmEngine.toggleTitleStatus('${ct.id}', 'counterTitles'); imperivmEngine.openTitlesModal('sombras');">
+                  <button class="imperivm-card-action-btn" onclick="imperivmEngine.toggleTitleStatus('${ct.id}', 'counterTitles'); imperivmEngine.openTitlesModal();">
                     ${ct.unlocked ? 'Desintegrar' : 'Integrar (+40 XP)'}
                   </button>
                 </div>
-                <h5 style="color: #FFF; margin: 0 0 4px 0; font-size: 1rem;">${ct.name}</h5>
-                <p style="font-size: 0.78rem; color: var(--imperivm-text-muted); margin: 0;">${ct.desc}</p>
+                <h5 style="color: #FFF; margin: 0 0 4px 0; font-size: 0.96rem;">${ct.name}</h5>
+                <p style="font-size: 0.78rem; color: var(--imperivm-text-muted); margin: 0; line-height: 1.4;">${ct.desc}</p>
               </div>
             `).join('')}
           </div>
-
-          <button class="btn-imperivm-secondary" onclick="imperivmEngine.closeDrawer();">Cerrar</button>
         </div>
-      `;
-    }
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; gap: 10px;">
+          <button class="btn-imperivm-primary" style="flex: 1;" onclick="imperivmEngine.openArmamentariumModal();">
+            🎒 Abrir Armamentum Imperial (48)
+          </button>
+          <button class="btn-imperivm-secondary" onclick="imperivmEngine.closeDrawer();">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    `;
 
     this.openDrawer();
   },
 
-  // --- MODAL DE REGLAS DE EXPERIENCIA & MANTENIMIENTO DE RANGO ---
-  openRulesModal() {
+  // --- MODAL UNIFICADO: SISTEMA DE HÁBITOS & REGLAS DE RANGO (CONSOLIDADO CON CJProgress) ---
+  openHabitosYReglasModal(activeSection = 'reglas') {
     const drawer = document.getElementById("imperivm-drawer");
     const backdrop = document.getElementById("imperivm-drawer-backdrop");
     const titleEl = document.getElementById("imperivm-drawer-title");
@@ -1772,7 +1859,7 @@ const imperivmEngine = {
 
     drawer.scrollTop = 0;
     if (tabsBar) tabsBar.style.display = "none";
-    titleEl.textContent = "🏛️ REGLAS DE EXPERIENCIA, RANGO & STATS";
+    titleEl.textContent = "📜 SISTEMA DE HÁBITOS & REGLAS DE RANGO";
 
     const P = window.CJProgress;
     const C = P ? P.CONFIG : { difficultyXP: { facil: 25, medio: 50, dificil: 75 }, dailySoftCap: 600, overCapFactor: 0.5, activeDayXP: 100, streakBonus: {} };
@@ -1785,72 +1872,158 @@ const imperivmEngine = {
     const rankRows = L.map(r => {
       const span = r.next ? (r.next - r.threshold) : null;
       const g = span ? Math.round(span / 3) : 6000;
-      return `<div><strong>${r.rank}. ${r.latin}</strong> — ${r.title} · desde ${r.threshold.toLocaleString()} XP${r.next ? ` (grado I → II → III cada ~${g.toLocaleString()} XP)` : ' (grados cada 6.000 XP)'}</div>`;
+      return `<div style="padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; gap: 8px; font-size: 0.78rem;">
+        <span><strong>${r.rank}. ${r.latin}</strong> <span style="color: var(--imperivm-text-muted);">(${r.title})</span></span>
+        <span style="color: var(--imperivm-text-gold); font-family: monospace;">≥ ${r.threshold.toLocaleString()} XP</span>
+      </div>`;
     }).join('');
 
-    body.innerHTML = `
-      <div style="display: flex; flex-direction: column; gap: 14px;">
+    const renderNavBtn = (key, label, icon) => `
+      <button class="btn-campaign-toggle ${activeSection === key ? 'active' : ''}" 
+              onclick="imperivmEngine.openHabitosYReglasModal('${key}');" 
+              style="padding: 6px 12px; font-size: 0.74rem;">
+        ${icon} ${label}
+      </button>
+    `;
 
-        ${snap ? `<div style="${box} border-color: var(--imperivm-border-gold);">
-          <h5 style="${h5}">📍 Tu estado ahora</h5>
-          <p style="${small}">${snap.level.latin} · Grado ${snap.level.gradeRoman} — <strong>${snap.xp.toLocaleString()} XP</strong> · racha de <strong>${snap.streak.days}</strong> días · hoy <strong>${snap.today.xp}/${snap.today.cap}</strong> XP.</p>
+    let sectionContent = "";
+
+    if (activeSection === 'reglas') {
+      sectionContent = `
+        ${snap ? `<div style="${box} border-color: var(--imperivm-border-gold); background: linear-gradient(135deg, rgba(184,134,11,0.12) 0%, rgba(20,24,36,0.6) 100%);">
+          <div style="font-size: 0.7rem; letter-spacing: 1.5px; color: var(--imperivm-text-gold); font-weight: 800;">ESTADO ACTUAL EN VIVO</div>
+          <h4 style="color: #FFF; margin: 4px 0; font-family: var(--imperivm-font-title); font-size: 1.15rem;">${snap.level.latin} · Grado ${snap.level.gradeRoman}</h4>
+          <p style="${small}">${snap.level.title} — <strong>${snap.xp.toLocaleString()} XP total</strong> · Racha de <strong>${snap.streak.days}</strong> día(s) ${snap.streak.todayActive ? '✔' : ''} · Hoy: <strong>${snap.today.xp}/${snap.today.cap}</strong> XP.</p>
         </div>` : ''}
 
         <div style="${box}">
           <h5 style="${h5}">⚡ 1. Cómo se gana experiencia (XP)</h5>
-          <p style="${small}">Cada acción completada da XP según su dificultad o duración. Todo XP queda anotado en un <strong>libro de movimientos</strong> (puedes deshacerlo con ↩ en la pestaña Maestría). Desmarcar una tarea o bloque revierte su XP.</p>
-          <div style="display: flex; flex-direction: column; gap: 5px; font-size: 0.82rem; margin-top: 8px;">
-            <div>• <strong style="color: #52C41A;">Fácil +${C.difficultyXP.facil} XP</strong> · hasta 20 min (hidratación, caminata, 15 págs de lectura).</div>
-            <div>• <strong style="color: #E8A0A8;">Medio +${C.difficultyXP.medio} XP</strong> · 21–50 min (fuerza, Deep Work, idiomas).</div>
-            <div>• <strong style="color: #FF6B6B;">Difícil +${C.difficultyXP.dificil} XP</strong> · más de 50 min o hitos (tesis, sparring, revisión financiera semanal).</div>
-            <div>• <strong>Fijos:</strong> tarea del día +20 · bloque somático +15 · tarea de proyecto +20 · mejora de atributo +50 · avance de misión +30 · misión conquistada +150 · título/contratítulo +40.</div>
-            <div>• Cada acción mantiene una <strong>clave por día</strong>: no se puede cobrar dos veces lo mismo el mismo día.</div>
+          <p style="${small}">Todo avance real se traduce en XP mediante el motor único. Todo movimiento queda registrado en el historial y es reversible con el botón ↩.</p>
+          <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem; margin-top: 10px;">
+            <div style="display: flex; justify-content: space-between; background: rgba(0,0,0,0.25); padding: 6px 10px; border-radius: 4px;">
+              <span>🟢 <strong style="color: #52C41A;">Fácil</strong> (hasta 20 min): Hidratación, caminata, 15 págs lectura</span>
+              <strong style="color: #52C41A;">+${C.difficultyXP.facil} XP</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; background: rgba(0,0,0,0.25); padding: 6px 10px; border-radius: 4px;">
+              <span>🟡 <strong style="color: #F3D079;">Medio</strong> (21–50 min): Fuerza, Deep Work, estudio de idiomas</span>
+              <strong style="color: #F3D079;">+${C.difficultyXP.medio} XP</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; background: rgba(0,0,0,0.25); padding: 6px 10px; border-radius: 4px;">
+              <span>🔴 <strong style="color: #FF6B6B;">Difícil</strong> (>50 min o hitos): Tesis, sparring, auditoría semanal</span>
+              <strong style="color: #FF6B6B;">+${C.difficultyXP.dificil} XP</strong>
+            </div>
+          </div>
+          <p style="${small} margin-top: 10px;">
+            • <strong>Acciones Fijas:</strong> Tarea del día +20 XP · Bloque somático +15 XP · Tarea de proyecto +20 XP · Subida de atributo +50 XP · Avance de misión +30 XP · Misión conquistada +150 XP · Consagración de Título o Contratítulo +40 XP.
+          </p>
+        </div>
+
+        <div style="${box}">
+          <h5 style="${h5}">🔥 2. Tope diario blando & Racha</h5>
+          <p style="${small}">
+            • <strong>Tope Blando (${C.dailySoftCap} XP):</strong> Una vez alcanzado en el día, los puntos adicionales rinden el <strong>50%</strong>. Premia la disciplina sostenible frente al atracón impulsivo.<br>
+            • <strong>Día Activo (≥ ${C.activeDayXP} XP):</strong> Alcanzar este umbral diario valida el día para mantener encendida la racha.<br>
+            • <strong>Bonos por hito de Racha:</strong> ${bonus}.
+          </p>
+        </div>
+      `;
+    } else if (activeSection === 'habitos') {
+      sectionContent = `
+        <div style="position: relative; border-radius: 8px; overflow: hidden; height: 140px; border: 1.5px solid var(--imperivm-border-gold); margin-bottom: 4px;">
+          <img src="${IMPERIVM_MEDIA.bitacora_progresion}" style="width: 100%; height: 100%; object-fit: cover;">
+          <div style="position: absolute; inset: 0; background: linear-gradient(180deg, transparent 20%, rgba(7,9,14,0.92) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 14px 18px;">
+            <span style="font-size: 0.7rem; color: var(--imperivm-text-gold); font-weight: 800; letter-spacing: 1px; text-transform: uppercase;">Manifiesto de la Orden</span>
+            <h4 style="font-family: var(--imperivm-font-title); font-size: 1.15rem; color: #FFF; margin: 2px 0 0 0;">Los 5 Pilares de Caballería Jaguar</h4>
           </div>
         </div>
 
         <div style="${box}">
-          <h5 style="${h5}">🔥 2. Tope diario y racha</h5>
+          <h5 style="${h5}">🛡️ Filosofía Fundamental</h5>
           <p style="${small}">
-            • <strong>Tope blando:</strong> pasadas las <strong>${C.dailySoftCap} XP</strong> de un día, cada acción vale la <strong>mitad</strong> (premia la constancia, no el atracón).<br>
-            • <strong>Día activo:</strong> un día cuenta para la racha si sumas <strong>${C.activeDayXP}+ XP</strong>.<br>
-            • <strong>Racha:</strong> días activos consecutivos (en tu hora local). Se rompe si un día no llegas al mínimo.<br>
-            • <strong>Bonos de racha (una vez):</strong> ${bonus}.<br>
-            • El estandarte <strong>Vexillum</strong> de la cabecera crece con tu racha (hasta 21 días).
+            El Caballero Jaguar no compite contra otros, sino contra la entropía, la dispersión dopaminérgica y la procrastinación. Cada hábito diario está diseñado para construir soberanía real.
           </p>
         </div>
 
-        <div style="${box}">
-          <h5 style="${h5}">🏛️ 3. Rangos y grados (Cursus Honorum)</h5>
-          <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem; color: var(--imperivm-text-muted);">${rankRows}</div>
-          <p style="${small} margin-top: 8px;">El <strong>rango</strong> sube solo por XP total. Dentro de cada rango hay 3 <strong>grados</strong> (I, II, III). Tu nivel anterior se conservó al reiniciar el XP.</p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px;">
+          <div style="${box}">
+            <div style="font-size: 1.1rem; color: #FFF; margin-bottom: 4px;">🧘 1. Mente & Foco</div>
+            <p style="${small}">Tesis de Máster en Hannover, Filosofía Estoica cotidiana, bloques de Deep Work y códices de lectura viva.</p>
+          </div>
+          <div style="${box}">
+            <div style="font-size: 1.1rem; color: #FFF; margin-bottom: 4px;">⚔️ 2. Fuerza & Combate</div>
+            <p style="${small}">Hipertrofia en gimnasio, sparrings de Muay Thai, running al aire libre, calistenia y postura marcial.</p>
+          </div>
+          <div style="${box}">
+            <div style="font-size: 1.1rem; color: #FFF; margin-bottom: 4px;">🌲 3. Territorio & Proyectos</div>
+            <p style="${small}">ReWilding y conexión con la naturaleza, dominio de idiomas (Alemán B1, Euskera A1) y campañas de vida.</p>
+          </div>
+          <div style="${box}">
+            <div style="font-size: 1.1rem; color: #FFF; margin-bottom: 4px;">🪙 4. Soberanía & Finanzas</div>
+            <p style="${small}">Tesorería y orden financiero en Sparkasse & Banco Chile, tasa de ahorro, austeridad y blindaje económico.</p>
+          </div>
+          <div style="${box}">
+            <div style="font-size: 1.1rem; color: #FFF; margin-bottom: 4px;">🩵 5. Vitalidad Somática</div>
+            <p style="${small}">Meditación somática, Dinacharya ayurvédico, automasajes, outfits conscientes y respeto por el sueño.</p>
+          </div>
         </div>
 
+        <div style="text-align: center; margin-top: 6px;">
+          <button class="btn-imperivm-primary" style="padding: 9px 20px; font-size: 0.82rem;" onclick="imperivmEngine.closeDrawer(); if (typeof openSistemaMaestroModal === 'function') openSistemaMaestroModal();">
+            📜 Abrir Pitch Deck Interactivo Completo ▶
+          </button>
+        </div>
+      `;
+    } else if (activeSection === 'rangos') {
+      sectionContent = `
         <div style="${box}">
-          <h5 style="${h5}">🎌 4. Auras y banderines (9 frentes de vida)</h5>
+          <h5 style="${h5}">🏛️ Cursus Honorum (Escalafón Imperial)</h5>
+          <p style="${small}">La jerarquía se conquista sumando XP total en la vida real. Dentro de cada rango existen tres grados (I, II y III).</p>
+          <div style="margin-top: 12px; display: flex; flex-direction: column; gap: 4px;">
+            ${rankRows}
+          </div>
+        </div>
+      `;
+    } else if (activeSection === 'auras') {
+      sectionContent = `
+        <div style="${box}">
+          <h5 style="${h5}">🎌 Las 9 Auras & Dinámica de Banderines</h5>
           <p style="${small}">
-            Cada acción pertenece a un <strong>aura</strong> (Vida, Exploración, Amor, Salud, Soberanía, Espiritualidad, Naturaleza, Deporte, Mente): suma <strong>+1 punto</strong> y alarga ese banderín. Sin actividad, un aura pierde 1 punto por día.<br>
-            La <strong>Vibra</strong> mide tu constancia semanal por aura:
+            Cada una de tus acciones nutre una de las 9 auras (Vida, Exploración, Amor, Salud, Soberanía, Espiritualidad, Naturaleza, Deporte, Mente). 
+            Cada día inactivo resta 1 punto por entropía.
           </p>
-          <div style="font-family: monospace; font-size: 0.85rem; color: #E8A0A8; background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 6px; border-left: 3px solid var(--imperivm-gold); margin: 8px 0;">
+          <div style="font-family: monospace; font-size: 0.82rem; color: #F3D079; background: rgba(0,0,0,0.5); padding: 10px 14px; border-radius: 6px; border-left: 3px solid var(--imperivm-gold); margin: 12px 0;">
             Vibra = [ Σ (0.82^i · √P_i · 12) ] × [ 1 + 0.40 · (días_activos / 7) ]
           </div>
-          <p style="${small}">Suma más hacer poco varios días que mucho en uno solo: √P amortigua picos, 0.82^i resta 18% por cada día de antigüedad y estar activo 7/7 da +40%.</p>
-        </div>
-
-        <div style="${box}">
-          <h5 style="${h5}">📊 5. Stats, títulos y objetos</h5>
           <p style="${small}">
-            • <strong>Stats (atributos):</strong> cada acción sube +1 el atributo asociado (p. ej. Muay Thai, Lectura).<br>
-            • <strong>Títulos de Maestría</strong> (virtudes logradas) y <strong>Contratítulos de Vulnerabilidad</strong> (romper rigideces con consciencia): al consagrarlos dan +40 XP.<br>
-            • <strong>Armamentum Imperial:</strong> los objetos se desbloquean al conquistar misiones u hitos y se equipan para vestir a tu Caballero.
+            La fórmula premia la consistencia distribuida en los 7 días de la semana y amortigua las sobrecargas repentinas.
           </p>
         </div>
+      `;
+    }
 
-        <button class="btn-imperivm-secondary" onclick="imperivmEngine.closeDrawer();">Cerrar Manual</button>
+    body.innerHTML = `
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; gap: 6px; flex-wrap: wrap; background: rgba(0,0,0,0.3); padding: 6px; border-radius: 8px; border: 1px solid var(--imperivm-border);">
+          ${renderNavBtn('reglas', 'Reglas & XP', '⚡')}
+          ${renderNavBtn('habitos', '5 Pilares de Hábitos', '📜')}
+          ${renderNavBtn('rangos', 'Cursus Honorum', '🏛️')}
+          ${renderNavBtn('auras', 'Auras & Vibra', '🎌')}
+        </div>
+
+        ${sectionContent}
+
+        <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+          <button class="btn-imperivm-secondary" onclick="imperivmEngine.closeDrawer();">Cerrar</button>
+        </div>
       </div>
     `;
 
     this.openDrawer();
+  },
+
+  // --- COMPATIBILIDAD CON ACCESOS PREVIOS A REGLAS ---
+  openRulesModal() {
+    this.openHabitosYReglasModal('reglas');
   },
 
   getAuraColorClass(auraKey = "") {
@@ -2006,6 +2179,10 @@ const imperivmEngine = {
 
   // --- DRAWER DE BITÁCORA IMPERIAL ---
   openBitacoraDrawer(bitacoraId) {
+    if (bitacoraId === 'progresion') {
+      this.openHabitosYReglasModal('habitos');
+      return;
+    }
     const titlesMap = {
       lectura: { title: "📚 Biblioteca Estoica & Lecturas", desc: "50+ Obras de Marco Aurelio, Séneca, Epicteto y Ryan Holiday con registro de páginas y notas.", img: IMPERIVM_MEDIA.bitacora_lectura, tab: "lectura" },
       ayurveda: { title: "🌿 Ayurveda & Dinacharya Sagrado", desc: "Diagnóstico interactivo de Doshas, botica botánica y rituales de purificación somática.", img: IMPERIVM_MEDIA.bitacora_ayurveda, tab: "ayurveda" },
