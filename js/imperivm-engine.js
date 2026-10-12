@@ -399,7 +399,7 @@ const imperivmEngine = {
         ${this.renderExploracionPersonalRail()}
 
         <!-- ====================================================================
-             5. RITOS DE TEMPLANZA: LOS 4 RITOS ANCESTRALES
+             5. ESPIRITUALIDAD: RITOS ANCESTRALES, OBSERVACIÓN & CICLOS
              ==================================================================== -->
         ${this.renderRitosAncestralesRail()}
 
@@ -656,17 +656,13 @@ const imperivmEngine = {
       { id: "terapia", title: "🏛️ Terapia Estoica & Diálogo", img: "assets/banner_construccion_filosofia.jpg", type: "terapia" },
       { id: "ayurveda", title: "🌿 Hábitos Digestivos & Hierbas", img: IMPERIVM_MEDIA.bitacora_ayurveda, type: "bitacora" },
       { id: "masajes", title: "💆 Alivio Muscular & Fascia", img: IMPERIVM_MEDIA.bitacora_masajes, type: "bitacora" },
-      { id: "meditacion", title: "🧘 Meditación & Respiración", img: IMPERIVM_MEDIA.bitacora_meditacion, type: "bitacora" }
-    ];
-
-    const datemasterItems = [
+      { id: "meditacion", title: "🧘 Meditación & Respiración", img: IMPERIVM_MEDIA.bitacora_meditacion, type: "bitacora" },
       { id: "datemaster", title: "💘 DateMaster Apex", img: "assets/datemaster_logo.png", type: "datemaster" }
     ];
 
     let activeItems = sportsItems;
     if (tab === 'habitos') activeItems = habitosItems;
     else if (tab === 'bienestar') activeItems = bienestarItems;
-    else if (tab === 'datemaster') activeItems = datemasterItems;
 
     return `
       <div class="imperivm-rail-section" id="rail-cuerpo-salud">
@@ -685,9 +681,6 @@ const imperivmEngine = {
               </button>
               <button class="btn-campaign-toggle ${tab === 'bienestar' ? 'active' : ''}" onclick="imperivmEngine.switchCuerpoTab('bienestar');">
                 🌿 Bienestar (${bienestarItems.length})
-              </button>
-              <button class="btn-campaign-toggle ${tab === 'datemaster' ? 'active' : ''}" onclick="imperivmEngine.switchCuerpoTab('datemaster');" style="display: inline-flex; align-items: center; gap: 6px;">
-                <img src="assets/datemaster_logo.png" alt="DateMaster" style="width: 18px; height: 18px; border-radius: 4px; object-fit: cover;" onerror="this.style.display='none'"> DateMaster
               </button>
             </div>
 
@@ -792,6 +785,17 @@ const imperivmEngine = {
         desc: "Consagración del altar imperial, espejo de Tezcatlipoca y pacto de 21 días de autodominio.",
         img: IMPERIVM_MEDIA.rito_jaguar,
         actionText: "Abrir Rito Jaguar"
+      },
+      {
+        key: "astral",
+        title: "🔮 Observación & Ciclos",
+        pueblo: "Observatorio Celeste • Cosmografía",
+        badge: "CICLOS",
+        status: "OBSERVACIÓN",
+        tag: "🌌 CARTA NATAL // TRÁNSITOS",
+        desc: "Tránsitos celestes, ciclos solares, carta natal y momentos de pausa sagrada.",
+        img: IMPERIVM_MEDIA.bitacora_astral,
+        actionText: "Abrir Observatorio"
       }
     ];
 
@@ -799,7 +803,7 @@ const imperivmEngine = {
       <div class="imperivm-rail-section" id="rail-ritos-ancestrales">
         <div class="imperivm-rail-header">
           <div class="imperivm-rail-title-group">
-            <h3 class="imperivm-rail-title">🕯️ Ritos de Templanza & Conexión <span class="dev-section-label">#rail-ritos-ancestrales</span></h3>
+            <h3 class="imperivm-rail-title">🕯️ Espiritualidad <span class="dev-section-label">#rail-ritos-ancestrales</span></h3>
           </div>
           <div class="imperivm-rail-controls">
             <button class="imperivm-nav-arrow" onclick="imperivmEngine.scrollTrack('ritos-track', -360);" title="Anterior">◀</button>
@@ -809,7 +813,7 @@ const imperivmEngine = {
 
         <div class="imperivm-carousel-track" id="ritos-track">
           ${ritos.map(r => `
-            <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openRitoModal('${r.key}');">
+            <div class="imperivm-card" style="cursor: pointer;" onclick="${r.key === 'astral' ? `imperivmEngine.openBitacoraDrawer('astral');` : `imperivmEngine.openRitoModal('${r.key}');`}">
               <div class="imperivm-card-media">
                 <img src="${r.img}" alt="${r.title}">
               </div>
@@ -1041,6 +1045,10 @@ const imperivmEngine = {
 
   renderMaestriaCards() {
     return `
+      <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openBitacoraDrawer('progresion');">
+        <div class="imperivm-card-media"><img src="${IMPERIVM_MEDIA.bitacora_progresion}" alt="Sistema de Hábitos"></div>
+        <div class="imperivm-card-body"><h4 class="imperivm-card-title">📜 Sistema de Hábitos</h4></div>
+      </div>
       <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openTitlesModal('virtudes');">
         <div class="imperivm-card-media"><img src="assets/jaguar_logo_renaissance.jpg" alt="Títulos de Maestría"></div>
         <div class="imperivm-card-body"><h4 class="imperivm-card-title">👑 Títulos de Maestría</h4></div>
@@ -1070,8 +1078,6 @@ const imperivmEngine = {
       // Intelecto & Filosofía
       { id: "lectura", cat: "intelecto", badge: "LECTURA", title: "📚 Lectura & Biblioteca", desc: "Obras clásicas, notas al margen y hábito diario de lectura.", img: IMPERIVM_MEDIA.bitacora_lectura },
       { id: "idiomas", cat: "intelecto", badge: "POLÍGLOTA", title: "🌐 Idiomas en Práctica", desc: "Alemán B1, Euskera A1, Portugués e Italiano activo.", img: IMPERIVM_MEDIA.bitacora_idiomas },
-      { id: "astral", cat: "intelecto", badge: "CICLOS", title: "🔮 Observación & Ciclos", desc: "Tránsitos celestes, calendario y momentos de pausa.", img: IMPERIVM_MEDIA.bitacora_astral },
-      { id: "progresion", cat: "intelecto", badge: "HÁBITOS", title: "📜 Sistema de Hábitos", desc: "Los 5 pilares de constancia y niveles personales.", img: IMPERIVM_MEDIA.bitacora_progresion },
 
       // Artes & Música
       { id: "musica", cat: "artes", badge: "MÚSICA", title: "🎺 Trompeta & Viento", desc: "Práctica de trompeta jazz, afinación y técnica de aire.", img: IMPERIVM_MEDIA.bitacora_musica },
@@ -1080,6 +1086,9 @@ const imperivmEngine = {
     ];
 
     const filteredItems = currentFilter === 'todos' ? items : items.filter(it => it.cat === currentFilter);
+
+    const intelectoCount = items.filter(it => it.cat === 'intelecto').length;
+    const artesCount = items.filter(it => it.cat === 'artes').length;
 
     return `
       <div class="imperivm-rail-section" id="rail-exploracion-personal">
@@ -1094,10 +1103,10 @@ const imperivmEngine = {
                 Todos (${items.length})
               </button>
               <button class="btn-campaign-toggle ${currentFilter === 'intelecto' ? 'active' : ''}" onclick="imperivmEngine.filterExploracion('intelecto');">
-                📚 Intelecto (4)
+                📚 Intelecto (${intelectoCount})
               </button>
               <button class="btn-campaign-toggle ${currentFilter === 'artes' ? 'active' : ''}" onclick="imperivmEngine.filterExploracion('artes');">
-                🎨 Arte & Música (3)
+                🎨 Arte & Música (${artesCount})
               </button>
             </div>
 
