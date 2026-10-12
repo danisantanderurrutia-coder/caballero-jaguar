@@ -3238,7 +3238,12 @@ const imperivmEngine = {
     this.ensureDrawerInDOM();
     const drawer = document.getElementById("imperivm-drawer");
     const backdrop = document.getElementById("imperivm-drawer-backdrop");
-    if (drawer) drawer.classList.add("active");
+    const body = document.getElementById("imperivm-drawer-body");
+    if (drawer) {
+      drawer.scrollTop = 0;
+      drawer.classList.add("active");
+    }
+    if (body) body.scrollTop = 0;
     if (backdrop) backdrop.classList.add("active");
     this.lockBackgroundScroll();
   },
