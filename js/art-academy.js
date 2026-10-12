@@ -463,7 +463,7 @@ function addFotoLog() {
 
   fotoState.logs.unshift({
     id: "fl-" + Date.now(),
-    date: new Date().toISOString().split('T')[0],
+    date: cjToday(),
     spot: spotEl.value.trim(),
     lens: lensEl && lensEl.value.trim() ? lensEl.value.trim() : "Lente fija",
     params: paramsEl && paramsEl.value.trim() ? paramsEl.value.trim() : "Modo Manual",
@@ -856,7 +856,7 @@ function addPinturaStudy() {
 
   pinturaState.studies.unshift({
     id: "ps-" + Date.now(),
-    date: new Date().toISOString().split('T')[0],
+    date: cjToday(),
     title: titleEl.value.trim(),
     medium: mediumEl ? mediumEl.value : "Óleo sobre lienzo",
     palette: paletteEl && paletteEl.value.trim() ? paletteEl.value.trim() : "Paleta de Zorn",

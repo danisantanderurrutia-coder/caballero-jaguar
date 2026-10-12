@@ -530,15 +530,9 @@ function incrementStat(statKey) {
   }
 
   reyJaguarState.stats[statKey].value = (reyJaguarState.stats[statKey].value || 0) + 1;
-  reyJaguarState.character.xp = (reyJaguarState.character.xp || 0) + 50;
-
-  const newLevel = Math.floor(reyJaguarState.character.xp / 1000) + 1;
-  if (newLevel > (reyJaguarState.character.level || 1)) {
-    reyJaguarState.character.level = newLevel;
-    triggerAvatarCelebrationEffect(`🎉 ¡NIVEL ${newLevel} ALCANZADO! Soberanía acumulada.`);
-  } else {
-    triggerAvatarCelebrationEffect(`+1 a ${reyJaguarState.stats[statKey].name} (+50 XP)`);
-  }
+  // XP y nivel los gestiona el motor único (CJProgress): ya anuncia ascensos de rango
+  window.awardXP(50, `Mejora de atributo: ${reyJaguarState.stats[statKey].name}`, statKey);
+  triggerAvatarCelebrationEffect(`+1 a ${reyJaguarState.stats[statKey].name} (+50 XP)`);
 
   saveReyJaguarState();
   renderCharacterHUD();
@@ -613,7 +607,7 @@ function syncBankSummaryWithFinanceState() {
       if (!reyJaguarState.bankSummary) reyJaguarState.bankSummary = {};
       if (hasSp) reyJaguarState.bankSummary.sparkasseCurrentEUR = Math.round(2450 + spSum);
       if (hasClp) reyJaguarState.bankSummary.bancoChileCurrentCLP = Math.round(1850000 + clpSum);
-      reyJaguarState.bankSummary.lastSyncDate = new Date().toISOString().split('T')[0];
+      reyJaguarState.bankSummary.lastSyncDate = cjToday();
     }
   } catch (e) {
     console.error("Error en syncBankSummaryWithFinanceState:", e);
@@ -844,7 +838,7 @@ function logChallengeBonusAction(challengeId) {
   const challenge = CABALLERO_BONUS_CHALLENGES.find(c => c.id === challengeId);
   if (!challenge) return;
 
-  const todayStr = new Date().toISOString().split("T")[0];
+  const todayStr = cjToday();
   if (!reyJaguarState.dailyChallengeActions) {
     reyJaguarState.dailyChallengeActions = {};
   }
@@ -867,9 +861,7 @@ function logChallengeBonusAction(challengeId) {
   if (typeof CaballeroScoringEngine !== 'undefined' && typeof CaballeroScoringEngine.awardAction === 'function') {
     CaballeroScoringEngine.awardAction(challenge.auraKey, challenge.difficulty, `Desafío Extra: ${challenge.title}`);
   } else {
-    if (reyJaguarState.character) {
-      reyJaguarState.character.xp = (reyJaguarState.character.xp || 0) + challenge.xp;
-    }
+    window.awardXP(challenge.xp, `Desafío Extra: ${challenge.title}`, challenge.auraKey);
   }
 
   // Si es el desafío detox (0 porno), avanzar racha y el contador
@@ -916,7 +908,7 @@ function openCaballeroChallengeModal() {
 
   const noPornDays = (reyJaguarState.character && typeof reyJaguarState.character.noPornDays === 'number') ? reyJaguarState.character.noPornDays : 1;
   const streakDays = (reyJaguarState.character && typeof reyJaguarState.character.streakDays === 'number') ? reyJaguarState.character.streakDays : 1;
-  const todayStr = new Date().toISOString().split("T")[0];
+  const todayStr = cjToday();
   const todayActions = (reyJaguarState.dailyChallengeActions && reyJaguarState.dailyChallengeActions[todayStr]) || {};
 
   content.innerHTML = `
@@ -2166,7 +2158,7 @@ function logAgrotechProgressFromInspector() {
   
   incrementStat("agrotech");
   if (typeof CaballeroScoringEngine !== "undefined") {
-    CaballeroScoringEngine.awardXP("territorio", 50, `🌱 Agrotech: ${desc}`);
+    CaballeroScoringEngine.awardXP("naturaleza", 50, `🌱 Agrotech: ${desc}`);
   }
   openKCDInspector({ type: "stat", statKey: "agrotech" });
 }
@@ -3658,7 +3650,7 @@ function advanceSubQuest(questId, subQuestId) {
 
       // Otorgar XP de territorio por avance en expedición
       if (typeof CaballeroScoringEngine !== 'undefined') {
-        CaballeroScoringEngine.awardXP('territorio', 30, `Avance en Misión: ${sub.text}`);
+        CaballeroScoringEngine.awardXP('vida', 30, `Avance en Misión: ${sub.text}`, `subquest-${sub.id}-${sub.current}`);
       }
 
       const allDone = quest.subQuests.every(s => s.completed);
@@ -3668,7 +3660,7 @@ function advanceSubQuest(questId, subQuestId) {
         if (reward) reward.unlocked = true;
 
         if (typeof CaballeroScoringEngine !== 'undefined') {
-          CaballeroScoringEngine.awardXP('territorio', 150, `¡Misión Conquistada! ${quest.title}`);
+          CaballeroScoringEngine.awardXP('vida', 150, `¡Misión Conquistada! ${quest.title}`, `quest-${quest.id}`);
         }
 
         if (typeof showNotification === 'function') showNotification(`🎉 ¡MISIÓN PRINCIPAL COMPLETADA! Desbloqueaste: ${reward ? reward.name : 'Objeto'}`);

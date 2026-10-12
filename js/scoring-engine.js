@@ -142,7 +142,7 @@
 
   // --- 3. GESTIÓN DEL ESTADO LOCAL DE PUNTOS Y VIBRA ---
   let scoringState = {
-    today: new Date().toISOString().split("T")[0],
+    today: cjToday(),
     auraPoints: {
       vida: 0,
       exploracion: 0,
@@ -171,7 +171,7 @@
   };
 
   function applyDailyDecay() {
-    const todayStr = new Date().toISOString().split("T")[0];
+    const todayStr = cjToday();
     if (!scoringState.lastActiveDate) scoringState.lastActiveDate = {};
 
     let modified = false;
@@ -282,7 +282,7 @@
       for (let i = 0; i < 7; i++) {
         const d = new Date(today);
         d.setDate(today.getDate() - i);
-        const dateStr = d.toISOString().split("T")[0];
+        const dateStr = cjDateKey(d);
         const dayPoints = (scoringState.dailyLog[dateStr] && scoringState.dailyLog[dateStr][auraKey]) || 0;
         
         if (dayPoints > 0) activeDaysCount++;
@@ -333,6 +333,58 @@
       applyDailyDecay();
     },
 
+    // ------------------------------------------------------------------
+    // API DE REGISTRO UNIFICADA (antes llamada desde la app pero inexistente)
+    // ------------------------------------------------------------------
+    /** Tramo de XP según minutos: ≤20 → 25 · ≤50 → 50 · >50 → 75 */
+    xpForMinutes(mins) {
+      const m = Number(mins) || 0;
+      return m <= 20 ? XP_LEVELS.facil : (m <= 50 ? XP_LEVELS.medio : XP_LEVELS.dificil);
+    },
+
+    calculateTimeXP(duration, category) {
+      return { xp: this.xpForMinutes(duration), pillar: (window.CJProgress ? window.CJProgress.normAura(category) : "vida") };
+    },
+
+    /** Otorga `xp` exactos a un pilar/aura: +1 punto de aura, log diario y libro de XP. */
+    awardXP(pillar, xp, description = "", key = null) {
+      const auraKey = window.CJProgress ? window.CJProgress.normAura(pillar) : (CABALLERO_AURAS[pillar] ? pillar : "vida");
+      const entry = window.CJProgress
+        ? window.CJProgress.award({ xp, aura: auraKey, desc: description || ("Acción en " + CABALLERO_AURAS[auraKey].shortName), key })
+        : null;
+      if (!entry) return null; // duplicado (misma clave hoy) o XP inválido
+
+      const todayStr = window.CJProgress.todayLocal();
+      scoringState.auraPoints[auraKey] = (scoringState.auraPoints[auraKey] || 0) + 1;
+      if (!scoringState.lastActiveDate) scoringState.lastActiveDate = {};
+      scoringState.lastActiveDate[auraKey] = todayStr;
+      if (!scoringState.dailyLog[todayStr]) scoringState.dailyLog[todayStr] = {};
+      scoringState.dailyLog[todayStr][auraKey] = (scoringState.dailyLog[todayStr][auraKey] || 0) + 1;
+      saveScoringState();
+
+      if (typeof imperivmEngine !== "undefined" && typeof imperivmEngine.renderHeaderCategoryPennants === "function") {
+        imperivmEngine.renderHeaderCategoryPennants();
+      }
+      if (typeof window.showNotification === "function") {
+        window.showNotification(`✨ +${entry.xp} XP • ${CABALLERO_AURAS[auraKey].shortName}`);
+      }
+      return entry;
+    },
+
+    logMeditation(mins, technique = "Meditación") {
+      return this.awardXP("espiritualidad", this.xpForMinutes(mins), `${technique} (${mins} min)`);
+    },
+
+    logMassage(label, mins) {
+      return this.awardXP("salud", this.xpForMinutes(mins), `Masaje: ${label} (${mins} min)`);
+    },
+
+    logReading(title, pages, mins) {
+      const xp = this.xpForMinutes(mins || Math.round((Number(pages) || 0) * 2));
+      const entry = this.awardXP("mente", xp, `Lectura: ${title} (${pages} págs / ${mins} min)`);
+      return { totalXP: entry ? entry.xp : 0, entry };
+    },
+
     /**
      * Asigna actividad, otorga XP al personaje, suma +1 punto al aura respectiva
      * y guarda en el registro diario para el cálculo de Vibra.
@@ -341,7 +393,7 @@
       if (!CABALLERO_AURAS[auraKey]) auraKey = "vida";
 
       const xpAmount = XP_LEVELS[difficulty] || XP_LEVELS.medio;
-      const todayStr = new Date().toISOString().split("T")[0];
+      const todayStr = cjToday();
 
       // 1. Incrementar puntos de aura (+1 punto)
       scoringState.auraPoints[auraKey] = (scoringState.auraPoints[auraKey] || 0) + 1;
@@ -366,20 +418,16 @@
 
       saveScoringState();
 
-      // 3. Otorgar XP al personaje de reyJaguarState y sincronizar estadísticas del atributo
+      // 3. Otorgar XP por el motor único (libro de movimientos) y sincronizar el stat del atributo
+      if (window.CJProgress) {
+        window.CJProgress.award({
+          xp: xpAmount,
+          aura: auraKey,
+          desc: description || `Acción en Aura ${CABALLERO_AURAS[auraKey].shortName}`,
+          key: arguments[5] || null
+        });
+      }
       if (window.reyJaguarState && window.reyJaguarState.character) {
-        window.reyJaguarState.character.xp = (window.reyJaguarState.character.xp || 0) + xpAmount;
-        
-        // Actualizar rango según la nueva XP
-        if (typeof ScoringEngine.getRankForXP === "function") {
-          const rankInfo = ScoringEngine.getRankForXP(window.reyJaguarState.character.xp);
-          if (rankInfo && typeof rankInfo.rank === "number") {
-            window.reyJaguarState.character.level = rankInfo.rank;
-            window.reyJaguarState.character.currentRankIndex = rankInfo.rank - 1;
-          }
-        }
-
-        // Sincronizar stat interna del atributo específico
         const statKey = dominantSubKey || auraKey;
         if (statKey && window.reyJaguarState.stats) {
           if (!window.reyJaguarState.stats[statKey]) {
@@ -387,12 +435,7 @@
           }
           window.reyJaguarState.stats[statKey].value = (window.reyJaguarState.stats[statKey].value || 0) + 1;
         }
-
         if (typeof window.saveReyJaguarState === "function") window.saveReyJaguarState();
-        if (typeof window.renderCharacterHUD === "function") window.renderCharacterHUD();
-        if (typeof window.updateHeaderDisplay === "function") window.updateHeaderDisplay();
-      } else if (typeof window.awardXP === "function") {
-        window.awardXP(xpAmount, description || `Acción en Aura ${CABALLERO_AURAS[auraKey].shortName}`);
       }
 
       // Re-renderizar banderines heráldicos en tiempo real
@@ -417,7 +460,7 @@
       if (!CABALLERO_AURAS[auraKey]) auraKey = "vida";
 
       const xpAmount = XP_LEVELS[difficulty] || XP_LEVELS.medio;
-      const todayStr = new Date().toISOString().split("T")[0];
+      const todayStr = cjToday();
 
       // 1. Decrementar puntos de aura (sin bajar de 0)
       scoringState.auraPoints[auraKey] = Math.max(0, (scoringState.auraPoints[auraKey] || 0) - 1);
@@ -436,26 +479,17 @@
 
       saveScoringState();
 
-      // 3. Deducir XP del personaje
+      // 3. Revertir el movimiento en el libro único de XP y el stat interno
+      if (window.CJProgress) {
+        window.CJProgress.revoke({ aura: auraKey, xp: xpAmount, desc: description || undefined }) ||
+          window.CJProgress.revoke({ aura: auraKey, xp: xpAmount });
+      }
       if (window.reyJaguarState && window.reyJaguarState.character) {
-        window.reyJaguarState.character.xp = Math.max(0, (window.reyJaguarState.character.xp || 0) - xpAmount);
-        
-        if (typeof ScoringEngine.getRankForXP === "function") {
-          const rankInfo = ScoringEngine.getRankForXP(window.reyJaguarState.character.xp);
-          if (rankInfo && typeof rankInfo.rank === "number") {
-            window.reyJaguarState.character.level = rankInfo.rank;
-            window.reyJaguarState.character.currentRankIndex = rankInfo.rank - 1;
-          }
-        }
-
         const statKey = dominantSubKey || auraKey;
         if (statKey && window.reyJaguarState.stats && window.reyJaguarState.stats[statKey]) {
           window.reyJaguarState.stats[statKey].value = Math.max(0, (window.reyJaguarState.stats[statKey].value || 0) - 1);
         }
-
         if (typeof window.saveReyJaguarState === "function") window.saveReyJaguarState();
-        if (typeof window.renderCharacterHUD === "function") window.renderCharacterHUD();
-        if (typeof window.updateHeaderDisplay === "function") window.updateHeaderDisplay();
       }
 
       // Re-renderizar banderines en tiempo real
@@ -743,7 +777,7 @@
         mente: 0
       };
       scoringState.dailyLog = {};
-      scoringState.today = new Date().toISOString().split("T")[0];
+      scoringState.today = cjToday();
       saveScoringState();
     }
   };

@@ -31,9 +31,9 @@ let appState = {
     { id: "t7", title: "Cita especial de fin de semana con mi novia", timeScope: "weekly", category: "pareja", completed: false }
   ],
   activityLogs: [
-    { id: "a1", activity: "Estudio y lectura estoica", duration: 45, category: "Lectura", date: new Date().toISOString().split('T')[0] },
-    { id: "a2", activity: "Rutina Caballero + Calistenia", duration: 25, category: "Ejercicios", date: new Date().toISOString().split('T')[0] },
-    { id: "a3", activity: "Desarrollo de proyecto de Ingresos", duration: 90, category: "Proyectos", date: new Date().toISOString().split('T')[0] }
+    { id: "a1", activity: "Estudio y lectura estoica", duration: 45, category: "Lectura", date: cjToday() },
+    { id: "a2", activity: "Rutina Caballero + Calistenia", duration: 25, category: "Ejercicios", date: cjToday() },
+    { id: "a3", activity: "Desarrollo de proyecto de Ingresos", duration: 90, category: "Proyectos", date: cjToday() }
   ],
   screenTimeLogs: {
     work: 240,
@@ -189,6 +189,12 @@ function playSoundEffect(type) {
 }
 
 function updateLevelProgress() {
+  // El nivel, grado y racha se derivan del motor único de XP (CJProgress)
+  if (window.CJProgress) {
+    window.CJProgress.sync();
+    renderLevelsGrid();
+    return;
+  }
   const profile = getActiveProfile();
   const levelInfo = RANKS_STRUCTURE.find(r => r.level === profile.currentLevel) || RANKS_STRUCTURE[0];
   
@@ -214,6 +220,10 @@ function updateLevelProgress() {
 }
 
 function toggleDayCompleted(dayNum) {
+  if (window.CJProgress) {
+    showNotification("🦅 Los días del Vexillum se cuentan solos: cada día con 100+ XP suma a tu racha.");
+    return;
+  }
   const profile = getActiveProfile();
   if (profile.completedDays.includes(dayNum)) {
     profile.completedDays = profile.completedDays.filter(d => d !== dayNum);
@@ -239,12 +249,23 @@ function renderHeaderStatus() {
       : ((window.reyJaguarState && window.reyJaguarState.character && typeof window.reyJaguarState.character.xp === 'number')
           ? window.reyJaguarState.character.xp
           : (profile.currentXp || 0));
-    levelNameEl.innerHTML = `<strong>${xp.toLocaleString()} XP</strong>`;
+    if (window.CJProgress) {
+      const lv = window.CJProgress.levelInfo(xp);
+      levelNameEl.innerHTML = `<strong>${xp.toLocaleString()} XP</strong> · ${lv.latin} ${lv.gradeRoman}`;
+    } else {
+      levelNameEl.innerHTML = `<strong>${xp.toLocaleString()} XP</strong>`;
+    }
   }
-  if (streakEl) streakEl.innerText = `🦅 Vexillum: ${profile.completedDays.length} / 21 Días`;
-  if (xpFillEl) {
-    const pct = (profile.completedDays.length / 21) * 100;
-    xpFillEl.style.width = `${Math.max(8, pct)}%`;
+  if (window.CJProgress) {
+    const snap = window.CJProgress.snapshot();
+    if (streakEl) streakEl.innerText = `🔥 Racha: ${snap.streak.days} días · Hoy ${snap.today.xp}/${snap.today.cap} XP`;
+    if (xpFillEl) xpFillEl.style.width = `${Math.max(4, snap.level.progress)}%`;
+  } else {
+    if (streakEl) streakEl.innerText = `🦅 Vexillum: ${profile.completedDays.length} / 21 Días`;
+    if (xpFillEl) {
+      const pct = (profile.completedDays.length / 21) * 100;
+      xpFillEl.style.width = `${Math.max(8, pct)}%`;
+    }
   }
   if (window.imperivmEngine && typeof window.imperivmEngine.updateVexillumVisuals === 'function') {
     window.imperivmEngine.updateVexillumVisuals();
@@ -607,8 +628,11 @@ function toggleTask(id) {
     if (task.completed) {
       playSoundEffect("success");
       if (typeof CaballeroScoringEngine !== "undefined") {
-        CaballeroScoringEngine.awardXP(task.category || "foco", 20, `Deber cumplido: ${task.title}`);
+        CaballeroScoringEngine.awardXP(task.category || "foco", 20, `Deber cumplido: ${task.title}`, `task-${task.id}`);
       }
+    } else if (window.CJProgress) {
+      // Desmarcar revierte el XP (evita farmeo marcando/desmarcando)
+      window.CJProgress.revoke({ key: `task-${task.id}` });
     }
     saveAppState();
     renderTasks();
@@ -850,7 +874,7 @@ function addSweetMemory() {
   appState.coupleData.sweetMemories.unshift({
     id: "m-" + Date.now(),
     text: input.value.trim(),
-    date: new Date().toISOString().split('T')[0]
+    date: cjToday()
   });
 
   input.value = "";
@@ -1027,15 +1051,7 @@ function incrementProjectTask(projId) {
   if (typeof saveProjectsHubData === "function") saveProjectsHubData();
 
   // Otorgar XP y feedback sensorial
-  const profile = typeof getActiveProfile === "function" ? getActiveProfile() : null;
-  if (profile) {
-    profile.xp = (profile.xp || 0) + 20;
-    if (typeof saveAppState === "function") saveAppState();
-    if (typeof renderHeaderStatus === "function") renderHeaderStatus();
-  }
-  if (typeof reyJaguarState !== "undefined" && reyJaguarState.character) {
-    reyJaguarState.character.xp = (reyJaguarState.character.xp || 0) + 20;
-  }
+  window.awardXP(20, `Proyecto «${p.title}»: ${taskText}`, "exploracion");
 
   if (typeof playSoundEffect === "function") playSoundEffect("success");
   if (typeof showNotification === "function") {
@@ -1141,7 +1157,7 @@ function logActivity() {
     duration: duration,
     category: category,
     xpAwarded: earnedXP,
-    date: new Date().toISOString().split('T')[0]
+    date: cjToday()
   });
 
   name.value = "";
@@ -1298,10 +1314,7 @@ function spinDopamineReward() {
 
   setTimeout(() => {
     const randomReward = DOPAMINE_REWARDS[Math.floor(Math.random() * DOPAMINE_REWARDS.length)];
-    const profile = getActiveProfile();
-    profile.xp = (profile.xp || 0) + randomReward.bonusXP;
-    saveAppState();
-    renderHeaderStatus();
+    window.awardXP(randomReward.bonusXP, `Ruleta de dopamina sana: ${randomReward.title}`, "vida");
 
     resultEl.innerHTML = `
       <div style="font-weight: 800; font-size: 1.05rem; color: var(--neon-pink-bright); margin-bottom: 4px;">${randomReward.title}</div>
@@ -1882,7 +1895,7 @@ function completeRitoInitiation(ritoKey) {
   }));
 
   if (typeof awardXP === "function") {
-    awardXP(50, `Iniciación Sagrada Rito ${rito.pueblo.split('•')[0].trim()}`);
+    awardXP(50, `Iniciación Sagrada Rito ${rito.pueblo.split('•')[0].trim()}`, "espiritualidad");
   }
 
   showNotification(`🕯️ Rito de Iniciación completado: Consagrados los 21 Días de Templanza (+50 XP).`);
@@ -2281,11 +2294,7 @@ function speakCurrentFlashcard() {
 function rateFlashcard(rating) {
   const langObj = languagePracticeData[currentPracticeLang];
   if (rating === 'easy') {
-    if (appState && appState.profiles && appState.profiles[0]) {
-      appState.profiles[0].xp += 10;
-      renderHeaderStatus();
-      if (typeof saveAppState === 'function') saveAppState();
-    }
+    window.awardXP(10, "Flashcard dominada", "exploracion");
   }
   
   isFlashcardFlipped = false;
@@ -2324,11 +2333,7 @@ function submitQuizAnswer(optIdx) {
 
   if (optIdx === quizObj.correct) {
     langQuizStreak += 1;
-    if (appState && appState.profiles && appState.profiles[0]) {
-      appState.profiles[0].xp += 15;
-      renderHeaderStatus();
-      if (typeof saveAppState === 'function') saveAppState();
-    }
+    window.awardXP(15, "Quiz de idioma acertado", "exploracion");
 
     feedbackBox.style.display = "block";
     feedbackBox.style.background = "rgba(52,211,153,0.2)";
@@ -2367,11 +2372,7 @@ function saveLanguageJournalEntry() {
 
   input.value = "";
 
-  if (appState && appState.profiles && appState.profiles[0]) {
-    appState.profiles[0].xp += 15;
-    renderHeaderStatus();
-    if (typeof saveAppState === 'function') saveAppState();
-  }
+  window.awardXP(15, "Entrada en diario de idiomas", "exploracion");
 
   if (historyBox) {
     historyBox.innerHTML = langJournalEntries.map(e => `

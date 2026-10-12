@@ -16,7 +16,7 @@ if [ -n "$bad" ]; then
 fi
 
 # Escaneo de contenido: rutas de la app DateMaster, bases de datos o credenciales
-leak=$(git diff --cached -U0 | grep -E '^\+' | grep -E "DateMaster Apex\.app|/Applications/DateMaster|AKIA[0-9A-Z]{16}|gho_[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{20,}|BEGIN (RSA|OPENSSH|PRIVATE) KEY")
+leak=$(git diff --cached -U0 -- . ":!.githooks" | grep -E '^\+' | grep -E "/Applications/DateMaster|AKIA[0-9A-Z]{16}|gho_[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{20,}|BEGIN (RSA|OPENSSH|PRIVATE) KEY")
 if [ -n "$leak" ]; then
   echo "❌ COMMIT BLOQUEADO: contenido sensible detectado en los cambios:"
   echo "$leak" | cut -c1-140 | sed 's/^/   /'

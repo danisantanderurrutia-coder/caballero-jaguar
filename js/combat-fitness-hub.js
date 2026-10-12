@@ -337,7 +337,7 @@ function addClimbingSession() {
 
   combatState.climbingMetrics.sessions.unshift({
     id: "c-" + Date.now(),
-    date: new Date().toISOString().split('T')[0],
+    date: cjToday(),
     type: typeEl ? typeEl.value : "Muro Indoor (Boulder)",
     grade: gradeEl.value.trim().toUpperCase(),
     location: locEl && locEl.value.trim() ? locEl.value.trim() : "Rocódromo / Roca Natural",
@@ -384,7 +384,7 @@ function addSparringPartner() {
     id: "s-" + Date.now(),
     name: nameEl.value.trim(),
     gym: "Gimnasio de Europa",
-    date: new Date().toISOString().split('T')[0],
+    date: cjToday(),
     discipline: "Muay Thai / Sparring",
     notes: notesEl && notesEl.value.trim() ? notesEl.value.trim() : "Sesión de sparring intensa."
   });

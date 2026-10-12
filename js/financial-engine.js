@@ -82,7 +82,7 @@ function parseBankFileContent(content, filename = "") {
     if (parts.length < 3) parts = line.split("\t");
 
     if (parts.length >= 3) {
-      const date = parts[0].trim() || new Date().toISOString().split('T')[0];
+      const date = parts[0].trim() || cjToday();
       const desc = parts[1].trim() || "Gasto importado";
       let amountStr = parts[2].trim();
       
@@ -278,7 +278,7 @@ function exportToGoogleSheetsCSV() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.setAttribute("href", url);
-  link.setAttribute("download", `Jaguar_Finanzas_${new Date().toISOString().split('T')[0]}.csv`);
+  link.setAttribute("download", `Jaguar_Finanzas_${cjToday()}.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -453,7 +453,7 @@ function logAvoidedExpense(desc, amount, currency = "EUR") {
 
   const newEntry = {
     id: "av-" + Date.now(),
-    date: new Date().toISOString().split('T')[0],
+    date: cjToday(),
     desc: cleanDesc,
     amount: amt,
     currency: currency
@@ -573,7 +573,7 @@ function addManualTransaction() {
 
   financeState.transactions.unshift({
     id: "tx-" + Date.now(),
-    date: new Date().toISOString().split('T')[0],
+    date: cjToday(),
     desc: desc.value.trim(),
     amount: parseFloat(amount.value),
     currency: currency.value,

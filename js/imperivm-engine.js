@@ -88,7 +88,8 @@ const IMPERIVM_MEDIA = {
   tantra_eyegazing: "assets/tantra_eyegazing.jpg"
 };
 
-const IMPERIVM_ROMAN_RANKS = [
+// Tabla de rangos: fuente única en js/core/progress.js (CJProgress.LEVELS)
+const IMPERIVM_ROMAN_RANKS = window.CJProgress ? window.CJProgress.LEVELS : [
   { rank: 1, latin: "Tiro Legionis", title: "Legionario Iniciado", desc: "Disciplina base, templanza y cumplimiento diario.", threshold: 0, next: 1000 },
   { rank: 2, latin: "Centurio Ordinarius", title: "Centurión de Línea", desc: "Consagración profesional y dominio técnico.", threshold: 1000, next: 3500 },
   { rank: 3, latin: "Tribunus Cohortis", title: "Tribuno de Estrategia", desc: "Mando ejecutivo, investigación y proyectos.", threshold: 3500, next: 8500 },
@@ -270,6 +271,7 @@ const imperivmEngine = {
   },
 
   getCharacterXP() {
+    if (window.CJProgress) return window.CJProgress.totalXP();
     const st = (typeof reyJaguarState !== "undefined") ? reyJaguarState : (window.reyJaguarState || null);
     if (st && st.character) {
       return Number(st.character.xp) || 0;
@@ -382,29 +384,24 @@ const imperivmEngine = {
         ${this.renderTodayFlowRail()}
 
         <!-- ====================================================================
-             2. CUERPO Y SALUD: DEPORTES, CONSTRUCCIÓN/APEX & SANACIÓN SOMÁTICA
+             2. MISIONES Y PROYECTOS (incluye pestaña maestra: Maestría, Rangos y Armamentum)
+             ==================================================================== -->
+        ${this.renderMisionesRail()}
+
+        <!-- ====================================================================
+             3. CUERPO Y SALUD: DEPORTES, HÁBITOS, BIENESTAR, DATEMASTER
              ==================================================================== -->
         ${this.renderCuerpoYSaludRail()}
 
         <!-- ====================================================================
-             3. EXPLORACIÓN PERSONAL: LECTURA, IDIOMAS, ARTES, MÚSICA & MEDITACIÓN
+             4. EXPLORACIÓN PERSONAL: LECTURA, IDIOMAS, ARTES, MÚSICA & MEDITACIÓN
              ==================================================================== -->
         ${this.renderExploracionPersonalRail()}
-
-        <!-- ====================================================================
-             4. MISIONES Y METAS: MISIONES PRINCIPALES & PROYECTOS SECUNDARIOS
-             ==================================================================== -->
-        ${this.renderMisionesRail()}
 
         <!-- ====================================================================
              5. RITOS DE TEMPLANZA: LOS 4 RITOS ANCESTRALES
              ==================================================================== -->
         ${this.renderRitosAncestralesRail()}
-
-        <!-- ====================================================================
-             6. LOGROS Y RANGOS: ESCALAFÓN, TÍTULOS Y OBJETOS DESBLOQUEADOS
-             ==================================================================== -->
-        ${this.renderEscalafonRail()}
 
         <!-- ====================================================================
              8. ARCHIVO DE LEGADO: BOTÓN DISCRETO AL PIE DE PÁGINA
@@ -876,7 +873,9 @@ const imperivmEngine = {
     ];
 
     let itemsToDisplay = [];
-    if (currentView === 'principales') {
+    if (currentView === 'maestria') {
+      itemsToDisplay = [];
+    } else if (currentView === 'principales') {
       itemsToDisplay = activeMainQuests;
     } else if (currentView === 'secundarias') {
       itemsToDisplay = secondaryProjects;
@@ -902,6 +901,9 @@ const imperivmEngine = {
               <button class="btn-campaign-toggle ${currentView === 'conquistadas' ? 'active' : ''}" onclick="imperivmEngine.switchMisionesView('conquistadas');" title="Ver misiones completadas">
                 🏆 Conquistadas (${completedMainQuests.length})
               </button>
+              <button class="btn-campaign-toggle ${currentView === 'maestria' ? 'active' : ''}" onclick="imperivmEngine.switchMisionesView('maestria');" title="Títulos, contratítulos, reglas de experiencia y Armamentum Imperial">
+                👑 Maestría y Rangos
+              </button>
             </div>
 
             <div class="imperivm-rail-controls">
@@ -911,8 +913,9 @@ const imperivmEngine = {
           </div>
         </div>
 
+        ${currentView === 'maestria' ? this.renderMaestriaStatusPanel() : ''}
         <div class="imperivm-carousel-track" id="misiones-track">
-          ${itemsToDisplay.length > 0 ? itemsToDisplay.map((item) => {
+          ${currentView === 'maestria' ? this.renderMaestriaCards() : (itemsToDisplay.length > 0 ? itemsToDisplay.map((item) => {
             if (currentView === 'secundarias') {
               return `
                 <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openSecondaryQuestModal('${item.id}');">
@@ -943,82 +946,113 @@ const imperivmEngine = {
             <div style="padding: 24px; color: var(--imperivm-text-muted); font-size: 0.88rem; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px dashed var(--imperivm-border); width: 100%;">
               No hay elementos en esta vista.
             </div>
-          `}
+          `)}
         </div>
       </div>
     `;
   },
 
   // ==========================================================================
-  // FILA 7: ESCALAFÓN IMPERIAL (CURSUS HONORUM, TÍTULOS, CONTRATÍTULOS, REGLAS XP Y ARMAMENTARIUM)
-  // Reúne en 4 pestañas de alto estatus:
-  // 1. Títulos de Maestría
-  // 2. Contratítulos de Vulnerabilidad Consciente
-  // 3. Reglas de Experiencia, Mantenimiento & Vibra
-  // 4. Armamentarium (Catálogo Completo de 48 Objetos)
+  // PESTAÑA MAESTRA (dentro de Misiones y Proyectos): MAESTRÍA, RANGOS & ARMAMENTUM
+  // Reúne: 1. Títulos de Maestría · 2. Contratítulos de Vulnerabilidad ·
+  //        3. Reglas de Experiencia y Rango · 4. Armamentum Imperial (objetos)
   // ==========================================================================
-  renderEscalafonRail() {
+  renderMaestriaStatusPanel() {
+    const P = window.CJProgress;
+    if (!P) return "";
+    const snap = P.snapshot();
+    const lv = snap.level;
     const st = (typeof reyJaguarState !== "undefined") ? reyJaguarState : (window.reyJaguarState || null);
-    const xp = this.getCharacterXP();
-    const rank = this.getCurrentRank(xp);
     const items = (st && Array.isArray(st.inventory)) ? st.inventory : [];
-    const equippedCount = items.filter(i => i.equipped).length;
+    const unlocked = items.filter(i => i.unlocked).length;
+    const equipped = items.filter(i => i.equipped).length;
+    const titles = (st && Array.isArray(st.titles)) ? st.titles : [];
+    const counterTitles = (st && Array.isArray(st.counterTitles)) ? st.counterTitles : [];
+    const titlesOn = titles.filter(t => t.unlocked).length;
+    const counterOn = counterTitles.filter(t => t.unlocked).length;
+    const byAura = P.xpByAura(7);
+    const maxAura = Math.max(1, ...Object.values(byAura));
+    const auras = (window.CaballeroScoringEngine && window.CaballeroScoringEngine.auras) || {};
+    const week = P.lastDays(7);
+    const maxDay = Math.max(P.CONFIG.dailySoftCap, ...week.map(d => d.xp));
+    const todayPct = Math.min(100, Math.round((snap.today.xp / snap.today.cap) * 100));
+    const box = "background: rgba(255,255,255,0.04); border: 1px solid var(--imperivm-border); border-radius: 10px; padding: 14px;";
+    const recent = P.recent(5);
 
     return `
-      <div class="imperivm-rail-section" id="rail-escalafon-imperial">
-        <div class="imperivm-rail-header">
-          <div class="imperivm-rail-title-group">
-            <h3 class="imperivm-rail-title">🏆 Niveles y Recompensas <span class="dev-section-label">#rail-escalafon-imperial</span></h3>
+      <div id="cj-maestria-panel" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin: 4px 0 14px 0;">
+        <div style="${box}">
+          <div style="font-size: 0.7rem; letter-spacing: 1.5px; color: var(--imperivm-text-muted);">RANGO ACTUAL</div>
+          <div style="font-family: var(--imperivm-font-title); font-size: 1.15rem; color: #FFF; margin: 4px 0;">${lv.latin} · Grado ${lv.gradeRoman}</div>
+          <div style="font-size: 0.8rem; color: var(--imperivm-text-muted); margin-bottom: 8px;">${lv.title} — ${lv.desc}</div>
+          <div style="height: 7px; background: rgba(0,0,0,0.5); border-radius: 4px; overflow: hidden;"><div style="height: 100%; width: ${lv.progress}%; background: linear-gradient(90deg, #B8860B, #F3D079);"></div></div>
+          <div style="font-size: 0.75rem; color: #E8A0A8; margin-top: 6px;">${snap.xp.toLocaleString()} XP total ${lv.next ? `· faltan ${lv.toNext.toLocaleString()} XP para ${P.LEVELS[lv.rank].latin}` : '· rango máximo'}</div>
+        </div>
+
+        <div style="${box}">
+          <div style="font-size: 0.7rem; letter-spacing: 1.5px; color: var(--imperivm-text-muted);">HOY · ${snap.today.date}</div>
+          <div style="font-size: 1.15rem; color: #FFF; margin: 4px 0;">${snap.today.xp} / ${snap.today.cap} XP <span style="font-size: 0.75rem; color: var(--imperivm-text-muted);">(tope blando)</span></div>
+          <div style="height: 7px; background: rgba(0,0,0,0.5); border-radius: 4px; overflow: hidden;"><div style="height: 100%; width: ${todayPct}%; background: linear-gradient(90deg, #2E7D32, #81C784);"></div></div>
+          <div style="font-size: 0.78rem; margin-top: 8px; color: ${snap.streak.todayActive ? '#81C784' : '#E8A0A8'};">
+            🔥 Racha: <strong>${snap.streak.days}</strong> día(s) ${snap.streak.todayActive ? '· hoy ya cuenta ✔' : `· hoy aún no cuenta (faltan ${Math.max(0, snap.today.activeAt - snap.today.xp)} XP)`}
           </div>
-          <div class="imperivm-rail-controls">
-            <button class="imperivm-nav-arrow" onclick="imperivmEngine.scrollTrack('escalafon-track', -360);" title="Anterior">◀</button>
-            <button class="imperivm-nav-arrow" onclick="imperivmEngine.scrollTrack('escalafon-track', 360);" title="Siguiente">▶</button>
+          <div style="display: flex; gap: 3px; align-items: flex-end; height: 34px; margin-top: 8px;">
+            ${week.map(d => `<div title="${d.date}: ${d.xp} XP" style="flex: 1; background: ${d.xp >= snap.today.activeAt ? '#B8860B' : 'rgba(255,255,255,0.15)'}; height: ${Math.max(4, Math.round((d.xp / maxDay) * 100))}%; border-radius: 2px;"></div>`).join('')}
           </div>
         </div>
 
-        <div class="imperivm-carousel-track" id="escalafon-track">
-          
-          <!-- PESTAÑA 1: TÍTULOS DE MAESTRÍA MASCULINA -->
-          <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openTitlesModal('virtudes');">
-            <div class="imperivm-card-media">
-              <img src="assets/jaguar_logo_renaissance.jpg" alt="Títulos de Maestría">
-            </div>
-            <div class="imperivm-card-body">
-              <h4 class="imperivm-card-title">👑 Títulos de Maestría</h4>
-            </div>
+        <div style="${box}">
+          <div style="font-size: 0.7rem; letter-spacing: 1.5px; color: var(--imperivm-text-muted);">XP POR AURA · ÚLTIMOS 7 DÍAS</div>
+          <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 8px;">
+            ${P.AURAS.map(k => `
+              <div style="display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: #DDD;">
+                <span style="width: 92px;">${(auras[k] && auras[k].icon) || ''} ${(auras[k] && auras[k].shortName) || k}</span>
+                <div style="flex: 1; height: 6px; background: rgba(0,0,0,0.5); border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: ${Math.round((byAura[k] / maxAura) * 100)}%; background: ${(auras[k] && auras[k].baseColor) || '#B8860B'};"></div></div>
+                <span style="width: 40px; text-align: right;">${byAura[k]}</span>
+              </div>`).join('')}
           </div>
-
-          <!-- PESTAÑA 2: CONTRATÍTULOS DE VULNERABILIDAD CONSCIENTE -->
-          <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openTitlesModal('sombras');">
-            <div class="imperivm-card-media">
-              <img src="${IMPERIVM_MEDIA.vespera}" alt="Contratítulos">
-            </div>
-            <div class="imperivm-card-body">
-              <h4 class="imperivm-card-title">💧 Contratítulos de Vulnerabilidad</h4>
-            </div>
-          </div>
-
-          <!-- PESTAÑA 3: REGLAS DE EXPERIENCIA & MANTENIMIENTO DE RANGO -->
-          <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openRulesModal();">
-            <div class="imperivm-card-media">
-              <img src="${IMPERIVM_MEDIA.legado_kcd}" alt="Reglas de XP">
-            </div>
-            <div class="imperivm-card-body">
-              <h4 class="imperivm-card-title">🏛️ Reglas de Experiencia & Rango</h4>
-            </div>
-          </div>
-
-          <!-- PESTAÑA 4: ARMAMENTARIUM (CATÁLOGO COMPLETO DE 48 OBJETOS) -->
-          <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openArmamentariumModal();">
-            <div class="imperivm-card-media">
-              <img src="${IMPERIVM_MEDIA.objetos_grid}" alt="Armamentarium">
-            </div>
-            <div class="imperivm-card-body">
-              <h4 class="imperivm-card-title">🎒 Armamentarium Imperial</h4>
-            </div>
-          </div>
-
         </div>
+
+        <div style="${box}">
+          <div style="font-size: 0.7rem; letter-spacing: 1.5px; color: var(--imperivm-text-muted);">ÚLTIMOS MOVIMIENTOS DE XP</div>
+          <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 8px; font-size: 0.75rem; color: #DDD;">
+            ${recent.length ? recent.map(e => `
+              <div style="display: flex; justify-content: space-between; gap: 8px; align-items: center;">
+                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${e.desc}">${e.date.slice(5)} · ${e.desc}</span>
+                <span style="white-space: nowrap;"><strong style="color: #F3D079;">+${e.xp}</strong>
+                  <button onclick="imperivmEngine.undoXPEntry('${e.id}')" title="Deshacer este movimiento" style="background: none; border: none; color: #E8A0A8; cursor: pointer;">↩</button></span>
+              </div>`).join('') : '<em style="color: var(--imperivm-text-muted);">Aún no hay movimientos. Completa una tarea o bloque del plan de hoy.</em>'}
+          </div>
+          <div style="font-size: 0.72rem; color: var(--imperivm-text-muted); margin-top: 10px;">🎒 Armamentum: ${unlocked} desbloqueados · ${equipped} equipados${titles.length ? ` · 👑 Títulos: ${titlesOn}/${titles.length}` : ''}${counterTitles.length ? ` · 💧 Contratítulos: ${counterOn}/${counterTitles.length}` : ''}</div>
+        </div>
+      </div>
+    `;
+  },
+
+  undoXPEntry(id) {
+    if (window.CJProgress && window.CJProgress.revokeById(id)) {
+      if (typeof showNotification === "function") showNotification("↩️ Movimiento de XP deshecho.");
+      this.switchMisionesView('maestria');
+    }
+  },
+
+  renderMaestriaCards() {
+    return `
+      <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openTitlesModal('virtudes');">
+        <div class="imperivm-card-media"><img src="assets/jaguar_logo_renaissance.jpg" alt="Títulos de Maestría"></div>
+        <div class="imperivm-card-body"><h4 class="imperivm-card-title">👑 Títulos de Maestría</h4></div>
+      </div>
+      <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openTitlesModal('sombras');">
+        <div class="imperivm-card-media"><img src="${IMPERIVM_MEDIA.vespera}" alt="Contratítulos"></div>
+        <div class="imperivm-card-body"><h4 class="imperivm-card-title">💧 Contratítulos de Vulnerabilidad</h4></div>
+      </div>
+      <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openRulesModal();">
+        <div class="imperivm-card-media"><img src="${IMPERIVM_MEDIA.legado_kcd}" alt="Reglas de XP"></div>
+        <div class="imperivm-card-body"><h4 class="imperivm-card-title">🏛️ Reglas de Experiencia & Rango</h4></div>
+      </div>
+      <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openArmamentariumModal();">
+        <div class="imperivm-card-media"><img src="${IMPERIVM_MEDIA.objetos_grid}" alt="Armamentum Imperial"></div>
+        <div class="imperivm-card-body"><h4 class="imperivm-card-title">🎒 Armamentum Imperial</h4></div>
       </div>
     `;
   },
@@ -1726,52 +1760,77 @@ const imperivmEngine = {
 
     drawer.scrollTop = 0;
     if (tabsBar) tabsBar.style.display = "none";
-    titleEl.textContent = "🏛️ REGLAS DE EXPERIENCIA & CURSUS HONORUM";
+    titleEl.textContent = "🏛️ REGLAS DE EXPERIENCIA, RANGO & STATS";
+
+    const P = window.CJProgress;
+    const C = P ? P.CONFIG : { difficultyXP: { facil: 25, medio: 50, dificil: 75 }, dailySoftCap: 600, overCapFactor: 0.5, activeDayXP: 100, streakBonus: {} };
+    const L = P ? P.LEVELS : IMPERIVM_ROMAN_RANKS;
+    const snap = P ? P.snapshot() : null;
+    const box = 'background: rgba(255,255,255,0.04); border: 1px solid var(--imperivm-border); border-radius: 8px; padding: 14px;';
+    const h5 = 'color: var(--imperivm-text-gold); margin: 0 0 8px 0; font-size: 0.95rem;';
+    const small = 'font-size: 0.8rem; color: var(--imperivm-text-muted); line-height: 1.55; margin: 0;';
+    const bonus = Object.entries(C.streakBonus).map(([d, x]) => `${d} días → +${x} XP`).join(' · ');
+    const rankRows = L.map(r => {
+      const span = r.next ? (r.next - r.threshold) : null;
+      const g = span ? Math.round(span / 3) : 6000;
+      return `<div><strong>${r.rank}. ${r.latin}</strong> — ${r.title} · desde ${r.threshold.toLocaleString()} XP${r.next ? ` (grado I → II → III cada ~${g.toLocaleString()} XP)` : ' (grados cada 6.000 XP)'}</div>`;
+    }).join('');
 
     body.innerHTML = `
-      <div style="display: flex; flex-direction: column; gap: 16px;">
-        
-        <!-- 1. ESCALAS DE EXPERIENCIA -->
-        <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--imperivm-border); border-radius: 8px; padding: 14px;">
-          <h5 style="color: var(--imperivm-text-gold); margin: 0 0 8px 0; font-size: 0.95rem;">⚡ Escalas de Experiencia (XP):</h5>
-          <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.82rem;">
-            <div>• <strong style="color: #52C41A;">Fácil (+25 XP):</strong> Tareas menores, hidratación 3.2L, caminata matutina, 15 páginas de lectura.</div>
-            <div>• <strong style="color: #C0392B;">Medio (+50 XP):</strong> Sesión de fuerza en Campus Martius, 50 min Deep Work, práctica de idiomas.</div>
-            <div>• <strong style="color: #FF6B6B;">Difícil (+75 XP):</strong> Hito de Tesis Hannover, combate/sparring, 90 min flujo monolítico, revisión financiera semanal.</div>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+
+        ${snap ? `<div style="${box} border-color: var(--imperivm-border-gold);">
+          <h5 style="${h5}">📍 Tu estado ahora</h5>
+          <p style="${small}">${snap.level.latin} · Grado ${snap.level.gradeRoman} — <strong>${snap.xp.toLocaleString()} XP</strong> · racha de <strong>${snap.streak.days}</strong> días · hoy <strong>${snap.today.xp}/${snap.today.cap}</strong> XP.</p>
+        </div>` : ''}
+
+        <div style="${box}">
+          <h5 style="${h5}">⚡ 1. Cómo se gana experiencia (XP)</h5>
+          <p style="${small}">Cada acción completada da XP según su dificultad o duración. Todo XP queda anotado en un <strong>libro de movimientos</strong> (puedes deshacerlo con ↩ en la pestaña Maestría). Desmarcar una tarea o bloque revierte su XP.</p>
+          <div style="display: flex; flex-direction: column; gap: 5px; font-size: 0.82rem; margin-top: 8px;">
+            <div>• <strong style="color: #52C41A;">Fácil +${C.difficultyXP.facil} XP</strong> · hasta 20 min (hidratación, caminata, 15 págs de lectura).</div>
+            <div>• <strong style="color: #E8A0A8;">Medio +${C.difficultyXP.medio} XP</strong> · 21–50 min (fuerza, Deep Work, idiomas).</div>
+            <div>• <strong style="color: #FF6B6B;">Difícil +${C.difficultyXP.dificil} XP</strong> · más de 50 min o hitos (tesis, sparring, revisión financiera semanal).</div>
+            <div>• <strong>Fijos:</strong> tarea del día +20 · bloque somático +15 · tarea de proyecto +20 · mejora de atributo +50 · avance de misión +30 · misión conquistada +150 · título/contratítulo +40.</div>
+            <div>• Cada acción mantiene una <strong>clave por día</strong>: no se puede cobrar dos veces lo mismo el mismo día.</div>
           </div>
         </div>
 
-        <!-- 2. FÓRMULA MATEMÁTICA DE LA VIBRA & DECAIMIENTO -->
-        <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--imperivm-border); border-radius: 8px; padding: 14px;">
-          <h5 style="color: var(--imperivm-text-gold); margin: 0 0 8px 0; font-size: 0.95rem;">📐 Algoritmo de Mantenimiento de la Vibra:</h5>
-          <div style="font-family: monospace; font-size: 0.88rem; color: #E8A0A8; background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 6px; border-left: 3px solid var(--imperivm-gold); margin-bottom: 8px;">
-            Vibra = [ Σ (0.82^i · √P_i · 12) ] × [ 1 + 0.40 · (D_activos / 7) ]
-          </div>
-          <p style="font-size: 0.8rem; color: var(--imperivm-text-muted); line-height: 1.5; margin: 0;">
-            <strong>Principio Fundamental:</strong> <em>"Suma más hacer poco durante varios días que mucho durante un solo día"</em>.<br>
-            • <strong>Raíz cuadrada (√P_i):</strong> Amortigua picos aislados para premiar el hábito repartido.<br>
-            • <strong>Factor de decaimiento (0.82^i):</strong> Los puntos pierden 18% de peso por cada día que pasa si no se revalidan.<br>
-            • <strong>Bono de consistencia (+40%):</strong> Mantener activos los 7 días de la semana multiplica tu puntuación un 40% extra.
+        <div style="${box}">
+          <h5 style="${h5}">🔥 2. Tope diario y racha</h5>
+          <p style="${small}">
+            • <strong>Tope blando:</strong> pasadas las <strong>${C.dailySoftCap} XP</strong> de un día, cada acción vale la <strong>mitad</strong> (premia la constancia, no el atracón).<br>
+            • <strong>Día activo:</strong> un día cuenta para la racha si sumas <strong>${C.activeDayXP}+ XP</strong>.<br>
+            • <strong>Racha:</strong> días activos consecutivos (en tu hora local). Se rompe si un día no llegas al mínimo.<br>
+            • <strong>Bonos de racha (una vez):</strong> ${bonus}.<br>
+            • El estandarte <strong>Vexillum</strong> de la cabecera crece con tu racha (hasta 21 días).
           </p>
         </div>
 
-        <!-- 3. RANGOS DEL CURSUS HONORUM -->
-        <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--imperivm-border); border-radius: 8px; padding: 14px;">
-          <h5 style="color: var(--imperivm-text-gold); margin: 0 0 8px 0; font-size: 0.95rem;">🏛️ Escalafón Cursus Honorum:</h5>
-          <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem; color: var(--imperivm-text-muted);">
-            <div><strong>Rango 1: Tiro Legionis</strong> (0 - 1,000 XP) • Iniciación y templanza base.</div>
-            <div><strong>Rango 2: Centurio Ordinarius</strong> (1,000 - 3,500 XP) • Consagración profesional.</div>
-            <div><strong>Rango 3: Tribunus Cohortis</strong> (3,500 - 8,500 XP) • Mando ejecutivo e investigación.</div>
-            <div><strong>Rango 4: Legatus Legionis</strong> (8,500 - 18,000 XP) • Soberanía de frentes vitales.</div>
-            <div><strong>Rango 5: Consul & Imperator</strong> (18,000+ XP) • Soberanía patrimonial plena.</div>
-          </div>
+        <div style="${box}">
+          <h5 style="${h5}">🏛️ 3. Rangos y grados (Cursus Honorum)</h5>
+          <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem; color: var(--imperivm-text-muted);">${rankRows}</div>
+          <p style="${small} margin-top: 8px;">El <strong>rango</strong> sube solo por XP total. Dentro de cada rango hay 3 <strong>grados</strong> (I, II, III). Tu nivel anterior se conservó al reiniciar el XP.</p>
         </div>
 
-        <!-- 4. VEXILLUM DE TEMPLANZA -->
-        <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--imperivm-border); border-radius: 8px; padding: 14px;">
-          <h5 style="color: var(--imperivm-text-gold); margin: 0 0 8px 0; font-size: 0.95rem;">🦅 Estandarte Vexillum (21 Días):</h5>
-          <p style="font-size: 0.8rem; color: var(--imperivm-text-muted); line-height: 1.5; margin: 0;">
-            El estandarte heráldico en la cabecera alarga su tela y suma faleras de metal (bronce, plata, oro) al sostener la racha de templanza ininterrumpida.
+        <div style="${box}">
+          <h5 style="${h5}">🎌 4. Auras y banderines (9 frentes de vida)</h5>
+          <p style="${small}">
+            Cada acción pertenece a un <strong>aura</strong> (Vida, Exploración, Amor, Salud, Soberanía, Espiritualidad, Naturaleza, Deporte, Mente): suma <strong>+1 punto</strong> y alarga ese banderín. Sin actividad, un aura pierde 1 punto por día.<br>
+            La <strong>Vibra</strong> mide tu constancia semanal por aura:
+          </p>
+          <div style="font-family: monospace; font-size: 0.85rem; color: #E8A0A8; background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 6px; border-left: 3px solid var(--imperivm-gold); margin: 8px 0;">
+            Vibra = [ Σ (0.82^i · √P_i · 12) ] × [ 1 + 0.40 · (días_activos / 7) ]
+          </div>
+          <p style="${small}">Suma más hacer poco varios días que mucho en uno solo: √P amortigua picos, 0.82^i resta 18% por cada día de antigüedad y estar activo 7/7 da +40%.</p>
+        </div>
+
+        <div style="${box}">
+          <h5 style="${h5}">📊 5. Stats, títulos y objetos</h5>
+          <p style="${small}">
+            • <strong>Stats (atributos):</strong> cada acción sube +1 el atributo asociado (p. ej. Muay Thai, Lectura).<br>
+            • <strong>Títulos de Maestría</strong> (virtudes logradas) y <strong>Contratítulos de Vulnerabilidad</strong> (romper rigideces con consciencia): al consagrarlos dan +40 XP.<br>
+            • <strong>Armamentum Imperial:</strong> los objetos se desbloquean al conquistar misiones u hitos y se equipan para vestir a tu Caballero.
           </p>
         </div>
 
@@ -2856,7 +2915,7 @@ const imperivmEngine = {
     localStorage.setItem("APEX_TSCORE_CURRENT", score);
 
     if (typeof awardXP === "function") {
-      awardXP(40, "Check-in Bio-Feedback T-Score");
+      awardXP(40, "Check-in Bio-Feedback T-Score", "salud", "tscore-checkin");
     }
 
     if (typeof showNotification === "function") {
@@ -2871,7 +2930,7 @@ const imperivmEngine = {
     } else {
       completedDays.push(day);
       if (typeof awardXP === "function") {
-        awardXP(50, `Monk Mode Día ${day}`);
+        awardXP(50, `Monk Mode Día ${day}`, "mente", `monk-day-${day}`);
       }
       if (typeof showNotification === "function") {
         showNotification(`🧠 Día ${day} de Monk Mode Conquistado (+50 XP). Foco de acero.`);
@@ -2902,7 +2961,7 @@ const imperivmEngine = {
 
   swearApexHonorOath() {
     if (typeof awardXP === "function") {
-      awardXP(30, "Juramento de Honor APEX");
+      awardXP(30, "Juramento de Honor APEX", "mente", "honor-oath");
     }
     if (typeof showNotification === "function") {
       showNotification("👑 Voto de Honor APEX Sellado (+30 XP). La palabra es ley de bronce.");
@@ -2911,7 +2970,7 @@ const imperivmEngine = {
 
   recordTantraPractice() {
     if (typeof awardXP === "function") {
-      awardXP(40, "Sesión de Maestría Tántrica & Polaridad");
+      awardXP(40, "Sesión de Maestría Tántrica & Polaridad", "amor");
     }
     if (typeof showNotification === "function") {
       showNotification("🔥 Sesión de Maestría Tántrica registrada (+40 XP). Vitalidad y presencia integradas.");
@@ -3204,19 +3263,23 @@ const imperivmEngine = {
     if (!item) return;
 
     item.unlocked = !item.unlocked;
+    const titleKey = `title-${listKey}-${item.id}`;
+    if (!item.unlocked && window.CJProgress) {
+      window.CJProgress.revoke({ key: titleKey });
+    }
     if (item.unlocked) {
-      this.awardVirtus(40, `Título Consagrado: ${item.name}`);
+      this.awardVirtus(40, `Título Consagrado: ${item.name}`, "vida", titleKey);
       if (typeof playSoundEffect === "function") playSoundEffect("success");
-      if (typeof showNotification === "function") showNotification(`🏆 ¡Título Consagrado: ${item.name}! +40 Virtus.`);
+      if (typeof showNotification === "function") showNotification(`🏆 ¡Título Consagrado: ${item.name}!`);
     }
 
     if (typeof saveReyJaguarState === "function") saveReyJaguarState();
     this.render();
   },
 
-  awardVirtus(amount, description = "Acción Imperial") {
+  awardVirtus(amount, description = "Acción Imperial", aura = "vida", key = null) {
     if (typeof window.awardXP === "function") {
-      window.awardXP(amount, description);
+      window.awardXP(amount, description, aura, key);
     } else {
       const st = (typeof reyJaguarState !== "undefined") ? reyJaguarState : (window.reyJaguarState || null);
       if (st && st.character) {

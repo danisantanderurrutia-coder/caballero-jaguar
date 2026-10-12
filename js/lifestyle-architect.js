@@ -13,7 +13,7 @@ const LIFESTYLE_ARCHITECT_DATA = {
   "metadatos": {
     "usuario": "Caballero Jaguar (Daniel)",
     "objetivo": "Vida sana, vitalidad física, claridad mental y presencia estética",
-    "fecha_creacion": new Date().toISOString().split("T")[0],
+    "fecha_creacion": cjToday(),
     "score_vitalidad_semanal": "99/100",
     "version": "2.5.0-somatic-master"
   },
@@ -1656,16 +1656,11 @@ function toggleSomaticBlockDone(blockId) {
   localStorage.setItem("completedSomaticBlocks", JSON.stringify(completedSomaticBlocks));
 
   if (completedSomaticBlocks[blockId]) {
-    // Sumar XP de juego si existe el motor Rey Jaguar
-    if (typeof reyJaguarState !== "undefined" && reyJaguarState.character) {
-      reyJaguarState.character.xp = (reyJaguarState.character.xp || 0) + 15;
-      if (typeof saveReyJaguarState === "function") saveReyJaguarState();
-      if (typeof updateHeaderXP === "function") updateHeaderXP();
-    }
+    // XP vía motor único (una vez por bloque y día)
+    window.awardXP(15, `Bloque somático ${blockId}`, "salud", `somatic-${blockId}`);
     if (typeof playSoundEffect === "function") playSoundEffect("success");
-    if (typeof showNotification === "function") {
-      showNotification("✨ Bloque Somático Completado (+15 XP). ¡Vitalidad encarnada!");
-    }
+  } else if (window.CJProgress) {
+    window.CJProgress.revoke({ key: `somatic-${blockId}` });
   }
 
   renderLifestyleArchitectApp();
@@ -1691,10 +1686,9 @@ function addSingleBlockToTasks(dayName, momentName, activityName) {
     if (typeof renderTasks === "function") renderTasks();
 
     // Activar Flow Mode y otorgar experiencia de Vitalidad Somática
-    if (typeof CaballeroScoringEngine !== "undefined") {
-      CaballeroScoringEngine.awardXP("vitalidad", 20, `Compromiso Somático Flow: [${dayName} ${momentName}]`);
-    } else if (typeof showNotification === "function") {
-      showNotification(`Bloque añadido a Tareas del Día: "${activityName.slice(0, 35)}..."`);
+    // El XP se gana al COMPLETAR la tarea, no al planificarla
+    if (typeof showNotification === "function") {
+      showNotification(`Bloque añadido a Tareas del Día: "${activityName.slice(0, 35)}..." (gana XP al completarlo)`);
     }
   } else {
     alert("Tarea añadida: " + taskTitle);
@@ -1723,10 +1717,8 @@ function addFullDayToTasks(dayKey) {
     if (typeof saveAppState === "function") saveAppState();
     if (typeof renderTasks === "function") renderTasks();
 
-    if (typeof CaballeroScoringEngine !== "undefined") {
-      CaballeroScoringEngine.awardXP("vitalidad", 50, `Jornada Completa de Vitalidad: ${day.nombre}`);
-    } else if (typeof showNotification === "function") {
-      showNotification(`Los 3 bloques de ${day.nombre} fueron añadidos a tus Tareas Diarias.`);
+    if (typeof showNotification === "function") {
+      showNotification(`Los 3 bloques de ${day.nombre} fueron añadidos a tus Tareas Diarias (ganan XP al completarse).`);
     }
   }
 }
@@ -1809,7 +1801,7 @@ function updateModalPromptAndJSONDisplays() {
   if (promptDisplay) {
     const customizedPrompt = SYSTEM_PROMPT_TEXT_TEMPLATE
       .replace(/{{NOMBRE_USUARIO}}/g, customUserPreferences.nombre)
-      .replace(/{{FECHA}}/g, new Date().toISOString().split("T")[0])
+      .replace(/{{FECHA}}/g, cjToday())
       .replace(/{{PREFERENCIAS}}/g, customUserPreferences.preferencias);
     promptDisplay.textContent = customizedPrompt;
   }
@@ -1820,7 +1812,7 @@ function updateModalPromptAndJSONDisplays() {
       metadatos: {
         ...LIFESTYLE_ARCHITECT_DATA.metadatos,
         usuario: customUserPreferences.nombre,
-        fecha_creacion: new Date().toISOString().split("T")[0]
+        fecha_creacion: cjToday()
       }
     };
     jsonDisplay.textContent = JSON.stringify(exportableData, null, 2);
@@ -1850,7 +1842,7 @@ function saveCustomLifestylePreferences() {
 function copySystemPromptText() {
   const customizedPrompt = SYSTEM_PROMPT_TEXT_TEMPLATE
     .replace(/{{NOMBRE_USUARIO}}/g, customUserPreferences.nombre)
-    .replace(/{{FECHA}}/g, new Date().toISOString().split("T")[0])
+    .replace(/{{FECHA}}/g, cjToday())
     .replace(/{{PREFERENCIAS}}/g, customUserPreferences.preferencias);
 
   navigator.clipboard.writeText(customizedPrompt).then(() => {
@@ -1871,7 +1863,7 @@ function copyCurrentLifestyleJSON() {
     metadatos: {
       ...LIFESTYLE_ARCHITECT_DATA.metadatos,
       usuario: customUserPreferences.nombre,
-      fecha_creacion: new Date().toISOString().split("T")[0]
+      fecha_creacion: cjToday()
     }
   };
   const jsonStr = JSON.stringify(exportableData, null, 2);
@@ -1894,7 +1886,7 @@ function downloadLifestyleJSONFile() {
     metadatos: {
       ...LIFESTYLE_ARCHITECT_DATA.metadatos,
       usuario: customUserPreferences.nombre,
-      fecha_creacion: new Date().toISOString().split("T")[0]
+      fecha_creacion: cjToday()
     }
   };
   const jsonStr = JSON.stringify(exportableData, null, 2);
