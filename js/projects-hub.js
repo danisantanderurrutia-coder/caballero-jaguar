@@ -179,21 +179,48 @@ let projectsData = {
 
   red_maule: {
     id: "red_maule",
-    title: "📰 Red de Noticias Maule",
-    subtitle: "Plataforma de periodismo territorial independiente y comunitario (Eventual)",
-    collaborators: "Periodistas Locales & Colectivos del Maule",
-    category: "Periodismo Territorial (Eventual)",
-    bannerImg: "assets/img_ciencia_territorios.jpg",
-    desc: "Red de información ciudadana, fiscalización ambiental y crónicas territoriales para visibilizar la realidad del Maule.",
+    title: "📻 Red Comunitaria de Medios Maule Sur (Maule Red)",
+    subtitle: "Radio en vivo, información popular, emergencias rurales (APR) y periodismo territorial",
+    collaborators: "Reporteros Locales, Comunidades Campesinas & Redes de APR (Fase: Crear Equipo)",
+    category: "Comunicación Popular & Medios Territoriales",
+    bannerImg: "assets/img_maule_red.jpg",
+    desc: "Plataforma comunitaria de información para el Maule Sur. Integra radio comunitaria en vivo, avisador de emergencias de Agua Potable Rural (APR) y cortes de suministro eléctrico, mapa territorial colaborativo y periodismo de utilidad cotidiana para sectores rurales y urbanos del Maule. Actualmente en fase de convocatoria y conformación de equipo fundador.",
     gantt: [
-      { id: "g1", stage: "Diseño Editorial & Alianzas Regionales", startDate: "2026-11-01", endDate: "2027-01-15", progress: 0, status: "Planificación" },
-      { id: "g2", stage: "Lanzamiento del Boletín Digital Maule", startDate: "2027-01-16", endDate: "2027-04-01", progress: 0, status: "Pendiente" }
+      { id: "g1", stage: "Diseño y Arquitectura de Plataforma Maule Red", startDate: "2026-08-01", endDate: "2026-09-30", progress: 100, status: "Completado" },
+      { id: "g2", stage: "Convocatoria y Formación de Equipo Comunitario", startDate: "2026-10-01", endDate: "2026-12-15", progress: 40, status: "En Ejecución" },
+      { id: "g3", stage: "Integración de Transmisión Radial y Nodos APR", startDate: "2026-11-01", endDate: "2027-01-30", progress: 25, status: "Planificación" },
+      { id: "g4", stage: "Lanzamiento y Cobertura Territorial Maule Sur", startDate: "2027-02-01", endDate: "2027-04-30", progress: 0, status: "Pendiente" }
     ],
     checklist: [
-      { id: "chk1", text: "Mapear temas críticos: agua, salud, monocultivos y cultura maulina", completed: false },
-      { id: "chk2", text: "Crear estructura de financiamiento ético y boletín semanal", completed: false }
+      { id: "chk1", text: "Prototipar plataforma web y mapa de cortes y emergencias APR", completed: true },
+      { id: "chk2", text: "Elaborar perfil de roles y convocatoria abierta para reporteros locales", completed: true },
+      { id: "chk3", text: "Realizar primera asamblea o reunión de equipo fundador", completed: false },
+      { id: "chk4", text: "Conectar señal streaming para la radio comunitaria en vivo", completed: false }
     ],
-    notes: "Medio comprometido con el territorio de origen."
+    notes: "Maule Red responde a la desconexión informativa de los territorios rurales: comunicación hecha por y para las comunidades."
+  },
+
+  museo_memoria: {
+    id: "museo_memoria",
+    title: "🏛️ Museo de la Memoria y Dignidad Maule",
+    subtitle: "Museo virtual interactivo y archivo de memoria histórica y DD.HH. de la Región del Maule",
+    collaborators: "Investigadores Históricos, Colectivos de DDHH & Pedagogos (Fase: Crear Equipo)",
+    category: "Memoria Histórica & Derechos Humanos",
+    bannerImg: "assets/img_museo_memoria_maule.jpg",
+    desc: "Plataforma digital y museo interactivo orientado al rescate, divulgación y reflexión crítica sobre la memoria histórica, los derechos humanos y las expresiones populares de la Región del Maule (Talca, Curicó, Linares y Cauquenes). Incluye mapa interactivo con más de 23 sitios georreferenciados, escenarios multimedia, relatos orales, archivo documental y caja de herramientas comunitarias. Actualmente en fase de conformación de equipo.",
+    gantt: [
+      { id: "g1", stage: "Despliegue del Museo Digital & Mapa de 23 Sitios", startDate: "2026-07-01", endDate: "2026-09-30", progress: 100, status: "Completado" },
+      { id: "g2", stage: "Convocatoria de Equipo Multidisciplinario de Memoria", startDate: "2026-10-01", endDate: "2026-12-31", progress: 40, status: "En Ejecución" },
+      { id: "g3", stage: "Talleres Comunitarios & Caja de Herramientas en Escuelas", startDate: "2027-01-01", endDate: "2027-03-31", progress: 15, status: "Planificación" },
+      { id: "g4", stage: "Digitalización de Archivos & Testimonios Orales Inéditos", startDate: "2027-03-01", endDate: "2027-06-30", progress: 0, status: "Pendiente" }
+    ],
+    checklist: [
+      { id: "chk1", text: "Publicar sitio web oficial y visor de mapa interactivo regional", completed: true },
+      { id: "chk2", text: "Redactar manifiesto de convocatoria para equipo de investigación y archivo", completed: true },
+      { id: "chk3", text: "Coordinar primeros lazos con agrupaciones de memoria y familiares de DDHH", completed: false },
+      { id: "chk4", text: "Activar caja de herramientas pedagógicas para talleres en juntas de vecinos", completed: false }
+    ],
+    notes: "Memoria viva, territorial y participativa para las 4 provincias del Maule: https://danisantanderurrutia-coder.github.io/memoria-y-dignidad-maule/"
   },
 
   manager_daniela: {
@@ -233,6 +260,11 @@ function loadProjectsHubData() {
         delete parsed.permacultura.desc;
         delete parsed.permacultura.subsections;
       }
+      if (parsed.red_maule && parsed.red_maule.title && parsed.red_maule.title.includes("Eventual")) {
+        delete parsed.red_maule.title;
+        delete parsed.red_maule.subtitle;
+        delete parsed.red_maule.desc;
+      }
       projectsData = Object.assign({}, projectsData, parsed);
     } catch (e) { console.error("Error al cargar datos de proyectos:", e); }
   }
@@ -240,6 +272,8 @@ function loadProjectsHubData() {
   projectsData.manejadores = projectsData.incel;
   projectsData.agrotech = projectsData.permacultura;
   projectsData.chile_agrotech = projectsData.permacultura;
+  projectsData.maule_red = projectsData.red_maule;
+  projectsData.museo = projectsData.museo_memoria;
 }
 
 function saveProjectsHubData() {

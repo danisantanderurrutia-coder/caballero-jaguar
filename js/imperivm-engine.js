@@ -53,6 +53,8 @@ const IMPERIVM_MEDIA = {
   provincia_manejadores: "assets/img_incel_ai_influencer.jpg",
   provincia_piratas: "assets/img_pirates_pacific.jpg",
   provincia_divulgacion: "assets/img_ciencia_territorios.jpg",
+  provincia_maule_red: "assets/img_maule_red.jpg",
+  provincia_museo_memoria: "assets/img_museo_memoria_maule.jpg",
 
   // Objetos & Legado
   objetos_grid: "assets/jaguar_40_items_sprite_grid.jpg",
@@ -875,6 +877,8 @@ const imperivmEngine = {
       { id: "rewild", title: "🔥 ReWild: Bosques & Ecosistemas", category: "Ecología", desc: "Propuesta de restauración activa del bosque nativo y plataforma.", img: IMPERIVM_MEDIA.provincia_rewild },
       { id: "permacultura", title: "🌾 Chile Agrotech", category: "Agrotech & ESG", desc: "Plataforma de precisión agrícola, sensores IoT, gemelo digital AgriTwin e inteligencia satelital en Maule.", img: IMPERIVM_MEDIA.provincia_agrotech },
       { id: "incel", title: "🎭 Los Manejadores", category: "Medios & IA", desc: "Agencia de comunicación digital: avatares IA, canales de YouTube y arquitectura de presencia.", img: IMPERIVM_MEDIA.provincia_manejadores },
+      { id: "maule_red", title: "📻 Red Comunitaria de Medios Maule Sur", category: "Comunicación Popular", desc: "Radio en vivo, avisador de emergencias de APR y periodismo territorial (Fase: Crear equipo).", img: IMPERIVM_MEDIA.provincia_maule_red },
+      { id: "museo_memoria", title: "🏛️ Museo de la Memoria y Dignidad Maule", category: "Derechos Humanos", desc: "Museo virtual, mapa interactivo de 23 sitios de memoria y archivo popular (Fase: Crear equipo).", img: IMPERIVM_MEDIA.provincia_museo_memoria },
       { id: "piratas", title: "🏴‍☠️ Cómic Piratas del Pacífico", category: "Arte", desc: "Narrativa gráfica, guión y dibujo histórico naval.", img: IMPERIVM_MEDIA.provincia_piratas },
       { id: "divulgacion", title: "🎙️ Ciencia & Territorio", category: "Divulgación", desc: "Podcast independiente, salidas de campo y difusión.", img: IMPERIVM_MEDIA.provincia_divulgacion }
     ];

@@ -65,7 +65,9 @@ let appState = {
     { id: "incel", title: "🎭 Los Manejadores (Agencia Digital & IA)", category: "ingresos", status: "en_desarrollo", desc: "Gestión de avatares IA, storytelling para YouTube y arquitectura de presencia digital." },
     { id: "piratas", title: "🏴‍☠️ Cómic de Piratas: Guerra del Pacífico", category: "academia", status: "en_desarrollo", desc: "Cómic histórico-fantástico sobre contienda naval y mitología del Pacífico Sur." },
     { id: "divulgacion", title: "🎙️ Ciencia & Territorios", category: "politica", status: "en_desarrollo", desc: "Plataforma de divulgación científica territorial y comunicación pública de la ciencia." },
-    { id: "permacultura", title: "🌾 Chile Agrotech (Tecnología de Precisión)", category: "ingresos", status: "en_desarrollo", desc: "Gemelo digital AgriTwin, sensores IoT y analítica satelital multiespectral en el Maule." }
+    { id: "permacultura", title: "🌾 Chile Agrotech (Tecnología de Precisión)", category: "ingresos", status: "en_desarrollo", desc: "Gemelo digital AgriTwin, sensores IoT y analítica satelital multiespectral en el Maule." },
+    { id: "maule_red", title: "📻 Red Comunitaria de Medios Maule Sur", category: "politica", status: "en_desarrollo", desc: "Radio en vivo, avisador de emergencias de APR y periodismo territorial (Fase: Crear equipo)." },
+    { id: "museo_memoria", title: "🏛️ Museo de la Memoria y Dignidad Maule", category: "politica", status: "en_desarrollo", desc: "Museo virtual, mapa interactivo de 23 sitios de memoria y archivo popular (Fase: Crear equipo)." }
   ],
   chatHistories: {
     therapist: { addictions: [], empathy: [], sexaffective: [] },

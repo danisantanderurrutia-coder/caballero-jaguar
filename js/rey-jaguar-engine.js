@@ -205,7 +205,8 @@ const KCD_AURAS_CONFIG = {
       { key: "incel", name: "Los Manejadores", fullName: "Los Manejadores · Agencia IA & YouTube", icon: "🎭", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, desc: "Influencers virtuales IA, producción de YouTube y presencia digital.", tab: "campanas" },
       { key: "divulgacion", name: "Ciencia & Territorios", fullName: "Divulgación Científica Territorial", icon: "🎙️", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, desc: "Podcast, reportajes de terreno y mapeo participativo.", tab: "campanas" },
       { key: "paper_fisica", name: "Paper en Física", fullName: "Investigación en Física (Eventual)", icon: "⚛️", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, desc: "Modelación matemática y exploración teórica.", tab: "campanas" },
-      { key: "red_maule", name: "Red Noticias Maule", fullName: "Red de Noticias Maule (Eventual)", icon: "📰", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, desc: "Periodismo territorial independiente del Maule.", tab: "campanas" },
+      { key: "red_maule", name: "Maule Red", fullName: "Red Comunitaria de Medios Maule Sur", icon: "📻", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, desc: "Comunicación popular, radio comunitaria y alertas rurales.", tab: "campanas" },
+      { key: "museo_memoria", name: "Museo Memoria", fullName: "Museo de la Memoria y Dignidad Maule", icon: "🏛️", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, desc: "Archivo virtual, mapa de memoria histórica y DDHH en Maule.", tab: "campanas" },
       { key: "manager_daniela", name: "Manager Daniela", fullName: "Manager & Editor de Daniela (Eventual)", icon: "⭐", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, desc: "Estrategia de contenidos, edición y apoyo profesional.", tab: "campanas" }
     ]
   },
