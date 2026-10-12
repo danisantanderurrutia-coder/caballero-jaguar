@@ -243,11 +243,84 @@ let projectsData = {
   }
 };
 
+if (typeof window !== "undefined") {
+  window.projectsData = projectsData;
+}
+
+// Claves de alias que no deben duplicarse en listados ni en almacenamiento
+const PROJECT_ALIAS_KEYS = ["manejadores", "agrotech", "chile_agrotech", "maule_red", "museo"];
+
+function setupProjectAliases() {
+  if (typeof window !== "undefined") {
+    window.projectsData = projectsData;
+  }
+  const aliasMap = {
+    manejadores: () => projectsData.incel,
+    agrotech: () => projectsData.permacultura,
+    chile_agrotech: () => projectsData.permacultura,
+    maule_red: () => projectsData.red_maule,
+    museo: () => projectsData.museo_memoria
+  };
+  Object.keys(aliasMap).forEach(aliasKey => {
+    try {
+      Object.defineProperty(projectsData, aliasKey, {
+        get: aliasMap[aliasKey],
+        set: function(val) {
+          const target = aliasMap[aliasKey]();
+          if (target && typeof val === "object") {
+            Object.assign(target, val);
+          }
+        },
+        enumerable: false,
+        configurable: true
+      });
+    } catch (e) {}
+  });
+}
+setupProjectAliases();
+
+function getCanonicalProjectsList() {
+  if (typeof loadProjectsHubData === "function") loadProjectsHubData();
+  if (typeof projectsData === "undefined" || !projectsData) return [];
+
+  const aliasSet = new Set(PROJECT_ALIAS_KEYS);
+  const seenIds = new Set();
+  const seenTitles = new Set();
+  const seenObjects = new Set();
+  const result = [];
+
+  for (const key of Object.keys(projectsData)) {
+    if (aliasSet.has(key)) continue;
+    const p = projectsData[key];
+    if (!p || typeof p !== "object") continue;
+    if (seenObjects.has(p)) continue;
+
+    const idKey = (p.id || key).toLowerCase().trim();
+    const simplifiedTitle = (p.title || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+    if (seenIds.has(idKey)) continue;
+    if (simplifiedTitle && seenTitles.has(simplifiedTitle)) continue;
+
+    seenObjects.add(p);
+    seenIds.add(idKey);
+    if (simplifiedTitle) seenTitles.add(simplifiedTitle);
+    result.push(p);
+  }
+
+  return result;
+}
+window.getCanonicalProjectsList = getCanonicalProjectsList;
+
 function loadProjectsHubData() {
   const saved = localStorage.getItem(PROJECTS_HUB_STORAGE_KEY);
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
+      // Purgar claves alias que se hayan serializado previamente en localStorage
+      PROJECT_ALIAS_KEYS.forEach(k => {
+        delete parsed[k];
+        delete projectsData[k];
+      });
       // Migración automática a los nombres oficiales
       if (parsed.incel && parsed.incel.title && parsed.incel.title.includes("INCEL")) {
         delete parsed.incel.title;
@@ -266,18 +339,28 @@ function loadProjectsHubData() {
         delete parsed.red_maule.desc;
       }
       projectsData = Object.assign({}, projectsData, parsed);
+      // Asegurar que no queden como propiedades enumerables tras Object.assign
+      PROJECT_ALIAS_KEYS.forEach(k => {
+        delete projectsData[k];
+      });
     } catch (e) { console.error("Error al cargar datos de proyectos:", e); }
   }
-  // Alias de compatibilidad
-  projectsData.manejadores = projectsData.incel;
-  projectsData.agrotech = projectsData.permacultura;
-  projectsData.chile_agrotech = projectsData.permacultura;
-  projectsData.maule_red = projectsData.red_maule;
-  projectsData.museo = projectsData.museo_memoria;
+  // Alias de compatibilidad como propiedades NO ENUMERABLES (getters)
+  setupProjectAliases();
+}
+if (typeof window !== "undefined") {
+  window.loadProjectsHubData = loadProjectsHubData;
 }
 
 function saveProjectsHubData() {
+  PROJECT_ALIAS_KEYS.forEach(k => {
+    delete projectsData[k];
+  });
   localStorage.setItem(PROJECTS_HUB_STORAGE_KEY, JSON.stringify(projectsData));
+  setupProjectAliases();
+}
+if (typeof window !== "undefined") {
+  window.saveProjectsHubData = saveProjectsHubData;
 }
 
 // --- RENDERIZADO DE UN PROYECTO SELECCIONADO ---

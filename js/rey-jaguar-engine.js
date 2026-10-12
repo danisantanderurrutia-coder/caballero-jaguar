@@ -2431,9 +2431,11 @@ window.saveItemLore = saveItemLore;
 function renderCampanasProjectsCards() {
   if (typeof loadProjectsHubData === "function") loadProjectsHubData();
   if (typeof projectsData === "undefined") return "";
-  const keys = Object.keys(projectsData);
-  return keys.map(key => {
-    const p = projectsData[key];
+  const projectsList = typeof getCanonicalProjectsList === "function"
+    ? getCanonicalProjectsList()
+    : Object.keys(projectsData).map(k => projectsData[k]);
+
+  return projectsList.map(p => {
     const checklist = p.checklist || [];
     const totalTasks = checklist.length;
     const completedTasks = checklist.filter(c => c.completed).length;
@@ -2536,7 +2538,10 @@ function renderCampanasTab() {
   if (!container) return;
 
   if (typeof loadProjectsHubData === "function") loadProjectsHubData();
-  const totalProjects = typeof projectsData !== "undefined" ? Object.keys(projectsData).length : 0;
+  const canonicalProjects = typeof getCanonicalProjectsList === "function" 
+    ? getCanonicalProjectsList() 
+    : (typeof projectsData !== "undefined" ? Object.values(projectsData) : []);
+  const totalProjects = canonicalProjects.length;
   const titles = reyJaguarState.titles || [];
   const counterTitles = reyJaguarState.counterTitles || [];
   const mainQuests = reyJaguarState.mainQuests || [];

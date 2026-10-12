@@ -922,10 +922,11 @@ function renderProjects() {
 
   if (typeof loadProjectsHubData === "function") loadProjectsHubData();
 
-  const projectKeys = Object.keys(projectsData);
+  const projectsList = typeof getCanonicalProjectsList === "function"
+    ? getCanonicalProjectsList()
+    : Object.keys(projectsData).map(k => projectsData[k]);
 
-  projectKeys.forEach(key => {
-    const p = projectsData[key];
+  projectsList.forEach(p => {
     const checklist = p.checklist || [];
     const totalTasks = checklist.length;
     const completedTasks = checklist.filter(c => c.completed).length;
