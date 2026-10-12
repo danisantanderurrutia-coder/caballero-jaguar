@@ -1088,18 +1088,18 @@ window.renderOrderRanksComponent = renderOrderRanksComponent;
 
 // --- RENDERIZADO PRINCIPAL DEL LANDING HUB (ESTÉTICA MINIMALISTA DIURNA KCD / DELEGACIÓN IMPERIVM) ---
 function renderRPGLandingHub(targetContainerId) {
-  // Si no se pide un contenedor legado y existe el motor IMPERIVM en el dashboard:
-  if (!targetContainerId && window.imperivmEngine && typeof window.imperivmEngine.render === "function") {
-    const activeTab = document.querySelector(".tab-content.active");
-    if (!activeTab || activeTab.id === "tab-dashboard") {
+  // El dashboard principal le pertenece exclusivamente a imperivmEngine:
+  if (!targetContainerId || targetContainerId === "rpg-landing-master-container") {
+    if (window.imperivmEngine && typeof window.imperivmEngine.render === "function") {
       window.imperivmEngine.render();
-      return;
     }
+    return;
   }
 
+  // El retablo solo puede renderizarse si se solicita explícitamente para el contenedor de legado
   const container = (typeof targetContainerId === "string")
     ? document.getElementById(targetContainerId)
-    : (targetContainerId || document.getElementById("rpg-landing-master-container"));
+    : targetContainerId;
   if (!container) return;
 
   try {

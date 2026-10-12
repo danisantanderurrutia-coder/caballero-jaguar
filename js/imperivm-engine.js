@@ -781,12 +781,6 @@ const imperivmEngine = {
         </div>
       </div>
 
-      <!-- MODAL MAESTRO: ESTRATEGIA DE LA LANZA (9 BANDERINES & CALENDARIO) -->
-      <div id="imperivm-estrategia-lanza-modal" class="imperivm-focus-overlay">
-        <div class="imperivm-focus-modal" style="max-width: 980px; width: 95%; max-height: 90vh; overflow-y: auto; text-align: left; background: #0B0E14; border: 1.5px solid var(--imperivm-border-gold); padding: 24px 28px; border-radius: 14px; box-shadow: 0 16px 48px rgba(0,0,0,0.9);">
-          <div id="estrategia-lanza-modal-content"></div>
-        </div>
-      </div>
 
       <!-- OVERLAY DE MODO FLOW / PANTALLA DE CINE -->
       <div id="imperivm-focus-overlay" class="imperivm-focus-overlay">
@@ -874,9 +868,6 @@ const imperivmEngine = {
               <button class="btn-mood-toggle ${currentMood === 'emergency' ? 'active-emergency' : ''}" onclick="imperivmEngine.switchWeeklyMood('emergency');" title="Activar Mood Emergency (Asalto Frontal: 2x Bloques de Empleo)">
                 🚨 Emergency (2x Empleo)
               </button>
-              <button class="btn-mood-toggle" onclick="imperivmEngine.openEstrategiaLanzaModal();" style="border-color: rgba(212,175,55,0.4); color: #F59E0B;" title="Ver Matriz de los 9 Banderines">
-                🗡️ Matriz 9 Banderines
-              </button>
             </div>
 
             <button id="btn-toggle-weekly-explorer" class="btn-imperivm-primary" style="padding: 6px 14px; font-size: 0.78rem; border-radius: 6px; cursor: pointer;" onclick="imperivmEngine.toggleWeeklyExplorer();">
@@ -910,8 +901,8 @@ const imperivmEngine = {
               </div>
             </div>
           </div>
-          <button onclick="imperivmEngine.openEstrategiaLanzaModal();" style="background: rgba(212,175,55,0.12); border: 1px solid var(--imperivm-border-gold); color: var(--imperivm-text-gold); padding: 8px 14px; border-radius: 6px; font-size: 0.76rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
-            <span>🗡️ Ver Matriz Completa de los 9 Banderines ➔</span>
+          <button onclick="imperivmEngine.switchWeeklyMood('${currentMood === 'emergency' ? 'fresh' : 'emergency'}');" style="background: rgba(212,175,55,0.12); border: 1px solid var(--imperivm-border-gold); color: var(--imperivm-text-gold); padding: 8px 14px; border-radius: 6px; font-size: 0.76rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
+            <span>${currentMood === 'emergency' ? '🌿 Alternar a Mood Fresh' : '🚨 Alternar a Mood Emergency'}</span>
           </button>
         </div>
 
@@ -1731,8 +1722,8 @@ const imperivmEngine = {
                     Estrategia ${currentMood === 'emergency' ? 'Mood Emergency' : 'Mood Fresh'}: ${moodDayPlan.focus}
                   </strong>
                 </div>
-                <button onclick="imperivmEngine.openEstrategiaLanzaModal();" style="background: rgba(255,255,255,0.08); border: 1px solid var(--imperivm-border-gold); color: var(--imperivm-text-gold); border-radius: 4px; padding: 3px 8px; font-size: 0.68rem; cursor: pointer;">
-                  🗡️ Cambiar Modo
+                <button onclick="imperivmEngine.switchWeeklyMood('${currentMood === 'emergency' ? 'fresh' : 'emergency'}'); imperivmEngine.switchDayDrawerTab('${dayKey}', 'momentos');" style="background: rgba(255,255,255,0.08); border: 1px solid var(--imperivm-border-gold); color: var(--imperivm-text-gold); border-radius: 4px; padding: 3px 8px; font-size: 0.68rem; cursor: pointer;">
+                  ${currentMood === 'emergency' ? '🌿 Modo Fresh' : '🚨 Modo Emergency'}
                 </button>
               </div>
               <div style="display: flex; flex-direction: column; gap: 5px;">
@@ -3704,168 +3695,17 @@ const imperivmEngine = {
   },
 
   openEstrategiaLanzaModal(initialMood = null) {
-    const modal = document.getElementById("imperivm-estrategia-lanza-modal");
-    if (!modal) return;
-    const moodToRender = initialMood || localStorage.getItem("CABALLERO_WEEKLY_MOOD") || imperivmState.weeklyMood || "emergency";
-    this.renderEstrategiaLanzaContent(moodToRender);
-    modal.classList.add("active");
+    if (initialMood) {
+      this.switchWeeklyMood(initialMood);
+    } else {
+      const current = localStorage.getItem("CABALLERO_WEEKLY_MOOD") || imperivmState.weeklyMood || "emergency";
+      this.switchWeeklyMood(current === "emergency" ? "fresh" : "emergency");
+    }
   },
 
-  closeEstrategiaLanzaModal() {
-    const modal = document.getElementById("imperivm-estrategia-lanza-modal");
-    if (modal) modal.classList.remove("active");
-  },
+  closeEstrategiaLanzaModal() {},
 
-  renderEstrategiaLanzaContent(moodKey) {
-    const container = document.getElementById("estrategia-lanza-modal-content");
-    if (!container) return;
-    if (moodKey !== "fresh" && moodKey !== "emergency") moodKey = "emergency";
-
-    const schedule = (typeof WEEKLY_STRATEGY_SCHEDULE !== "undefined") ? WEEKLY_STRATEGY_SCHEDULE[moodKey] : null;
-    if (!schedule) return;
-
-    const isEmergency = moodKey === "emergency";
-    const currentActiveMood = localStorage.getItem("CABALLERO_WEEKLY_MOOD") || imperivmState.weeklyMood || "emergency";
-    const isThisMoodCurrentlyApplied = currentActiveMood === moodKey;
-
-    const daysKeys = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"];
-    const dayNames = {
-      lunes: "Lunes", martes: "Martes", miercoles: "Miércoles",
-      jueves: "Jueves", viernes: "Viernes", sabado: "Sábado", domingo: "Domingo"
-    };
-
-    container.innerHTML = `
-      <!-- HEADER CON CERRAR Y PESTAÑAS DE MOOD -->
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 14px; flex-wrap: wrap; gap: 12px;">
-        <div>
-          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
-            <span style="font-size: 1.4rem;">🗡️</span>
-            <span class="badge-tag badge-gold" style="font-size: 0.72rem; letter-spacing: 0.05em;">ESTRATEGIA DE LA LANZA // CALENDARIO SEMANAL</span>
-            ${isThisMoodCurrentlyApplied ? '<span class="badge-tag badge-emerald" style="font-size: 0.68rem;">⚡ MODO ACTIVO EN TU SEMANA</span>' : ''}
-          </div>
-          <h2 style="font-family: var(--imperivm-font-title); color: #FFF; font-size: 1.45rem; margin: 4px 0 0 0;">
-            ${schedule.icon} ${schedule.name}
-          </h2>
-          <p style="font-size: 0.82rem; color: var(--imperivm-text-muted); margin: 4px 0 0 0;">
-            ${schedule.slogan}
-          </p>
-        </div>
-
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <!-- SELECTOR DE MOODS DENTRO DEL MODAL -->
-          <div style="display: flex; gap: 6px; background: rgba(0,0,0,0.5); padding: 4px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-            <button class="btn-mood-toggle ${!isEmergency ? 'active-fresh' : ''}" onclick="imperivmEngine.renderEstrategiaLanzaContent('fresh');" style="cursor: pointer;">
-              🌿 Mood Fresh (Balance)
-            </button>
-            <button class="btn-mood-toggle ${isEmergency ? 'active-emergency' : ''}" onclick="imperivmEngine.renderEstrategiaLanzaContent('emergency');" style="cursor: pointer;">
-              🚨 Mood Emergency (2x Empleo)
-            </button>
-          </div>
-
-          <button onclick="imperivmEngine.closeEstrategiaLanzaModal();" style="background: rgba(255,255,255,0.08); border: 1px solid var(--imperivm-border); color: #FFF; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 0.85rem;">
-            ✕
-          </button>
-        </div>
-      </div>
-
-      <!-- DESCRIPCIÓN & METÁFORA DE LA LANZA -->
-      <div style="background: rgba(255,255,255,0.03); border: 1px solid ${isEmergency ? 'rgba(244,63,94,0.35)' : 'rgba(16,185,129,0.35)'}; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
-          <strong style="color: ${isEmergency ? '#FDA4AF' : '#6EE7B7'}; font-size: 0.9rem;">
-            ${isEmergency ? '🎯 LA PUNTA DE LA LANZA: 10 BLOQUES SEMANALES DE ASALTO AL EMPLEO' : '⚖️ POLIMATÍA ARMÓNICA: 1 BLOQUE MATUTINO + CIENCIA, MÚSICA & ARTE'}
-          </strong>
-          <span style="font-size: 0.76rem; color: #BBB;">
-            ${isEmergency ? 'Astil Somático de Máxima Resistencia (Deporte, Amor y Sueño)' : 'Equilibrio de Alto Rendimiento sin Agotamiento'}
-          </span>
-        </div>
-        <p style="font-size: 0.82rem; color: #DDD; margin: 0; line-height: 1.5;">
-          ${schedule.desc}
-        </p>
-      </div>
-
-      <!-- VERIFICACIÓN MAESTRA: LOS 9 BANDERINES DE CABALLERÍA (TODOS ACTIVOS) -->
-      <div style="margin-bottom: 22px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-          <h4 style="font-family: var(--imperivm-font-title); color: var(--imperivm-text-gold); margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.04em;">
-            🛡️ Verificación de los 9 Banderines Heráldicos (100% Cobertura Semanal)
-          </h4>
-          <span class="badge-tag badge-gold" style="font-size: 0.65rem;">9 / 9 BANDERINES ACTIVOS</span>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 8px;">
-          ${schedule.pennants.map(p => `
-            <div style="background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 12px; display: flex; align-items: flex-start; gap: 10px;">
-              <span style="font-size: 1.3rem; line-height: 1;">${p.icon}</span>
-              <div style="flex: 1;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
-                  <strong style="color: #FFF; font-size: 0.84rem;">${p.name}</strong>
-                  <span class="badge-tag badge-emerald" style="font-size: 0.58rem; padding: 1px 5px;">${p.status}</span>
-                </div>
-                <div style="font-size: 0.72rem; color: var(--imperivm-text-muted); line-height: 1.35;">${p.when}</div>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-      </div>
-
-      <!-- MATRIZ DÍA A DÍA (LUNES A DOMINGO) -->
-      <div style="margin-bottom: 20px;">
-        <h4 style="font-family: var(--imperivm-font-title); color: #FFF; margin: 0 0 12px 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.04em;">
-          📅 Horarios & Desglose de Bloques (Lunes a Domingo)
-        </h4>
-
-        <div class="lanza-matrix-grid">
-          ${daysKeys.map(dk => {
-            const dayData = schedule.days[dk];
-            const isToday = dk === imperivmEngine.getTodayKey();
-            return `
-              <div class="lanza-day-card" style="${isToday ? 'border-color: var(--imperivm-border-gold); background: rgba(212,175,55,0.06);' : ''}">
-                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; margin-bottom: 8px;">
-                  <div>
-                    <strong style="color: ${isToday ? 'var(--imperivm-text-gold)' : '#FFF'}; font-size: 0.88rem; font-family: var(--imperivm-font-title);">
-                      ${dayNames[dk].toUpperCase()} ${isToday ? '(HOY)' : ''}
-                    </strong>
-                    <div style="font-size: 0.7rem; color: var(--imperivm-text-muted);">${dayData.focus}</div>
-                  </div>
-                  <button onclick="imperivmEngine.closeEstrategiaLanzaModal(); imperivmEngine.openFullDayDrawer('${dk}');" style="background: none; border: 1px solid rgba(255,255,255,0.15); color: #AAA; border-radius: 4px; padding: 2px 6px; font-size: 0.65rem; cursor: pointer;">
-                    Ver Día ➔
-                  </button>
-                </div>
-
-                <div style="display: flex; flex-direction: column; gap: 6px;">
-                  ${dayData.blocks.map(b => `
-                    <div class="lanza-block-item">
-                      <div>
-                        <span style="font-weight: 700; color: #FFF; font-size: 0.74rem;">${b.time}</span>
-                        <div style="color: #DDD; font-size: 0.74rem; margin-top: 1px;">${b.title}</div>
-                      </div>
-                      <span class="badge-tag badge-gold" style="font-size: 0.6rem; padding: 1px 5px; white-space: nowrap;">${b.badge}</span>
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      </div>
-
-      <!-- BOTONES DE ACCIÓN AL PIE -->
-      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; flex-wrap: wrap; gap: 10px;">
-        <span style="font-size: 0.76rem; color: var(--imperivm-text-muted);">
-          * Puedes conmutar entre ambos modos en cualquier momento desde el Plan de Hoy o el Códice.
-        </span>
-
-        <div style="display: flex; gap: 10px;">
-          <button class="btn-imperivm-secondary" onclick="imperivmEngine.closeEstrategiaLanzaModal();">
-            Cerrar
-          </button>
-          <button class="btn-imperivm-primary" onclick="imperivmEngine.switchWeeklyMood('${moodKey}'); imperivmEngine.closeEstrategiaLanzaModal();" style="display: flex; align-items: center; gap: 6px;">
-            <span>⚡ Activar este Modo para mi Semana</span>
-          </button>
-        </div>
-      </div>
-    `;
-  },
+  renderEstrategiaLanzaContent() {},
 
   ensureDrawerInDOM() {
     let backdrop = document.getElementById("imperivm-drawer-backdrop");

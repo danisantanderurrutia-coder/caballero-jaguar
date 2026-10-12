@@ -441,8 +441,6 @@
       // Re-renderizar banderines heráldicos en tiempo real
       if (typeof imperivmEngine !== "undefined" && typeof imperivmEngine.renderHeaderCategoryPennants === "function") {
         imperivmEngine.renderHeaderCategoryPennants();
-      } else if (typeof window.renderRPGLandingHub === "function") {
-        window.renderRPGLandingHub();
       }
 
       if (typeof window.showNotification === "function") {
@@ -495,8 +493,6 @@
       // Re-renderizar banderines en tiempo real
       if (typeof imperivmEngine !== "undefined" && typeof imperivmEngine.renderHeaderCategoryPennants === "function") {
         imperivmEngine.renderHeaderCategoryPennants();
-      } else if (typeof window.renderRPGLandingHub === "function") {
-        window.renderRPGLandingHub();
       }
 
       if (typeof window.showNotification === "function") {

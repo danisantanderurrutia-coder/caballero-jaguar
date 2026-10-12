@@ -477,7 +477,7 @@ function logAvoidedExpense(desc, amount, currency = "EUR") {
   }
 
   if (typeof renderCharacterHUD === "function") renderCharacterHUD();
-  if (typeof renderRPGLandingHub === "function") renderRPGLandingHub();
+  if (window.imperivmEngine && typeof window.imperivmEngine.render === "function") window.imperivmEngine.render();
   renderFinanceDashboard();
 
   if (typeof showNotification === "function") {
@@ -496,7 +496,7 @@ function deleteAvoidedExpense(id) {
     if (typeof reyJaguarState !== "undefined" && reyJaguarState.stats && reyJaguarState.stats.finanzas && reyJaguarState.stats.finanzas.value > 0) {
       reyJaguarState.stats.finanzas.value -= 1;
       if (typeof saveReyJaguarState === "function") saveReyJaguarState();
-      if (typeof renderRPGLandingHub === "function") renderRPGLandingHub();
+      if (window.imperivmEngine && typeof window.imperivmEngine.render === "function") window.imperivmEngine.render();
     }
     renderFinanceDashboard();
     if (typeof showNotification === "function") showNotification("Registro eliminado.");

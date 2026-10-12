@@ -451,9 +451,6 @@ function selectMainTab(tabKey) {
   } else if (tabKey === "dashboard") {
     if (typeof imperivmEngine !== "undefined" && typeof imperivmEngine.render === "function") {
       imperivmEngine.render();
-    } else if (typeof renderRPGLandingHub === "function") {
-      if (typeof renderCharacterHUD === "function") renderCharacterHUD();
-      renderRPGLandingHub();
     }
   } else if (tabKey === "ejercicio") {
     if (typeof renderWorkouts === "function") renderWorkouts();
@@ -1347,9 +1344,7 @@ function runMainAppInit() {
 
   // Inicializar Motor Cinemático IMPERIVM
   if (typeof imperivmEngine !== "undefined" && typeof imperivmEngine.init === "function") {
-    try { imperivmEngine.init(); } catch (e) { console.error(e); }
-  } else if (typeof renderRPGLandingHub === "function") {
-    try { renderRPGLandingHub(); } catch (e) { console.error(e); }
+    try { imperivmEngine.init(); } catch (e) { console.error("Error al inicializar imperivmEngine:", e); }
   }
 
   try { selectMainTab("dashboard"); } catch (e) { console.error(e); }
