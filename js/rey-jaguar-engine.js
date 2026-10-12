@@ -2857,7 +2857,7 @@ window.openOutfitLightbox = function(dayKey) {
   const dayConfig = OUTFIT_DAYS_CONFIG.find(d => d.key === normKey) || OUTFIT_DAYS_CONFIG[0];
   let lifestyleData = {};
   if (typeof LIFESTYLE_ARCHITECT_DATA !== "undefined") {
-    lifestyleData = LIFESTYLE_ARCHITECT_DATA.calendario_somatico_semanal || {};
+    lifestyleData = LIFESTYLE_ARCHITECT_DATA.dias || LIFESTYLE_ARCHITECT_DATA.calendario_somatico_semanal || {};
   }
   const dayData = lifestyleData[dayConfig.key] || DEFAULT_OUTFIT_FALLBACK[dayConfig.key] || DEFAULT_OUTFIT_FALLBACK["lunes"];
 

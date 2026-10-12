@@ -405,11 +405,11 @@ const DEFAULT_MAIN_QUESTS = [
     rewardItemName: "Delantal Académico",
     img: "assets/german_castle_snow_day.jpg",
     subQuests: [
-      { id: "sq1_1", text: "📄 Entregar documento final de tesis a la comisión", completed: true },
-      { id: "sq1_2", text: "📖 10 Tardes de lectura crítica y estudio profundo", completed: true },
-      { id: "sq1_3", text: "🎤 Ensayar presentación oral de defensa 3 veces", completed: true },
-      { id: "sq1_4", text: "🔍 Revisión minuciosa de diapositivas y bibliografía", completed: true },
-      { id: "sq1_5", text: "🍷 Ceremonia y celebración formal de graduación", completed: true }
+      { id: "sq1_1", text: "📄 Entregar documento final de tesis a la comisión", target: 1, current: 1, completed: true },
+      { id: "sq1_2", text: "📖 10 Tardes de lectura crítica y estudio profundo", target: 10, current: 10, completed: true },
+      { id: "sq1_3", text: "🎤 Ensayar presentación oral de defensa 3 veces", target: 3, current: 3, completed: true },
+      { id: "sq1_4", text: "🔍 Revisión minuciosa de diapositivas y bibliografía", target: 2, current: 2, completed: true },
+      { id: "sq1_5", text: "🍷 Ceremonia y celebración formal de graduación", target: 1, current: 1, completed: true }
     ]
   },
   {
@@ -422,11 +422,11 @@ const DEFAULT_MAIN_QUESTS = [
     rewardItemName: "Moneda de Oro",
     img: "assets/german_castle_snow_day.jpg",
     subQuests: [
-      { id: "sq2_1", text: "🏠 Encontrar piso o estudio en Hannover", completed: false },
-      { id: "sq2_2", text: "🚚 Mudanza e instalación logística en Hannover", completed: false },
-      { id: "sq2_3", text: "📝 Redactar Lebenslauf (CV alemán) impecable", completed: false },
-      { id: "sq2_4", text: "📩 Enviar 10 postulaciones de empleo cualificadas", completed: false },
-      { id: "sq2_5", text: "✒️ Firma de contrato laboral formal en Alemania", completed: false }
+      { id: "sq2_1", text: "🏠 Encontrar piso o estudio en Hannover", target: 1, current: 0, completed: false },
+      { id: "sq2_2", text: "🚚 Mudanza e instalación logística en Hannover", target: 1, current: 0, completed: false },
+      { id: "sq2_3", text: "📝 Redactar Lebenslauf (CV alemán) impecable", target: 1, current: 0, completed: false },
+      { id: "sq2_4", text: "📩 Enviar 10 postulaciones de empleo cualificadas", target: 10, current: 0, completed: false },
+      { id: "sq2_5", text: "✒️ Firma de contrato laboral formal en Alemania", target: 1, current: 0, completed: false }
     ]
   },
   {
@@ -439,13 +439,13 @@ const DEFAULT_MAIN_QUESTS = [
     rewardItemName: "Maletín Ejecutivo",
     img: "assets/img_lauwersmeer_coastal.jpg",
     subQuests: [
-      { id: "sq3_1", text: "📝 Adaptar CV al mercado de Bilbao y España", completed: false },
-      { id: "sq3_2", text: "📨 Enviar 20 postulaciones a empresas e instituciones", completed: false },
-      { id: "sq3_3", text: "💬 Completar 3 entrevistas técnicas de selección", completed: false },
-      { id: "sq3_4", text: "✒️ Firma de contrato laboral en España", completed: false },
-      { id: "sq3_5", text: "🛂 Tramitar Visa Española (Plazo límite: 30 Junio 2027)", completed: false },
-      { id: "sq3_6", text: "🏡 Encontrar piso o domicilio en Bilbao", completed: false },
-      { id: "sq3_7", text: "✈️ Mudanza definitiva y empadronamiento", completed: false }
+      { id: "sq3_1", text: "📝 Adaptar CV al mercado de Bilbao y España", target: 1, current: 0, completed: false },
+      { id: "sq3_2", text: "📨 Enviar 20 postulaciones a empresas e instituciones", target: 20, current: 0, completed: false },
+      { id: "sq3_3", text: "💬 Completar 3 entrevistas técnicas de selección", target: 3, current: 0, completed: false },
+      { id: "sq3_4", text: "✒️ Firma de contrato laboral en España", target: 1, current: 0, completed: false },
+      { id: "sq3_5", text: "🛂 Tramitar Visa Española (Plazo límite: 30 Junio 2027)", target: 1, current: 0, completed: false },
+      { id: "sq3_6", text: "🏡 Encontrar piso o domicilio en Bilbao", target: 1, current: 0, completed: false },
+      { id: "sq3_7", text: "✈️ Mudanza definitiva y empadronamiento", target: 1, current: 0, completed: false }
     ]
   },
   {
@@ -458,10 +458,10 @@ const DEFAULT_MAIN_QUESTS = [
     rewardItemName: "Gafas de Viajero",
     img: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=800&auto=format&fit=crop&q=80",
     subQuests: [
-      { id: "sq4_1", text: "🗺️ Elegir destino y fijar fechas de vacaciones", completed: false },
-      { id: "sq4_2", text: "🎫 Reservar pasajes y alojamiento con anticipación", completed: false },
-      { id: "sq4_3", text: "🎒 Preparar equipaje minimalista de aventura", completed: false },
-      { id: "sq4_4", text: "🌊 Disfrutar de 7 días de descanso y naturaleza viva", completed: false }
+      { id: "sq4_1", text: "🗺️ Elegir destino y fijar fechas de vacaciones", target: 1, current: 0, completed: false },
+      { id: "sq4_2", text: "🎫 Reservar pasajes y alojamiento con anticipación", target: 1, current: 0, completed: false },
+      { id: "sq4_3", text: "🎒 Preparar equipaje minimalista de aventura", target: 1, current: 0, completed: false },
+      { id: "sq4_4", text: "🌊 Disfrutar de 7 días de descanso y naturaleza viva", target: 7, current: 0, completed: false }
     ]
   }
 ];
@@ -2021,15 +2021,53 @@ const imperivmEngine = {
 
         <h5 style="color: #FFF; margin: 6px 0 0 0; font-size: 0.95rem;">Hitos & Sub-Misiones:</h5>
         <div style="display: flex; flex-direction: column; gap: 8px;">
-          ${q.subQuests ? q.subQuests.map(sq => `
-            <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--imperivm-border); border-radius: 6px;">
-              <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; flex: 1; ${sq.completed ? 'text-decoration: line-through; opacity: 0.6;' : ''}">
-                <input type="checkbox" ${sq.completed ? 'checked' : ''} onchange="imperivmEngine.toggleSubQuest('${q.id}', '${sq.id}');">
-                <span style="font-size: 0.82rem; color: #FFF;">${sq.text}</span>
-              </label>
-              <span class="badge-tag badge-gold" style="font-size: 0.65rem;">+50 XP</span>
-            </div>
-          `).join('') : ''}
+          ${q.subQuests ? q.subQuests.map(sq => {
+            const hasMultipleSteps = (sq.target && sq.target > 1);
+            const currentCount = sq.current !== undefined ? sq.current : (sq.completed ? (sq.target || 1) : 0);
+            const targetCount = sq.target || 1;
+            const stepPct = Math.min(100, Math.round((currentCount / targetCount) * 100));
+
+            if (hasMultipleSteps) {
+              return `
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(255,255,255,0.03); border: 1.5px solid ${sq.completed ? 'rgba(82,196,26,0.35)' : 'var(--imperivm-border)'}; border-radius: 8px; gap: 10px;">
+                  <div style="flex: 1; min-width: 0;">
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                      <span style="font-size: 0.85rem; color: #FFF; font-weight: 600; ${sq.completed ? 'text-decoration: line-through; opacity: 0.7;' : ''}">${sq.text}</span>
+                      ${sq.completed ? '<span class="badge-tag badge-emerald" style="font-size: 0.65rem;">✓ META CUMPLIDA</span>' : ''}
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px; margin-top: 6px;">
+                      <div style="flex: 1; height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; max-width: 140px;">
+                        <div style="height: 100%; width: ${stepPct}%; background: ${sq.completed ? '#52C41A' : 'var(--imperivm-gold-gradient)'};"></div>
+                      </div>
+                      <span style="font-size: 0.78rem; color: ${sq.completed ? '#52C41A' : 'var(--imperivm-text-gold)'}; font-weight: 800; font-family: 'Cinzel', serif;">
+                        ${currentCount} / ${targetCount} ${sq.completed ? '✅' : ''}
+                      </span>
+                    </div>
+                  </div>
+                  <div style="display: flex; align-items: center; gap: 6px;">
+                    ${currentCount > 0 ? `
+                      <button class="btn-imperivm-secondary" style="padding: 3px 8px; font-size: 0.72rem; min-width: 26px;" onclick="imperivmEngine.advanceSubQuestStep('${q.id}', '${sq.id}', -1);" title="Restar 1 paso">-1</button>
+                    ` : ''}
+                    ${!sq.completed ? `
+                      <button class="btn-imperivm-primary" style="padding: 4px 12px; font-size: 0.75rem; font-weight: 800;" onclick="imperivmEngine.advanceSubQuestStep('${q.id}', '${sq.id}', 1);" title="Registrar 1 paso/postulación (+20 Virtus)">+1 Paso</button>
+                    ` : `
+                      <button class="btn-imperivm-secondary" style="padding: 3px 8px; font-size: 0.7rem; color: #888;" onclick="imperivmEngine.advanceSubQuestStep('${q.id}', '${sq.id}', -1);" title="Reabrir / restar paso">Revertir</button>
+                    `}
+                  </div>
+                </div>
+              `;
+            } else {
+              return `
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--imperivm-border); border-radius: 8px;">
+                  <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; flex: 1; ${sq.completed ? 'text-decoration: line-through; opacity: 0.6;' : ''}">
+                    <input type="checkbox" ${sq.completed ? 'checked' : ''} onchange="imperivmEngine.toggleSubQuest('${q.id}', '${sq.id}');" style="width: 17px; height: 17px; accent-color: var(--imperivm-gold); cursor: pointer;">
+                    <span style="font-size: 0.85rem; color: #FFF;">${sq.text}</span>
+                  </label>
+                  <span class="badge-tag ${sq.completed ? 'badge-emerald' : 'badge-gold'}" style="font-size: 0.65rem;">${sq.completed ? '✓ Conquistado' : '+50 Virtus'}</span>
+                </div>
+              `;
+            }
+          }).join('') : ''}
         </div>
 
         <div style="display: flex; gap: 10px; margin-top: 10px;">
@@ -2046,6 +2084,41 @@ const imperivmEngine = {
     this.openDrawer();
   },
 
+  advanceSubQuestStep(questId, sqId, delta = 1) {
+    const st = (typeof reyJaguarState !== "undefined") ? reyJaguarState : (window.reyJaguarState || null);
+    let mainQuests = (st && Array.isArray(st.mainQuests)) ? st.mainQuests : DEFAULT_MAIN_QUESTS;
+    const q = mainQuests.find(x => x.id === questId);
+    if (!q || !q.subQuests) return;
+
+    const sq = q.subQuests.find(x => x.id === sqId);
+    if (!sq) return;
+
+    const target = sq.target || 1;
+    let current = sq.current !== undefined ? sq.current : (sq.completed ? target : 0);
+    current = Math.max(0, Math.min(target, current + delta));
+    sq.current = current;
+    sq.completed = (current >= target);
+
+    if (delta > 0) {
+      this.awardVirtus(20, `Avance: ${sq.text} (${current}/${target})`);
+      if (typeof playSoundEffect === "function") playSoundEffect("success");
+      if (typeof showNotification === "function") showNotification(`⚡ Paso registrado: ${sq.text} (${current}/${target})`);
+    } else {
+      if (typeof showNotification === "function") showNotification(`↩️ Paso revertido: ${sq.text} (${current}/${target})`);
+    }
+
+    if (q.subQuests.every(s => s.completed)) {
+      q.completed = true;
+      if (typeof showNotification === "function") showNotification(`🎉 ¡Todas las sub-misiones de ${q.title} completadas!`);
+    } else {
+      q.completed = false;
+    }
+
+    if (typeof saveReyJaguarState === "function") saveReyJaguarState();
+    this.openMainQuestModal(questId);
+    this.render();
+  },
+
   markQuestConquered(questId) {
     const st = (typeof reyJaguarState !== "undefined") ? reyJaguarState : (window.reyJaguarState || null);
     let mainQuests = (st && Array.isArray(st.mainQuests)) ? st.mainQuests : DEFAULT_MAIN_QUESTS;
@@ -2053,7 +2126,12 @@ const imperivmEngine = {
     if (!q) return;
 
     q.completed = true;
-    if (q.subQuests) q.subQuests.forEach(sq => sq.completed = true);
+    if (q.subQuests) {
+      q.subQuests.forEach(sq => {
+        sq.completed = true;
+        if (sq.target) sq.current = sq.target;
+      });
+    }
     if (q.rewardItemId && st && Array.isArray(st.inventory)) {
       const item = st.inventory.find(i => i.id === q.rewardItemId);
       if (item) {
@@ -2078,11 +2156,24 @@ const imperivmEngine = {
 
     const sq = q.subQuests.find(x => x.id === sqId);
     if (sq) {
-      sq.completed = !sq.completed;
-      if (sq.completed) {
-        this.awardVirtus(50, `Hito cumplido: ${sq.text}`);
-        if (typeof playSoundEffect === "function") playSoundEffect("success");
-        if (typeof showNotification === "function") showNotification(`✓ Hito de Campaña: ${sq.text} (+50 Virtus)`);
+      if (sq.target && sq.target > 1) {
+        // Si tiene contador, el toggle conmuta entre 0 y el target completo
+        if (sq.completed) {
+          sq.completed = false;
+          sq.current = 0;
+        } else {
+          sq.completed = true;
+          sq.current = sq.target;
+          this.awardVirtus(50, `Hito cumplido: ${sq.text}`);
+        }
+      } else {
+        sq.completed = !sq.completed;
+        if (sq.target) sq.current = sq.completed ? sq.target : 0;
+        if (sq.completed) {
+          this.awardVirtus(50, `Hito cumplido: ${sq.text}`);
+          if (typeof playSoundEffect === "function") playSoundEffect("success");
+          if (typeof showNotification === "function") showNotification(`✓ Hito de Campaña: ${sq.text} (+50 Virtus)`);
+        }
       }
       if (typeof saveReyJaguarState === "function") saveReyJaguarState();
       this.openMainQuestModal(questId);
@@ -3391,6 +3482,7 @@ const imperivmEngine = {
             </div>
           </div>
         </div>
+      `;
     }
 
     container.innerHTML = `
