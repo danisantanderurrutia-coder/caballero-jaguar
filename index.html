@@ -357,9 +357,21 @@
         <div style="position: relative; border-radius: 12px; overflow: hidden; height: 260px; border: 1.5px solid rgba(155, 35, 53, 0.4); box-shadow: 0 14px 40px rgba(0,0,0,0.85);">
           <img src="assets/banner_astral.jpg" alt="Observatorio Celeste & Astrolabio" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7) contrast(1.15);">
           <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 24px; background: linear-gradient(to top, rgba(5,5,8,0.95) 0%, rgba(5,5,8,0.4) 65%, transparent 100%);">
-            <span class="badge-tag" style="margin-bottom: 6px;">🌌 Cosmografía Imperial</span>
-            <h2 style="font-family: 'Cinzel', serif; font-size: 1.8rem; color: #FFF; margin: 4px 0 0 0; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Observatorio Celeste & Carta Natal</h2>
-            <p style="font-size: 0.88rem; color: #CBD5E1; margin: 4px 0 0 0;">Aries (23 Mar 1996) • Regente Marte en conjunción con Sol, Luna en Tauro</p>
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px;">
+              <div>
+                <span class="badge-tag" style="margin-bottom: 6px;">🌌 Cosmografía Imperial & Espiritualidad</span>
+                <h2 style="font-family: 'Cinzel', serif; font-size: 1.8rem; color: #FFF; margin: 4px 0 0 0; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Observatorio Celeste & Carta Natal</h2>
+                <p style="font-size: 0.88rem; color: #CBD5E1; margin: 4px 0 0 0;">Aries (23 Mar 1996 • Parral) • Regente Marte en conjunción con Sol • Primer Retorno de Saturno (30 Años)</p>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn-jaguar btn-secondary-dark" onclick="selectMainTab('dashboard')" style="font-size: 0.8rem; padding: 6px 12px;">
+                  ◀ Volver al Dashboard
+                </button>
+                <button class="btn-jaguar btn-gold-chrome" onclick="openRitosModal()" style="font-size: 0.8rem; padding: 6px 12px; color: #0E0905; font-weight: bold;">
+                  🕯️ Ritos Sagrados
+                </button>
+              </div>
+            </div>
           </div>
         </div>
         
@@ -376,18 +388,31 @@
             </div>
           </div>
           <p style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-top: 8px;">
-            Mapa cosmográfico de nacimiento. Revela la conjunción primordial de fuego entre el <strong>Sol</strong> y su regente <strong>Marte en Aries</strong>, anclados por la solidez estoica y perseverancia terrenal de la <strong>Luna en Tauro</strong>.
+            Mapa cosmográfico de nacimiento. Revela la conjunción primordial de fuego entre el <strong>Sol</strong> y su regente <strong>Marte en Aries</strong> en la cumbre de la Casa X (Cenit de la vocación pública), anclados por la solidez estoica y perseverancia terrenal de la <strong>Luna en Tauro</strong> (Exaltada). En este momento vital (2026), atraviesas tu <strong>Primer Retorno de Saturno en Aries</strong>: el rito de paso sagrado hacia la soberanía y la maestría absoluta.
           </p>
         </div>
 
-        <!-- CONTENEDOR 2 COLUMNAS: RUEDA ZODIACAL ASTRONÓMICA + DETALLE DE CASAS & PLANETAS -->
+        <!-- RELOJ CELESTE EN VIVO: 2 WIDGETS DINÁMICOS -->
+        <div class="grid-2" style="gap: 16px;">
+          <div class="jaguar-card" id="astro-live-moon-widget" style="padding: 16px; background: rgba(14, 20, 28, 0.85); border-left: 3px solid #00E5FF;">
+            <!-- Renderizado dinámico vía astralObservatory.init() -->
+          </div>
+          <div class="jaguar-card" id="astro-live-ruler-widget" style="padding: 16px; background: rgba(14, 20, 28, 0.85); border-left: 3px solid #D4AF37;">
+            <!-- Renderizado dinámico vía astralObservatory.init() -->
+          </div>
+        </div>
+
+        <!-- CONTENEDOR 2 COLUMNAS: RUEDA ZODIACAL + EJE CARDINAL -->
         <div class="celestial-observatory-grid">
           
           <!-- COLUMNA 1: RUEDA CELESTE INTERACTIVA (SVG CON 12 CASAS, ZODÍACO Y PLANETAS) -->
           <div class="celestial-wheel-box">
-            <h3 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: var(--parchment-light); margin-bottom: 12px; text-align: center;">
+            <h3 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: var(--parchment-light); margin-bottom: 6px; text-align: center;">
               🧭 Rueda Zodiacal de las 12 Casas
             </h3>
+            <span style="font-size: 0.74rem; color: var(--text-dim); margin-bottom: 12px; display: block; text-align: center;">
+              💡 Haz clic en los símbolos del mapa para abrir el tratado del planeta
+            </span>
             
             <svg id="astro-celestial-wheel" viewBox="0 0 500 500" style="width: 100%; max-width: 420px; height: auto;">
               <defs>
@@ -410,65 +435,50 @@
               <circle cx="250" cy="250" r="85" fill="#080D16" stroke="#8A9BA8" stroke-width="1.5" />
 
               <!-- LÍNEAS RADIALES DE LAS 12 CASAS -->
-              <!-- Casa I / Ascendente (Eje Horizontal Izquierdo) -->
               <line x1="10" y1="250" x2="490" y2="250" stroke="#8A9BA8" stroke-width="2" opacity="0.7" />
-              <!-- Casa X / Medio Cielo (Eje Vertical Superior) -->
               <line x1="250" y1="10" x2="250" y2="490" stroke="#8A9BA8" stroke-width="2" opacity="0.7" />
-              <!-- Radios a 30 grados -->
               <line x1="45" y1="130" x2="455" y2="370" stroke="#2B4E75" stroke-width="1" opacity="0.5" />
               <line x1="130" y1="45" x2="370" y2="455" stroke="#2B4E75" stroke-width="1" opacity="0.5" />
               <line x1="370" y1="45" x2="130" y2="455" stroke="#2B4E75" stroke-width="1" opacity="0.5" />
               <line x1="455" y1="130" x2="45" y2="370" stroke="#2B4E75" stroke-width="1" opacity="0.5" />
 
               <!-- SÍMBOLOS DEL ZODÍACO EN EL ANILLO EXTERIOR -->
-              <!-- ♈ Aries -->
               <text x="80" y="210" fill="#E2DACB" font-size="20" font-weight="bold" text-anchor="middle">♈</text>
-              <!-- ♉ Tauro -->
               <text x="120" y="125" fill="#E2DACB" font-size="20" font-weight="bold" text-anchor="middle">♉</text>
-              <!-- ♊ Géminis -->
               <text x="210" y="75" fill="#8A9BA8" font-size="18" text-anchor="middle">♊</text>
-              <!-- ♋ Cáncer -->
               <text x="290" y="75" fill="#8A9BA8" font-size="18" text-anchor="middle">♋</text>
-              <!-- ♌ Leo -->
               <text x="380" y="125" fill="#8A9BA8" font-size="18" text-anchor="middle">♌</text>
-              <!-- ♍ Virgo -->
               <text x="420" y="210" fill="#8A9BA8" font-size="18" text-anchor="middle">♍</text>
-              <!-- ♎ Libra -->
               <text x="420" y="295" fill="#8A9BA8" font-size="18" text-anchor="middle">♎</text>
-              <!-- ♏ Escorpio -->
               <text x="380" y="380" fill="#8A9BA8" font-size="18" text-anchor="middle">♏</text>
-              <!-- ♐ Sagitario -->
               <text x="290" y="430" fill="#8A9BA8" font-size="18" text-anchor="middle">♐</text>
-              <!-- ♑ Capricornio -->
               <text x="210" y="430" fill="#8A9BA8" font-size="18" text-anchor="middle">♑</text>
-              <!-- ♒ Acuario -->
               <text x="120" y="380" fill="#8A9BA8" font-size="18" text-anchor="middle">♒</text>
-              <!-- ♓ Piscis -->
               <text x="80" y="295" fill="#8A9BA8" font-size="18" text-anchor="middle">♓</text>
 
-              <!-- MARCADORES PLANETARIOS CLAVE DEL REY JAGUAR -->
-              <!-- ☉ Sol en Aries (Casa X / Medio Cielo) -->
-              <circle cx="170" cy="180" r="14" fill="#6B2323" stroke="#E2DACB" stroke-width="1.5" />
-              <text x="170" y="186" fill="#FFF" font-size="13" font-weight="900" text-anchor="middle">☉</text>
-              <text x="170" y="160" fill="#E2DACB" font-size="10" font-family="'Cinzel', serif" text-anchor="middle">Sol 03°♈</text>
+              <!-- MARCADORES PLANETARIOS CLAVE (CLIQUEABLES) -->
+              <!-- ☉ Sol en Aries (Casa X) -->
+              <circle cx="170" cy="180" r="15" fill="#6B2323" stroke="#E2DACB" stroke-width="1.5" style="cursor: pointer;" onclick="astralObservatory.openPlanetDetailModal('sol')" />
+              <text x="170" y="186" fill="#FFF" font-size="14" font-weight="900" text-anchor="middle" style="cursor: pointer;" onclick="astralObservatory.openPlanetDetailModal('sol')">☉</text>
+              <text x="170" y="158" fill="#E2DACB" font-size="10" font-family="'Cinzel', serif" text-anchor="middle" style="cursor: pointer;" onclick="astralObservatory.openPlanetDetailModal('sol')">Sol 03°♈</text>
 
               <!-- ♂ Marte en Aries (Regente Domicilio) -->
-              <circle cx="130" cy="195" r="14" fill="#8B3030" stroke="#8A9BA8" stroke-width="1.5" />
-              <text x="130" y="201" fill="#FFF" font-size="13" font-weight="900" text-anchor="middle">♂</text>
-              <text x="130" y="222" fill="#E2DACB" font-size="10" font-family="'Cinzel', serif" text-anchor="middle">Marte 08°♈</text>
+              <circle cx="130" cy="195" r="15" fill="#8B3030" stroke="#8A9BA8" stroke-width="1.5" style="cursor: pointer;" onclick="astralObservatory.openPlanetDetailModal('marte')" />
+              <text x="130" y="201" fill="#FFF" font-size="14" font-weight="900" text-anchor="middle" style="cursor: pointer;" onclick="astralObservatory.openPlanetDetailModal('marte')">♂</text>
+              <text x="130" y="224" fill="#E2DACB" font-size="10" font-family="'Cinzel', serif" text-anchor="middle" style="cursor: pointer;" onclick="astralObservatory.openPlanetDetailModal('marte')">Marte 08°♈</text>
 
               <!-- ☽ Luna en Tauro (Exaltada) -->
-              <circle cx="160" cy="115" r="14" fill="#2B4E75" stroke="#E2DACB" stroke-width="1.5" />
-              <text x="160" y="121" fill="#FFF" font-size="13" font-weight="900" text-anchor="middle">☽</text>
-              <text x="160" y="95" fill="#8A9BA8" font-size="10" font-family="'Cinzel', serif" text-anchor="middle">Luna 24°♉</text>
+              <circle cx="160" cy="115" r="15" fill="#2B4E75" stroke="#E2DACB" stroke-width="1.5" style="cursor: pointer;" onclick="astralObservatory.openPlanetDetailModal('luna')" />
+              <text x="160" y="121" fill="#FFF" font-size="14" font-weight="900" text-anchor="middle" style="cursor: pointer;" onclick="astralObservatory.openPlanetDetailModal('luna')">☽</text>
+              <text x="160" y="93" fill="#8A9BA8" font-size="10" font-family="'Cinzel', serif" text-anchor="middle" style="cursor: pointer;" onclick="astralObservatory.openPlanetDetailModal('luna')">Luna 24°♉</text>
 
               <!-- ♃ Júpiter en Capricornio -->
-              <circle cx="230" cy="350" r="12" fill="#1A344F" stroke="#8A9BA8" stroke-width="1" />
-              <text x="230" y="355" fill="#FFF" font-size="11" text-anchor="middle">♃</text>
+              <circle cx="230" cy="350" r="13" fill="#1A344F" stroke="#8A9BA8" stroke-width="1.2" style="cursor: pointer;" onclick="astralObservatory.openPlanetDetailModal('jupiter')" />
+              <text x="230" y="355" fill="#FFF" font-size="12" text-anchor="middle" style="cursor: pointer;" onclick="astralObservatory.openPlanetDetailModal('jupiter')">♃</text>
 
               <!-- ♄ Saturno en Aries -->
-              <circle cx="205" cy="170" r="12" fill="#142235" stroke="#8A9BA8" stroke-width="1" />
-              <text x="205" y="175" fill="#FFF" font-size="11" text-anchor="middle">♄</text>
+              <circle cx="205" cy="170" r="13" fill="#142235" stroke="#D4AF37" stroke-width="1.5" style="cursor: pointer;" onclick="astralObservatory.openPlanetDetailModal('saturno')" />
+              <text x="205" y="175" fill="#FFF" font-size="12" text-anchor="middle" style="cursor: pointer;" onclick="astralObservatory.openPlanetDetailModal('saturno')">♄</text>
 
               <!-- CENTRO DEL MAPA: ESCUDO DEL CABALLERO JAGUAR -->
               <circle cx="250" cy="250" r="50" fill="#080D16" stroke="url(#ringGoldGrad)" stroke-width="2" />
@@ -485,96 +495,70 @@
             </div>
           </div>
 
-          <!-- COLUMNA 2: MATRIZ DE PLANETAS & ASPECTOS PSICOLÓGICOS -->
-          <div style="display: flex; flex-direction: column; gap: 16px;">
-            
-            <div class="jaguar-card" style="padding: 16px;">
-              <h3 class="card-title" style="font-size: 1.15rem; margin-bottom: 12px;">🌟 Posiciones Planetarias Natalicias</h3>
-              
-              <div class="astro-planet-grid">
-                
-                <div class="astro-planet-pill">
-                  <span style="font-size: 1.6rem; color: #E2DACB;">☉</span>
-                  <div>
-                    <strong style="color: #FFF; font-size: 0.9rem;">Sol en Aries (03° 08')</strong>
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">Casa X • Fuego Cardinal</div>
-                    <p style="font-size: 0.8rem; color: var(--parchment-warm); margin-top: 2px;">El Héroe Conquistador. Voluntad inquebrantable, impulso para fundar proyectos y liderazgo natural.</p>
-                  </div>
-                </div>
-
-                <div class="astro-planet-pill">
-                  <span style="font-size: 1.6rem; color: #8A9BA8;">☽</span>
-                  <div>
-                    <strong style="color: #FFF; font-size: 0.9rem;">Luna en Tauro (24° 15')</strong>
-                    <span class="badge-tag badge-emerald" style="font-size: 0.65rem; padding: 1px 6px;">Exaltada</span>
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">Casa XI • Tierra Fija</div>
-                    <p style="font-size: 0.8rem; color: var(--parchment-warm); margin-top: 2px;">Estabilidad emocional pétrea, serenidad estoica ante las crisis y profundo arraigo a la tierra y la permacultura.</p>
-                  </div>
-                </div>
-
-                <div class="astro-planet-pill">
-                  <span style="font-size: 1.6rem; color: #6B2323;">♂</span>
-                  <div>
-                    <strong style="color: #FFF; font-size: 0.9rem;">Marte en Aries (08° 42')</strong>
-                    <span class="badge-tag badge-gold" style="font-size: 0.65rem; padding: 1px 6px;">Domicilio Puro</span>
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">Casa X • Regente Planetario</div>
-                    <p style="font-size: 0.8rem; color: var(--parchment-warm); margin-top: 2px;">El Guerrero Estoico. Potencia motriz para el Muay Thai, la calistenia y la conquista de metas sin vacilación.</p>
-                  </div>
-                </div>
-
-                <div class="astro-planet-pill">
-                  <span style="font-size: 1.6rem; color: #4A79A7;">☿</span>
-                  <div>
-                    <strong style="color: #FFF; font-size: 0.9rem;">Mercurio en Piscis (12° 20')</strong>
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">Casa IX • Agua Mutable</div>
-                    <p style="font-size: 0.8rem; color: var(--parchment-warm); margin-top: 2px;">Pensamiento holístico, visión transmedia y capacidad para conectar ciencia dura con narrativa épica y poética.</p>
-                  </div>
-                </div>
-
-                <div class="astro-planet-pill">
-                  <span style="font-size: 1.6rem; color: #8A9BA8;">♀</span>
-                  <div>
-                    <strong style="color: #FFF; font-size: 0.9rem;">Venus en Tauro (16° 50')</strong>
-                    <span class="badge-tag badge-gold" style="font-size: 0.65rem; padding: 1px 6px;">Domicilio Puro</span>
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">Casa XI • Tierra Fija</div>
-                    <p style="font-size: 0.8rem; color: var(--parchment-warm); margin-top: 2px;">Afinidad con la belleza atemporal renacentista, la armonía del diseño predial y la lealtad profunda.</p>
-                  </div>
-                </div>
-
-                <div class="astro-planet-pill">
-                  <span style="font-size: 1.6rem; color: #4A79A7;">♄</span>
-                  <div>
-                    <strong style="color: #FFF; font-size: 0.9rem;">Saturno en Aries (28° 50')</strong>
-                    <div style="font-size: 0.75rem; color: var(--text-muted);">Casa X • Fuego Cardinal</div>
-                    <p style="font-size: 0.8rem; color: var(--parchment-warm); margin-top: 2px;">El Alquimista del Autodominio. Transmutación de la impulsividad en disciplina de acero a largo plazo.</p>
-                  </div>
-                </div>
-
+          <!-- COLUMNA 2: RESUMEN DE LA ARQUITECTURA CELESTE & BOTONES DE TRATADO -->
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div class="jaguar-card" style="padding: 16px; background: rgba(14, 20, 28, 0.85);">
+              <span class="badge-tag badge-gold" style="font-size: 0.68rem;">ALINEACIÓN DE PODER</span>
+              <h4 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #FFF; margin: 4px 0 8px 0;">
+                El Fuego Primordial del Cenit (Sol + Marte + Saturno)
+              </h4>
+              <p style="font-size: 0.84rem; color: var(--parchment-light); line-height: 1.55; margin: 0 0 10px 0;">
+                Tener tres planetas de primer orden en la Casa X en Aries significa que tu destino está indisolublemente unido al <strong>liderazgo público, la soberanía territorial y la construcción de un legado visible</strong>. No naciste para ser mero espectador de la historia; naciste para fundar frentes y comandar expediciones.
+              </p>
+              <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+                <button class="btn-jaguar btn-sm" onclick="astralObservatory.openPlanetDetailModal('sol')" style="justify-content: center; font-size: 0.78rem;">
+                  ☉ Sol en Aries
+                </button>
+                <button class="btn-jaguar btn-sm" onclick="astralObservatory.openPlanetDetailModal('marte')" style="justify-content: center; font-size: 0.78rem;">
+                  ♂ Marte en Aries
+                </button>
+                <button class="btn-jaguar btn-sm" onclick="astralObservatory.openPlanetDetailModal('luna')" style="justify-content: center; font-size: 0.78rem;">
+                  ☽ Luna en Tauro
+                </button>
+                <button class="btn-jaguar btn-sm" onclick="astralObservatory.openPlanetDetailModal('saturno')" style="justify-content: center; font-size: 0.78rem;">
+                  ♄ Saturno en Aries
+                </button>
               </div>
             </div>
 
-            <!-- ALQUIMIA DE ASPECTOS MAYORES -->
-            <div class="jaguar-card" style="padding: 16px;">
-              <h3 class="card-title" style="font-size: 1.15rem; margin-bottom: 10px;">⚡ Aspectos Clave & Alquimia Psicológica</h3>
-              
-              <div style="display: flex; flex-direction: column; gap: 8px;">
-                <div style="padding: 8px 12px; background: rgba(8, 13, 22, 0.6); border-radius: var(--radius-sm); border-left: 3px solid #6B2323; font-size: 0.85rem;">
-                  <strong style="color: #FFF;">☉ Conjunción Sol - Marte en Aries:</strong>
-                  <span style="color: var(--text-muted);"> Motor de energía inagotable. Capacidad de levantarse ante cualquier adversidad y ejecutar con vigor.</span>
-                </div>
-                <div style="padding: 8px 12px; background: rgba(8, 13, 22, 0.6); border-radius: var(--radius-sm); border-left: 3px solid #4A79A7; font-size: 0.85rem;">
-                  <strong style="color: #FFF;">☽ Trígono Luna - Júpiter:</strong>
-                  <span style="color: var(--text-muted);"> Optimismo templado por la prudencia financiera, magnetismo en proyectos de permacultura e impacto comunitario.</span>
-                </div>
-                <div style="padding: 8px 12px; background: rgba(8, 13, 22, 0.6); border-radius: var(--radius-sm); border-left: 3px solid #8A9BA8; font-size: 0.85rem;">
-                  <strong style="color: #FFF;">♂ Trígono Marte - Plutón:</strong>
-                  <span style="color: var(--text-muted);"> Resiliencia física excepcional en entrenamientos y perseverancia férrea en la redacción de publicaciones complejas.</span>
-                </div>
-              </div>
+            <div class="jaguar-card" style="padding: 16px; background: rgba(14, 20, 28, 0.85); border-left: 3px solid #D4AF37;">
+              <span class="badge-tag badge-cyan" style="font-size: 0.68rem;">EL GRAN SALTO EVOLUTIVO</span>
+              <h4 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #FFF; margin: 4px 0 8px 0;">
+                Eje Nodal: Del Guerrero Solitario a la Mesa Redonda
+              </h4>
+              <p style="font-size: 0.84rem; color: var(--parchment-light); line-height: 1.55; margin: 0 0 10px 0;">
+                Tu <strong>Nodo Sur en Aries</strong> te hace autosuficiente e imparable en solitario. Pero tu <strong>Nodo Norte en Libra</strong> marca tu verdadero dharma: aprender a construir en equipo, sellar pactos fraternales sólidos (Maule Red, Museo de la Memoria) y liderar sin tener que cargar todas las piedras sobre tu propia espalda.
+              </p>
+              <button class="btn-jaguar btn-sm btn-gold-chrome" onclick="astralObservatory.openPlanetDetailModal('nodonorte')" style="justify-content: center; width: 100%; color: #0E0905; font-weight: bold; font-size: 0.78rem;">
+                ☊ Explorar el Tratado del Nodo Norte en Libra
+              </button>
             </div>
-
           </div>
 
+        </div>
+
+        <!-- BARRA MAESTRA DE SUBPESTAÑAS DE EXPLORACIÓN PROFUNDA -->
+        <div class="astro-subtab-bar">
+          <button class="astro-subtab-btn active" data-subtab="planetas" onclick="astralObservatory.setTab('planetas')">
+            🧭 13 Cuerpos & Puntos en Casas
+          </button>
+          <button class="astro-subtab-btn" data-subtab="aspectos" onclick="astralObservatory.setTab('aspectos')">
+            ⚡ Aspectarium & Alquimia
+          </button>
+          <button class="astro-subtab-btn" data-subtab="saturno" onclick="astralObservatory.setTab('saturno')">
+            🪐 Retorno de Saturno (30 Años)
+          </button>
+          <button class="astro-subtab-btn" data-subtab="sincretismo" onclick="astralObservatory.setTab('sincretismo')">
+            🐆 Sincretismo (Maya, Oriental, Tarot)
+          </button>
+          <button class="astro-subtab-btn" data-subtab="transitos" onclick="astralObservatory.setTab('transitos')">
+            🌕 Reloj Celeste & Tránsitos
+          </button>
+        </div>
+
+        <!-- CONTENEDOR DINÁMICO DE LA VISTA ACTIVA -->
+        <div id="astro-main-view-container">
+          <!-- Renderizado dinámico vía astralObservatory.renderActiveTab() -->
         </div>
 
       </div>
@@ -1825,6 +1809,7 @@
   <script src="js/scoring-engine.js?v=20261012_v27"></script>
   <script src="js/imperivm-engine.js?v=20261012_v27"></script>
   <script src="js/rey-jaguar-engine.js?v=20261012_v27"></script>
+  <script src="js/astral-observatory.js?v=20261012_v28"></script>
   <script src="js/app.js?v=20261012_v27"></script>
 
   <!-- MODAL DE MODO FOCO • POMODORO CYBERPUNK -->
@@ -1878,6 +1863,14 @@
     <div class="jaguar-modal-card">
       <button onclick="closeItemDetailModal()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: #FFF; font-size: 1.4rem; cursor: pointer; z-index: 10;">✕</button>
       <div id="item-detail-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- MODAL CENTRADO: TRATADO ASTRAL & PLANETAS EN CASAS (CABALLERO JAGUAR) -->
+  <div id="astro-planet-detail-modal" class="jaguar-modal-overlay" style="display: none;" onclick="if(event.target === this) astralObservatory.closePlanetDetailModal();">
+    <div class="jaguar-modal-card" style="max-width: 760px; width: 94%; border: 1.5px solid var(--border-gold); background: linear-gradient(145deg, rgba(23,30,40,0.98) 0%, rgba(11,14,20,0.99) 100%); box-shadow: 0 14px 40px rgba(0,0,0,0.9);">
+      <button onclick="astralObservatory.closePlanetDetailModal()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--imperial-gold-light); font-size: 1.4rem; cursor: pointer; z-index: 10;">✕</button>
+      <div id="astro-planet-modal-content"></div>
     </div>
   </div>
 

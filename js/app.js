@@ -486,6 +486,8 @@ function selectMainTab(tabKey) {
     initMassageStudio();
   } else if (tabKey === "progresion" && typeof renderSistemaMaestroPitch === "function") {
     renderSistemaMaestroPitch();
+  } else if (tabKey === "astral" && typeof astralObservatory !== "undefined" && typeof astralObservatory.init === "function") {
+    astralObservatory.init();
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });

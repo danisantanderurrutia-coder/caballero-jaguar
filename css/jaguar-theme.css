@@ -1376,6 +1376,44 @@ select.input-jaguar option {
   background: rgba(23, 30, 40, 0.75);
 }
 
+.astro-subtab-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0;
+  border-bottom: 1.5px solid var(--border-glass);
+  padding-bottom: 12px;
+}
+
+.astro-subtab-btn {
+  background: rgba(14, 20, 28, 0.85);
+  border: 1px solid var(--border-glass);
+  color: var(--text-muted);
+  padding: 9px 16px;
+  border-radius: var(--radius-sm);
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.astro-subtab-btn:hover {
+  border-color: var(--border-gold);
+  color: #FFF;
+  background: rgba(23, 30, 40, 0.95);
+}
+
+.astro-subtab-btn.active {
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.25) 0%, rgba(14, 20, 28, 0.95) 100%);
+  border-color: var(--imperial-gold);
+  color: #FFF;
+  box-shadow: 0 4px 14px rgba(212, 175, 55, 0.2);
+}
+
 /* ==========================================================================
    ARSENAL & PERTRECHOS (INVENTARIO DE CABALLERÍA)
    ========================================================================== */
