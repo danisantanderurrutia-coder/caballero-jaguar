@@ -38,11 +38,15 @@
 
   const AURAS = ["vida", "exploracion", "amor", "salud", "soberania", "espiritualidad", "naturaleza", "deporte", "mente"];
   const AURA_ALIASES = {
-    foco: "mente", lectura: "mente", estudio: "mente", filosofia: "mente",
-    vitalidad: "salud", nutricion: "salud", meditacion: "espiritualidad", ritos: "espiritualidad",
-    territorio: "naturaleza", bosque: "naturaleza", ejercicios: "deporte", combate: "deporte",
-    pareja: "amor", proyectos: "exploracion", idiomas: "exploracion", musica: "exploracion",
-    finanzas: "soberania", tramites: "vida", general: "vida"
+    foco: "mente", lectura: "mente", estudio: "mente", filosofia: "mente", aleman: "mente",
+    vitalidad: "salud", nutricion: "salud", somatica: "salud", sueno: "salud",
+    meditacion: "espiritualidad", ritos: "espiritualidad", detox: "espiritualidad",
+    territorio: "naturaleza", bosque: "naturaleza", rewild: "naturaleza", airelibre: "naturaleza", botanica: "naturaleza",
+    ejercicios: "deporte", combate: "deporte", gym: "deporte", cardio: "deporte",
+    pareja: "amor", amor: "amor", intimidad: "amor", acuerdos: "amor", aftercare: "amor", citas: "amor",
+    proyectos: "exploracion", idiomas: "exploracion", musica: "exploracion", arte: "exploracion", lauwersmeer: "exploracion", red_maule: "exploracion", agrotech: "exploracion",
+    finanzas: "soberania", ahorro: "soberania", auditoria: "soberania",
+    tramites: "vida", empleo: "vida", tesis: "vida", general: "vida"
   };
 
   // --- FECHAS LOCALES ---
@@ -76,7 +80,16 @@
   }
 
   function normAura(a) {
-    a = String(a || "vida").toLowerCase();
+    a = String(a || "vida").toLowerCase().trim();
+    if (a.includes(":")) {
+      const parts = a.split(":");
+      if (AURAS.includes(parts[0])) return parts[0];
+      a = parts[1] || parts[0];
+    }
+    if (a.includes("_")) {
+      const parts = a.split("_");
+      if (AURAS.includes(parts[0])) return parts[0];
+    }
     if (AURAS.includes(a)) return a;
     return AURA_ALIASES[a] || "vida";
   }

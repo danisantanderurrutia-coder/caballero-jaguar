@@ -2961,6 +2961,10 @@ a:hover {
   pointer-events: auto !important;
 }
 
+#outfit-lightbox-modal {
+  z-index: 100050 !important;
+}
+
 /* --- TARJETA DE MODAL ESTÁNDAR --- */
 .jaguar-modal-card {
   background: linear-gradient(160deg, #101017 0%, #07070A 100%) !important;
@@ -3699,6 +3703,73 @@ body.dev-labels-visible .dev-labels-corner-trigger {
   border-color: #00E5FF !important;
   background: rgba(0, 229, 255, 0.2) !important;
   box-shadow: 0 0 14px rgba(0, 229, 255, 0.6) !important;
+}
+
+/* ==========================================================================
+   CONMUTADOR DE ESTRATEGIA DE LA LANZA (MOOD FRESH VS MOOD EMERGENCY)
+   ========================================================================== */
+.btn-mood-toggle {
+  background: rgba(20, 26, 40, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #A0AEC0;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.btn-mood-toggle:hover {
+  border-color: rgba(212, 175, 55, 0.4);
+  color: #FFF;
+}
+
+.btn-mood-toggle.active-fresh {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.28) 0%, rgba(5, 150, 105, 0.45) 100%) !important;
+  border-color: #10B981 !important;
+  color: #A7F3D0 !important;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.3) !important;
+}
+
+.btn-mood-toggle.active-emergency {
+  background: linear-gradient(135deg, rgba(225, 29, 72, 0.28) 0%, rgba(190, 18, 60, 0.5) 100%) !important;
+  border-color: #F43F5E !important;
+  color: #FFE4E6 !important;
+  box-shadow: 0 0 12px rgba(244, 63, 94, 0.35) !important;
+}
+
+.lanza-matrix-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 12px;
+}
+
+.lanza-day-card {
+  background: rgba(14, 18, 29, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 12px 14px;
+  transition: all 0.2s ease;
+}
+
+.lanza-day-card:hover {
+  border-color: rgba(212, 175, 55, 0.35);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+
+.lanza-block-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+  margin-top: 6px;
+  font-size: 0.78rem;
 }
 
 

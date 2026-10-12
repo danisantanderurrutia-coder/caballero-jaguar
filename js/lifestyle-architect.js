@@ -1472,11 +1472,11 @@ function renderSingleDayCard(dayKey, isDetailed = true) {
       
       <!-- BANNER DE ENCABEZADO DEL DÍA CON POST DE OUTFIT TIPO INSTAGRAM (5:4) -->
       <div style="display: flex; gap: 18px; margin-bottom: 16px; border-bottom: 1px solid var(--border-glass); padding-bottom: 16px; align-items: center; flex-wrap: wrap;">
-        <!-- BANNER 5:4 OUTFIT -->
-        <div style="width: 145px; height: 116px; border-radius: var(--radius-sm); overflow: hidden; border: 1.5px solid var(--border-gold); flex-shrink: 0; box-shadow: var(--shadow-metallic); position: relative; background: #0B0E14;">
+        <!-- BANNER 5:4 OUTFIT (CLIC PARA AMPLIAR EN HD) -->
+        <div style="width: 145px; height: 116px; border-radius: var(--radius-sm); overflow: hidden; border: 1.5px solid var(--border-gold); flex-shrink: 0; box-shadow: var(--shadow-metallic); position: relative; background: #0B0E14; cursor: pointer;" onclick="if(typeof openOutfitLightbox === 'function') openOutfitLightbox('${dayKey}');" title="Haz clic para ver el outfit completo en alta resolución">
           <img src="assets/outfit_banner_${dayKey}.jpg" alt="Outfit ${day.nombre}" onerror="this.onerror=null; this.src='assets/outfit_look_${dayKey}.jpg';" style="width: 100%; height: 100%; object-fit: cover;">
           <div style="position: absolute; bottom: 0; inset-inline: 0; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, transparent 100%); font-size: 0.65rem; color: #E5B842; font-weight: 700; text-align: center; padding: 3px 4px; font-family: 'Cinzel', serif;">
-            👔 Outfit 5:4
+            👔 Outfit 5:4 🔍
           </div>
         </div>
 

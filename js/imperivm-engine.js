@@ -87,7 +87,8 @@ const IMPERIVM_MEDIA = {
   tantra_breathwork: "assets/tantra_breathwork.jpg",
   tantra_touch: "assets/tantra_touch.jpg",
   tantra_karezza: "assets/tantra_karezza.jpg",
-  tantra_eyegazing: "assets/tantra_eyegazing.jpg"
+  tantra_eyegazing: "assets/tantra_eyegazing.jpg",
+  tantra_polaridad: "assets/tantra_eyegazing_soul_1787946150572.jpg"
 };
 
 // Tabla de rangos: fuente única en js/core/progress.js (CJProgress.LEVELS)
@@ -107,6 +108,290 @@ const STOIC_QUOTES = [
   { text: "La suerte es lo que sucede cuando la preparación se encuentra con la oportunidad.", author: "Séneca" },
   { text: "El alma se tiñe del color de sus pensamientos.", author: "Marco Aurelio" }
 ];
+
+// Helper maestro para nombres visuales de categorías enlazadas a los 9 Banderines
+function formatTaskCategoryBadge(rawCat) {
+  if (!rawCat) return "⚡ General";
+  const cat = String(rawCat).trim();
+  const map = {
+    // 1. Vida
+    "vida:empleo": "👑 Empleo Hannover",
+    "vida:tesis": "👑 Tesis Máster",
+    "vida:tramites": "👑 Trámites & Visa",
+    "vida:general": "👑 Misión Vital",
+    "empleo": "👑 Empleo Hannover",
+    "tesis": "👑 Tesis Máster",
+    "tramites": "👑 Trámites",
+    "vida": "👑 Vida",
+
+    // 2. Exploración
+    "exploracion:lauwersmeer": "🧭 Lauwersmeer",
+    "exploracion:proyectos": "🧭 Proyectos Piratas",
+    "exploracion:agrotech": "🧭 Agrotech",
+    "exploracion:red_maule": "🧭 Maule Red",
+    "exploracion:musica": "🧭 Música & Jazz",
+    "exploracion:arte": "🧭 Arte & Foto",
+    "lauwersmeer": "🧭 Lauwersmeer",
+    "proyectos": "🧭 Proyectos",
+    "agrotech": "🧭 Agrotech",
+    "red_maule": "🧭 Maule Red",
+    "musica": "🧭 Música",
+    "arte": "🧭 Arte",
+    "exploracion": "🧭 Exploración",
+
+    // 3. Amor & Pareja
+    "amor:intimidad": "💖 Presencia Íntima",
+    "amor:pareja": "💖 Vida en Pareja",
+    "amor:acuerdos": "💖 Acuerdos & Diálogo",
+    "amor:aftercare": "💖 Aftercare & Masajes",
+    "amor": "💖 Amor & Pareja",
+    "pareja": "💖 Vida en Pareja",
+    "intimidad": "💖 Intimidad",
+    "acuerdos": "💖 Acuerdos",
+    "aftercare": "💖 Aftercare",
+
+    // 4. Mente & Foco
+    "mente:foco": "🧠 Bloque Deep Work",
+    "mente:aleman": "🧠 Alemán / Idiomas",
+    "mente:lectura": "🧠 Lectura Estoica",
+    "foco": "🧠 Deep Work",
+    "idiomas": "🧠 Alemán",
+    "aleman": "🧠 Alemán",
+    "lectura": "🧠 Lectura",
+    "mente": "🧠 Mente",
+
+    // 5. Salud Somática
+    "salud:nutricion": "🌿 Nutrición Limpia",
+    "salud:somatica": "🌿 Somática & Yoga",
+    "salud:sueno": "🌿 Higiene de Sueño",
+    "nutricion": "🌿 Nutrición Limpia",
+    "salud": "🌿 Salud Somática",
+    "somatica": "🌿 Somática",
+    "sueno": "🌿 Sueño",
+
+    // 6. Deporte & Combate
+    "deporte:gym": "🥊 Campus Gym",
+    "deporte:combate": "🥊 Muay Thai / Sparring",
+    "deporte:cardio": "🥊 Running / Cardio",
+    "entrenamiento": "🥊 Campus Gym",
+    "gym": "🥊 Campus Gym",
+    "combate": "🥊 Muay Thai",
+    "cuerpo": "🥊 Deporte & Gym",
+    "deporte": "🥊 Deporte",
+
+    // 7. Soberanía Financiera
+    "soberania:finanzas": "🪙 Finanzas & Cuentas",
+    "soberania:auditoria": "🪙 Auditoría Gastos",
+    "soberania:ahorro": "🪙 Ahorro Soberano",
+    "finanzas": "🪙 Finanzas",
+    "soberania": "🪙 Soberanía",
+
+    // 8. Naturaleza & Ecosistemas
+    "naturaleza:rewild": "🌲 ReWild & Bosque",
+    "naturaleza:airelibre": "🌲 Naturaleza / Mar",
+    "naturaleza:botanica": "🌲 Botánica / Suelo",
+    "rewild": "🌲 ReWild & Bosque",
+    "naturaleza": "🌲 Naturaleza",
+
+    // 9. Espiritualidad & Ritos
+    "espiritualidad:meditacion": "🕯️ Meditación Vipassana",
+    "espiritualidad:ritos": "🕯️ Ritos Sagrados",
+    "espiritualidad:detox": "🕯️ Detox Energético",
+    "meditacion": "🕯️ Meditación",
+    "espiritualidad": "🕯️ Espiritualidad",
+
+    "general": "⚡ General"
+  };
+
+  if (map[cat]) return map[cat];
+  if (cat.includes(":")) {
+    const parts = cat.split(":");
+    return parts[1].charAt(0).toUpperCase() + parts[1].slice(1);
+  }
+  return cat.charAt(0).toUpperCase() + cat.slice(1);
+}
+window.formatTaskCategoryBadge = formatTaskCategoryBadge;
+
+// ============================================================================
+// ESTRATEGIA DE LA LANZA: CALENDARIOS SEMANALES (MOOD FRESH VS MOOD EMERGENCY)
+// Verificación matemática y vivencial: Los 9 Banderines de Caballería se activan
+// en ambos calendarios a lo largo de los 7 días de la semana.
+// ============================================================================
+const WEEKLY_STRATEGY_SCHEDULE = {
+  fresh: {
+    id: "fresh",
+    name: "Mood Fresh (Ritmo Balanceado & Polimatía)",
+    icon: "🌿",
+    color: "#2DD4BF",
+    badge: "BALANCEADO",
+    slogan: "Punta de lanza matutina (90 min) + Exploración & Ecología + Tardes de Somática & Arte",
+    desc: "Diseñado para sostener el avance de la tesis y empleo sin sobrecarga, dejando espacio regular a la investigación científica, música, entrenamiento y vida en pareja.",
+    pennants: [
+      { id: "vida", name: "Vida", icon: "👑", when: "Lunes a Viernes • 09:30-11:00 (Foco Tesis / Empleo)", status: "✓ ACTIVO" },
+      { id: "exploracion", name: "Exploración", icon: "🧭", when: "Lunes (Paper Lauwersmeer), Miércoles (Agrotech / Música), Sábado (Arte)", status: "✓ ACTIVO" },
+      { id: "amor", name: "Amor & Pareja", icon: "💖", when: "Martes (Presencia), Jueves (Aftercare), Viernes (Cita), Sábado (Tantra)", status: "✓ ACTIVO" },
+      { id: "mente", name: "Mente & Foco", icon: "🧠", when: "Lunes (Lectura estoica), Martes (Alemán B2/C1), Domingo (Estrategia)", status: "✓ ACTIVO" },
+      { id: "salud", name: "Salud Somática", icon: "🌿", when: "Diario (Dinacharya, nutrición limpia, hidratación 3.2L, sueño reparador)", status: "✓ ACTIVO" },
+      { id: "deporte", name: "Deporte & Combate", icon: "🥊", when: "Lunes (Campus Gym), Martes (Cardio), Jueves (Muay Thai), Sábado (Calistenia)", status: "✓ ACTIVO" },
+      { id: "soberania", name: "Soberanía Financiera", icon: "🪙", when: "Domingo • 10:00 (Auditoría semanal cuentas Sparkasse / Banco de Chile)", status: "✓ ACTIVO" },
+      { id: "naturaleza", name: "Naturaleza & Ecosistemas", icon: "🌲", when: "Viernes tarde (Caminata bosque) y Sábado (ReWild / Conexión tierra)", status: "✓ ACTIVO" },
+      { id: "espiritualidad", name: "Espiritualidad & Ritos", icon: "🕯️", when: "Lunes y Domingo noche (Vipassana, Altar ancestral y detox)", status: "✓ ACTIVO" }
+    ],
+    days: {
+      lunes: {
+        focus: "Fuerza Base & Inicio Armónico",
+        blocks: [
+          { time: "09:30 - 11:00", title: "Bloque Foco: Empleo Hannover & Tesis", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "Paper Lauwersmeer (Análisis & Redacción)", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "17:00 - 18:30", title: "Campus Martius (Gym Hipertrofia)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "21:30 - 22:00", title: "Vipassana & Lectura Marco Aurelio", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+        ]
+      },
+      martes: {
+        focus: "Idiomas, Resistencia & Pareja",
+        blocks: [
+          { time: "09:30 - 11:00", title: "Networking & Postulaciones Hannover", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "Alemán Intensivo (B2/C1 Gramática & Habla)", aura: "mente", badge: "🧠 Mente" },
+          { time: "17:30 - 18:30", title: "Running & Resistencia Aeróbica", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "20:00 - 22:00", title: "Presencia Íntima & Cena en Pareja", aura: "amor", badge: "💖 Amor" }
+        ]
+      },
+      miercoles: {
+        focus: "Proyectos Piratas & Música Jazz",
+        blocks: [
+          { time: "09:30 - 11:00", title: "Proyectos Piratas & Agrotech Huerta", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "11:30 - 13:00", title: "Revisión Documentos Vitales & Tesis", aura: "vida", badge: "👑 Vida" },
+          { time: "16:00 - 17:30", title: "Trompeta, Práctica Jazz & Escalas", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "18:00 - 19:00", title: "Yoga Somático & Fascia Release", aura: "salud", badge: "🌿 Salud" }
+        ]
+      },
+      jueves: {
+        focus: "Combate Marcial & Complicidad",
+        blocks: [
+          { time: "09:30 - 11:00", title: "Entrevistas & Postulaciones Hannover", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "Maule Red & Museo Digital", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "17:30 - 19:00", title: "Muay Thai & Sparring de Combate", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "20:30 - 22:00", title: "Aftercare, Masajes & Diálogo Profundo", aura: "amor", badge: "💖 Amor" }
+        ]
+      },
+      viernes: {
+        focus: "Cierre de Frente & Naturaleza",
+        blocks: [
+          { time: "09:30 - 11:00", title: "Cierre Semanal de Postulaciones", aura: "vida", badge: "👑 Vida" },
+          { time: "15:00 - 17:00", title: "Caminata Bosque & Respiración Libre", aura: "naturaleza", badge: "🌲 Naturaleza" },
+          { time: "20:00 - 23:00", title: "Cita Romántica & Cena en Pareja", aura: "amor", badge: "💖 Amor" }
+        ]
+      },
+      sabado: {
+        focus: "ReWild, Arte & Tantra",
+        blocks: [
+          { time: "10:00 - 13:00", title: "Expedición ReWild Bosque o Mar", aura: "naturaleza", badge: "🌲 Naturaleza" },
+          { time: "16:00 - 17:30", title: "Pintura al Óleo, Bocetos o Fotografía", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "18:00 - 19:15", title: "Calistenia o Bouldering al Aire Libre", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "21:00 - 23:00", title: "Tantra & Polaridad Somática", aura: "amor", badge: "💖 Amor" }
+        ]
+      },
+      domingo: {
+        focus: "Soberanía, Ritos & Alineación",
+        blocks: [
+          { time: "10:00 - 11:30", title: "Auditoría Dominical Cuentas Sparkasse/Chile", aura: "soberania", badge: "🪙 Soberanía" },
+          { time: "12:00 - 14:00", title: "Meal Prep Semanal Nutrición Limpia", aura: "salud", badge: "🌿 Salud" },
+          { time: "17:00 - 18:30", title: "Lectura Estoica & Plan de la Semana", aura: "mente", badge: "🧠 Mente" },
+          { time: "21:00 - 22:00", title: "Ritos Sagrados, Altar & Vipassana", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+        ]
+      }
+    }
+  },
+  emergency: {
+    id: "emergency",
+    name: "Mood Emergency (Asalto Frontal al Empleo)",
+    icon: "🚨",
+    color: "#E11D48",
+    badge: "2X EMPLEO",
+    slogan: "Doble Bloque Diario (3h) Empleo Hannover + Astil Somático de Máxima Resistencia",
+    desc: "Prioridad número uno: firmar contrato laboral en Alemania. 2 bloques diarios de asalto frontal al mercado (10 bloques semanales), blindando la energía con deporte, presencia de pareja y auditoría dominical.",
+    pennants: [
+      { id: "vida", name: "Vida", icon: "👑", when: "Lunes a Viernes • 2 BLOQUES DIARIOS (09:00-10:30 y 11:30-13:00: 10 bloques de empleo)", status: "✓ ACTIVO (MÁXIMO FOCO)" },
+      { id: "exploracion", name: "Exploración", icon: "🧭", when: "Martes (Check Paper 45m) y Sábado (Despeje Creativo / Trompeta 1h)", status: "✓ ACTIVO" },
+      { id: "amor", name: "Amor & Pareja", icon: "💖", when: "Martes a Sábado (Presencia íntima, Aftercare, Cita viernes y Tantra sábado)", status: "✓ ACTIVO" },
+      { id: "mente", name: "Mente & Foco", icon: "🧠", when: "Lunes (Alemán para entrevistas), Miércoles (Estoicismo contra ansiedad), Domingo (Planificación)", status: "✓ ACTIVO" },
+      { id: "salud", name: "Salud Somática", icon: "🌿", when: "Diario (Nutrición limpia 2,950 kcal, Hidratación 3.2L, Sueño reparador, Meal Prep dom)", status: "✓ ACTIVO" },
+      { id: "deporte", name: "Deporte & Combate", icon: "🥊", when: "Lunes (Fuerza gym), Martes (Running cortisol), Jueves (Muay Thai), Sábado (Cardio)", status: "✓ ACTIVO" },
+      { id: "soberania", name: "Soberanía Financiera", icon: "🪙", when: "Domingo • 10:00 (Blindaje estricto de caja y presupuesto durante búsqueda de empleo)", status: "✓ ACTIVO" },
+      { id: "naturaleza", name: "Naturaleza & Ecosistemas", icon: "🌲", when: "Viernes tarde (Caminata bosque) y Sábado mañana (Oxigenación profunda ReWild)", status: "✓ ACTIVO" },
+      { id: "espiritualidad", name: "Espiritualidad & Ritos", icon: "🕯️", when: "Lunes noche (Vipassana descompresión) y Domingo noche (Altar & Templanza)", status: "✓ ACTIVO" }
+    ],
+    days: {
+      lunes: {
+        focus: "Asalto 1: Oleada Masiva de Postulaciones",
+        blocks: [
+          { time: "09:00 - 10:30", title: "Punta de Lanza 1: 10 CVs en StepStone/LinkedIn/Indeed", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "Punta de Lanza 2: Anschreiben personalizadas & Follow-up", aura: "vida", badge: "👑 Vida" },
+          { time: "16:30 - 17:30", title: "Alemán Técnico para Entrevistas Laborales", aura: "mente", badge: "🧠 Mente" },
+          { time: "18:00 - 19:15", title: "Campus Martius (Fuerza Rápida Antiestrés)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "21:30 - 22:00", title: "Vipassana 15m (Disolver Ansiedad de Futuro)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+        ]
+      },
+      martes: {
+        focus: "Asalto 2: Compañías Clave & Pareja",
+        blocks: [
+          { time: "09:00 - 10:30", title: "Punta de Lanza 1: Postulaciones directas en Hannover", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "Punta de Lanza 2: Mock Interview & Guiones técnicos", aura: "vida", badge: "👑 Vida" },
+          { time: "16:00 - 17:00", title: "Mantenimiento Paper Lauwersmeer (Check rápido)", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "17:30 - 18:30", title: "Running 6km (Descarga de Cortisol)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "20:00 - 22:00", title: "Presencia Íntima & Apoyo Mutuo en Pareja", aura: "amor", badge: "💖 Amor" }
+        ]
+      },
+      miercoles: {
+        focus: "Asalto 3: Trámites, Visa & Templanza",
+        blocks: [
+          { time: "09:00 - 10:30", title: "Punta de Lanza 1: Llamadas, recruiters & respuestas", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "Punta de Lanza 2: Trámites Visa, Título & Cartas", aura: "vida", badge: "👑 Vida" },
+          { time: "16:00 - 17:00", title: "Lectura Estoica (Séneca: Calma ante el azar)", aura: "mente", badge: "🧠 Mente" },
+          { time: "17:30 - 18:30", title: "Estiramientos Somáticos & Respiración Diafragma", aura: "salud", badge: "🌿 Salud" },
+          { time: "20:30 - 22:00", title: "Cena Afectiva sin Pantallas & Diálogo Calmo", aura: "amor", badge: "💖 Amor" }
+        ]
+      },
+      jueves: {
+        focus: "Asalto 4: Segunda Oleada & Combate",
+        blocks: [
+          { time: "09:00 - 10:30", title: "Punta de Lanza 1: 8 Postulaciones adicionales", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "Punta de Lanza 2: Contacto con Hiring Managers", aura: "vida", badge: "👑 Vida" },
+          { time: "17:30 - 19:00", title: "Muay Thai & Sparring (Energía del Guerrero)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "20:30 - 22:00", title: "Aftercare, Masajes & Apoyo con Marie", aura: "amor", badge: "💖 Amor" }
+        ]
+      },
+      viernes: {
+        focus: "Asalto 5: Cierre & Reseteo en Bosque",
+        blocks: [
+          { time: "09:00 - 10:30", title: "Punta de Lanza 1: Seguimiento semanal exhaustivo", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "Punta de Lanza 2: Agenda de entrevistas semana próx.", aura: "vida", badge: "👑 Vida" },
+          { time: "15:30 - 17:00", title: "Reseteo en Bosque / ReWild (Cero móvil)", aura: "naturaleza", badge: "🌲 Naturaleza" },
+          { time: "20:00 - 23:00", title: "Cita Romántica: Desconexión Laboral Total", aura: "amor", badge: "💖 Amor" }
+        ]
+      },
+      sabado: {
+        focus: "Desconexión, ReWild & Goce",
+        blocks: [
+          { time: "10:00 - 13:00", title: "ReWild & Senderismo (Oxigenación profunda)", aura: "naturaleza", badge: "🌲 Naturaleza" },
+          { time: "16:00 - 17:00", title: "Despeje Creativo (Música o Escritura)", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "17:30 - 18:30", title: "Cardio al aire libre o Calistenia", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "21:00 - 23:00", title: "Tantra & Polaridad Somática", aura: "amor", badge: "💖 Amor" }
+        ]
+      },
+      domingo: {
+        focus: "Blindaje Financiero, Meal Prep & Ritos",
+        blocks: [
+          { time: "10:00 - 11:30", title: "Auditoría de Gastos & Blindaje de Caja", aura: "soberania", badge: "🪙 Soberanía" },
+          { time: "12:00 - 14:00", title: "Meal Prep: Comidas listas para toda la semana", aura: "salud", badge: "🌿 Salud" },
+          { time: "17:00 - 18:30", title: "Estrategia de la Lanza: Semana entrante", aura: "mente", badge: "🧠 Mente" },
+          { time: "21:00 - 22:00", title: "Altar Ancestral & Meditación de Templanza", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+        ]
+      }
+    }
+  }
+};
+window.WEEKLY_STRATEGY_SCHEDULE = WEEKLY_STRATEGY_SCHEDULE;
 
 // Misiones de Campaña por defecto para garantizar que NUNCA aparezcan vacías
 const DEFAULT_MAIN_QUESTS = [
@@ -196,6 +481,7 @@ let imperivmState = {
   cuerpoFilter: "entrenamiento", // compatibilidad con llamadas previas
   exploracionFilter: "todos", // "todos" | "intelecto" | "artes"
   activeDayTabKey: "momentos", // "momentos" | "nutricion" | "entrenamiento" | "dieta" | "outfit" | "tareas"
+  weeklyMood: localStorage.getItem("CABALLERO_WEEKLY_MOOD") || "emergency", // "fresh" | "emergency"
   savedScrollY: 0
 };
 
@@ -424,16 +710,67 @@ const imperivmEngine = {
           
           <div style="display: flex; gap: 10px; margin-bottom: 14px;">
             <select id="quick-task-scope-select" style="flex: 1; background: #151C2C; border: 1px solid var(--imperivm-border); border-radius: 6px; padding: 8px 10px; color: #FFF; font-size: 0.82rem;">
-              <option value="daily">Tarea para Hoy</option>
-              <option value="weekly">Tarea Semanal</option>
+              <option value="daily">📅 Tarea para Hoy</option>
+              <option value="weekly">🗓️ Tarea Semanal</option>
+              <option value="lunes">🔹 Lunes</option>
+              <option value="martes">🔹 Martes</option>
+              <option value="miercoles">🔹 Miércoles</option>
+              <option value="jueves">🔹 Jueves</option>
+              <option value="viernes">🔹 Viernes</option>
+              <option value="sabado">🔹 Sábado</option>
+              <option value="domingo">🔹 Domingo</option>
             </select>
             <select id="quick-task-cat-select" style="flex: 1; background: #151C2C; border: 1px solid var(--imperivm-border); border-radius: 6px; padding: 8px 10px; color: #FFF; font-size: 0.82rem;">
-              <option value="foco">Foco / Deep Work</option>
-              <option value="tesis">Tesis Máster</option>
-              <option value="idiomas">Alemán / Idiomas</option>
-              <option value="musica">Trompeta / Jazz</option>
-              <option value="finanzas">Finanzas / Sparkasse</option>
-              <option value="salud">Somática / Gym</option>
+              <optgroup label="👑 1. BANDERÍN VIDA (Misiones Principales)">
+                <option value="vida:empleo">🇩🇪 Empleo Hannover / Postulaciones</option>
+                <option value="vida:tesis">🎓 Tesis Máster / Entregables</option>
+                <option value="vida:tramites">📑 Visa, Trámites & Consulado</option>
+                <option value="vida:general">👑 Misión Vital / General</option>
+              </optgroup>
+              <optgroup label="🧭 2. BANDERÍN EXPLORACIÓN (Misiones Secundarias)">
+                <option value="exploracion:lauwersmeer">🌊 Paper Lauwersmeer (Holanda)</option>
+                <option value="exploracion:proyectos">🏴‍☠️ Proyectos Piratas / Ideas</option>
+                <option value="exploracion:agrotech">🌱 Agrotech / Huerta Urbana</option>
+                <option value="exploracion:red_maule">🌐 Maule Red / Museo Digital</option>
+                <option value="exploracion:musica">🎺 Música / Jazz & Trompeta</option>
+                <option value="exploracion:arte">🎨 Arte, Dibujo & Fotografía</option>
+              </optgroup>
+              <optgroup label="💖 3. BANDERÍN AMOR & PAREJA (Goce & Vínculo)">
+                <option value="amor:intimidad">🕯️ Presencia Íntima & Polaridad</option>
+                <option value="amor:pareja">🍷 Cita / Tiempo de Calidad en Pareja</option>
+                <option value="amor:acuerdos">💬 Conversación Consciente & Acuerdos</option>
+                <option value="amor:aftercare">💆 Aftercare, Masajes & Caricias</option>
+              </optgroup>
+              <optgroup label="🧠 4. BANDERÍN MENTE & FOCO ESTOICO">
+                <option value="mente:foco">🎯 Bloque Deep Work (90 min)</option>
+                <option value="mente:aleman">🗣️ Alemán / Idiomas</option>
+                <option value="mente:lectura">📜 Lectura Estoica & Filosofía</option>
+              </optgroup>
+              <optgroup label="🌿 5. BANDERÍN SALUD SOMÁTICA">
+                <option value="salud:nutricion">🥑 Nutrición Limpia & Meal Prep</option>
+                <option value="salud:somatica">🌿 Somática, Respiración & Yoga</option>
+                <option value="salud:sueno">🌙 Higiene de Sueño (7-8h)</option>
+              </optgroup>
+              <optgroup label="🥊 6. BANDERÍN DEPORTE & COMBATE">
+                <option value="deporte:gym">🏋️ Campus Martius / Hipertrofia</option>
+                <option value="deporte:combate">🥊 Muay Thai / Sparring</option>
+                <option value="deporte:cardio">🏃 Running / Resistencia</option>
+              </optgroup>
+              <optgroup label="🪙 7. BANDERÍN SOBERANÍA FINANCIERA">
+                <option value="soberania:finanzas">💶 Finanzas Sparkasse & Chile</option>
+                <option value="soberania:auditoria">📊 Auditoría Dominical de Gastos</option>
+                <option value="soberania:ahorro">🛡️ Cero Gastos Hormiga</option>
+              </optgroup>
+              <optgroup label="🌲 8. BANDERÍN NATURALEZA & ECOSISTEMAS">
+                <option value="naturaleza:rewild">🔥 ReWild & Bosque Nativo</option>
+                <option value="naturaleza:airelibre">🏕️ Senderismo & Conexión Tierra</option>
+                <option value="naturaleza:botanica">🌿 Botánica & Suelo</option>
+              </optgroup>
+              <optgroup label="🕯️ 9. BANDERÍN ESPIRITUALIDAD & RITOS">
+                <option value="espiritualidad:meditacion">🧘 Meditación Vipassana</option>
+                <option value="espiritualidad:ritos">🪶 Ritos Sagrados & Altar</option>
+                <option value="espiritualidad:detox">⚡ Detox Energético & Transmutación</option>
+              </optgroup>
             </select>
           </div>
 
@@ -441,6 +778,13 @@ const imperivmEngine = {
             <button class="btn-imperivm-secondary" onclick="imperivmEngine.closeAddTaskModal();">Cancelar</button>
             <button class="btn-imperivm-primary" onclick="imperivmEngine.saveQuickTask();">Guardar Tarea</button>
           </div>
+        </div>
+      </div>
+
+      <!-- MODAL MAESTRO: ESTRATEGIA DE LA LANZA (9 BANDERINES & CALENDARIO) -->
+      <div id="imperivm-estrategia-lanza-modal" class="imperivm-focus-overlay">
+        <div class="imperivm-focus-modal" style="max-width: 980px; width: 95%; max-height: 90vh; overflow-y: auto; text-align: left; background: #0B0E14; border: 1.5px solid var(--imperivm-border-gold); padding: 24px 28px; border-radius: 14px; box-shadow: 0 16px 48px rgba(0,0,0,0.9);">
+          <div id="estrategia-lanza-modal-content"></div>
         </div>
       </div>
 
@@ -511,13 +855,30 @@ const imperivmEngine = {
       { key: "domingo", label: "DOMINGO", tema: "Descanso, Lectura & Cierre", img: IMPERIVM_MEDIA.outfit_domingo }
     ];
 
+    const currentMood = localStorage.getItem("CABALLERO_WEEKLY_MOOD") || imperivmState.weeklyMood || "emergency";
+    const scheduleData = (typeof WEEKLY_STRATEGY_SCHEDULE !== "undefined") ? WEEKLY_STRATEGY_SCHEDULE[currentMood] : null;
+    const todayPlan = (scheduleData && scheduleData.days && scheduleData.days[today]) ? scheduleData.days[today] : { focus: "Estrategia Activa", blocks: [] };
+
     return `
       <div class="imperivm-rail-section" id="rail-today-flow">
         <div class="imperivm-rail-header">
           <div class="imperivm-rail-title-group">
             <h3 class="imperivm-rail-title">🌅 Plan de Hoy • ${today.toUpperCase()} <span class="dev-section-label">#rail-today-flow</span></h3>
           </div>
-          <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <!-- SELECTOR DE ESTRATEGIA: MOOD FRESH VS MOOD EMERGENCY -->
+            <div style="display: flex; gap: 4px; background: rgba(0,0,0,0.5); padding: 3px 5px; border-radius: 8px; border: 1px solid rgba(212,175,55,0.25);">
+              <button class="btn-mood-toggle ${currentMood === 'fresh' ? 'active-fresh' : ''}" onclick="imperivmEngine.switchWeeklyMood('fresh');" title="Activar Mood Fresh (Ritmo Balanceado & Polimatía)">
+                🌿 Fresh
+              </button>
+              <button class="btn-mood-toggle ${currentMood === 'emergency' ? 'active-emergency' : ''}" onclick="imperivmEngine.switchWeeklyMood('emergency');" title="Activar Mood Emergency (Asalto Frontal: 2x Bloques de Empleo)">
+                🚨 Emergency (2x Empleo)
+              </button>
+              <button class="btn-mood-toggle" onclick="imperivmEngine.openEstrategiaLanzaModal();" style="border-color: rgba(212,175,55,0.4); color: #F59E0B;" title="Ver Matriz de los 9 Banderines">
+                🗡️ Matriz 9 Banderines
+              </button>
+            </div>
+
             <button id="btn-toggle-weekly-explorer" class="btn-imperivm-primary" style="padding: 6px 14px; font-size: 0.78rem; border-radius: 6px; cursor: pointer;" onclick="imperivmEngine.toggleWeeklyExplorer();">
               ${imperivmState.weeklyExplorerOpen ? '📅 Ocultar semana ▲' : '📅 Ver resto de la semana ▾'}
             </button>
@@ -526,6 +887,32 @@ const imperivmEngine = {
               <button class="imperivm-nav-arrow" onclick="imperivmEngine.scrollTrack('today-flow-track', 360);" title="Siguiente">▶</button>
             </div>
           </div>
+        </div>
+
+        <!-- BANNER CINEMÁTICO DE LA ESTRATEGIA DE LA LANZA EN VIVO -->
+        <div style="margin-bottom: 14px; background: ${currentMood === 'emergency' ? 'linear-gradient(90deg, rgba(225,29,72,0.18) 0%, rgba(15,20,30,0.85) 100%)' : 'linear-gradient(90deg, rgba(16,185,129,0.18) 0%, rgba(15,20,30,0.85) 100%)'}; border: 1px solid ${currentMood === 'emergency' ? 'rgba(244,63,94,0.4)' : 'rgba(16,185,129,0.4)'}; border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; box-shadow: 0 4px 18px rgba(0,0,0,0.4);">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="font-size: 1.6rem; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 6px 10px; border: 1px solid rgba(255,255,255,0.08);">
+              ${currentMood === 'emergency' ? '🚨' : '🌿'}
+            </div>
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                <span style="font-size: 0.9rem; font-weight: 800; color: ${currentMood === 'emergency' ? '#FDA4AF' : '#6EE7B7'}; font-family: var(--imperivm-font-title); letter-spacing: 0.04em;">
+                  ${scheduleData ? scheduleData.name.toUpperCase() : 'ESTRATEGIA SEMANAL'}
+                </span>
+                <span class="badge-tag ${currentMood === 'emergency' ? 'badge-pink' : 'badge-emerald'}" style="font-size: 0.65rem; padding: 2px 7px;">
+                  ${today.toUpperCase()}: ${todayPlan.focus}
+                </span>
+              </div>
+              <div style="font-size: 0.77rem; color: #DDD; margin-top: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                <span style="color: var(--imperivm-text-gold); font-weight: 700;">Bloques de hoy:</span>
+                ${todayPlan.blocks.map(b => `<span style="background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);"><strong style="color: #FFF;">${b.time}</strong> ${b.badge} • ${b.title}</span>`).join(' ')}
+              </div>
+            </div>
+          </div>
+          <button onclick="imperivmEngine.openEstrategiaLanzaModal();" style="background: rgba(212,175,55,0.12); border: 1px solid var(--imperivm-border-gold); color: var(--imperivm-text-gold); padding: 8px 14px; border-radius: 6px; font-size: 0.76rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
+            <span>🗡️ Ver Matriz Completa de los 9 Banderines ➔</span>
+          </button>
         </div>
 
         <div class="imperivm-carousel-track" id="today-flow-track">
@@ -644,13 +1031,13 @@ const imperivmEngine = {
     ];
 
     const habitosItems = [
-      { id: "nietzsche", title: "🏛️ Conexión & Pareja", img: IMPERIVM_MEDIA.construccion_nietzsche, type: "construccion" },
+      { id: "nietzsche", title: "🏛️ La Síntesis Nietzscheana", img: IMPERIVM_MEDIA.construccion_nietzsche, type: "construccion" },
       { id: "tscore", title: "📊 Vitalidad & Energía", img: IMPERIVM_MEDIA.construccion_tscore, type: "construccion" },
       { id: "monk", title: "🧠 Enfoque & Cero Distracciones", img: IMPERIVM_MEDIA.construccion_monk, type: "construccion" },
       { id: "estoicismo", title: "🏛️ Calma & Control Emocional", img: IMPERIVM_MEDIA.construccion_filosofia, type: "construccion" },
       { id: "biohacking", title: "⚡ Energía, Frío & Descanso", img: IMPERIVM_MEDIA.construccion_biohacking, type: "construccion" },
       { id: "honor", title: "👑 Código de Conducta", img: IMPERIVM_MEDIA.construccion_honor, type: "construccion" },
-      { id: "tantra", title: "🔥 Presencia & Conexión Íntima", img: IMPERIVM_MEDIA.tantra_karezza, type: "construccion" },
+      { id: "tantra", title: "🔥 Presencia & Conexión Íntima", img: IMPERIVM_MEDIA.tantra_polaridad, type: "construccion" },
       { id: "finanzas", title: "⚖️ Finanzas & Ahorro", img: IMPERIVM_MEDIA.finanzas_sparkasse, type: "finanzas" }
     ];
 
@@ -1257,7 +1644,9 @@ const imperivmEngine = {
 
   // --- CONMUTADOR DE PESTAÑAS EN DRAWER DE DÍA ---
   switchDayDrawerTab(dayKey, subTab) {
+    if (subTab === "dieta") subTab = "nutricion";
     imperivmState.activeDayTabKey = subTab;
+    this.activeDrawerDayKey = dayKey;
     this.openFullDayDrawer(dayKey, subTab);
   },
 
@@ -1275,7 +1664,7 @@ const imperivmEngine = {
       vespera: "momentos",
       nutricion: "nutricion",
       entrenamiento: "entrenamiento",
-      dieta: "dieta",
+      dieta: "nutricion",
       outfit: "outfit",
       tareas: "tareas"
     };
@@ -1309,15 +1698,19 @@ const imperivmEngine = {
 
     const completedMap = (typeof completedSomaticBlocks !== "undefined") ? completedSomaticBlocks : JSON.parse(localStorage.getItem("completedSomaticBlocks") || "{}");
     const allTasks = (typeof appState !== "undefined" && Array.isArray(appState.tasks)) ? appState.tasks : [];
-    const dailyTasks = allTasks.filter(t => t.timeScope === "daily");
+    const dayTasks = allTasks.filter(t => (t.targetDay === dayKey) || (!t.targetDay && t.timeScope === "daily" && isToday));
+    const weeklyTasks = allTasks.filter(t => t.timeScope === "weekly");
+
+    const currentMood = localStorage.getItem("CABALLERO_WEEKLY_MOOD") || imperivmState.weeklyMood || "emergency";
+    const currentSchedule = (typeof WEEKLY_STRATEGY_SCHEDULE !== "undefined") ? WEEKLY_STRATEGY_SCHEDULE[currentMood] : null;
+    const moodDayPlan = (currentSchedule && currentSchedule.days && currentSchedule.days[dayKey]) ? currentSchedule.days[dayKey] : null;
 
     // Subpestañas contextuales limpias e integradas
     const subtabsHTML = `
       <div class="day-contextual-subtabs">
         <button class="btn-day-subtab ${subTab === 'momentos' ? 'active' : ''}" onclick="imperivmEngine.switchDayDrawerTab('${dayKey}', 'momentos');">🌅 Momentos</button>
-        <button class="btn-day-subtab ${subTab === 'nutricion' ? 'active' : ''}" onclick="imperivmEngine.switchDayDrawerTab('${dayKey}', 'nutricion');">🥑 Nutrición</button>
+        <button class="btn-day-subtab ${subTab === 'nutricion' || subTab === 'dieta' ? 'active' : ''}" onclick="imperivmEngine.switchDayDrawerTab('${dayKey}', 'nutricion');">🥑 Nutrición & Dieta</button>
         <button class="btn-day-subtab ${subTab === 'entrenamiento' ? 'active' : ''}" onclick="imperivmEngine.switchDayDrawerTab('${dayKey}', 'entrenamiento');">🏋️‍♂️ Entrenamiento</button>
-        <button class="btn-day-subtab ${subTab === 'dieta' ? 'active' : ''}" onclick="imperivmEngine.switchDayDrawerTab('${dayKey}', 'dieta');">🥗 Dieta</button>
         <button class="btn-day-subtab ${subTab === 'outfit' ? 'active' : ''}" onclick="imperivmEngine.switchDayDrawerTab('${dayKey}', 'outfit');">🧥 Indumentaria</button>
         <button class="btn-day-subtab ${subTab === 'tareas' ? 'active' : ''}" onclick="imperivmEngine.switchDayDrawerTab('${dayKey}', 'tareas');">📋 Tareas</button>
       </div>
@@ -1328,6 +1721,30 @@ const imperivmEngine = {
     if (subTab === "momentos") {
       contentHTML = `
         <div style="display: flex; flex-direction: column; gap: 14px;">
+          <!-- BLOQUE DE ESTRATEGIA DE LA LANZA PARA ESTE DÍA -->
+          ${moodDayPlan ? `
+            <div style="background: ${currentMood === 'emergency' ? 'linear-gradient(135deg, rgba(225,29,72,0.18) 0%, rgba(14,18,29,0.9) 100%)' : 'linear-gradient(135deg, rgba(16,185,129,0.18) 0%, rgba(14,18,29,0.9) 100%)'}; border: 1.5px solid ${currentMood === 'emergency' ? 'rgba(244,63,94,0.4)' : 'rgba(16,185,129,0.4)'}; border-radius: 8px; padding: 12px 14px; margin-bottom: 4px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <div style="display: flex; align-items: center; gap: 6px;">
+                  <span style="font-size: 1.1rem;">${currentMood === 'emergency' ? '🚨' : '🌿'}</span>
+                  <strong style="color: ${currentMood === 'emergency' ? '#FDA4AF' : '#6EE7B7'}; font-size: 0.86rem; font-family: var(--imperivm-font-title);">
+                    Estrategia ${currentMood === 'emergency' ? 'Mood Emergency' : 'Mood Fresh'}: ${moodDayPlan.focus}
+                  </strong>
+                </div>
+                <button onclick="imperivmEngine.openEstrategiaLanzaModal();" style="background: rgba(255,255,255,0.08); border: 1px solid var(--imperivm-border-gold); color: var(--imperivm-text-gold); border-radius: 4px; padding: 3px 8px; font-size: 0.68rem; cursor: pointer;">
+                  🗡️ Cambiar Modo
+                </button>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 5px;">
+                ${moodDayPlan.blocks.map(b => `
+                  <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.35); padding: 6px 10px; border-radius: 5px; font-size: 0.76rem;">
+                    <span style="color: #FFF;"><strong style="color: var(--imperivm-text-gold);">${b.time}</strong> • ${b.title}</span>
+                    <span class="badge-tag badge-gold" style="font-size: 0.62rem; padding: 1px 6px;">${b.badge}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
           <!-- AURORA -->
           <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--imperivm-border); border-radius: 8px; padding: 14px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
@@ -1454,41 +1871,21 @@ const imperivmEngine = {
           `).join('') : '<p style="font-size: 0.8rem; color: var(--imperivm-text-muted);">Sentadillas búlgaras, dominadas estrictas, fondos en paralelas y movilidad articular.</p>'}
         </div>
       `;
-    } else if (subTab === "dieta") {
-      contentHTML = `
-        <div style="display: flex; flex-direction: column; gap: 16px;">
-          <div style="border-radius: 8px; overflow: hidden; height: 180px; border: 1px solid var(--imperivm-border);">
-            <img src="${IMPERIVM_MEDIA.nutricion}" style="width: 100%; height: 100%; object-fit: cover;">
-          </div>
-          <h4 style="font-family: var(--imperivm-font-title); font-size: 1.25rem; color: #FFF; margin: 0;">${nutData ? nutData.titulo : "Ración & Menú Somático"}</h4>
-          
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--imperivm-border); border-radius: 8px; padding: 12px; text-align: center;">
-              <span style="font-size: 0.72rem; color: var(--imperivm-text-muted); text-transform: uppercase;">Calorías Meta</span>
-              <h5 style="color: var(--imperivm-text-gold); margin: 4px 0 0 0; font-size: 1.2rem;">${nutData ? nutData.calorias_meta : "2,400 kcal"}</h5>
-            </div>
-            <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--imperivm-border); border-radius: 8px; padding: 12px; text-align: center;">
-              <span style="font-size: 0.72rem; color: var(--imperivm-text-muted); text-transform: uppercase;">Proteína Meta</span>
-              <h5 style="color: #52C41A; margin: 4px 0 0 0; font-size: 1.2rem;">${nutData ? nutData.proteina_meta : "160g"}</h5>
-            </div>
-          </div>
-
-          <h5 style="color: #FFF; margin: 4px 0 0 0; font-size: 0.95rem;">Distribución de Comidas:</h5>
-          ${nutData && Array.isArray(nutData.comidas) ? nutData.comidas.map(c => `
-            <div style="border-left: 2px solid var(--imperivm-border-gold); padding-left: 12px; margin-bottom: 8px;">
-              <strong style="font-size: 0.84rem; color: #FFF;">${c.nombre}:</strong>
-              <p style="font-size: 0.78rem; color: var(--imperivm-text-muted); margin: 2px 0 0 0;">${c.plato || c.descripcion}</p>
-            </div>
-          `).join('') : '<p style="font-size: 0.8rem; color: var(--imperivm-text-muted);">Huevos de pastoreo, verduras salteadas, carnes magras, arroz integral y aguacate.</p>'}
-        </div>
-      `;
     } else if (subTab === "outfit") {
       contentHTML = `
         <div style="display: flex; flex-direction: column; gap: 16px;">
-          <div style="border-radius: 8px; overflow: hidden; height: 260px; border: 1.5px solid var(--imperivm-border-gold);">
+          <div style="border-radius: 8px; overflow: hidden; height: 260px; border: 1.5px solid var(--imperivm-border-gold); cursor: pointer; position: relative;" onclick="if(typeof openOutfitLightbox === 'function') openOutfitLightbox('${dayKey}');" title="Haz clic para ver atuendo completo en alta resolución">
             <img src="${outfitImg}" style="width: 100%; height: 100%; object-fit: cover;">
+            <div style="position: absolute; bottom: 8px; right: 8px; background: rgba(0,0,0,0.8); border: 1px solid var(--imperivm-border-gold); border-radius: 4px; padding: 4px 8px; font-size: 0.72rem; color: #E5B842; font-weight: 700;">
+              🔍 Clic para Ampliar HD
+            </div>
           </div>
-          <h4 style="font-family: var(--imperivm-font-title); font-size: 1.25rem; color: #FFF; margin: 0;">Prescripción de Indumentaria Somática</h4>
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h4 style="font-family: var(--imperivm-font-title); font-size: 1.25rem; color: #FFF; margin: 0;">Prescripción de Indumentaria Somática</h4>
+            <button class="btn-imperivm-primary" style="padding: 6px 12px; font-size: 0.75rem;" onclick="if(typeof openOutfitLightbox === 'function') openOutfitLightbox('${dayKey}');">
+              🔍 Ver Lookbook Completo
+            </button>
+          </div>
           
           <div style="background: rgba(255,255,255,0.04); border: 1px solid var(--imperivm-border); border-radius: 8px; padding: 14px;">
             <strong style="color: var(--imperivm-text-gold); font-size: 0.85rem; display: block; margin-bottom: 4px;">🧥 Capa Exterior:</strong>
@@ -1510,20 +1907,49 @@ const imperivmEngine = {
       contentHTML = `
         <div style="display: flex; flex-direction: column; gap: 16px;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h4 style="font-family: var(--imperivm-font-title); font-size: 1.2rem; color: #FFF; margin: 0;">Checklist Diario Activo</h4>
-            <button class="btn-imperivm-primary" style="padding: 6px 12px; font-size: 0.78rem;" onclick="imperivmEngine.openAddTaskModal('daily');">+ Nueva Tarea</button>
+            <div>
+              <h4 style="font-family: var(--imperivm-font-title); font-size: 1.2rem; color: #FFF; margin: 0;">Deberes para ${dayKey.toUpperCase()}</h4>
+              <span style="font-size: 0.72rem; color: var(--imperivm-text-muted);">Checklist asignado al día y metas semanales</span>
+            </div>
+            <button class="btn-imperivm-primary" style="padding: 6px 12px; font-size: 0.78rem;" onclick="imperivmEngine.openAddTaskModal('daily', '${dayKey}');">+ Nueva Tarea</button>
           </div>
 
-          <div style="display: flex; flex-direction: column; gap: 8px; max-height: 50vh; overflow-y: auto;">
-            ${dailyTasks.length > 0 ? dailyTasks.map(t => `
-              <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--imperivm-border); border-radius: 6px;">
-                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; flex: 1; ${t.completed ? 'text-decoration: line-through; opacity: 0.6;' : ''}">
-                  <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="imperivmEngine.toggleTaskInline('${t.id}')">
-                  <span style="font-size: 0.85rem; color: #FFF;">${t.title}</span>
-                </label>
-                <span class="badge-tag badge-gold" style="font-size: 0.68rem;">+20 XP</span>
+          <div style="display: flex; flex-direction: column; gap: 12px; max-height: 52vh; overflow-y: auto;">
+            <!-- SECCIÓN: TAREAS ESPECÍFICAS DEL DÍA -->
+            <div>
+              <div style="font-size: 0.74rem; font-weight: 700; color: var(--imperivm-text-gold); margin-bottom: 6px; text-transform: uppercase;">
+                📅 Tareas del Día (${dayTasks.length})
               </div>
-            `).join('') : '<p style="font-size: 0.85rem; color: var(--imperivm-text-muted);">No hay tareas asignadas para hoy. Haz clic arriba para crear una.</p>'}
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                ${dayTasks.length > 0 ? dayTasks.map(t => `
+                  <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--imperivm-border); border-radius: 6px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; flex: 1; ${t.completed ? 'text-decoration: line-through; opacity: 0.6;' : ''}">
+                      <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="imperivmEngine.toggleTaskInline('${t.id}')">
+                      <span style="font-size: 0.85rem; color: #FFF;">${t.title}</span>
+                    </label>
+                    <span class="badge-tag badge-gold" style="font-size: 0.65rem;">${formatTaskCategoryBadge(t.category)}</span>
+                  </div>
+                `).join('') : '<p style="font-size: 0.8rem; color: var(--imperivm-text-muted); margin: 4px 0 8px 0;">No hay tareas específicas para este día.</p>'}
+              </div>
+            </div>
+
+            <!-- SECCIÓN: METAS SEMANALES ACTIVAS -->
+            <div>
+              <div style="font-size: 0.74rem; font-weight: 700; color: #52C41A; margin-bottom: 6px; text-transform: uppercase;">
+                🗓️ Metas Semanales (${weeklyTasks.length})
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                ${weeklyTasks.length > 0 ? weeklyTasks.map(t => `
+                  <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(82, 196, 26, 0.05); border: 1px solid rgba(82, 196, 26, 0.25); border-radius: 6px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; flex: 1; ${t.completed ? 'text-decoration: line-through; opacity: 0.6;' : ''}">
+                      <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="imperivmEngine.toggleTaskInline('${t.id}')">
+                      <span style="font-size: 0.85rem; color: #FFF;">${t.title}</span>
+                    </label>
+                    <span class="badge-tag badge-emerald" style="font-size: 0.65rem;">${formatTaskCategoryBadge(t.category)}</span>
+                  </div>
+                `).join('') : '<p style="font-size: 0.8rem; color: var(--imperivm-text-muted); margin: 4px 0;">No hay metas semanales registradas.</p>'}
+              </div>
+            </div>
           </div>
         </div>
       `;
@@ -2551,13 +2977,13 @@ const imperivmEngine = {
         desc: "El mapa de comportamiento del hombre completo: palabra empeñada inviolable, autodisciplina estoica, protección de los tuyos y magnanimidad soberana."
       },
       tantra: {
-        title: "Academia Tantra & Maestría Sexual",
-        tag: "🔥 TANTRA // SOBERANÍA",
-        badge: "TANTRA APEX",
+        title: "Presencia & Conexión Íntima",
+        tag: "🔥 TANTRA // POLARIDAD SOMÁTICA",
+        badge: "TANTRA & POLARIDAD",
         color: "#FB7185",
-        banner: IMPERIVM_MEDIA.tantra_karezza,
-        subtitle: "4 Pilares de Maestría Erótica Masculina & Karezza",
-        desc: "Integración de energía vital, control orgásmico sin eyaculación involuntaria, presencia tántrica profunda y conexión íntima con tu pareja pilar."
+        banner: IMPERIVM_MEDIA.tantra_polaridad,
+        subtitle: "Polaridad Somática, Mirada Consciente & Presencia",
+        desc: "Integración de energía vital, contención masculina, presencia tántrica profunda y conexión de alma con la polaridad femenina."
       }
     };
 
@@ -2965,7 +3391,6 @@ const imperivmEngine = {
             </div>
           </div>
         </div>
-      `;
     }
 
     container.innerHTML = `
@@ -2993,8 +3418,8 @@ const imperivmEngine = {
         </button>
       </div>
 
-      <!-- SELECTOR TIPO SUB-TABS DE LOS 7 MÓDULOS -->
-      <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-bottom: 16px;">
+      <!-- SELECTOR TIPO SUB-TABS DE LOS MÓDULOS -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(95px, 1fr)); gap: 6px; margin-bottom: 16px;">
         ${navKeys.map(k => {
           const m = modulesData[k];
           const isCurrent = k === moduleKey;
@@ -3170,6 +3595,186 @@ const imperivmEngine = {
     }
   },
 
+  // ==========================================================================
+  // ESTRATEGIA DE LA LANZA: CONMUTACIÓN DE MOODS & MATRIZ DE LOS 9 BANDERINES
+  // ==========================================================================
+  switchWeeklyMood(mood) {
+    if (mood !== "fresh" && mood !== "emergency") mood = "emergency";
+    localStorage.setItem("CABALLERO_WEEKLY_MOOD", mood);
+    imperivmState.weeklyMood = mood;
+    if (typeof showNotification === "function") {
+      const label = mood === "emergency"
+        ? "🚨 Modo Emergency Activado: 2 bloques diarios de empleo en Hannover (Punta de Lanza)"
+        : "🌿 Modo Fresh Activado: Ritmo balanceado (1 bloque empleo + exploración y arte)";
+      showNotification(label);
+    }
+    this.render();
+  },
+
+  openEstrategiaLanzaModal(initialMood = null) {
+    const modal = document.getElementById("imperivm-estrategia-lanza-modal");
+    if (!modal) return;
+    const moodToRender = initialMood || localStorage.getItem("CABALLERO_WEEKLY_MOOD") || imperivmState.weeklyMood || "emergency";
+    this.renderEstrategiaLanzaContent(moodToRender);
+    modal.classList.add("active");
+  },
+
+  closeEstrategiaLanzaModal() {
+    const modal = document.getElementById("imperivm-estrategia-lanza-modal");
+    if (modal) modal.classList.remove("active");
+  },
+
+  renderEstrategiaLanzaContent(moodKey) {
+    const container = document.getElementById("estrategia-lanza-modal-content");
+    if (!container) return;
+    if (moodKey !== "fresh" && moodKey !== "emergency") moodKey = "emergency";
+
+    const schedule = (typeof WEEKLY_STRATEGY_SCHEDULE !== "undefined") ? WEEKLY_STRATEGY_SCHEDULE[moodKey] : null;
+    if (!schedule) return;
+
+    const isEmergency = moodKey === "emergency";
+    const currentActiveMood = localStorage.getItem("CABALLERO_WEEKLY_MOOD") || imperivmState.weeklyMood || "emergency";
+    const isThisMoodCurrentlyApplied = currentActiveMood === moodKey;
+
+    const daysKeys = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"];
+    const dayNames = {
+      lunes: "Lunes", martes: "Martes", miercoles: "Miércoles",
+      jueves: "Jueves", viernes: "Viernes", sabado: "Sábado", domingo: "Domingo"
+    };
+
+    container.innerHTML = `
+      <!-- HEADER CON CERRAR Y PESTAÑAS DE MOOD -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 14px; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">
+            <span style="font-size: 1.4rem;">🗡️</span>
+            <span class="badge-tag badge-gold" style="font-size: 0.72rem; letter-spacing: 0.05em;">ESTRATEGIA DE LA LANZA // CALENDARIO SEMANAL</span>
+            ${isThisMoodCurrentlyApplied ? '<span class="badge-tag badge-emerald" style="font-size: 0.68rem;">⚡ MODO ACTIVO EN TU SEMANA</span>' : ''}
+          </div>
+          <h2 style="font-family: var(--imperivm-font-title); color: #FFF; font-size: 1.45rem; margin: 4px 0 0 0;">
+            ${schedule.icon} ${schedule.name}
+          </h2>
+          <p style="font-size: 0.82rem; color: var(--imperivm-text-muted); margin: 4px 0 0 0;">
+            ${schedule.slogan}
+          </p>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <!-- SELECTOR DE MOODS DENTRO DEL MODAL -->
+          <div style="display: flex; gap: 6px; background: rgba(0,0,0,0.5); padding: 4px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
+            <button class="btn-mood-toggle ${!isEmergency ? 'active-fresh' : ''}" onclick="imperivmEngine.renderEstrategiaLanzaContent('fresh');" style="cursor: pointer;">
+              🌿 Mood Fresh (Balance)
+            </button>
+            <button class="btn-mood-toggle ${isEmergency ? 'active-emergency' : ''}" onclick="imperivmEngine.renderEstrategiaLanzaContent('emergency');" style="cursor: pointer;">
+              🚨 Mood Emergency (2x Empleo)
+            </button>
+          </div>
+
+          <button onclick="imperivmEngine.closeEstrategiaLanzaModal();" style="background: rgba(255,255,255,0.08); border: 1px solid var(--imperivm-border); color: #FFF; border-radius: 6px; padding: 6px 12px; cursor: pointer; font-size: 0.85rem;">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- DESCRIPCIÓN & METÁFORA DE LA LANZA -->
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid ${isEmergency ? 'rgba(244,63,94,0.35)' : 'rgba(16,185,129,0.35)'}; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 8px;">
+          <strong style="color: ${isEmergency ? '#FDA4AF' : '#6EE7B7'}; font-size: 0.9rem;">
+            ${isEmergency ? '🎯 LA PUNTA DE LA LANZA: 10 BLOQUES SEMANALES DE ASALTO AL EMPLEO' : '⚖️ POLIMATÍA ARMÓNICA: 1 BLOQUE MATUTINO + CIENCIA, MÚSICA & ARTE'}
+          </strong>
+          <span style="font-size: 0.76rem; color: #BBB;">
+            ${isEmergency ? 'Astil Somático de Máxima Resistencia (Deporte, Amor y Sueño)' : 'Equilibrio de Alto Rendimiento sin Agotamiento'}
+          </span>
+        </div>
+        <p style="font-size: 0.82rem; color: #DDD; margin: 0; line-height: 1.5;">
+          ${schedule.desc}
+        </p>
+      </div>
+
+      <!-- VERIFICACIÓN MAESTRA: LOS 9 BANDERINES DE CABALLERÍA (TODOS ACTIVOS) -->
+      <div style="margin-bottom: 22px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <h4 style="font-family: var(--imperivm-font-title); color: var(--imperivm-text-gold); margin: 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.04em;">
+            🛡️ Verificación de los 9 Banderines Heráldicos (100% Cobertura Semanal)
+          </h4>
+          <span class="badge-tag badge-gold" style="font-size: 0.65rem;">9 / 9 BANDERINES ACTIVOS</span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 8px;">
+          ${schedule.pennants.map(p => `
+            <div style="background: rgba(0,0,0,0.45); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 12px; display: flex; align-items: flex-start; gap: 10px;">
+              <span style="font-size: 1.3rem; line-height: 1;">${p.icon}</span>
+              <div style="flex: 1;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px;">
+                  <strong style="color: #FFF; font-size: 0.84rem;">${p.name}</strong>
+                  <span class="badge-tag badge-emerald" style="font-size: 0.58rem; padding: 1px 5px;">${p.status}</span>
+                </div>
+                <div style="font-size: 0.72rem; color: var(--imperivm-text-muted); line-height: 1.35;">${p.when}</div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <!-- MATRIZ DÍA A DÍA (LUNES A DOMINGO) -->
+      <div style="margin-bottom: 20px;">
+        <h4 style="font-family: var(--imperivm-font-title); color: #FFF; margin: 0 0 12px 0; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.04em;">
+          📅 Horarios & Desglose de Bloques (Lunes a Domingo)
+        </h4>
+
+        <div class="lanza-matrix-grid">
+          ${daysKeys.map(dk => {
+            const dayData = schedule.days[dk];
+            const isToday = dk === imperivmEngine.getTodayKey();
+            return `
+              <div class="lanza-day-card" style="${isToday ? 'border-color: var(--imperivm-border-gold); background: rgba(212,175,55,0.06);' : ''}">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 6px; margin-bottom: 8px;">
+                  <div>
+                    <strong style="color: ${isToday ? 'var(--imperivm-text-gold)' : '#FFF'}; font-size: 0.88rem; font-family: var(--imperivm-font-title);">
+                      ${dayNames[dk].toUpperCase()} ${isToday ? '(HOY)' : ''}
+                    </strong>
+                    <div style="font-size: 0.7rem; color: var(--imperivm-text-muted);">${dayData.focus}</div>
+                  </div>
+                  <button onclick="imperivmEngine.closeEstrategiaLanzaModal(); imperivmEngine.openFullDayDrawer('${dk}');" style="background: none; border: 1px solid rgba(255,255,255,0.15); color: #AAA; border-radius: 4px; padding: 2px 6px; font-size: 0.65rem; cursor: pointer;">
+                    Ver Día ➔
+                  </button>
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 6px;">
+                  ${dayData.blocks.map(b => `
+                    <div class="lanza-block-item">
+                      <div>
+                        <span style="font-weight: 700; color: #FFF; font-size: 0.74rem;">${b.time}</span>
+                        <div style="color: #DDD; font-size: 0.74rem; margin-top: 1px;">${b.title}</div>
+                      </div>
+                      <span class="badge-tag badge-gold" style="font-size: 0.6rem; padding: 1px 5px; white-space: nowrap;">${b.badge}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+
+      <!-- BOTONES DE ACCIÓN AL PIE -->
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; flex-wrap: wrap; gap: 10px;">
+        <span style="font-size: 0.76rem; color: var(--imperivm-text-muted);">
+          * Puedes conmutar entre ambos modos en cualquier momento desde el Plan de Hoy o el Códice.
+        </span>
+
+        <div style="display: flex; gap: 10px;">
+          <button class="btn-imperivm-secondary" onclick="imperivmEngine.closeEstrategiaLanzaModal();">
+            Cerrar
+          </button>
+          <button class="btn-imperivm-primary" onclick="imperivmEngine.switchWeeklyMood('${moodKey}'); imperivmEngine.closeEstrategiaLanzaModal();" style="display: flex; align-items: center; gap: 6px;">
+            <span>⚡ Activar este Modo para mi Semana</span>
+          </button>
+        </div>
+      </div>
+    `;
+  },
+
   ensureDrawerInDOM() {
     let backdrop = document.getElementById("imperivm-drawer-backdrop");
     let drawer = document.getElementById("imperivm-drawer");
@@ -3261,15 +3866,34 @@ const imperivmEngine = {
   },
 
   // --- GESTIÓN DE TAREAS RÁPIDAS ---
-  openAddTaskModal(scope = "daily") {
+  openAddTaskModal(scope = "daily", targetDay = null) {
     const modal = document.getElementById("imperivm-add-task-modal");
     const titleEl = document.getElementById("add-task-modal-title");
     const scopeSelect = document.getElementById("quick-task-scope-select");
     const input = document.getElementById("quick-task-title-input");
 
+    const daysMap = {
+      lunes: "Lunes",
+      martes: "Martes",
+      miercoles: "Miércoles",
+      jueves: "Jueves",
+      viernes: "Viernes",
+      sabado: "Sábado",
+      domingo: "Domingo"
+    };
+
     if (modal) {
-      if (titleEl) titleEl.textContent = scope === "daily" ? "➕ Nueva Tarea para Hoy" : "➕ Nueva Tarea Semanal";
-      if (scopeSelect) scopeSelect.value = scope;
+      const activeScope = targetDay || scope;
+      if (titleEl) {
+        if (daysMap[activeScope]) {
+          titleEl.textContent = `➕ Nueva Tarea para el ${daysMap[activeScope]}`;
+        } else {
+          titleEl.textContent = activeScope === "daily" ? "➕ Nueva Tarea para Hoy" : "➕ Nueva Tarea Semanal";
+        }
+      }
+      if (scopeSelect) {
+        scopeSelect.value = activeScope;
+      }
       if (input) { input.value = ""; setTimeout(() => input.focus(), 100); }
       modal.classList.add("active");
     }
@@ -3287,11 +3911,16 @@ const imperivmEngine = {
 
     if (!input || !input.value.trim()) return;
 
+    const rawScope = scopeSelect ? scopeSelect.value : "daily";
+    const daysKeys = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"];
+    const isSpecificDay = daysKeys.includes(rawScope);
+
     const newTask = {
       id: "task-" + Date.now(),
       title: input.value.trim(),
       category: catSelect ? catSelect.value : "foco",
-      timeScope: scopeSelect ? scopeSelect.value : "daily",
+      timeScope: rawScope === "weekly" ? "weekly" : "daily",
+      targetDay: isSpecificDay ? rawScope : null,
       completed: false
     };
 
@@ -3301,11 +3930,17 @@ const imperivmEngine = {
     }
 
     if (typeof showNotification === "function") {
-      showNotification(`✨ Tarea agregada: ${newTask.title}`);
+      const daySuffix = isSpecificDay ? ` (${rawScope.toUpperCase()})` : '';
+      showNotification(`✨ Tarea agregada${daySuffix}: ${newTask.title}`);
     }
 
     this.closeAddTaskModal();
-    this.render();
+    if (typeof renderTasks === "function") renderTasks();
+    if (this.activeDrawerDayKey) {
+      this.openFullDayDrawer(this.activeDrawerDayKey, "tareas");
+    } else {
+      this.render();
+    }
   },
 
   toggleTaskInline(taskId) {

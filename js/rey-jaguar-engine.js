@@ -1582,11 +1582,11 @@ function openKCDInspector(params) {
           const xp = act.xp || (diff === 'dificil' ? 75 : (diff === 'medio' ? 50 : 25));
 
           const cardStyle = isCompletedLifeQuest 
-            ? "background: #F4EFEB; border: 1.5px solid #2B6847; border-radius: var(--radius-md); padding: 12px 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; opacity: 0.88;"
+            ? "background: #F8FAF7; border: 1.5px solid #2B6847; border-radius: var(--radius-md); padding: 12px 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap;"
             : "background: #FFFDF9; border: 1.5px solid rgba(197,154,40,0.35); border-radius: var(--radius-md); padding: 12px 16px; box-shadow: 0 2px 6px rgba(0,0,0,0.04); display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap;";
 
-          const textDecoration = isCompletedLifeQuest ? "text-decoration: line-through; color: #5A6B5C;" : "color: #0E0E13;";
-          const descDecoration = isCompletedLifeQuest ? "text-decoration: line-through; color: #8A968C;" : "color: #5D4E3E;";
+          const textDecoration = "color: #0E0E13;";
+          const descDecoration = "color: #5D4E3E;";
 
           return `
             <div class="kcd-parchment-activity-card" style="${cardStyle}">
@@ -1606,21 +1606,26 @@ function openKCDInspector(params) {
               <div style="display: flex; align-items: center; gap: 10px;">
                 <div style="text-align: center; min-width: 70px; background: ${isCompletedLifeQuest ? '#E8F5E9' : '#F0E8D6'}; border: 1px solid ${isCompletedLifeQuest ? '#2B6847' : 'rgba(197,154,40,0.4)'}; border-radius: 6px; padding: 6px 10px;">
                   <span style="font-size: 0.62rem; color: ${isCompletedLifeQuest ? '#1B4D3E' : '#7A6347'}; display: block; font-family: 'Cinzel', serif; font-weight: 700;">ESTADO</span>
-                  <strong style="font-size: 1.15rem; color: ${isCompletedLifeQuest ? '#1B4D3E' : '#0E0E13'}; font-family: 'Cinzel', serif;">${isCompletedLifeQuest ? '✓ HECHO' : `${val} PTS`}</strong>
+                  <strong style="font-size: 1.15rem; color: ${isCompletedLifeQuest ? '#1B4D3E' : '#0E0E13'}; font-family: 'Cinzel', serif;">${val} PTS</strong>
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 5px;">
-                  ${isVida ? (
-                    isCompletedLifeQuest ? `
-                      <button class="btn-jaguar btn-sm" style="background: rgba(43,104,71,0.2); color: #1B4D3E; border: 1.5px solid #2B6847; font-weight: 800; font-size: 0.72rem; padding: 6px 14px; cursor: pointer;" onclick="completeLifeQuestAction('${act.key}', '${diff}', '${act.fullName || act.name}', '${act.subKey || act.key}', '${act.tab || ''}');" title="Haz clic para desmarcar este hito (-1 Punto)">
-                        👑 Conquistado (Desmarcar)
+                  ${isVida ? `
+                    <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                      <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #0E0905; font-weight: 900; font-size: 0.72rem; padding: 6px 12px;" onclick="CaballeroScoringEngine.awardAction('vida', '${diff}', '${act.fullName || act.name}', null, '${act.subKey || act.key}'); openKCDInspector({ type: 'category', categoryKey: 'vida' });" title="Registrar sesión o avance (+1 Punto & +${xp} XP)">
+                        ⚡ +1 Avance / Sesión (+${xp} XP)
                       </button>
-                    ` : `
-                      <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #0E0905; font-weight: 900; font-size: 0.72rem; padding: 6px 14px;" onclick="completeLifeQuestAction('${act.key}', '${diff}', '${act.fullName || act.name}', '${act.subKey || act.key}', '${act.tab || ''}');" title="Conquistar hito de vida (+1 Punto & +${xp} XP)">
-                        ⚡ Conquistar (+${xp} XP)
-                      </button>
-                    `
-                  ) : `
+                      ${isCompletedLifeQuest ? `
+                        <button class="btn-jaguar btn-sm" style="background: rgba(43,104,71,0.2); color: #1B4D3E; border: 1.5px solid #2B6847; font-weight: 800; font-size: 0.72rem; padding: 6px 10px; cursor: pointer;" onclick="completeLifeQuestAction('${act.key}', '${diff}', '${act.fullName || act.name}', '${act.subKey || act.key}', '${act.tab || ''}');" title="Haz clic para desmarcar el hito final de vida">
+                          👑 Conquistado (Desmarcar)
+                        </button>
+                      ` : `
+                        <button class="btn-jaguar btn-sm btn-secondary-dark" style="color: #9B2335; border: 1.5px solid rgba(155,35,53,0.4); font-weight: 800; font-size: 0.72rem; padding: 6px 10px;" onclick="completeLifeQuestAction('${act.key}', '${diff}', '${act.fullName || act.name}', '${act.subKey || act.key}', '${act.tab || ''}');" title="Conquistar definitivamente este hito">
+                          👑 Sellar Misión
+                        </button>
+                      `}
+                    </div>
+                  ` : `
                     <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #0E0905; font-weight: 900; font-size: 0.72rem; padding: 6px 14px;" onclick="CaballeroScoringEngine.awardAction('${catKey}', '${diff}', '${act.fullName || act.name}', null, '${act.subKey || act.key}'); openKCDInspector({ type: 'category', categoryKey: '${catKey}' });" title="Registrar acción (+1 Punto & +${xp} XP)">
                       ⚡ +1 Punto (+${xp} XP)
                     </button>
@@ -1907,15 +1912,69 @@ function openKCDInspector(params) {
             <span class="badge-tag badge-emerald" style="font-size: 0.65rem;">Hábitos Hoy</span>
           </div>
 
-          <div style="display: flex; gap: 6px; margin-bottom: 10px;">
-            <input type="text" id="kcd-codex-daily-input" class="kcd-task-input" placeholder="Nueva tarea diaria..." style="flex: 1;" onkeypress="if(event.key==='Enter') addCodexTask('daily')">
-            <select id="kcd-codex-daily-cat" class="kcd-task-select" style="width: 85px;">
-              <option value="foco">Foco</option>
-              <option value="tesis">Tesis</option>
-              <option value="idiomas">Idiomas</option>
-              <option value="cuerpo">Cuerpo</option>
-              <option value="somatico">Vitalidad</option>
-              <option value="general">General</option>
+          <div style="display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap;">
+            <input type="text" id="kcd-codex-daily-input" class="kcd-task-input" placeholder="Nueva tarea..." style="flex: 1; min-width: 140px;" onkeypress="if(event.key==='Enter') addCodexTask('daily')">
+            <select id="kcd-codex-daily-day" class="kcd-task-select" style="width: 80px;">
+              <option value="daily">📅 Hoy</option>
+              <option value="lunes">Lunes</option>
+              <option value="martes">Martes</option>
+              <option value="miercoles">Miércoles</option>
+              <option value="jueves">Jueves</option>
+              <option value="viernes">Viernes</option>
+              <option value="sabado">Sábado</option>
+              <option value="domingo">Domingo</option>
+            </select>
+            <select id="kcd-codex-daily-cat" class="kcd-task-select" style="min-width: 130px; max-width: 170px;">
+              <optgroup label="👑 Vida (Misiones Principales)">
+                <option value="vida:empleo">🇩🇪 Empleo Hannover</option>
+                <option value="vida:tesis">🎓 Tesis Máster</option>
+                <option value="vida:tramites">📑 Visa & Trámites</option>
+                <option value="vida:general">👑 Misión Vital</option>
+              </optgroup>
+              <optgroup label="🧭 Exploración (Misiones Sec.)">
+                <option value="exploracion:lauwersmeer">🌊 Lauwersmeer</option>
+                <option value="exploracion:proyectos">🏴‍☠️ Proyectos Piratas</option>
+                <option value="exploracion:agrotech">🌱 Agrotech / Huerta</option>
+                <option value="exploracion:red_maule">🌐 Maule Red</option>
+                <option value="exploracion:musica">🎺 Música / Jazz</option>
+                <option value="exploracion:arte">🎨 Arte & Foto</option>
+              </optgroup>
+              <optgroup label="💖 Amor & Pareja (Goce)">
+                <option value="amor:intimidad">🕯️ Presencia Íntima</option>
+                <option value="amor:pareja">🍷 Vida en Pareja</option>
+                <option value="amor:acuerdos">💬 Acuerdos & Diálogo</option>
+                <option value="amor:aftercare">💆 Aftercare & Caricias</option>
+              </optgroup>
+              <optgroup label="🧠 Mente & Foco Estoico">
+                <option value="mente:foco">🎯 Bloque Deep Work</option>
+                <option value="mente:aleman">🗣️ Alemán / Idiomas</option>
+                <option value="mente:lectura">📜 Lectura Estoica</option>
+              </optgroup>
+              <optgroup label="🌿 Salud Somática">
+                <option value="salud:nutricion">🥑 Nutrición Limpia</option>
+                <option value="salud:somatica">🌿 Somática & Yoga</option>
+                <option value="salud:sueno">🌙 Higiene de Sueño</option>
+              </optgroup>
+              <optgroup label="🥊 Deporte & Combate">
+                <option value="deporte:gym">🏋️ Campus Gym</option>
+                <option value="deporte:combate">🥊 Muay Thai / Sparring</option>
+                <option value="deporte:cardio">🏃 Running / Cardio</option>
+              </optgroup>
+              <optgroup label="🪙 Soberanía Financiera">
+                <option value="soberania:finanzas">💶 Finanzas & Cuentas</option>
+                <option value="soberania:auditoria">📊 Auditoría Gastos</option>
+                <option value="soberania:ahorro">🛡️ Cero Gastos Hormiga</option>
+              </optgroup>
+              <optgroup label="🌲 Naturaleza & Ecosistemas">
+                <option value="naturaleza:rewild">🔥 ReWild & Bosque</option>
+                <option value="naturaleza:airelibre">🏕️ Senderismo & Mar</option>
+                <option value="naturaleza:botanica">🌿 Botánica & Suelo</option>
+              </optgroup>
+              <optgroup label="🕯️ Espiritualidad & Ritos">
+                <option value="espiritualidad:meditacion">🧘 Meditación Vipassana</option>
+                <option value="espiritualidad:ritos">🪶 Ritos Sagrados</option>
+                <option value="espiritualidad:detox">⚡ Detox Energético</option>
+              </optgroup>
             </select>
             <button class="kcd-task-add-btn" onclick="addCodexTask('daily')" title="Añadir">+</button>
           </div>
@@ -1935,12 +1994,47 @@ function openKCDInspector(params) {
 
           <div style="display: flex; gap: 6px; margin-bottom: 10px;">
             <input type="text" id="kcd-codex-weekly-input" class="kcd-task-input" placeholder="Nueva meta semanal..." style="flex: 1;" onkeypress="if(event.key==='Enter') addCodexTask('weekly')">
-            <select id="kcd-codex-weekly-cat" class="kcd-task-select" style="width: 85px;">
-              <option value="tesis">Tesis</option>
-              <option value="empleo">Empleo</option>
-              <option value="idiomas">Idiomas</option>
-              <option value="rewild">ReWild</option>
-              <option value="general">General</option>
+            <select id="kcd-codex-weekly-cat" class="kcd-task-select" style="min-width: 130px; max-width: 170px;">
+              <optgroup label="👑 Vida (Misiones Principales)">
+                <option value="vida:empleo">🇩🇪 Empleo Hannover</option>
+                <option value="vida:tesis">🎓 Tesis Máster</option>
+                <option value="vida:tramites">📑 Visa & Trámites</option>
+                <option value="vida:general">👑 Misión Vital</option>
+              </optgroup>
+              <optgroup label="🧭 Exploración (Misiones Sec.)">
+                <option value="exploracion:lauwersmeer">🌊 Lauwersmeer</option>
+                <option value="exploracion:proyectos">🏴‍☠️ Proyectos Piratas</option>
+                <option value="exploracion:agrotech">🌱 Agrotech / Huerta</option>
+                <option value="exploracion:red_maule">🌐 Maule Red</option>
+              </optgroup>
+              <optgroup label="💖 Amor & Pareja (Goce)">
+                <option value="amor:pareja">🍷 Vida en Pareja</option>
+                <option value="amor:intimidad">🕯️ Presencia Íntima</option>
+                <option value="amor:acuerdos">💬 Acuerdos Conscientes</option>
+              </optgroup>
+              <optgroup label="🧠 Mente & Foco Estoico">
+                <option value="mente:foco">🎯 Bloque Deep Work</option>
+                <option value="mente:aleman">🗣️ Alemán / Idiomas</option>
+                <option value="mente:lectura">📜 Lectura Estoica</option>
+              </optgroup>
+              <optgroup label="🪙 Soberanía Financiera">
+                <option value="soberania:finanzas">💶 Finanzas & Cuentas</option>
+                <option value="soberania:auditoria">📊 Auditoría Gastos</option>
+              </optgroup>
+              <optgroup label="🌿 Salud Somática">
+                <option value="salud:nutricion">🥑 Nutrición Limpia</option>
+                <option value="salud:somatica">🌿 Somática & Vitalidad</option>
+              </optgroup>
+              <optgroup label="🥊 Deporte & Combate">
+                <option value="deporte:gym">🏋️ Campus Gym</option>
+                <option value="deporte:combate">🥊 Muay Thai</option>
+              </optgroup>
+              <optgroup label="🌲 Naturaleza & Ecosistemas">
+                <option value="naturaleza:rewild">🔥 ReWild & Bosque</option>
+              </optgroup>
+              <optgroup label="🕯️ Espiritualidad & Ritos">
+                <option value="espiritualidad:meditacion">🧘 Meditación</option>
+              </optgroup>
             </select>
             <button class="kcd-task-add-btn" onclick="addCodexTask('weekly')" title="Añadir">+</button>
           </div>
@@ -2171,7 +2265,8 @@ function renderKCDCodexTasksLists() {
             <span style="font-size: 0.86rem; color: ${t.completed ? '#8A7765; text-decoration: line-through;' : '#0E0E13; font-weight: 600;'}">${t.title}</span>
           </div>
           <div style="display: flex; align-items: center; gap: 6px;">
-            <span class="badge-tag badge-gold" style="font-size: 0.62rem; padding: 1px 5px;">${t.category || 'General'}</span>
+            ${t.targetDay ? `<span class="badge-tag badge-cyan" style="font-size: 0.62rem; padding: 1px 5px;">${t.targetDay.slice(0, 3).toUpperCase()}</span>` : ''}
+            <span class="badge-tag badge-gold" style="font-size: 0.62rem; padding: 1px 5px;">${(typeof formatTaskCategoryBadge === 'function') ? formatTaskCategoryBadge(t.category) : (t.category || 'General')}</span>
             <button onclick="deleteTask('${t.id}'); renderKCDCodexTasksLists();" style="background: none; border: none; font-size: 0.85rem; color: #A0AEC0; cursor: pointer;">✕</button>
           </div>
         </div>
@@ -2190,7 +2285,7 @@ function renderKCDCodexTasksLists() {
             <span style="font-size: 0.86rem; color: ${t.completed ? '#8A7765; text-decoration: line-through;' : '#0E0E13; font-weight: 600;'}">${t.title}</span>
           </div>
           <div style="display: flex; align-items: center; gap: 6px;">
-            <span class="badge-tag badge-emerald" style="font-size: 0.62rem; padding: 1px 5px;">${t.category || 'Tesis'}</span>
+            <span class="badge-tag badge-emerald" style="font-size: 0.62rem; padding: 1px 5px;">${(typeof formatTaskCategoryBadge === 'function') ? formatTaskCategoryBadge(t.category) : (t.category || 'Tesis')}</span>
             <button onclick="deleteTask('${t.id}'); renderKCDCodexTasksLists();" style="background: none; border: none; font-size: 0.85rem; color: #A0AEC0; cursor: pointer;">✕</button>
           </div>
         </div>
@@ -2203,15 +2298,20 @@ window.renderKCDCodexTasksLists = renderKCDCodexTasksLists;
 function addCodexTask(timeScope) {
   const inputId = timeScope === 'daily' ? 'kcd-codex-daily-input' : 'kcd-codex-weekly-input';
   const catId = timeScope === 'daily' ? 'kcd-codex-daily-cat' : 'kcd-codex-weekly-cat';
+  const dayId = 'kcd-codex-daily-day';
   const input = document.getElementById(inputId);
   const cat = document.getElementById(catId);
+  const dayEl = document.getElementById(dayId);
   if (!input || !input.value.trim()) return;
+
+  const targetDayVal = (timeScope === 'daily' && dayEl && dayEl.value !== 'daily') ? dayEl.value : null;
 
   if (typeof appState !== 'undefined' && Array.isArray(appState.tasks)) {
     appState.tasks.push({
       id: "task-" + Date.now(),
       title: input.value.trim(),
       timeScope: timeScope,
+      targetDay: targetDayVal,
       category: cat ? cat.value : (timeScope === 'daily' ? 'foco' : 'tesis'),
       completed: false
     });
@@ -2219,7 +2319,10 @@ function addCodexTask(timeScope) {
     input.value = "";
     renderKCDCodexTasksLists();
     if (typeof renderTasks === 'function') renderTasks();
-    if (typeof showNotification === 'function') showNotification(timeScope === 'daily' ? "Tarea diaria registrada en el Códice." : "Meta semanal registrada en el Códice.");
+    if (typeof showNotification === 'function') {
+      const daySuffix = targetDayVal ? ` (${targetDayVal.toUpperCase()})` : '';
+      showNotification(timeScope === 'daily' ? `Tarea registrada${daySuffix} en el Códice.` : "Meta semanal registrada en el Códice.");
+    }
   }
 }
 window.addCodexTask = addCodexTask;
@@ -2750,7 +2853,8 @@ const OUTFIT_DAYS_CONFIG = [
 ];
 
 window.openOutfitLightbox = function(dayKey) {
-  const dayConfig = OUTFIT_DAYS_CONFIG.find(d => d.key === dayKey) || OUTFIT_DAYS_CONFIG[0];
+  const normKey = (typeof dayKey === 'string' && dayKey.trim()) ? dayKey.trim().toLowerCase() : (currentOutfitDayKey || "lunes");
+  const dayConfig = OUTFIT_DAYS_CONFIG.find(d => d.key === normKey) || OUTFIT_DAYS_CONFIG[0];
   let lifestyleData = {};
   if (typeof LIFESTYLE_ARCHITECT_DATA !== "undefined") {
     lifestyleData = LIFESTYLE_ARCHITECT_DATA.calendario_somatico_semanal || {};
@@ -2760,6 +2864,7 @@ window.openOutfitLightbox = function(dayKey) {
   const container = document.getElementById("outfit-lightbox-content");
   const modal = document.getElementById("outfit-lightbox-modal");
   if (!modal) return;
+  modal.style.zIndex = "100050";
 
   if (container) {
     container.innerHTML = `
