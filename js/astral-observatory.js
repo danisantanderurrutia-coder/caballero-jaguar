@@ -508,15 +508,15 @@ const astralObservatory = {
       <div style="display: flex; align-items: center; gap: 12px;">
         <span style="font-size: 2.2rem; filter: drop-shadow(0 0 10px rgba(255,255,255,0.3));">${moon.emoji}</span>
         <div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;">Fase Lunar en Vivo</div>
+          <div style="font-size: 0.72rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.08em;">Fase Lunar en Vivo</div>
           <strong style="color: #FFF; font-size: 1.05rem; font-family: 'Cinzel', serif;">${moon.phaseName}</strong>
-          <div style="font-size: 0.78rem; color: #DCD3C1; margin-top: 2px;">
-            Iluminación: <strong>${moon.illumination}%</strong> • Edad: ${moon.age} días
+          <div style="font-size: 0.78rem; color: #E2E8F0; margin-top: 2px;">
+            Iluminación: <strong style="color: #00E5FF;">${moon.illumination}%</strong> • Edad: <strong style="color: #FFF;">${moon.age}</strong> días
           </div>
         </div>
       </div>
-      <p style="font-size: 0.8rem; color: var(--parchment-warm); line-height: 1.45; margin: 8px 0 0 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 6px;">
-        🛡️ <strong>Directriz Lunar:</strong> ${moon.stoicFocus}
+      <p style="font-size: 0.83rem; color: #F1F5F9; line-height: 1.5; margin: 8px 0 0 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 6px;">
+        🛡️ <strong style="color: #00E5FF;">Directriz Lunar:</strong> ${moon.stoicFocus}
       </p>
     `;
 
@@ -524,15 +524,15 @@ const astralObservatory = {
       <div style="display: flex; align-items: center; gap: 12px;">
         <span style="font-size: 2.2rem; color: ${ruler.color}; filter: drop-shadow(0 0 8px ${ruler.color});">🪐</span>
         <div>
-          <div style="font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;">Regencia Planetaria de Hoy</div>
+          <div style="font-size: 0.72rem; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.08em;">Regencia Planetaria de Hoy</div>
           <strong style="color: #FFF; font-size: 1.05rem; font-family: 'Cinzel', serif;">${ruler.name}: ${ruler.ruler}</strong>
           <div style="font-size: 0.78rem; color: ${ruler.color}; margin-top: 2px;">
-            Elemento: <strong>${ruler.element}</strong>
+            Elemento: <strong style="color: #FFF;">${ruler.element}</strong>
           </div>
         </div>
       </div>
-      <p style="font-size: 0.8rem; color: var(--parchment-warm); line-height: 1.45; margin: 8px 0 0 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 6px;">
-        ⚡ <strong>Foco Táctico:</strong> ${ruler.focus}
+      <p style="font-size: 0.83rem; color: #F1F5F9; line-height: 1.5; margin: 8px 0 0 0; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 6px;">
+        ⚡ <strong style="color: #FFD700;">Foco Táctico:</strong> ${ruler.focus}
       </p>
     `;
   },
@@ -559,35 +559,35 @@ const astralObservatory = {
 
     container.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 18px;">
-        <div style="background: rgba(14, 20, 28, 0.75); border: 1px solid var(--border-glass); border-radius: 10px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div style="background: rgba(14, 20, 28, 0.9); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
           <div>
             <span class="badge-tag badge-gold" style="font-size: 0.7rem;">ENCICLOPEDIA ASTRAL COMPLETA</span>
             <h4 style="font-family: 'Cinzel', serif; font-size: 1.25rem; color: #FFF; margin: 4px 0 0 0;">
               Los 13 Cuerpos Celestes & Puntos del Alma en sus Casas
             </h4>
           </div>
-          <span style="font-size: 0.82rem; color: var(--text-muted);">
+          <span style="font-size: 0.82rem; color: #CBD5E1;">
             💡 Haz clic en cualquier planeta para abrir su tratado completo (Psicología, Sombra y Alquimia).
           </span>
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 14px;">
           ${planetsList.map(p => `
-            <div class="astro-planet-pill" style="cursor: pointer; position: relative; border-left: 3px solid ${p.badgeColor};" onclick="astralObservatory.openPlanetDetailModal('${p.id}')">
+            <div class="astro-planet-pill" style="cursor: pointer; position: relative; border-left: 3px solid ${p.badgeColor}; background: rgba(11, 14, 20, 0.9);" onclick="astralObservatory.openPlanetDetailModal('${p.id}')">
               <span style="font-size: 2rem; color: ${p.badgeColor}; line-height: 1; min-width: 32px; text-align: center;">${p.symbol}</span>
               <div style="flex: 1;">
                 <div style="display: flex; justify-content: space-between; align-items: baseline; gap: 6px;">
                   <strong style="color: #FFF; font-size: 0.95rem;">${p.name}</strong>
                   <span style="font-size: 0.68rem; color: ${p.badgeColor}; font-weight: 700; text-transform: uppercase;">${p.dignity.split('•')[0]}</span>
                 </div>
-                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 2px;">
+                <div style="font-size: 0.78rem; color: #94A3B8; margin-top: 2px;">
                   ${p.house} • <span style="color: #CBD5E1;">${p.archetype}</span>
                 </div>
-                <p style="font-size: 0.8rem; color: var(--parchment-warm); line-height: 1.45; margin: 6px 0 0 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                <p style="font-size: 0.84rem; color: #F1F5F9; line-height: 1.5; margin: 6px 0 0 0; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
                   ${p.psychology}
                 </p>
                 <div style="margin-top: 8px; display: flex; justify-content: flex-end;">
-                  <span style="font-size: 0.72rem; color: var(--imperial-gold-light); font-weight: bold;">Leer Tratado Completo ➔</span>
+                  <span style="font-size: 0.74rem; color: var(--imperial-gold-light); font-weight: bold;">Leer Tratado Completo ➔</span>
                 </div>
               </div>
             </div>
@@ -602,19 +602,19 @@ const astralObservatory = {
 
     container.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 18px;">
-        <div style="background: rgba(14, 20, 28, 0.75); border: 1px solid var(--border-glass); border-radius: 10px; padding: 14px 18px;">
+        <div style="background: rgba(14, 20, 28, 0.9); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 14px 18px;">
           <span class="badge-tag badge-gold" style="font-size: 0.7rem;">ASPECTARIUM & ALQUIMIA PSICOLÓGICA</span>
           <h4 style="font-family: 'Cinzel', serif; font-size: 1.25rem; color: #FFF; margin: 4px 0 0 0;">
             Geometría Celeste: Las 8 Tensiones & Superpoderes Dinámicos
           </h4>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 6px; line-height: 1.5;">
+          <p style="font-size: 0.86rem; color: #CBD5E1; margin-top: 6px; line-height: 1.55;">
             Los aspectos no son destinos ciegos, sino cables de alta tensión entre distintas partes de tu cerebro y tu alma. Representan cómo tus impulsos (Marte), tus emociones (Luna), tu disciplina (Saturno) y tu visión de futuro (Urano) dialogan entre sí.
           </p>
         </div>
 
         <div style="display: flex; flex-direction: column; gap: 12px;">
           ${aspects.map(a => `
-            <div class="jaguar-card" style="padding: 16px; border-left: 4px solid ${a.color}; background: rgba(11, 14, 20, 0.85);">
+            <div class="jaguar-card" style="padding: 16px; border-left: 4px solid ${a.color}; background: rgba(11, 14, 20, 0.92);">
               <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;">
                 <div style="display: flex; align-items: center; gap: 10px;">
                   <span style="font-size: 1.3rem; color: ${a.color};">⚡</span>
@@ -622,26 +622,26 @@ const astralObservatory = {
                 </div>
                 <div style="display: flex; gap: 6px; align-items: center;">
                   <span class="badge-tag" style="background: rgba(255,255,255,0.06); color: ${a.color}; border: 1px solid ${a.color}; font-size: 0.7rem;">${a.badge}</span>
-                  <span style="font-size: 0.75rem; color: var(--text-dim);">${a.house}</span>
+                  <span style="font-size: 0.78rem; color: #94A3B8;">${a.house}</span>
                 </div>
               </div>
 
-              <div style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 8px; font-family: monospace;">
-                ${a.planets} • <em>${a.type}</em>
+              <div style="font-size: 0.82rem; color: #CBD5E1; margin-bottom: 8px; font-family: monospace;">
+                ${a.planets} • <em style="color: #FFF;">${a.type}</em>
               </div>
 
-              <p style="font-size: 0.85rem; color: var(--parchment-light); line-height: 1.5; margin: 0 0 10px 0;">
+              <p style="font-size: 0.88rem; color: #F1F5F9; line-height: 1.6; margin: 0 0 10px 0;">
                 ${a.desc}
               </p>
 
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: rgba(0,0,0,0.3); padding: 10px 14px; border-radius: 6px;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: rgba(0,0,0,0.45); padding: 12px 14px; border-radius: 6px;">
                 <div style="border-left: 2px solid #C0392B; padding-left: 8px;">
-                  <strong style="color: #E57373; font-size: 0.75rem; text-transform: uppercase; display: block;">⚠️ Fricción / Sombra:</strong>
-                  <span style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;">${a.tension}</span>
+                  <strong style="color: #FF8A80; font-size: 0.76rem; text-transform: uppercase; display: block; margin-bottom: 2px;">⚠️ Fricción / Sombra:</strong>
+                  <span style="font-size: 0.82rem; color: #E2E8F0; line-height: 1.45;">${a.tension}</span>
                 </div>
                 <div style="border-left: 2px solid #4CAF50; padding-left: 8px;">
-                  <strong style="color: #81C784; font-size: 0.75rem; text-transform: uppercase; display: block;">⚔️ Canalización Estoica:</strong>
-                  <span style="font-size: 0.78rem; color: var(--text-muted); line-height: 1.4;">${a.channeling}</span>
+                  <strong style="color: #A5D6A7; font-size: 0.76rem; text-transform: uppercase; display: block; margin-bottom: 2px;">⚔️ Canalización Estoica:</strong>
+                  <span style="font-size: 0.82rem; color: #E2E8F0; line-height: 1.45;">${a.channeling}</span>
                 </div>
               </div>
             </div>
@@ -657,7 +657,7 @@ const astralObservatory = {
     container.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 20px;">
         
-        <div style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(14, 20, 28, 0.95) 100%); border: 1.5px solid var(--border-gold); border-radius: 12px; padding: 22px; box-shadow: 0 10px 30px rgba(0,0,0,0.7);">
+        <div style="background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(14, 20, 28, 0.95) 100%); border: 1.5px solid var(--border-gold); border-radius: 12px; padding: 22px; box-shadow: 0 10px 30px rgba(0,0,0,0.7);">
           <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 12px;">
             <span style="font-size: 2.8rem; color: #D4AF37;">🪐</span>
             <div>
@@ -666,7 +666,7 @@ const astralObservatory = {
               <div style="font-size: 0.85rem; color: var(--imperial-gold-light); margin-top: 2px;">${s.subtitle}</div>
             </div>
           </div>
-          <p style="font-size: 0.9rem; color: var(--parchment-light); line-height: 1.65; white-space: pre-line; margin: 0;">
+          <p style="font-size: 0.92rem; color: #F1F5F9; line-height: 1.7; white-space: pre-line; margin: 0;">
             ${s.intro}
           </p>
         </div>
@@ -677,23 +677,23 @@ const astralObservatory = {
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
           ${s.gates.map(g => `
-            <div class="jaguar-card" style="padding: 18px; border-top: 3px solid #D4AF37; background: rgba(14, 20, 28, 0.85); display: flex; flex-direction: column; gap: 8px;">
+            <div class="jaguar-card" style="padding: 18px; border-top: 3px solid #D4AF37; background: rgba(14, 20, 28, 0.92); display: flex; flex-direction: column; gap: 8px;">
               <div style="display: flex; justify-content: space-between; align-items: center;">
                 <span style="font-family: 'Cinzel', serif; font-size: 1.4rem; color: #D4AF37; font-weight: bold;">Puerta ${g.num}</span>
                 <span class="badge-tag" style="font-size: 0.65rem; background: rgba(212,175,55,0.15); color: #D4AF37; border: 1px solid rgba(212,175,55,0.4);">RITO INICIÁTICO</span>
               </div>
               <h5 style="font-family: 'Cinzel', serif; font-size: 1.05rem; color: #FFF; margin: 0;">${g.name}</h5>
-              <div style="font-size: 0.76rem; color: var(--imperial-gold-light); font-weight: 700; text-transform: uppercase;">${g.rule}</div>
-              <p style="font-size: 0.83rem; color: var(--text-muted); line-height: 1.55; margin: 4px 0 0 0;">
+              <div style="font-size: 0.78rem; color: var(--imperial-gold-light); font-weight: 700; text-transform: uppercase;">${g.rule}</div>
+              <p style="font-size: 0.86rem; color: #E2E8F0; line-height: 1.6; margin: 4px 0 0 0;">
                 ${g.desc}
               </p>
             </div>
           `).join('')}
         </div>
 
-        <div style="background: rgba(11, 14, 20, 0.9); border: 1px dashed rgba(212,175,55,0.4); border-radius: 8px; padding: 16px; text-align: center;">
+        <div style="background: rgba(11, 14, 20, 0.92); border: 1px dashed rgba(212,175,55,0.4); border-radius: 8px; padding: 18px; text-align: center;">
           <h5 style="font-family: 'Cinzel', serif; color: #FFF; font-size: 1.05rem; margin: 0 0 6px 0;">📜 El Voto de Saturno a los 30 Años</h5>
-          <p style="font-size: 0.86rem; color: var(--parchment-warm); font-style: italic; max-width: 800px; margin: 0 auto; line-height: 1.6;">
+          <p style="font-size: 0.9rem; color: #FFD700; font-style: italic; max-width: 800px; margin: 0 auto; line-height: 1.65;">
             «No pediré que los acontecimientos ocurran como yo deseo; desearé que ocurran tal como ocurren, y mi camino será sereno. La juventud fue la forja del acero; ahora comienza el imperio de mi propia voluntad.»
           </p>
         </div>
@@ -707,12 +707,12 @@ const astralObservatory = {
 
     container.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 20px;">
-        <div style="background: rgba(14, 20, 28, 0.75); border: 1px solid var(--border-glass); border-radius: 10px; padding: 16px 20px;">
+        <div style="background: rgba(14, 20, 28, 0.9); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 16px 20px;">
           <span class="badge-tag badge-gold" style="font-size: 0.7rem;">SINCRETISMO ANCESTRAL & COSMOGRAFÍAS DEL MUNDO</span>
           <h4 style="font-family: 'Cinzel', serif; font-size: 1.25rem; color: #FFF; margin: 4px 0 0 0;">
             El Caballero Jaguar a través de los Espejos del Saber Universal
           </h4>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 6px; line-height: 1.5;">
+          <p style="font-size: 0.86rem; color: #CBD5E1; margin-top: 6px; line-height: 1.55;">
             Tu carta astral occidental dialoga directamente con la cosmovisión tolteca/mexica, la sabiduría china de los cinco elementos y los arquetipos renacentistas del Tarot. Todas apuntan hacia el mismo centro: la maestría del guerrero sabio.
           </p>
         </div>
@@ -720,30 +720,30 @@ const astralObservatory = {
         <div class="grid-2" style="gap: 16px;">
           
           <!-- MAYA MEXICA OCELOTL -->
-          <div class="jaguar-card" style="padding: 18px; border-left: 4px solid #C0392B; background: rgba(14, 20, 28, 0.85);">
+          <div class="jaguar-card" style="padding: 18px; border-left: 4px solid #C0392B; background: rgba(14, 20, 28, 0.92);">
             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
               <span style="font-size: 2.2rem;">🐆</span>
               <div>
                 <h5 style="font-family: 'Cinzel', serif; font-size: 1.1rem; color: #FFF; margin: 0;">${c.maya.name}</h5>
-                <span style="font-size: 0.75rem; color: #E57373;">Patrón: ${c.maya.patron} • ${c.maya.element}</span>
+                <span style="font-size: 0.78rem; color: #FF8A80;">Patrón: ${c.maya.patron} • ${c.maya.element}</span>
               </div>
             </div>
-            <p style="font-size: 0.84rem; color: var(--parchment-light); line-height: 1.6; margin: 0;">
+            <p style="font-size: 0.88rem; color: #F1F5F9; line-height: 1.65; margin: 0;">
               ${c.maya.lore}
             </p>
           </div>
 
           <!-- ORIENTAL RATA DE FUEGO -->
-          <div class="jaguar-card" style="padding: 18px; border-left: 4px solid #F39C12; background: rgba(14, 20, 28, 0.85);">
+          <div class="jaguar-card" style="padding: 18px; border-left: 4px solid #F39C12; background: rgba(14, 20, 28, 0.92);">
             <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 10px;">
               <span style="font-size: 2.2rem;">🐀</span>
               <div>
                 <h5 style="font-family: 'Cinzel', serif; font-size: 1.1rem; color: #FFF; margin: 0;">${c.chinese.name}</h5>
-                <span style="font-size: 0.75rem; color: #FFB74D;">${c.chinese.yinYang}</span>
+                <span style="font-size: 0.78rem; color: #FFB74D;">${c.chinese.yinYang}</span>
               </div>
             </div>
-            <div style="font-size: 0.76rem; color: var(--text-dim); margin-bottom: 8px;"><strong>Rasgos:</strong> ${c.chinese.traits}</div>
-            <p style="font-size: 0.84rem; color: var(--parchment-light); line-height: 1.6; margin: 0;">
+            <div style="font-size: 0.78rem; color: #CBD5E1; margin-bottom: 8px;"><strong>Rasgos:</strong> <span style="color: #FFF;">${c.chinese.traits}</span></div>
+            <p style="font-size: 0.88rem; color: #F1F5F9; line-height: 1.65; margin: 0;">
               ${c.chinese.lore}
             </p>
           </div>
@@ -751,26 +751,26 @@ const astralObservatory = {
         </div>
 
         <!-- TAROT ARQUETÍPICO -->
-        <div class="jaguar-card" style="padding: 18px; border-left: 4px solid #8E44AD; background: rgba(14, 20, 28, 0.85);">
+        <div class="jaguar-card" style="padding: 18px; border-left: 4px solid #8E44AD; background: rgba(14, 20, 28, 0.92);">
           <h5 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #FFF; margin: 0 0 14px 0;">
             🃏 Los Dos Arcanos Mayores Rectores de tu Consciencia
           </h5>
           <div class="grid-2" style="gap: 16px;">
-            <div style="background: rgba(0,0,0,0.35); padding: 14px; border-radius: 8px;">
+            <div style="background: rgba(0,0,0,0.45); padding: 14px; border-radius: 8px;">
               <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
                 <strong style="color: #D4AF37; font-size: 0.95rem; font-family: 'Cinzel', serif;">${c.tarot.emperor.name}</strong>
-                <span style="font-size: 0.7rem; color: var(--text-dim);">${c.tarot.emperor.astralRule}</span>
+                <span style="font-size: 0.75rem; color: #94A3B8;">${c.tarot.emperor.astralRule}</span>
               </div>
-              <p style="font-size: 0.82rem; color: var(--parchment-warm); line-height: 1.5; margin: 0;">
+              <p style="font-size: 0.86rem; color: #F1F5F9; line-height: 1.6; margin: 0;">
                 ${c.tarot.emperor.lore}
               </p>
             </div>
-            <div style="background: rgba(0,0,0,0.35); padding: 14px; border-radius: 8px;">
+            <div style="background: rgba(0,0,0,0.45); padding: 14px; border-radius: 8px;">
               <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px;">
                 <strong style="color: #81D4FA; font-size: 0.95rem; font-family: 'Cinzel', serif;">${c.tarot.magician.name}</strong>
-                <span style="font-size: 0.7rem; color: var(--text-dim);">${c.tarot.magician.astralRule}</span>
+                <span style="font-size: 0.75rem; color: #94A3B8;">${c.tarot.magician.astralRule}</span>
               </div>
-              <p style="font-size: 0.82rem; color: var(--parchment-warm); line-height: 1.5; margin: 0;">
+              <p style="font-size: 0.86rem; color: #F1F5F9; line-height: 1.6; margin: 0;">
                 ${c.tarot.magician.lore}
               </p>
             </div>
@@ -787,12 +787,12 @@ const astralObservatory = {
 
     container.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 20px;">
-        <div style="background: rgba(14, 20, 28, 0.75); border: 1px solid var(--border-glass); border-radius: 10px; padding: 16px 20px;">
+        <div style="background: rgba(14, 20, 28, 0.9); border: 1px solid rgba(255,255,255,0.12); border-radius: 10px; padding: 16px 20px;">
           <span class="badge-tag badge-gold" style="font-size: 0.7rem;">EL RELOJ CELESTE OPERATIVO</span>
           <h4 style="font-family: 'Cinzel', serif; font-size: 1.25rem; color: #FFF; margin: 4px 0 0 0;">
             Tránsitos en Tiempo Real & Horas Planetarias para la Práctica Diaria
           </h4>
-          <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 6px; line-height: 1.5;">
+          <p style="font-size: 0.86rem; color: #CBD5E1; margin-top: 6px; line-height: 1.55;">
             El Caballero Jaguar no mira el cielo para adivinar pasivamente el futuro; lo mira como un estratega renacentista para sincronizar el esfuerzo de su jornada con las mareas cósmicas.
           </p>
         </div>
@@ -803,18 +803,18 @@ const astralObservatory = {
             <span style="font-size: 3.5rem; display: block; margin-bottom: 8px;">${moon.emoji}</span>
             <span class="badge-tag badge-cyan" style="font-size: 0.75rem;">ESTADO LUNAR EXACTO</span>
             <h4 style="font-family: 'Cinzel', serif; font-size: 1.3rem; color: #FFF; margin: 8px 0 4px 0;">${moon.phaseName}</h4>
-            <div style="font-size: 0.88rem; color: var(--parchment-warm); margin-bottom: 14px;">
-              Iluminación: <strong>${moon.illumination}%</strong> • Día del Ciclo: <strong>${moon.age}</strong> de 29.5
+            <div style="font-size: 0.9rem; color: #F1F5F9; margin-bottom: 14px;">
+              Iluminación: <strong style="color: #00E5FF;">${moon.illumination}%</strong> • Día del Ciclo: <strong style="color: #FFF;">${moon.age}</strong> de 29.5
             </div>
-            <div style="text-align: left; background: rgba(0,0,0,0.4); padding: 14px; border-radius: 8px; border-left: 3px solid #00E5FF;">
-              <strong style="color: #FFF; font-size: 0.82rem; display: block; margin-bottom: 4px;">🎯 Instrucción de Templanza:</strong>
-              <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; margin: 0;">
+            <div style="text-align: left; background: rgba(0,0,0,0.45); padding: 14px; border-radius: 8px; border-left: 3px solid #00E5FF;">
+              <strong style="color: #FFF; font-size: 0.85rem; display: block; margin-bottom: 4px;">🎯 Instrucción de Templanza:</strong>
+              <p style="font-size: 0.85rem; color: #E2E8F0; line-height: 1.55; margin: 0;">
                 ${moon.stoicFocus}
               </p>
             </div>
           </div>
 
-          <div class="jaguar-card" style="padding: 18px; background: rgba(14, 20, 28, 0.85);">
+          <div class="jaguar-card" style="padding: 18px; background: rgba(14, 20, 28, 0.92);">
             <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
               <span style="font-size: 2.2rem; color: ${ruler.color};">🪐</span>
               <div>
@@ -822,12 +822,12 @@ const astralObservatory = {
                 <h4 style="font-family: 'Cinzel', serif; font-size: 1.25rem; color: #FFF; margin: 2px 0 0 0;">${ruler.name}: Regencia de ${ruler.ruler}</h4>
               </div>
             </div>
-            <p style="font-size: 0.85rem; color: var(--parchment-light); line-height: 1.55; margin: 0 0 14px 0;">
+            <p style="font-size: 0.88rem; color: #F1F5F9; line-height: 1.6; margin: 0 0 14px 0;">
               Cada día de la semana recibe la impronta de un regente tradicional caldeo. Aprovechar este ritmo natural optimiza la recuperación del sistema nervioso y multiplica la eficacia en tus metas.
             </p>
-            <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; border-left: 3px solid ${ruler.color};">
-              <strong style="color: #FFF; font-size: 0.8rem; display: block; margin-bottom: 2px;">⚡ Plan de Acción del Día:</strong>
-              <span style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.45;">${ruler.focus}</span>
+            <div style="background: rgba(0,0,0,0.45); padding: 12px; border-radius: 6px; border-left: 3px solid ${ruler.color};">
+              <strong style="color: #FFF; font-size: 0.82rem; display: block; margin-bottom: 2px;">⚡ Plan de Acción del Día:</strong>
+              <span style="font-size: 0.85rem; color: #E2E8F0; line-height: 1.5;">${ruler.focus}</span>
             </div>
           </div>
 
@@ -839,33 +839,33 @@ const astralObservatory = {
             📅 El Heptagrama Semanal de Caballería
           </h5>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
-            <div style="padding: 10px; background: rgba(0,0,0,0.3); border-radius: 6px; text-align: center; border-top: 2px solid #C0392B;">
+            <div style="padding: 10px; background: rgba(0,0,0,0.4); border-radius: 6px; text-align: center; border-top: 2px solid #C0392B;">
               <strong style="color: #FFF; font-size: 0.85rem; display: block;">Martes (Marte ♂)</strong>
-              <span style="font-size: 0.72rem; color: var(--text-muted);">Muay Thai, fuerza & tareas duras</span>
+              <span style="font-size: 0.74rem; color: #CBD5E1;">Muay Thai, fuerza & tareas duras</span>
             </div>
-            <div style="padding: 10px; background: rgba(0,0,0,0.3); border-radius: 6px; text-align: center; border-top: 2px solid #2980B9;">
+            <div style="padding: 10px; background: rgba(0,0,0,0.4); border-radius: 6px; text-align: center; border-top: 2px solid #2980B9;">
               <strong style="color: #FFF; font-size: 0.85rem; display: block;">Miércoles (Mercurio ☿)</strong>
-              <span style="font-size: 0.72rem; color: var(--text-muted);">Papers, idiomas & código</span>
+              <span style="font-size: 0.74rem; color: #CBD5E1;">Papers, idiomas & código</span>
             </div>
-            <div style="padding: 10px; background: rgba(0,0,0,0.3); border-radius: 6px; text-align: center; border-top: 2px solid #8E44AD;">
+            <div style="padding: 10px; background: rgba(0,0,0,0.4); border-radius: 6px; text-align: center; border-top: 2px solid #8E44AD;">
               <strong style="color: #FFF; font-size: 0.85rem; display: block;">Jueves (Júpiter ♃)</strong>
-              <span style="font-size: 0.72rem; color: var(--text-muted);">Estrategia, finanzas & alianzas</span>
+              <span style="font-size: 0.74rem; color: #CBD5E1;">Estrategia, finanzas & alianzas</span>
             </div>
-            <div style="padding: 10px; background: rgba(0,0,0,0.3); border-radius: 6px; text-align: center; border-top: 2px solid #27AE60;">
+            <div style="padding: 10px; background: rgba(0,0,0,0.4); border-radius: 6px; text-align: center; border-top: 2px solid #27AE60;">
               <strong style="color: #FFF; font-size: 0.85rem; display: block;">Viernes (Venus ♀)</strong>
-              <span style="font-size: 0.72rem; color: var(--text-muted);">Pintura Zorn, música & romance</span>
+              <span style="font-size: 0.74rem; color: #CBD5E1;">Pintura Zorn, música & romance</span>
             </div>
-            <div style="padding: 10px; background: rgba(0,0,0,0.3); border-radius: 6px; text-align: center; border-top: 2px solid #7F8C8D;">
+            <div style="padding: 10px; background: rgba(0,0,0,0.4); border-radius: 6px; text-align: center; border-top: 2px solid #7F8C8D;">
               <strong style="color: #FFF; font-size: 0.85rem; display: block;">Sábado (Saturno ♄)</strong>
-              <span style="font-size: 0.72rem; color: var(--text-muted);">Auditoría, limpieza & templanza</span>
+              <span style="font-size: 0.74rem; color: #CBD5E1;">Auditoría, limpieza & templanza</span>
             </div>
-            <div style="padding: 10px; background: rgba(0,0,0,0.3); border-radius: 6px; text-align: center; border-top: 2px solid #F39C12;">
+            <div style="padding: 10px; background: rgba(0,0,0,0.4); border-radius: 6px; text-align: center; border-top: 2px solid #F39C12;">
               <strong style="color: #FFF; font-size: 0.85rem; display: block;">Domingo (Sol ☉)</strong>
-              <span style="font-size: 0.72rem; color: var(--text-muted);">Códice semanal & visión soberana</span>
+              <span style="font-size: 0.74rem; color: #CBD5E1;">Códice semanal & visión soberana</span>
             </div>
-            <div style="padding: 10px; background: rgba(0,0,0,0.3); border-radius: 6px; text-align: center; border-top: 2px solid #BDC3C7;">
+            <div style="padding: 10px; background: rgba(0,0,0,0.4); border-radius: 6px; text-align: center; border-top: 2px solid #BDC3C7;">
               <strong style="color: #FFF; font-size: 0.85rem; display: block;">Lunes (Luna ☽)</strong>
-              <span style="font-size: 0.72rem; color: var(--text-muted);">Nutrición somática & orden basal</span>
+              <span style="font-size: 0.74rem; color: #CBD5E1;">Nutrición somática & orden basal</span>
             </div>
           </div>
         </div>
@@ -890,56 +890,56 @@ const astralObservatory = {
       <div style="display: flex; flex-direction: column; gap: 16px;">
         
         <!-- CABECERA DEL PLANETA -->
-        <div style="display: flex; align-items: center; gap: 14px; border-bottom: 1.5px solid var(--border-glass); padding-bottom: 14px;">
-          <div style="width: 56px; height: 56px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(0,0,0,0.5) 100%); border: 2px solid ${p.badgeColor}; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; color: ${p.badgeColor};">
+        <div style="display: flex; align-items: center; gap: 14px; border-bottom: 1.5px solid rgba(255,255,255,0.15); padding-bottom: 14px;">
+          <div style="width: 58px; height: 58px; border-radius: 50%; background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.6) 100%); border: 2.5px solid ${p.badgeColor}; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; color: ${p.badgeColor};">
             ${p.symbol}
           </div>
           <div style="flex: 1;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px;">
               <h3 style="font-family: 'Cinzel', serif; font-size: 1.4rem; color: #FFF; margin: 0;">${p.name}</h3>
-              <span class="badge-tag" style="background: rgba(255,255,255,0.06); color: ${p.badgeColor}; border: 1px solid ${p.badgeColor}; font-size: 0.72rem;">${p.dignity}</span>
+              <span class="badge-tag" style="background: rgba(255,255,255,0.08); color: ${p.badgeColor}; border: 1.5px solid ${p.badgeColor}; font-size: 0.74rem; font-weight: 700;">${p.dignity}</span>
             </div>
-            <div style="font-size: 0.82rem; color: var(--imperial-gold-light); margin-top: 3px;">
+            <div style="font-size: 0.84rem; color: #FFD700; margin-top: 3px; font-weight: 600;">
               ${p.house} • ${p.sign}
             </div>
-            <div style="font-size: 0.85rem; color: #FFF; font-weight: 600; margin-top: 2px;">
-              Arquetipo: ${p.archetype}
+            <div style="font-size: 0.88rem; color: #FFF; font-weight: 600; margin-top: 2px;">
+              Arquetipo: <span style="color: #CBD5E1;">${p.archetype}</span>
             </div>
           </div>
         </div>
 
         <!-- PESTAÑAS INTERNAS DENTRO DEL MODAL CENTRADO -->
-        <div style="display: flex; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 8px; overflow-x: auto;" id="astro-modal-tab-bar">
-          <button class="btn-jaguar btn-sm active" onclick="astralObservatory.switchModalSubTab('psi', this)">🧠 Psicología Profunda</button>
-          <button class="btn-jaguar btn-sm" onclick="astralObservatory.switchModalSubTab('proj', this)">⚔️ Proyectos Reales</button>
-          <button class="btn-jaguar btn-sm" onclick="astralObservatory.switchModalSubTab('shadow', this)">⚖️ Luz vs Sombra</button>
-          <button class="btn-jaguar btn-sm" onclick="astralObservatory.switchModalSubTab('stoic', this)">🛡️ Directriz Estoica</button>
+        <div style="display: flex; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.12); padding-bottom: 8px; overflow-x: auto;" id="astro-modal-tab-bar">
+          <button class="btn-jaguar btn-sm active" style="color: #FFF;" onclick="astralObservatory.switchModalSubTab('psi', this)">🧠 Psicología Profunda</button>
+          <button class="btn-jaguar btn-sm" style="color: #CBD5E1;" onclick="astralObservatory.switchModalSubTab('proj', this)">⚔️ Proyectos Reales</button>
+          <button class="btn-jaguar btn-sm" style="color: #CBD5E1;" onclick="astralObservatory.switchModalSubTab('shadow', this)">⚖️ Luz vs Sombra</button>
+          <button class="btn-jaguar btn-sm" style="color: #CBD5E1;" onclick="astralObservatory.switchModalSubTab('stoic', this)">🛡️ Directriz Estoica</button>
         </div>
 
         <!-- CONTENEDOR DINÁMICO DE SUBPESTAÑAS -->
-        <div id="astro-modal-tab-body" style="min-height: 180px; font-size: 0.88rem; line-height: 1.6; color: var(--parchment-light);">
+        <div id="astro-modal-tab-body" style="min-height: 180px; font-size: 0.92rem; line-height: 1.7; color: #F1F5F9;">
           <div id="tab-psi-content">
-            <h5 style="color: #FFF; margin: 0 0 8px 0; font-family: 'Cinzel', serif;">¿Qué significa este planeta en tu psique?</h5>
-            <p style="white-space: pre-line; margin: 0;">${p.psychology}</p>
+            <h5 style="color: #FFD700; margin: 0 0 8px 0; font-family: 'Cinzel', serif; font-size: 1.05rem;">¿Qué significa este planeta en tu psique?</h5>
+            <p style="white-space: pre-line; margin: 0; color: #F8FAFC;">${p.psychology}</p>
           </div>
           <div id="tab-proj-content" style="display: none;">
-            <h5 style="color: #FFF; margin: 0 0 8px 0; font-family: 'Cinzel', serif;">Manifestación en tus frentes de vida y proyectos</h5>
-            <p style="white-space: pre-line; margin: 0;">${p.projectsManifestation}</p>
+            <h5 style="color: #FFD700; margin: 0 0 8px 0; font-family: 'Cinzel', serif; font-size: 1.05rem;">Manifestación en tus frentes de vida y proyectos</h5>
+            <p style="white-space: pre-line; margin: 0; color: #F8FAFC;">${p.projectsManifestation}</p>
           </div>
           <div id="tab-shadow-content" style="display: none;">
-            <h5 style="color: #FFF; margin: 0 0 8px 0; font-family: 'Cinzel', serif;">Virtud Luminosa vs Trampa de Sombra</h5>
-            <p style="white-space: pre-line; margin: 0;">${p.lightVsShadow}</p>
+            <h5 style="color: #FFD700; margin: 0 0 8px 0; font-family: 'Cinzel', serif; font-size: 1.05rem;">Virtud Luminosa vs Trampa de Sombra</h5>
+            <p style="white-space: pre-line; margin: 0; color: #F8FAFC;">${p.lightVsShadow}</p>
           </div>
           <div id="tab-stoic-content" style="display: none;">
-            <h5 style="color: #FFF; margin: 0 0 8px 0; font-family: 'Cinzel', serif;">Directriz de Caballería & Alquimia Estoica</h5>
-            <div style="background: rgba(0,0,0,0.3); border-left: 3px solid #D4AF37; padding: 12px 14px; border-radius: 4px; margin-top: 6px;">
-              <p style="white-space: pre-line; margin: 0; font-style: italic;">${p.stoicGuidance}</p>
+            <h5 style="color: #FFD700; margin: 0 0 8px 0; font-family: 'Cinzel', serif; font-size: 1.05rem;">Directriz de Caballería & Alquimia Estoica</h5>
+            <div style="background: rgba(0,0,0,0.5); border-left: 3px solid #D4AF37; padding: 14px 16px; border-radius: 6px; margin-top: 6px;">
+              <p style="white-space: pre-line; margin: 0; font-style: italic; color: #FFF;">${p.stoicGuidance}</p>
             </div>
           </div>
         </div>
 
-        <div style="display: flex; justify-content: flex-end; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px;">
-          <button class="btn-jaguar btn-secondary-dark" onclick="astralObservatory.closePlanetDetailModal();">
+        <div style="display: flex; justify-content: flex-end; border-top: 1px solid rgba(255,255,255,0.12); padding-top: 12px;">
+          <button class="btn-jaguar btn-secondary-dark" onclick="astralObservatory.closePlanetDetailModal();" style="color: #FFF;">
             Cerrar Tratado
           </button>
         </div>

@@ -16,11 +16,11 @@
   <!-- GATEKEEPER / PANEL DE ACCESO DE COMANDO ESTOICO -->
   <div id="stoic-gatekeeper-overlay" class="stoic-gatekeeper-overlay">
     <div class="stoic-gatekeeper-card">
-      <!-- LOGO DEL JAGUAR AGRANDADO EN LA CÚPULA SUPERIOR -->
-      <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 14px;">
-        <img src="assets/jungle_jaguar_logo.jpg" alt="Caballero Jaguar" class="gatekeeper-jaguar-logo" style="width: 88px; height: 88px; border-radius: 50%; border: 2.5px solid #C59A28; box-shadow: 0 0 24px rgba(197, 154, 40, 0.45), 0 0 12px rgba(155, 35, 53, 0.6); object-fit: cover;">
+      <!-- LOGO DEL JAGUAR AGRANDADO EN LA CÚPULA SUPERIOR (X6 TAMAÑO MAJESTUOSO) -->
+      <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 18px;">
+        <img src="assets/jungle_jaguar_logo.jpg" alt="Caballero Jaguar" class="gatekeeper-jaguar-logo" style="width: 260px; height: 260px; border-radius: 50%; border: 3.5px solid #C59A28; box-shadow: 0 0 35px rgba(197, 154, 40, 0.6), 0 0 20px rgba(155, 35, 53, 0.7); object-fit: cover;">
       </div>
-      <span class="gatekeeper-badge">IMPERIVM • ORDO JAGUARIS</span>
+      <span class="gatekeeper-badge">GUERRERO JAGUAR</span>
       <h2 class="gatekeeper-title">ACCESO DE COMANDO</h2>
       <p class="gatekeeper-subtitle">Identificación de Caballería Requerida</p>
       <div class="gatekeeper-input-group">
@@ -79,14 +79,14 @@
         </button>
       </div>
 
-      <!-- BLOQUE CENTRAL: LOGO PRINCIPAL AGRANDADO AL CENTRO -->
+      <!-- BLOQUE CENTRAL: LOGO PRINCIPAL AGRANDADO AL CENTRO (X3 TAMAÑO) -->
       <div class="stoic-nav-segment stoic-nav-center stoic-logo-center-wrap">
-        <div class="brand-logo header-center-brand" onclick="selectMainTab('dashboard');" title="Caballero Jaguar - Inicio">
-          <div class="logo-icon-container header-logo-prominent" title="Emblema de la Orden del Caballero Jaguar">
-            <img src="assets/jungle_jaguar_logo.jpg" alt="Caballero Jaguar" class="logo-icon-img header-logo-img-prominent">
+        <div class="brand-logo header-center-brand" onclick="selectMainTab('dashboard');" title="Guerrero Jaguar - Inicio">
+          <div class="logo-icon-container header-logo-prominent" title="Emblema de la Orden del Guerrero Jaguar">
+            <img src="assets/jungle_jaguar_logo.jpg" alt="Guerrero Jaguar" class="logo-icon-img header-logo-img-prominent">
           </div>
           <div class="brand-text-block stoic-brand-text">
-            <span class="brand-name">IMPERIVM • ORDO JAGUARIS</span>
+            <span class="brand-name">Guerrero Jaguar</span>
             <span class="dev-section-label">#app-header</span>
           </div>
         </div>
@@ -384,20 +384,20 @@
             </div>
             <div style="text-align: right;">
               <span class="badge-tag badge-cyan">23 de Marzo de 1996 • 09:30 AM</span>
-              <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">Parral, VII Región del Maule, Chile</div>
+              <div style="font-size: 0.78rem; color: #CBD5E1; margin-top: 4px;">Parral, VII Región del Maule, Chile</div>
             </div>
           </div>
-          <p style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-top: 8px;">
-            Mapa cosmográfico de nacimiento. Revela la conjunción primordial de fuego entre el <strong>Sol</strong> y su regente <strong>Marte en Aries</strong> en la cumbre de la Casa X (Cenit de la vocación pública), anclados por la solidez estoica y perseverancia terrenal de la <strong>Luna en Tauro</strong> (Exaltada). En este momento vital (2026), atraviesas tu <strong>Primer Retorno de Saturno en Aries</strong>: el rito de paso sagrado hacia la soberanía y la maestría absoluta.
+          <p style="font-size: 0.95rem; color: #F1F5F9; line-height: 1.6; margin-top: 8px;">
+            Mapa cosmográfico de nacimiento. Revela la conjunción primordial de fuego entre el <strong style="color: #FFF;">Sol</strong> y su regente <strong style="color: #FFF;">Marte en Aries</strong> en la cumbre de la Casa X (Cenit de la vocación pública), anclados por la solidez estoica y perseverancia terrenal de la <strong style="color: #FFF;">Luna en Tauro</strong> (Exaltada). En este momento vital (2026), atraviesas tu <strong style="color: #D4AF37;">Primer Retorno de Saturno en Aries</strong>: el rito de paso sagrado hacia la soberanía y la maestría absoluta.
           </p>
         </div>
 
         <!-- RELOJ CELESTE EN VIVO: 2 WIDGETS DINÁMICOS -->
         <div class="grid-2" style="gap: 16px;">
-          <div class="jaguar-card" id="astro-live-moon-widget" style="padding: 16px; background: rgba(14, 20, 28, 0.85); border-left: 3px solid #00E5FF;">
+          <div class="jaguar-card" id="astro-live-moon-widget" style="padding: 16px; background: rgba(14, 20, 28, 0.92); border-left: 3px solid #00E5FF;">
             <!-- Renderizado dinámico vía astralObservatory.init() -->
           </div>
-          <div class="jaguar-card" id="astro-live-ruler-widget" style="padding: 16px; background: rgba(14, 20, 28, 0.85); border-left: 3px solid #D4AF37;">
+          <div class="jaguar-card" id="astro-live-ruler-widget" style="padding: 16px; background: rgba(14, 20, 28, 0.92); border-left: 3px solid #D4AF37;">
             <!-- Renderizado dinámico vía astralObservatory.init() -->
           </div>
         </div>
@@ -407,10 +407,10 @@
           
           <!-- COLUMNA 1: RUEDA CELESTE INTERACTIVA (SVG CON 12 CASAS, ZODÍACO Y PLANETAS) -->
           <div class="celestial-wheel-box">
-            <h3 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: var(--parchment-light); margin-bottom: 6px; text-align: center;">
+            <h3 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #FFF; margin-bottom: 6px; text-align: center;">
               🧭 Rueda Zodiacal de las 12 Casas
             </h3>
-            <span style="font-size: 0.74rem; color: var(--text-dim); margin-bottom: 12px; display: block; text-align: center;">
+            <span style="font-size: 0.74rem; color: #CBD5E1; margin-bottom: 12px; display: block; text-align: center;">
               💡 Haz clic en los símbolos del mapa para abrir el tratado del planeta
             </span>
             
@@ -490,20 +490,20 @@
               <text x="256" y="35" fill="#E2DACB" font-size="11" font-family="'Cinzel', serif" font-weight="bold">MC</text>
             </svg>
 
-            <div style="margin-top: 14px; text-align: center; font-size: 0.8rem; color: var(--parchment-warm);">
-              Eje Cardinal: <strong>Aries (Fuego) ➔ Tauro (Tierra) ➔ Capricornio (Estructura)</strong>
+            <div style="margin-top: 14px; text-align: center; font-size: 0.85rem; color: #FAF0D7;">
+              Eje Cardinal: <strong style="color: #FFF;">Aries (Fuego) ➔ Tauro (Tierra) ➔ Capricornio (Estructura)</strong>
             </div>
           </div>
 
           <!-- COLUMNA 2: RESUMEN DE LA ARQUITECTURA CELESTE & BOTONES DE TRATADO -->
           <div style="display: flex; flex-direction: column; gap: 14px;">
-            <div class="jaguar-card" style="padding: 16px; background: rgba(14, 20, 28, 0.85);">
+            <div class="jaguar-card" style="padding: 16px; background: rgba(14, 20, 28, 0.92);">
               <span class="badge-tag badge-gold" style="font-size: 0.68rem;">ALINEACIÓN DE PODER</span>
               <h4 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #FFF; margin: 4px 0 8px 0;">
                 El Fuego Primordial del Cenit (Sol + Marte + Saturno)
               </h4>
-              <p style="font-size: 0.84rem; color: var(--parchment-light); line-height: 1.55; margin: 0 0 10px 0;">
-                Tener tres planetas de primer orden en la Casa X en Aries significa que tu destino está indisolublemente unido al <strong>liderazgo público, la soberanía territorial y la construcción de un legado visible</strong>. No naciste para ser mero espectador de la historia; naciste para fundar frentes y comandar expediciones.
+              <p style="font-size: 0.86rem; color: #F1F5F9; line-height: 1.6; margin: 0 0 10px 0;">
+                Tener tres planetas de primer orden en la Casa X en Aries significa que tu destino está indisolublemente unido al <strong style="color: #FFF;">liderazgo público, la soberanía territorial y la construcción de un legado visible</strong>. No naciste para ser mero espectador de la historia; naciste para fundar frentes y comandar expediciones.
               </p>
               <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
                 <button class="btn-jaguar btn-sm" onclick="astralObservatory.openPlanetDetailModal('sol')" style="justify-content: center; font-size: 0.78rem;">
@@ -521,13 +521,13 @@
               </div>
             </div>
 
-            <div class="jaguar-card" style="padding: 16px; background: rgba(14, 20, 28, 0.85); border-left: 3px solid #D4AF37;">
+            <div class="jaguar-card" style="padding: 16px; background: rgba(14, 20, 28, 0.92); border-left: 3px solid #D4AF37;">
               <span class="badge-tag badge-cyan" style="font-size: 0.68rem;">EL GRAN SALTO EVOLUTIVO</span>
               <h4 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #FFF; margin: 4px 0 8px 0;">
                 Eje Nodal: Del Guerrero Solitario a la Mesa Redonda
               </h4>
-              <p style="font-size: 0.84rem; color: var(--parchment-light); line-height: 1.55; margin: 0 0 10px 0;">
-                Tu <strong>Nodo Sur en Aries</strong> te hace autosuficiente e imparable en solitario. Pero tu <strong>Nodo Norte en Libra</strong> marca tu verdadero dharma: aprender a construir en equipo, sellar pactos fraternales sólidos (Maule Red, Museo de la Memoria) y liderar sin tener que cargar todas las piedras sobre tu propia espalda.
+              <p style="font-size: 0.86rem; color: #F1F5F9; line-height: 1.6; margin: 0 0 10px 0;">
+                Tu <strong style="color: #FFF;">Nodo Sur en Aries</strong> te hace autosuficiente e imparable en solitario. Pero tu <strong style="color: #00E5FF;">Nodo Norte en Libra</strong> marca tu verdadero dharma: aprender a construir en equipo, sellar pactos fraternales sólidos (Maule Red, Museo de la Memoria) y liderar sin tener que cargar todas las piedras sobre tu propia espalda.
               </p>
               <button class="btn-jaguar btn-sm btn-gold-chrome" onclick="astralObservatory.openPlanetDetailModal('nodonorte')" style="justify-content: center; width: 100%; color: #0E0905; font-weight: bold; font-size: 0.78rem;">
                 ☊ Explorar el Tratado del Nodo Norte en Libra
