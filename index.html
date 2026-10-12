@@ -1,0 +1,2370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Caballero Jaguar • Orden Imperial & Desarrollo Integral</title>
+  <meta name="description" content="Plataforma de Desarrollo Integral Caballero Jaguar: Proyectos de Campaña, ReWild, Lauwersmeer, Urrutia Agrotech, Permacultura, Ciencia & Territorios, Balance Económico Sparkasse/Banco Chile, Matriz de Caballería 21 días.">
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico?v=renacimiento">
+  <link rel="icon" type="image/png" href="assets/favicon.png?v=renacimiento">
+  <link rel="apple-touch-icon" href="assets/favicon.png?v=renacimiento">
+  <link rel="stylesheet" href="css/jaguar-theme.css?v=20260915_equipo_v2">
+  <link rel="stylesheet" href="css/imperivm-theme.css?v=20261012_v27">
+</head>
+<body>
+
+  <!-- GATEKEEPER / PANEL DE ACCESO DE COMANDO ESTOICO -->
+  <div id="stoic-gatekeeper-overlay" class="stoic-gatekeeper-overlay">
+    <div class="stoic-gatekeeper-card">
+      <!-- LOGO DEL JAGUAR AGRANDADO EN LA CÚPULA SUPERIOR -->
+      <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 14px;">
+        <img src="assets/jungle_jaguar_logo.jpg" alt="Caballero Jaguar" class="gatekeeper-jaguar-logo" style="width: 88px; height: 88px; border-radius: 50%; border: 2.5px solid #C59A28; box-shadow: 0 0 24px rgba(197, 154, 40, 0.45), 0 0 12px rgba(155, 35, 53, 0.6); object-fit: cover;">
+      </div>
+      <span class="gatekeeper-badge">IMPERIVM • ORDO JAGUARIS</span>
+      <h2 class="gatekeeper-title">ACCESO DE COMANDO</h2>
+      <p class="gatekeeper-subtitle">Identificación de Caballería Requerida</p>
+      <div class="gatekeeper-input-group">
+        <input type="password" id="gatekeeper-pass-input" class="gatekeeper-input" placeholder="Credencial de la Orden..." onkeyup="if(event.key==='Enter') verifyGatekeeperPass();" autofocus>
+        <button class="gatekeeper-btn" onclick="verifyGatekeeperPass();">⚔️ INGRESAR</button>
+      </div>
+      <div id="gatekeeper-feedback" class="gatekeeper-feedback"></div>
+      <!-- ÁGUILA IMPERIAL DESPLAZADA AL FONDO CERRANDO EL MENÚ Y AL CENTRO -->
+      <div class="gatekeeper-bottom-seal" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px; padding-top: 14px; border-top: 1px solid rgba(197, 154, 40, 0.25);">
+        <div class="gatekeeper-eagle" style="margin: 0; font-size: 2rem; line-height: 1;">🦅</div>
+        <span style="font-size: 0.62rem; color: #94A3B8; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; font-weight: 700;">Vexillum Legionis</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-container">
+
+    <!-- ================================================================
+         TOP NAVBAR ESTOICO: PANEL DE INSTRUMENTOS MONOLÍTICO
+         Logos (Jaguar + DateMaster) | Info (i) | Música | Calendarios | Foco | XP
+         ================================================================ -->
+    <header class="app-header stoic-top-navbar">
+      
+      <!-- BLOQUE IZQUIERDO: REPRODUCTOR AMBIENT COMPACTO + INFO / DEV TOGGLE -->
+      <div class="stoic-nav-segment stoic-nav-left">
+        <div class="ambient-player-widget stoic-ambient-widget ambient-compact-left">
+          <button class="btn-ambient-control" onclick="ambientPlayer.prevTrack()" title="Pista Anterior">⏮</button>
+          <button id="ambient-play-btn" onclick="ambientPlayer.togglePlay()" title="Reproducir / Pausar">▶️</button>
+          <button class="btn-ambient-control" onclick="ambientPlayer.nextTrack()" title="Pista Siguiente">⏭</button>
+          <select id="ambient-track-select" class="ambient-track-select ambient-select-compact" onchange="ambientPlayer.selectTrack(this.value)" title="Estilo Musical">
+            <option value="templo_jaguar">🐆 Templo</option>
+            <option value="loffler_deep">🌲 Löffler</option>
+            <option value="bohemia_tavern">⚔️ Taberna</option>
+            <option value="cyberpunk_focus">🌆 Cyberpunk</option>
+            <option value="baroque_imperial">🎻 Barroca</option>
+            <option value="chillhop_rhodes">☕ Chillhop</option>
+            <option value="santuario_432">🌧️ 432 Hz</option>
+          </select>
+          <div class="ambient-equalizer-bars stoic-eq-bars" title="Ecualizador">
+            <span class="ambient-eq-bar bar-1"></span>
+            <span class="ambient-eq-bar bar-2"></span>
+            <span class="ambient-eq-bar bar-3"></span>
+            <span class="ambient-eq-bar bar-4"></span>
+          </div>
+          <button class="btn-ambient-vol-icon" onclick="ambientPlayer.toggleMute()" title="Silenciar">🔊</button>
+          <input type="range" id="ambient-vol-slider" min="0" max="1" step="0.05" value="0.45" oninput="ambientPlayer.setVolume(this.value)" class="ambient-vol-slider ambient-vol-mini" title="Volumen">
+        </div>
+        <button class="btn-header-info stoic-info-seal" id="header-info-btn" onclick="event.stopPropagation(); openSistemaMaestroModal();" title="Sistema Maestro de Progresión">
+          ℹ️
+        </button>
+        <button class="stoic-lightbulb-toggle" id="header-lightbulb-btn" onclick="event.stopPropagation(); imperivmEngine.toggleDevSectionLabels();" title="💡 Activar/Desactivar Etiquetas de Referencia Técnica">
+          💡
+        </button>
+        <button class="stoic-lightbulb-toggle" id="header-lock-btn" onclick="event.stopPropagation(); lockGatekeeper();" title="🔒 Bloquear / Salir de Comando">
+          🔒
+        </button>
+      </div>
+
+      <!-- BLOQUE CENTRAL: LOGO PRINCIPAL AGRANDADO AL CENTRO -->
+      <div class="stoic-nav-segment stoic-nav-center stoic-logo-center-wrap">
+        <div class="brand-logo header-center-brand" onclick="selectMainTab('dashboard');" title="Caballero Jaguar - Inicio">
+          <div class="logo-icon-container header-logo-prominent" title="Emblema de la Orden del Caballero Jaguar">
+            <img src="assets/jungle_jaguar_logo.jpg" alt="Caballero Jaguar" class="logo-icon-img header-logo-img-prominent">
+          </div>
+          <div class="brand-text-block stoic-brand-text">
+            <span class="brand-name">IMPERIVM • ORDO JAGUARIS</span>
+            <span class="dev-section-label">#app-header</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- BLOQUE DERECHO: TOTAL XP + CALENDARIO GOOGLE & HORA + BOTÓN FOCO -->
+      <div class="stoic-nav-segment stoic-nav-right">
+        <!-- EXPERIENCIA TOTAL -->
+        <div class="level-badge-card stoic-xp-badge" style="cursor: pointer;" onclick="openKCDInspector({ type: 'level' });" title="Ver Códice del Cursus Honorum">
+          <div class="level-icon">🏛️</div>
+          <div class="level-info">
+            <span class="level-name" id="header-level-name"><strong>350 XP</strong></span>
+            <div class="xp-bar-container" style="background: rgba(0,0,0,0.6); height: 5px; border-radius: 3px; border: 1px solid rgba(255,255,255,0.15);">
+              <div class="xp-bar-fill" id="header-xp-fill" style="background: linear-gradient(90deg, #888, #FFF); width: 35%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CALENDARIO DE GOOGLE & HORA hh:mm dd/mm/yy -->
+        <div class="celestial-header-widget stoic-celestial">
+          <div class="celestial-sun-moon-dial" id="celestial-sun-moon-dial" onclick="openCelestialHoroscopesModal()" title="Cosmografía &amp; 4 Horóscopos">
+            <span id="celestial-dial-icon">☀️</span>
+          </div>
+          <div class="celestial-datetime-box">
+            <div class="celestial-time-text" id="celestial-live-time">23:35</div>
+            <a href="https://calendar.google.com/calendar" target="_blank" class="celestial-calendar-link" title="Abrir Google Calendar">
+              📅 <span id="celestial-live-date">01/10/26</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- BOTÓN DE FOCO (SOLO FOCO) -->
+        <button class="btn-jaguar btn-micro-pill stoic-foco-btn" id="header-foco-btn" onclick="imperivmEngine.startFocusMode();" title="Modo Foco">
+          <span>⏱️ Foco</span>
+          <span id="header-pomo-badge" style="display: none; font-size: 0.72rem; color: #FFF; font-family: 'Cinzel', serif; font-weight: 900; background: rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px;">50:00</span>
+        </button>
+      </div>
+
+    </header>
+
+    <!-- ================================================================
+         HERO HEADER MONUMENTAL ESTOICO: GUERRERO ROMANO + VEXILLVM + 9 ESTANDARTES
+         ================================================================ -->
+    <section class="stoic-hero-header">
+      <img src="assets/stoic_roman_bg.jpg" alt="Centurión Romano en el Partenón" class="stoic-hero-bg-img">
+      <div class="stoic-hero-gradient-overlay"></div>
+      
+      <div class="stoic-hero-content">
+        <!-- GRAN VEXILLVM PRINCIPAL (Bandera Maestra de Días en Virtud) -->
+        <div class="stoic-vexillum-maestro header-challenge-hanging-pennant vexillum-streak-tier-1" onclick="openCaballeroChallengeModal()" title="🦅 Vexillum Legionis: Desafío de Templanza &amp; Matriz de 21 Días">
+          <div class="stoic-vexillum-iron-crossbar">
+            <span class="stoic-crossbar-ring"></span>
+            <span class="stoic-crossbar-ring"></span>
+          </div>
+          <div class="stoic-vexillum-cloth">
+            <span class="stoic-vexillum-eagle">🦅</span>
+            <span class="stoic-vexillum-title">HÁBITOS &amp; CONSTANCIA</span>
+            <span class="stoic-vexillum-days" id="header-challenge-days-text">DÍA 1 EN CONSTANCIA</span>
+            <span class="stoic-vexillum-sub">RETO 21 DÍAS</span>
+          </div>
+          <div class="stoic-vexillum-v-tip"></div>
+        </div>
+
+        <!-- BARRA DE HIERRO FORJADO CON LOS 9 ESTANDARTES DE VIRTUD -->
+        <div class="stoic-pennants-formation">
+          <div class="stoic-iron-bar-rail"></div>
+          <div class="header-category-pennants-container" id="header-category-pennants-bar" title="9 Áreas de Progreso • Haz clic para inspeccionar">
+            <!-- Inyectado dinámicamente por scoring-engine.js -->
+          </div>
+        </div>
+
+        <!-- PIRÁMIDE INVERTIDA DE COMANDOS EN EL CENTRO DEL HERO -->
+        <div class="stoic-pyramid-command-dock">
+          <span class="dev-section-label" style="display: none; align-self: center; margin-bottom: 6px;">#stoic-pyramid-command-dock</span>
+          <!-- Fila 1: 4 botones (Base ancha de la pirámide) -->
+          <div class="pyramid-row">
+            <button class="btn-command-pill" onclick="imperivmEngine.openAddTaskModal('daily');" title="Agregar Tarea al Día de Hoy">➕ Tarea de Hoy</button>
+            <button class="btn-command-pill" onclick="imperivmEngine.openAddTaskModal('weekly');" title="Agregar Tarea Semanal">➕ Tarea Semanal</button>
+            <button class="btn-command-pill" onclick="openCaballeroChallengeModal();" title="Ver Reto & Matriz 21 Días">🦅 Reto 21 Días</button>
+            <button class="btn-command-pill" onclick="imperivmEngine.openRulesModal();" title="Reglas y Sistema de Puntos">⭐ Reglas & Puntos</button>
+          </div>
+          <!-- Fila 2: 3 botones (Fila intermedia) -->
+          <div class="pyramid-row">
+            <button class="btn-command-pill btn-command-pill-gold" onclick="imperivmEngine.startFocusMode();" title="Iniciar Modo Enfoque / Deep Work">▶ MODO ENFOQUE</button>
+            <button class="btn-command-pill" onclick="openCelestialHoroscopesModal();" title="Ciclo Solar y Calendario">☀️ Ciclo Solar</button>
+            <a href="https://calendar.google.com/calendar" target="_blank" class="btn-command-pill" style="text-decoration: none;" title="Abrir Google Calendar">📅 Google Calendar</a>
+          </div>
+          <!-- Fila 3: 1 botón (Vértice inferior) -->
+          <div class="pyramid-row">
+            <button class="btn-command-pill" onclick="openSistemaMaestroModal();" title="Guía y Hábitos de Vida">ℹ️ Guía de Hábitos</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NAVEGACIÓN PRINCIPAL EN BARRA CENTRAL (SIMPLIFICADA) -->
+    <nav class="nav-tabs-container" style="justify-content: center; gap: 12px; flex-wrap: wrap;">
+      
+      <!-- BOTÓN 1: 🏛️ INICIO -->
+      <button class="tab-btn active" data-tab="dashboard" onclick="selectMainTab('dashboard');">
+        <span>🏛️ Inicio</span>
+      </button>
+
+      <!-- BOTÓN 2: 🏃 CUERPO Y SALUD -->
+      <button class="tab-btn" data-tab="cuerpo" onclick="selectMainTab('cuerpo');">
+        <span>🏃 Cuerpo y Salud</span>
+      </button>
+
+      <!-- BOTÓN 3: 🧭 EXPLORACIÓN PERSONAL -->
+      <button class="tab-btn" data-tab="exploracion" onclick="selectMainTab('exploracion');">
+        <span>🧭 Exploración Personal</span>
+      </button>
+
+      <!-- BOTÓN 4: 🎯 MISIONES -->
+      <button class="tab-btn" data-tab="misiones" onclick="selectMainTab('misiones');">
+        <span>🎯 Misiones</span>
+      </button>
+
+      <!-- BOTÓN 5: ⚖️ FINANZAS -->
+      <button class="tab-btn" data-tab="finanzas" onclick="selectMainTab('finanzas');">
+        <span>⚖️ Finanzas</span>
+      </button>
+
+      <!-- BOTÓN 6: 🎒 INVENTARIO -->
+      <button class="tab-btn" data-tab="inventario" onclick="selectMainTab('inventario'); renderInventoryTab();">
+        <span>🎒 Inventario</span>
+      </button>
+
+    </nav>
+
+    <!-- PESTAÑA: CAMPAÑAS & TÍTULOS TERRITORIALES -->
+    <section class="tab-content" id="tab-campanas">
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="position: relative; border-radius: var(--radius-md); overflow: hidden; height: 100px; border: 1.5px solid var(--border-gold); box-shadow: 0 8px 24px rgba(0,0,0,0.6); background: var(--bg-dark-card);">
+          <img src="assets/jaguar_world_map_80s.jpg" alt="Campañas Territoriales" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.35) blur(1px);" class="animated-jaguar-bg">
+          <div style="position: absolute; inset: 0; padding: 14px 22px; background: linear-gradient(135deg, rgba(11,14,20,0.95) 0%, rgba(23,30,40,0.7) 60%, transparent 100%); display: flex; flex-direction: column; justify-content: center;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="badge-tag badge-gold" style="font-size: 0.72rem;">🚀 Campañas de la Orden</span>
+              <span style="font-size: 0.8rem; color: #CBD5E0;">Misiones de Hannover & Bilbao, Títulos Masculinos y Contra-Títulos</span>
+            </div>
+            <h2 class="title-rose-neon" style="font-size: 1.4rem; font-family: 'Cinzel', serif; margin: 4px 0 0 0; color: #FFF;">🚀 Campañas Territoriales & Títulos de Maestría</h2>
+          </div>
+        </div>
+
+        <div id="campanas-master-container" class="campanas-container-wrapper"></div>
+      </div>
+    </section>
+
+    <!-- PESTAÑA: EQUIPO (ARSENAL & MOCHILA DEL CABALLERO JAGUAR) -->
+    <section class="tab-content" id="tab-inventario">
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="position: relative; border-radius: var(--radius-md); overflow: hidden; height: 100px; border: 1.5px solid var(--border-gold); box-shadow: 0 8px 24px rgba(0,0,0,0.6); background: var(--bg-dark-card);">
+          <img src="assets/jaguar_master_wallpaper.jpg" alt="Equipo del Caballero Jaguar" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.3) contrast(1.15);" class="animated-jaguar-bg">
+          <div style="position: absolute; inset: 0; padding: 14px 22px; background: linear-gradient(135deg, rgba(11,14,20,0.95) 0%, rgba(23,30,40,0.7) 60%, transparent 100%); display: flex; flex-direction: column; justify-content: center;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span class="badge-tag badge-gold" style="font-size: 0.72rem;">👔 Outfits & 🎒 Arsenal</span>
+              <span style="font-size: 0.8rem; color: #CBD5E0;">Indumentaria Somática por Día, Lookbook Semanal & 44 Reliquias de la Orden</span>
+            </div>
+            <h2 class="title-rose-neon" style="font-size: 1.4rem; font-family: 'Cinzel', serif; margin: 4px 0 0 0; color: #FFF;">👔 Outfits Somáticos & 🎒 Equipo del Caballero Jaguar</h2>
+          </div>
+        </div>
+
+        <div id="inventory-grid-container" class="inventory-container-wrapper"></div>
+      </div>
+    </section>
+
+    <!-- PESTAÑA: ESTILO DE VIDA, VESTIMENTA (OUTFIT) & ALIMENTACIÓN -->
+    <section class="tab-content" id="tab-lifestyle">
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div id="lifestyle-architect-master-container" class="lifestyle-architect-wrapper"></div>
+      </div>
+    </section>
+    <!-- PESTAÑA: BITÁCORAS DE LA ORDEN IMPERIAL -->
+    <section class="tab-content" id="tab-bitacoras">
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        <div style="position: relative; border-radius: var(--radius-lg); overflow: hidden; padding: 32px; border: 1.5px solid var(--border-gold); background: linear-gradient(145deg, rgba(23,30,40,0.98) 0%, rgba(11,14,20,0.99) 100%); box-shadow: 0 8px 24px rgba(0,0,0,0.6);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+            <span class="badge-tag badge-gold">📜 CÓDICE DE CABALLERÍA & BITÁCORAS</span>
+            <button class="btn-jaguar btn-gold-chrome" onclick="openBitacorasModal();">
+              ⚔️ ABRIR CÓDICE IMPERIAL EN PANTALLA COMPLETA
+            </button>
+          </div>
+          <h2 class="title-rose-neon" style="font-size: 2.2rem; font-family: 'Cinzel', serif; margin-bottom: 8px;">Bitácoras del Caballero Jaguar</h2>
+          <p style="font-size: 1.05rem; color: var(--text-muted); max-width: 800px; line-height: 1.6;">
+            Selecciona cualquiera de las bitácoras de la Orden Imperial para consultar balances financieros, disciplinas de combate, proyectos de campaña, biblioteca estoica y más.
+          </p>
+        </div>
+
+        <div class="grid-3">
+          <div class="jaguar-card" style="cursor: pointer;" onclick="selectMainTab('finanzas');">
+            <h3 class="card-title">💰 Finanzas & Tesorería</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">Conciliación bancaria Sparkasse Alemania & Banco de Chile.</p>
+          </div>
+          <div class="jaguar-card" style="cursor: pointer;" onclick="selectMainTab('ejercicio');">
+            <h3 class="card-title">🏋️‍♂️ Ejercicio & Combat</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">Sparrings de Muay Thai & Rutinas Nivel Caballero.</p>
+          </div>
+          <div class="jaguar-card" style="cursor: pointer;" onclick="selectMainTab('proyectos');">
+            <h3 class="card-title">🚀 Proyectos de Vida</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">6 Frentes estratégicos y campañas de vida.</p>
+          </div>
+          <div class="jaguar-card" style="cursor: pointer; border-color: rgba(255, 255, 255, 0.08);" onclick="selectMainTab('lectura');">
+            <h3 class="card-title">📚 Biblioteca Estoica & Lecturas</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">50+ Obras de filosofía estoica, oráculo del día y registro de lectura (Banderín Café).</p>
+          </div>
+          <div class="jaguar-card" style="cursor: pointer; border-color: rgba(255, 255, 255, 0.08);" onclick="selectMainTab('ayurveda');">
+            <h3 class="card-title">🌿 Ayurveda & Medicina Holística</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">Equilibrio Doshas Vata, Pitta, Kapha, Dinacharya y farmacia herbaria natural.</p>
+          </div>
+          <div class="jaguar-card" style="cursor: pointer; border-color: rgba(255, 255, 255, 0.08);" onclick="selectMainTab('meditacion');">
+            <h3 class="card-title" style="color: #FFF;">🧘 Meditación & Calma Somática</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">Box Breathing 4x4x4x4 animado, Vipassana, campana tibetana y registro de minutos (Banderín Rosa).</p>
+          </div>
+          <div class="jaguar-card" style="cursor: pointer; border-color: rgba(255, 255, 255, 0.08);" onclick="selectMainTab('masajes');">
+            <h3 class="card-title">💆 Masajes (Pareja & Auto-Masaje)</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">Tratados de masaje en pareja y auto-liberación miofascial con foam roller y puntos gatillo.</p>
+          </div>
+          <div class="jaguar-card" style="cursor: pointer; border-color: rgba(155, 35, 53, 0.25); background: linear-gradient(135deg, rgba(155, 35, 53, 0.06) 0%, rgba(10, 10, 14, 0.95) 100%);" onclick="openRitosModal();">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <h3 class="card-title">🕯️ Ritos Sagrados & Desintoxicación</h3>
+              <span class="badge-tag badge-gold">Iniciación 21 Días</span>
+            </div>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">Cosmovisiones ancestrales (Navajo Diné, Andino Quechua, Amazónico y Caballero Jaguar) para anclar el ciclo de templanza 100% sobrio.</p>
+          </div>
+          <div class="jaguar-card card-highlight" style="cursor: pointer; border-color: #9B2335; background: linear-gradient(135deg, rgba(155, 35, 53, 0.08) 0%, rgba(14, 14, 19, 0.95) 100%);" onclick="openSistemaMaestroModal();">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <h3 class="card-title">📜 Sistema Maestro de Progresión</h3>
+              <span class="badge-tag badge-gold">Pitch & Puntos</span>
+            </div>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">Manifiesto de Caballería Jaguar, los 5 Pilares, fórmula matemática de XP y simulador interactivo.</p>
+          </div>
+          <div class="jaguar-card" style="cursor: pointer;" onclick="selectMainTab('astral');">
+            <h3 class="card-title">🔮 Carta Astral</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">Aries (23 Mar 1996) • Regente Marte.</p>
+          </div>
+          <div class="jaguar-card" style="cursor: pointer;" onclick="selectMainTab('idiomas');">
+            <h3 class="card-title">🌐 Práctica de Idiomas</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">Alemán (B1), Euskera y Portugués.</p>
+          </div>
+          <div class="jaguar-card" style="cursor: pointer;" onclick="selectMainTab('musica');">
+            <h3 class="card-title">🎵 Música & Viento (Jazz & Blues)</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">Trompeta, saxofón, armónica y ranking de dificultad.</p>
+          </div>
+          <div class="jaguar-card" style="cursor: pointer;" onclick="selectMainTab('fotografia');">
+            <h3 class="card-title">📷 Aprender Fotografía</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">Óptica, composición áurea, luz y expedición.</p>
+          </div>
+          <div class="jaguar-card" style="cursor: pointer;" onclick="selectMainTab('pintura');">
+            <h3 class="card-title">🎨 Aprender Pintura</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">Teoría del color, paleta Zorn, óleo y claroscuro.</p>
+          </div>
+          <div class="jaguar-card" style="cursor: pointer; border-color: rgba(255, 255, 255, 0.08); background: linear-gradient(135deg, rgba(184, 134, 11, 0.06) 0%, rgba(14, 14, 19, 0.95) 100%);" onclick="launchDateMasterApex(event);" title="Ejecutar y Abrir DateMaster Apex (http://127.0.0.1:8000)">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <img src="assets/datemaster_logo.png" alt="DateMaster Apex" style="width: 26px; height: 26px; border-radius: 6px; object-fit: cover; box-shadow: 0 0 8px rgba(184, 134, 11, 0.15);">
+              <h3 class="card-title" style="margin: 0; color: #FFF;">DateMaster Apex</h3>
+            </div>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">App local en 127.0.0.1:8000. Clic para ejecutar script y abrir en el navegador.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PESTAÑA: CARTA ASTRAL PROFUNDA (OBSERVATORIO RENACENTISTA DEL REY JAGUAR) -->
+    <section class="tab-content" id="tab-astral">
+      <div style="display: flex; flex-direction: column; gap: 24px;">
+        
+        <!-- BANNER OBSERVATORIO CELESTE & CARTA ASTRAL -->
+        <div style="position: relative; border-radius: 12px; overflow: hidden; height: 260px; border: 1.5px solid rgba(155, 35, 53, 0.4); box-shadow: 0 14px 40px rgba(0,0,0,0.85);">
+          <img src="assets/banner_astral.jpg" alt="Observatorio Celeste & Astrolabio" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7) contrast(1.15);">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 24px; background: linear-gradient(to top, rgba(5,5,8,0.95) 0%, rgba(5,5,8,0.4) 65%, transparent 100%);">
+            <span class="badge-tag" style="margin-bottom: 6px;">🌌 Cosmografía Imperial</span>
+            <h2 style="font-family: 'Cinzel', serif; font-size: 1.8rem; color: #FFF; margin: 4px 0 0 0; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Observatorio Celeste & Carta Natal</h2>
+            <p style="font-size: 0.88rem; color: #CBD5E1; margin: 4px 0 0 0;">Aries (23 Mar 1996) • Regente Marte en conjunción con Sol, Luna en Tauro</p>
+          </div>
+        </div>
+        
+        <!-- CABECERA DEL OBSERVATORIO CELESTE -->
+        <div class="jaguar-card card-highlight">
+          <div class="card-title-bar">
+            <div>
+              <span class="badge-tag badge-gold">🌌 OBSERVATORIO CELESTE • CÓDICE IMPERIAL</span>
+              <h2 class="card-title" style="font-size: 1.8rem; margin-top: 4px;">Carta Natal & Rueda Zodiacal del Caballero Jaguar</h2>
+            </div>
+            <div style="text-align: right;">
+              <span class="badge-tag badge-cyan">23 de Marzo de 1996 • 09:30 AM</span>
+              <div style="font-size: 0.78rem; color: var(--text-muted); margin-top: 4px;">Parral, VII Región del Maule, Chile</div>
+            </div>
+          </div>
+          <p style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-top: 8px;">
+            Mapa cosmográfico de nacimiento. Revela la conjunción primordial de fuego entre el <strong>Sol</strong> y su regente <strong>Marte en Aries</strong>, anclados por la solidez estoica y perseverancia terrenal de la <strong>Luna en Tauro</strong>.
+          </p>
+        </div>
+
+        <!-- CONTENEDOR 2 COLUMNAS: RUEDA ZODIACAL ASTRONÓMICA + DETALLE DE CASAS & PLANETAS -->
+        <div class="celestial-observatory-grid">
+          
+          <!-- COLUMNA 1: RUEDA CELESTE INTERACTIVA (SVG CON 12 CASAS, ZODÍACO Y PLANETAS) -->
+          <div class="celestial-wheel-box">
+            <h3 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: var(--parchment-light); margin-bottom: 12px; text-align: center;">
+              🧭 Rueda Zodiacal de las 12 Casas
+            </h3>
+            
+            <svg id="astro-celestial-wheel" viewBox="0 0 500 500" style="width: 100%; max-width: 420px; height: auto;">
+              <defs>
+                <radialGradient id="celestialCenterGrad" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#142235" stop-opacity="0.9" />
+                  <stop offset="70%" stop-color="#080D16" stop-opacity="0.95" />
+                  <stop offset="100%" stop-color="#04070B" stop-opacity="1" />
+                </radialGradient>
+                <linearGradient id="ringGoldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#DCD3C1" />
+                  <stop offset="50%" stop-color="#8A9BA8" />
+                  <stop offset="100%" stop-color="#4A79A7" />
+                </linearGradient>
+              </defs>
+
+              <!-- FONDO DEL CIELO CON ESTRELLAS -->
+              <circle cx="250" cy="250" r="240" fill="url(#celestialCenterGrad)" stroke="#8A9BA8" stroke-width="2" />
+              <circle cx="250" cy="250" r="195" fill="none" stroke="#2B4E75" stroke-width="1.5" stroke-dasharray="4,4" />
+              <circle cx="250" cy="250" r="150" fill="none" stroke="url(#ringGoldGrad)" stroke-width="2" />
+              <circle cx="250" cy="250" r="85" fill="#080D16" stroke="#8A9BA8" stroke-width="1.5" />
+
+              <!-- LÍNEAS RADIALES DE LAS 12 CASAS -->
+              <!-- Casa I / Ascendente (Eje Horizontal Izquierdo) -->
+              <line x1="10" y1="250" x2="490" y2="250" stroke="#8A9BA8" stroke-width="2" opacity="0.7" />
+              <!-- Casa X / Medio Cielo (Eje Vertical Superior) -->
+              <line x1="250" y1="10" x2="250" y2="490" stroke="#8A9BA8" stroke-width="2" opacity="0.7" />
+              <!-- Radios a 30 grados -->
+              <line x1="45" y1="130" x2="455" y2="370" stroke="#2B4E75" stroke-width="1" opacity="0.5" />
+              <line x1="130" y1="45" x2="370" y2="455" stroke="#2B4E75" stroke-width="1" opacity="0.5" />
+              <line x1="370" y1="45" x2="130" y2="455" stroke="#2B4E75" stroke-width="1" opacity="0.5" />
+              <line x1="455" y1="130" x2="45" y2="370" stroke="#2B4E75" stroke-width="1" opacity="0.5" />
+
+              <!-- SÍMBOLOS DEL ZODÍACO EN EL ANILLO EXTERIOR -->
+              <!-- ♈ Aries -->
+              <text x="80" y="210" fill="#E2DACB" font-size="20" font-weight="bold" text-anchor="middle">♈</text>
+              <!-- ♉ Tauro -->
+              <text x="120" y="125" fill="#E2DACB" font-size="20" font-weight="bold" text-anchor="middle">♉</text>
+              <!-- ♊ Géminis -->
+              <text x="210" y="75" fill="#8A9BA8" font-size="18" text-anchor="middle">♊</text>
+              <!-- ♋ Cáncer -->
+              <text x="290" y="75" fill="#8A9BA8" font-size="18" text-anchor="middle">♋</text>
+              <!-- ♌ Leo -->
+              <text x="380" y="125" fill="#8A9BA8" font-size="18" text-anchor="middle">♌</text>
+              <!-- ♍ Virgo -->
+              <text x="420" y="210" fill="#8A9BA8" font-size="18" text-anchor="middle">♍</text>
+              <!-- ♎ Libra -->
+              <text x="420" y="295" fill="#8A9BA8" font-size="18" text-anchor="middle">♎</text>
+              <!-- ♏ Escorpio -->
+              <text x="380" y="380" fill="#8A9BA8" font-size="18" text-anchor="middle">♏</text>
+              <!-- ♐ Sagitario -->
+              <text x="290" y="430" fill="#8A9BA8" font-size="18" text-anchor="middle">♐</text>
+              <!-- ♑ Capricornio -->
+              <text x="210" y="430" fill="#8A9BA8" font-size="18" text-anchor="middle">♑</text>
+              <!-- ♒ Acuario -->
+              <text x="120" y="380" fill="#8A9BA8" font-size="18" text-anchor="middle">♒</text>
+              <!-- ♓ Piscis -->
+              <text x="80" y="295" fill="#8A9BA8" font-size="18" text-anchor="middle">♓</text>
+
+              <!-- MARCADORES PLANETARIOS CLAVE DEL REY JAGUAR -->
+              <!-- ☉ Sol en Aries (Casa X / Medio Cielo) -->
+              <circle cx="170" cy="180" r="14" fill="#6B2323" stroke="#E2DACB" stroke-width="1.5" />
+              <text x="170" y="186" fill="#FFF" font-size="13" font-weight="900" text-anchor="middle">☉</text>
+              <text x="170" y="160" fill="#E2DACB" font-size="10" font-family="'Cinzel', serif" text-anchor="middle">Sol 03°♈</text>
+
+              <!-- ♂ Marte en Aries (Regente Domicilio) -->
+              <circle cx="130" cy="195" r="14" fill="#8B3030" stroke="#8A9BA8" stroke-width="1.5" />
+              <text x="130" y="201" fill="#FFF" font-size="13" font-weight="900" text-anchor="middle">♂</text>
+              <text x="130" y="222" fill="#E2DACB" font-size="10" font-family="'Cinzel', serif" text-anchor="middle">Marte 08°♈</text>
+
+              <!-- ☽ Luna en Tauro (Exaltada) -->
+              <circle cx="160" cy="115" r="14" fill="#2B4E75" stroke="#E2DACB" stroke-width="1.5" />
+              <text x="160" y="121" fill="#FFF" font-size="13" font-weight="900" text-anchor="middle">☽</text>
+              <text x="160" y="95" fill="#8A9BA8" font-size="10" font-family="'Cinzel', serif" text-anchor="middle">Luna 24°♉</text>
+
+              <!-- ♃ Júpiter en Capricornio -->
+              <circle cx="230" cy="350" r="12" fill="#1A344F" stroke="#8A9BA8" stroke-width="1" />
+              <text x="230" y="355" fill="#FFF" font-size="11" text-anchor="middle">♃</text>
+
+              <!-- ♄ Saturno en Aries -->
+              <circle cx="205" cy="170" r="12" fill="#142235" stroke="#8A9BA8" stroke-width="1" />
+              <text x="205" y="175" fill="#FFF" font-size="11" text-anchor="middle">♄</text>
+
+              <!-- CENTRO DEL MAPA: ESCUDO DEL CABALLERO JAGUAR -->
+              <circle cx="250" cy="250" r="50" fill="#080D16" stroke="url(#ringGoldGrad)" stroke-width="2" />
+              <text x="250" y="246" fill="#E2DACB" font-size="22" text-anchor="middle">🐆</text>
+              <text x="250" y="265" fill="#C5A059" font-size="8.5" font-family="'Cinzel', serif" font-weight="bold" letter-spacing="1" text-anchor="middle">CABALLERO JAGUAR</text>
+
+              <!-- ETIQUETAS ANGULARES -->
+              <text x="35" y="244" fill="#E2DACB" font-size="11" font-family="'Cinzel', serif" font-weight="bold">AC</text>
+              <text x="256" y="35" fill="#E2DACB" font-size="11" font-family="'Cinzel', serif" font-weight="bold">MC</text>
+            </svg>
+
+            <div style="margin-top: 14px; text-align: center; font-size: 0.8rem; color: var(--parchment-warm);">
+              Eje Cardinal: <strong>Aries (Fuego) ➔ Tauro (Tierra) ➔ Capricornio (Estructura)</strong>
+            </div>
+          </div>
+
+          <!-- COLUMNA 2: MATRIZ DE PLANETAS & ASPECTOS PSICOLÓGICOS -->
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            
+            <div class="jaguar-card" style="padding: 16px;">
+              <h3 class="card-title" style="font-size: 1.15rem; margin-bottom: 12px;">🌟 Posiciones Planetarias Natalicias</h3>
+              
+              <div class="astro-planet-grid">
+                
+                <div class="astro-planet-pill">
+                  <span style="font-size: 1.6rem; color: #E2DACB;">☉</span>
+                  <div>
+                    <strong style="color: #FFF; font-size: 0.9rem;">Sol en Aries (03° 08')</strong>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Casa X • Fuego Cardinal</div>
+                    <p style="font-size: 0.8rem; color: var(--parchment-warm); margin-top: 2px;">El Héroe Conquistador. Voluntad inquebrantable, impulso para fundar proyectos y liderazgo natural.</p>
+                  </div>
+                </div>
+
+                <div class="astro-planet-pill">
+                  <span style="font-size: 1.6rem; color: #8A9BA8;">☽</span>
+                  <div>
+                    <strong style="color: #FFF; font-size: 0.9rem;">Luna en Tauro (24° 15')</strong>
+                    <span class="badge-tag badge-emerald" style="font-size: 0.65rem; padding: 1px 6px;">Exaltada</span>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Casa XI • Tierra Fija</div>
+                    <p style="font-size: 0.8rem; color: var(--parchment-warm); margin-top: 2px;">Estabilidad emocional pétrea, serenidad estoica ante las crisis y profundo arraigo a la tierra y la permacultura.</p>
+                  </div>
+                </div>
+
+                <div class="astro-planet-pill">
+                  <span style="font-size: 1.6rem; color: #6B2323;">♂</span>
+                  <div>
+                    <strong style="color: #FFF; font-size: 0.9rem;">Marte en Aries (08° 42')</strong>
+                    <span class="badge-tag badge-gold" style="font-size: 0.65rem; padding: 1px 6px;">Domicilio Puro</span>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Casa X • Regente Planetario</div>
+                    <p style="font-size: 0.8rem; color: var(--parchment-warm); margin-top: 2px;">El Guerrero Estoico. Potencia motriz para el Muay Thai, la calistenia y la conquista de metas sin vacilación.</p>
+                  </div>
+                </div>
+
+                <div class="astro-planet-pill">
+                  <span style="font-size: 1.6rem; color: #4A79A7;">☿</span>
+                  <div>
+                    <strong style="color: #FFF; font-size: 0.9rem;">Mercurio en Piscis (12° 20')</strong>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Casa IX • Agua Mutable</div>
+                    <p style="font-size: 0.8rem; color: var(--parchment-warm); margin-top: 2px;">Pensamiento holístico, visión transmedia y capacidad para conectar ciencia dura con narrativa épica y poética.</p>
+                  </div>
+                </div>
+
+                <div class="astro-planet-pill">
+                  <span style="font-size: 1.6rem; color: #8A9BA8;">♀</span>
+                  <div>
+                    <strong style="color: #FFF; font-size: 0.9rem;">Venus en Tauro (16° 50')</strong>
+                    <span class="badge-tag badge-gold" style="font-size: 0.65rem; padding: 1px 6px;">Domicilio Puro</span>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Casa XI • Tierra Fija</div>
+                    <p style="font-size: 0.8rem; color: var(--parchment-warm); margin-top: 2px;">Afinidad con la belleza atemporal renacentista, la armonía del diseño predial y la lealtad profunda.</p>
+                  </div>
+                </div>
+
+                <div class="astro-planet-pill">
+                  <span style="font-size: 1.6rem; color: #4A79A7;">♄</span>
+                  <div>
+                    <strong style="color: #FFF; font-size: 0.9rem;">Saturno en Aries (28° 50')</strong>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">Casa X • Fuego Cardinal</div>
+                    <p style="font-size: 0.8rem; color: var(--parchment-warm); margin-top: 2px;">El Alquimista del Autodominio. Transmutación de la impulsividad en disciplina de acero a largo plazo.</p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- ALQUIMIA DE ASPECTOS MAYORES -->
+            <div class="jaguar-card" style="padding: 16px;">
+              <h3 class="card-title" style="font-size: 1.15rem; margin-bottom: 10px;">⚡ Aspectos Clave & Alquimia Psicológica</h3>
+              
+              <div style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="padding: 8px 12px; background: rgba(8, 13, 22, 0.6); border-radius: var(--radius-sm); border-left: 3px solid #6B2323; font-size: 0.85rem;">
+                  <strong style="color: #FFF;">☉ Conjunción Sol - Marte en Aries:</strong>
+                  <span style="color: var(--text-muted);"> Motor de energía inagotable. Capacidad de levantarse ante cualquier adversidad y ejecutar con vigor.</span>
+                </div>
+                <div style="padding: 8px 12px; background: rgba(8, 13, 22, 0.6); border-radius: var(--radius-sm); border-left: 3px solid #4A79A7; font-size: 0.85rem;">
+                  <strong style="color: #FFF;">☽ Trígono Luna - Júpiter:</strong>
+                  <span style="color: var(--text-muted);"> Optimismo templado por la prudencia financiera, magnetismo en proyectos de permacultura e impacto comunitario.</span>
+                </div>
+                <div style="padding: 8px 12px; background: rgba(8, 13, 22, 0.6); border-radius: var(--radius-sm); border-left: 3px solid #8A9BA8; font-size: 0.85rem;">
+                  <strong style="color: #FFF;">♂ Trígono Marte - Plutón:</strong>
+                  <span style="color: var(--text-muted);"> Resiliencia física excepcional en entrenamientos y perseverancia férrea en la redacción de publicaciones complejas.</span>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PESTAÑA: APRENDIZAJE DE IDIOMAS & CENTRO DE PRÁCTICA INTERACTIVO -->
+    <section class="tab-content" id="tab-idiomas">
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        
+        <!-- BANNER POLÍGLOTA IMPERIAL & IDIOMAS -->
+        <div style="position: relative; border-radius: 12px; overflow: hidden; height: 260px; border: 1.5px solid rgba(155, 35, 53, 0.4); box-shadow: 0 14px 40px rgba(0,0,0,0.85);">
+          <img src="assets/banner_idiomas.jpg" alt="Aprendizaje de Idiomas & Códice" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.68) contrast(1.15);">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 24px; background: linear-gradient(to top, rgba(5,5,8,0.95) 0%, rgba(5,5,8,0.4) 65%, transparent 100%);">
+            <span class="badge-tag" style="margin-bottom: 6px;">🌐 Códice Lingüístico</span>
+            <h2 style="font-family: 'Cinzel', serif; font-size: 1.8rem; color: #FFF; margin: 4px 0 0 0; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Políglota Imperial & Centro de Idiomas</h2>
+            <p style="font-size: 0.88rem; color: #CBD5E1; margin: 4px 0 0 0;">Alemán (B1), Euskera (A1), Portugués (A2) e Italiano (A2) • Vocabulario activo y diario</p>
+          </div>
+        </div>
+        
+        <div class="jaguar-card" style="border-color: rgba(255, 255, 255, 0.7); background: var(--bg-glass);">
+          <div class="card-title-bar">
+            <h3 class="card-title">🌐 Centro de Práctica Interactivo de Idiomas</h3>
+            <span class="badge-tag badge-cyan">Alemán (B1) • Euskera (A1) • Portugués (A2) • Italiano (A2)</span>
+          </div>
+
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 18px;">
+            ¡Entrena tu fluidez diariamente para tu vida en Hannover, Bilbao y tus viajes! Selecciona tu idioma para estudiar flashcards con audio nativo, ponerte a prueba en desafíos exprés y redactar tu diario:
+          </p>
+
+          <!-- SELECTOR BAR DE IDIOMAS -->
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+            <button class="btn-jaguar lang-tab-btn active" data-lang="de" onclick="selectPracticeLanguage('de')">
+              🇩🇪 Alemán (Deutsch B1)
+            </button>
+            <button class="btn-jaguar lang-tab-btn" data-lang="eu" onclick="selectPracticeLanguage('eu')">
+              🇪🇸 Euskera (Euskara A1)
+            </button>
+            <button class="btn-jaguar lang-tab-btn" data-lang="pt" onclick="selectPracticeLanguage('pt')">
+              🇵🇹 Portugués (A2)
+            </button>
+            <button class="btn-jaguar lang-tab-btn" data-lang="it" onclick="selectPracticeLanguage('it')">
+              🇮🇹 Italiano (A2)
+            </button>
+          </div>
+
+          <!-- CONTENEDOR DE PRÁCTICA DINÁMICA (FLASHCARDS + AUDIO + RETOS) -->
+          <div class="grid-2" style="gap: 20px; align-items: start;">
+            
+            <!-- COLUMNA IZQUIERDA: TARJETA DE REPASO (FLASHCARD INTERACTIVA CON FLIP & TTS AUDIO) -->
+            <div class="jaguar-card" style="background: rgba(0,0,0,0.4); border-color: #C0392B; text-align: center; position: relative;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span id="flashcard-badge" class="badge-tag badge-gold">🇩🇪 Tarjeta 1 / 5</span>
+                <button class="btn-jaguar btn-sm" onclick="speakCurrentFlashcard()" title="Escuchar Pronunciación en Voz Nativa" style="background: rgba(255,255,255,0.08); border-color: rgba(255, 255, 255, 0.7); color: rgba(255, 255, 255, 0.7);">
+                  🔊 Escuchar Audio
+                </button>
+              </div>
+
+              <!-- FLASHCARD BOX (FLIP ON CLICK) -->
+              <div id="flashcard-box" onclick="flipCurrentFlashcard()" style="min-height: 180px; padding: 20px; border-radius: var(--radius-md); background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, rgba(14,14,19,0.9) 100%); border: 2px dashed rgba(155, 35, 53, 0.3); cursor: pointer; display: flex; flex-direction: column; justify-content: center; align-items: center; transition: all 0.3s ease; box-shadow: inset 0 0 15px rgba(155,35,53,0.1);">
+                <div id="flashcard-front">
+                  <span style="font-size: 0.8rem; color: #C0392B; text-transform: uppercase; font-weight: 700; letter-spacing: 0.1em;">Contexto / Situación</span>
+                  <h4 id="flashcard-prompt-text" style="font-size: 1.25rem; color: #FFF; font-family: 'Cinzel', serif; margin: 10px 0;">¿Cómo pedir un café con leche en la panadería en Hannover?</h4>
+                  <span style="font-size: 0.78rem; color: var(--text-dim);">💡 Haz click en la tarjeta para revelar la respuesta en Alemán y desglose...</span>
+                </div>
+
+                <div id="flashcard-back" style="display: none;">
+                  <span style="font-size: 0.8rem; color: rgba(255, 255, 255, 0.7); text-transform: uppercase; font-weight: 700; letter-spacing: 0.1em;">Traducción Nativa</span>
+                  <h4 id="flashcard-target-text" style="font-size: 1.3rem; color: #C0392B; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; font-weight: 800; margin: 10px 0;">"Ich hätte gerne einen Milchkaffee, bitte."</h4>
+                  <p id="flashcard-notes-text" style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4;">Usamos "hätte gerne" para pedir amablemente en comercios. "Der Milchkaffee" es en acusativo masculino.</p>
+                </div>
+              </div>
+
+              <!-- BOTONES DE CALIFICACIÓN DE REPASO (+XP) -->
+              <div style="display: flex; gap: 10px; margin-top: 16px; justify-content: center;">
+                <button class="btn-jaguar btn-sm btn-primary-pink" onclick="rateFlashcard('hard')">
+                  😓 Difícil
+                </button>
+                <button class="btn-jaguar btn-sm" onclick="rateFlashcard('medium')" style="background: rgba(244,196,48,0.2); border-color: #C0392B; color: #C0392B;">
+                  🤔 Medio
+                </button>
+                <button class="btn-jaguar btn-sm" onclick="rateFlashcard('easy')" style="background: rgba(255,255,255,0.1); border-color: rgba(255, 255, 255, 0.7); color: #FFF;">
+                  🌟 ¡Dominado! (+10 XP)
+                </button>
+              </div>
+            </div>
+
+            <!-- COLUMNA DERECHA: DESAFÍO DE TRADUCCIÓN EXPRÉS (QUIZ RAPIDO) -->
+            <div class="jaguar-card" style="background: rgba(0,0,0,0.4); border-color: rgba(255, 255, 255, 0.7);">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <h4 style="font-size: 1.1rem; color: rgba(255, 255, 255, 0.7); font-weight: 800;">⚡ Quiz Exprés de Práctica</h4>
+                <span id="quiz-score-badge" class="badge-tag badge-gold">Racha: 3 ⚡</span>
+              </div>
+
+              <p id="quiz-question-title" style="font-size: 0.9rem; color: #FFF; font-weight: 700; margin-bottom: 14px;">
+                Selecciona la traducción correcta para: <strong>"¡Muchas gracias por todo!"</strong>
+              </p>
+
+              <div id="quiz-options-container" style="display: flex; flex-direction: column; gap: 10px;">
+                <!-- Generado dinámicamente -->
+              </div>
+
+              <div id="quiz-feedback-box" style="margin-top: 14px; padding: 10px; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 700; display: none;"></div>
+            </div>
+
+          </div>
+
+          <!-- SECCIÓN: DIARIO DE REDACCIÓN Y BANCO DE FRASES REALES -->
+          <div style="margin-top: 24px; padding-top: 20px; border-top: 1px dashed rgba(52,211,153,0.3);">
+            <h4 style="font-size: 1.1rem; color: #C0392B; font-weight: 800; margin-bottom: 8px;">
+              ✍️ Tu Diario de Práctica Cotidiana
+            </h4>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">
+              Escribe 1 o 2 oraciones sobre tu día en el idioma seleccionado. Esto ejercita tu memoria activa de redacción:
+            </p>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <textarea id="lang-journal-input" class="input-jaguar" rows="2" placeholder="Escribe aquí tu frase del día (ej: Heute habe ich mein Projekt fertiggestellt...)..." style="flex-grow: 1; resize: vertical; min-height: 60px;"></textarea>
+              <button class="btn-jaguar btn-gold-chrome" onclick="saveLanguageJournalEntry()" style="color: #000; font-weight: 900; align-self: flex-end;">
+                💾 Guardar & Ganar XP
+              </button>
+            </div>
+            <div id="lang-journal-history" style="margin-top: 12px; display: flex; flex-direction: column; gap: 6px;"></div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- PESTAÑA: LANDING DE CONOCIMIENTO & FILOSOFÍA DE VIDA -->
+    <section class="tab-content" id="tab-conocimiento">
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        <div style="position: relative; border-radius: var(--radius-lg); overflow: hidden; height: 280px; border: 2px solid var(--border-rose-gold); box-shadow: var(--shadow-rose); background: var(--bg-dark-card);">
+          <img src="assets/img_ayurveda_holistic_wellness.jpg" alt="Conocimiento & Sabiduría" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4) contrast(1.1);" class="animated-jaguar-bg">
+          <div style="position: absolute; inset: 0; padding: 32px; background: linear-gradient(135deg, rgba(11,10,13,0.95) 0%, rgba(31,26,36,0.6) 60%, transparent 100%); display: flex; flex-direction: column; justify-content: center;">
+            <span class="badge-tag badge-gold" style="align-self: flex-start; margin-bottom: 8px;">🧠 Autodominio, Estoicismo & Bienestar Holístico</span>
+            <h2 class="title-rose-neon" style="font-size: 2.2rem; font-family: 'Cinzel', serif; margin-bottom: 8px;">Santuario de Conocimiento</h2>
+            <p style="font-size: 1.05rem; color: var(--text-muted); max-width: 700px; line-height: 1.5;">
+              Nutre tu mente con la dicotomía del control de Marco Aurelio, el equilibrio biológico del Ayurveda y el aprendizaje continuo para potenciar tus decisiones.
+            </p>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div class="jaguar-card card-highlight" style="cursor: pointer;" onclick="selectMainTab('lectura')">
+            <div class="card-title-bar">
+              <h3 class="card-title">📚 Biblioteca Estoica & Lecturas</h3>
+              <span class="badge-tag badge-pink">15 min / Día</span>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 14px;">
+              Revisión de obras clave: Marco Aurelio, Epicteto, Séneca y hábitos atómicos. Control de lecturas completadas y notas personales.
+            </p>
+            <button class="btn-jaguar btn-primary-pink">Explorar Biblioteca ➔</button>
+          </div>
+
+          <div class="jaguar-card card-highlight" style="cursor: pointer;" onclick="selectMainTab('ayurveda')">
+            <div class="card-title-bar">
+              <h3 class="card-title">🌿 Ayurveda & Medicina Holística</h3>
+              <span class="badge-tag badge-emerald">Vitalidad & Doshas</span>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 14px;">
+              Optimización de la energía vital, balance circadiano, rutina de longevidad y nutrición preventiva según los doshas Vata, Pitta y Kapha.
+            </p>
+            <button class="btn-jaguar btn-emerald-neon">Ver Protocolos Ayurveda ➔</button>
+          </div>
+        </div>
+
+        <!-- ORÁCULO DE SABIDURÍA INTERACTIVO -->
+        <div class="jaguar-card" style="border-color: #C0392B; background: linear-gradient(135deg, rgba(155, 35, 53, 0.06) 0%, var(--bg-dark-card) 100%);">
+          <div class="card-title-bar">
+            <h3 class="card-title">✨ Oráculo del Jaguar & Reflexión Estoica Diaria</h3>
+            <button class="btn-jaguar btn-gold-chrome" style="color: #000; font-weight: 800;" onclick="generateRandomStoicQuote()">
+              🎲 Tirar Oráculo
+            </button>
+          </div>
+          <div id="stoic-quote-display-conocimiento" class="stoic-quote-display" style="padding: 16px; background: rgba(0,0,0,0.3); border-radius: var(--radius-md); border: 1px dashed var(--border-rose-gold);">
+            <blockquote style="font-size: 1.05rem; font-style: italic; color: #FFF; line-height: 1.5; margin-bottom: 8px;">
+              "No tienes dominio sobre los eventos externos, pero sí sobre tu mente. Comprende esto y hallarás la verdadera fuerza."
+            </blockquote>
+            <div style="font-size: 0.85rem; font-weight: 800; color: #C0392B; text-align: right;">
+              — Marco Aurelio
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PESTAÑA ESPECIAL: DETALLE DE PROYECTO (CARTA GANTT + CHECKLIST) -->
+    <section class="tab-content" id="tab-project-detail">
+      <div id="project-detail-content"></div>
+    </section>
+
+    <!-- PESTAÑA PRINCIPAL: PANTALLA DEL JUEGO RPG REY JAGUAR / VISOR IMPERIVM -->
+    <section class="tab-content active" id="tab-dashboard">
+      <div id="rpg-landing-master-container" style="display: flex; flex-direction: column; gap: 24px;"></div>
+    </section>
+
+    <!-- PESTAÑA: ARCHIVO HISTÓRICO & MODO LEGADO (RETABLO KCD, MAPA 80S, SPRITES) -->
+    <section class="tab-content" id="tab-legado">
+      <div id="legado-master-container" style="display: flex; flex-direction: column; gap: 24px;"></div>
+    </section>
+
+    <!-- PESTAÑA: FINANZAS (SPARKASSE & BANCO CHILE) -->
+    <section class="tab-content" id="tab-finanzas">
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        
+        <!-- BANNER INSPIRACIONAL FINANZAS -->
+        <div style="position: relative; border-radius: var(--radius-lg); overflow: hidden; height: 340px; border: 2px solid var(--neon-cyan); box-shadow: 0 8px 24px rgba(0,0,0,0.6);">
+          <img src="assets/banner_finanzas_aerarium.jpg" alt="Aerarium • Fiscus Imperial" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.65);" class="animated-jaguar-bg">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 28px; background: linear-gradient(to top, rgba(7,3,18,0.96) 0%, rgba(7,3,18,0.5) 70%, transparent 100%);">
+            <span class="badge-tag badge-cyan" style="font-size: 0.85rem;">Financial Intelligence & Soberanía</span>
+            <h2 class="title-rose-neon" style="font-size: 2.2rem; margin-top: 6px; text-shadow: 0 0 20px rgba(255,255,255,0.15);">Balance Económico & Tasa de Ahorro</h2>
+            <p style="font-size: 1rem; color: #FFF; margin-top: 4px;">Integración de cuentas Sparkasse (€) & Banco Chile ($) para la aceleración de tu fondo de reserva.</p>
+          </div>
+        </div>
+
+        <!-- BARRA DE PESTAÑAS / TABS DE LA BITÁCORA DE FINANZAS (CON FONDO SÓLIDO Y ALTO CONTRASTE) -->
+        <div class="finance-nav-tabs-bar">
+          <button class="finance-nav-tab active" onclick="switchFinanceView('all', this)">
+            <span>📊 Vista Completa</span>
+          </button>
+          <button class="finance-nav-tab" onclick="switchFinanceView('resumen', this)">
+            <span>💰 Balance & Métricas</span>
+          </button>
+          <button class="finance-nav-tab" onclick="switchFinanceView('disciplina', this)">
+            <span>🛡️ Gastos Tontos Evitados</span>
+            <span class="finance-tab-pill">+1 Pt / Log</span>
+          </button>
+          <button class="finance-nav-tab" onclick="switchFinanceView('extractos', this)">
+            <span>📜 Extractos & Movimientos</span>
+          </button>
+          <button class="finance-nav-tab" onclick="switchFinanceView('drive', this)">
+            <span>☁️ Google Sheets & Drive</span>
+          </button>
+        </div>
+
+        <!-- VISTA SUB-TAB: BALANCE & MÉTRICAS (GRID 3 + MONITOR DE OCIO) -->
+        <div id="fin-view-resumen" style="display: flex; flex-direction: column; gap: 22px;">
+          <div class="grid-3">
+            <div class="jaguar-card">
+              <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Ingresos Totales (Mes)</div>
+              <div style="font-size: 2.2rem; font-weight: 900; color: var(--emerald-bright);" id="fin-total-ingresos">0.00 €</div>
+              <div style="font-size: 0.75rem; color: rgba(255, 255, 255, 0.7); margin-top: 4px;">Sparkasse + Banco Chile</div>
+            </div>
+
+            <div class="jaguar-card">
+              <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Gastos Totales (Mes)</div>
+              <div style="font-size: 2.2rem; font-weight: 900; color: var(--neon-pink-bright);" id="fin-total-gastos">0.00 €</div>
+              <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">Fijos + Ocio + Operación</div>
+            </div>
+
+            <div class="jaguar-card card-highlight">
+              <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Balance Neto / Tasa Ahorro</div>
+              <div style="font-size: 2.2rem; font-weight: 900; color: #C0392B;" id="fin-balance-neto">0.00 €</div>
+              <div style="font-size: 0.85rem; color: rgba(255, 255, 255, 0.7); font-weight: 700; margin-top: 4px;">
+                Tasa de Ahorro: <span id="fin-tasa-ahorro">0%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- GRÁFICO & MONITOR DE GASTOS EN OCIO -->
+          <div id="fin-ocio-chart-container" class="jaguar-card card-highlight"></div>
+        </div>
+
+        <!-- VISTA SUB-TAB: DISCIPLINA DE AHORRO (CONTABILIZAR POR CADA VEZ QUE NO SE HA PAGADO POR ALGO TONTO) -->
+        <div id="fin-view-disciplina" class="jaguar-card card-highlight" style="border: 1.5px solid var(--border-gold); background: linear-gradient(135deg, rgba(23,30,40,0.98) 0%, rgba(14,20,28,0.96) 100%);">
+          <div class="card-title-bar" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+            <div>
+              <h3 class="card-title" style="margin: 0; color: #FAF6EE; font-size: 1.2rem;">🛡️ Disciplina de Ahorro: Gastos Tontos Evitados</h3>
+              <p style="font-size: 0.86rem; color: var(--text-muted); margin: 4px 0 0 0;">Cada vez que frenas una compra compulsiva o innecesaria ganas <strong>+1 Punto</strong> para el Retablo y <strong>+50 XP</strong> de Soberanía.</p>
+            </div>
+            <span id="fin-avoided-badge-points" class="badge-tag badge-gold" style="font-size: 0.95rem; font-weight: 800; padding: 6px 14px; border: 1.5px solid #9B2335;">🪙 12 Puntos de Disciplina</span>
+          </div>
+
+          <!-- REGISTRADOR RÁPIDO DE GASTO TONTO EVITADO -->
+          <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 10px; margin-bottom: 16px; background: rgba(10,14,20,0.6); padding: 14px; border-radius: var(--radius-md); border: 1px solid rgba(197,154,40,0.25);">
+            <input type="text" id="fin-avoided-input-desc" class="input-jaguar" placeholder="¿Qué compra o gasto tonto evitaste? (Ej: Delivery innecesario, suscripción fantasma, capricho)">
+            <input type="number" id="fin-avoided-input-amount" class="input-jaguar" placeholder="€ Ahorrado (opcional)" step="0.5">
+            <button class="btn-jaguar btn-gold-chrome" style="color: #0B0E14; font-weight: 800; white-space: nowrap;" onclick="submitAvoidedExpenseUI()">
+              🛡️ +1 Punto (Evité Gasto Tonto)
+            </button>
+          </div>
+
+          <!-- HISTORIAL DE GASTOS TONTOS EVITADOS -->
+          <div style="font-size: 0.85rem; font-family: 'Cinzel', serif; font-weight: 700; color: var(--imperial-gold-light); margin-bottom: 8px; letter-spacing: 0.04em;">
+            📜 REGISTRO DE VICTORIAS FINANCIERAS (PUNTOS & DISCIPLINA)
+          </div>
+          <div id="fin-avoided-list" style="display: flex; flex-direction: column; gap: 8px;"></div>
+        </div>
+
+        <!-- VISTA SUB-TAB: INTEGRACIÓN CON GOOGLE SHEETS & GOOGLE DRIVE -->
+        <div id="fin-view-drive" class="jaguar-card" style="border-color: var(--emerald-bright); background: linear-gradient(135deg, rgba(52, 211, 153, 0.08) 0%, rgba(7, 3, 18, 0.95) 100%);">
+          <div class="card-title-bar">
+            <h3 class="card-title">📊 Sincronización Diaria con Google Spreadsheets & Drive</h3>
+            <span class="badge-tag badge-emerald">Google Drive Sync</span>
+          </div>
+
+          <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5;">
+            Registra y respalda diariamente tu balance financiero en tu Google Drive personal. Puedes exportar directamente a formato Google Sheet o conectar vía Apps Script para actualización continua.
+          </p>
+
+          <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px;">
+            <button class="btn-jaguar btn-primary-pink" onclick="syncLiveToGoogleSheet()">
+              ⚡ Sincronizar en Vivo a Google Sheet
+            </button>
+            <button class="btn-jaguar btn-emerald-neon" onclick="exportToGoogleSheetsCSV()">
+              📥 Descargar CSV para Google Sheets
+            </button>
+            <button class="btn-jaguar btn-electric-cyan" onclick="copyTransactionsToClipboard()">
+              📋 Copiar Formato Google Sheet (TSV)
+            </button>
+            <button class="btn-jaguar btn-gold-chrome" style="color: #000; font-weight: 800;" onclick="showGoogleAppsScriptModal()">
+              ⚙️ Ver Guía Apps Script & Gmail
+            </button>
+          </div>
+
+          <div style="display: flex; gap: 10px;">
+            <input type="text" id="fin-gsheet-url" class="input-jaguar" placeholder="URL Webhook de Google Apps Script (terminada en /exec)...">
+            <button class="btn-jaguar btn-primary-pink" onclick="saveGoogleSheetConfig()">Guardar Enlace Drive</button>
+          </div>
+        </div>
+
+        <!-- VISTA SUB-TAB: EXTRACTOS BANCARIOS & MOVIMIENTOS -->
+        <div id="fin-view-extractos" class="grid-main-sidebar">
+          <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="jaguar-card" style="border: 2px dashed var(--neon-cyan); background: rgba(0, 240, 255, 0.04);">
+              <div class="card-title-bar">
+                <h3 class="card-title">📄 Ingestión de Extractos Bancarios (Sparkasse / Banco Chile)</h3>
+                <span class="badge-tag badge-cyan">CSV / TXT / PDF</span>
+              </div>
+              <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 14px;">
+                Arrastra o selecciona tus reportes de movimientos emitidos por Sparkasse (€) o Banco Chile ($) para procesar y categorizar automáticamente tus gastos.
+              </p>
+              
+              <input type="file" id="bank-file-input" class="input-jaguar" accept=".csv,.txt,.json" onchange="const f=this.files[0]; if(f){ const r=new FileReader(); r.onload=e=>parseBankFileContent(e.target.result, f.name); r.readAsText(f); }">
+            </div>
+
+            <div class="jaguar-card">
+              <div class="card-title-bar">
+                <h3 class="card-title">➕ Registrar Movimiento Manual</h3>
+              </div>
+              <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto; gap: 8px;">
+                <input type="text" id="fin-new-desc" class="input-jaguar" placeholder="Descripción">
+                <input type="number" id="fin-new-amount" class="input-jaguar" placeholder="Monto" step="0.01">
+                <select id="fin-new-currency" class="input-jaguar">
+                  <option value="EUR">€ EUR</option>
+                  <option value="CLP">$ CLP</option>
+                </select>
+                <select id="fin-new-cat" class="input-jaguar">
+                  <option value="fijos">Fijos</option>
+                  <option value="alimentacion">Alimentación</option>
+                  <option value="ocio">Ocio / Estilo</option>
+                  <option value="ahorro">Inversión / Ahorro</option>
+                  <option value="ingreso">Ingreso</option>
+                </select>
+                <select id="fin-new-bank" class="input-jaguar">
+                  <option value="Sparkasse">Sparkasse</option>
+                  <option value="Banco Chile">Banco Chile</option>
+                </select>
+                <button class="btn-jaguar btn-primary-pink" onclick="addManualTransaction()">Registrar</button>
+              </div>
+            </div>
+
+            <div class="jaguar-card">
+              <div class="card-title-bar">
+                <h3 class="card-title">📜 Extractos Bancarios Procesados</h3>
+              </div>
+              <div id="fin-transactions-list"></div>
+            </div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="jaguar-card card-highlight">
+              <div class="card-title-bar">
+                <h3 class="card-title">🧠 Oportunidades & Análisis Financiero</h3>
+              </div>
+              <div id="fin-tips-container"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- PESTAÑA: EJERCICIO & DEPORTES DE COMBATE / RESISTENCIA -->
+    <section class="tab-content" id="tab-ejercicio">
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        
+        <!-- BANNER MOTIVACIONAL EJERCICIO & ENTRENADORA FITNESS -->
+        <div style="position: relative; border-radius: var(--radius-lg); overflow: hidden; height: 320px; border: 2px solid var(--neon-pink); box-shadow: var(--shadow-rose);">
+          <img src="assets/banner_entrenamiento_campus.jpg" alt="Campus Martius • Entrenamiento Legionario" style="width: 100%; height: 100%; object-fit: cover; object-position: center; filter: brightness(0.75) contrast(1.15);" class="animated-jaguar-bg">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 28px; background: linear-gradient(to top, rgba(7,3,18,0.96) 0%, rgba(7,3,18,0.4) 65%, transparent 100%);">
+            <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+              <span class="badge-tag badge-pink" style="font-size: 0.85rem;">🔥 Calistenia, Muay Thai, Kickboxing & Resistencia</span>
+              <span class="badge-tag badge-cyan" style="font-size: 0.85rem;">Europa Combat Directory</span>
+            </div>
+            <h2 class="title-rose-neon" style="font-size: 2.2rem; text-shadow: 0 0 25px rgba(255, 0, 127, 0.6);">Rutinas de Entrenamiento & Deportes de Combate</h2>
+            <p style="font-size: 1rem; color: #FFF; margin-top: 4px; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Tu cuerpo es la máquina que ejecuta los mandatos de tu mente. Registra tus gimnasios europeos, sparrings y metas deportivas.</p>
+          </div>
+        </div>
+
+        <!-- BARRA DE NAVEGACIÓN DE SUB-PESTAÑAS DE DEPORTE -->
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button class="btn-jaguar btn-primary-pink" onclick="document.getElementById('workouts-container').style.display='grid'; document.getElementById('combat-hub-container').style.display='none';">
+            🏋️‍♂️ Calistenia & Rutinas
+          </button>
+          <button class="btn-jaguar btn-electric-cyan" onclick="document.getElementById('workouts-container').style.display='none'; document.getElementById('combat-hub-container').style.display='block'; renderCombatHub('muaythai');">
+            🥊 Muay Thai & Kickboxing Europa
+          </button>
+          <button class="btn-jaguar btn-gold-chrome" style="color: #000; font-weight: 800;" onclick="document.getElementById('workouts-container').style.display='none'; document.getElementById('combat-hub-container').style.display='block'; renderCombatHub('triatlon');">
+            🏊‍♂️ Triatlón
+          </button>
+          <button class="btn-jaguar btn-emerald-neon" onclick="document.getElementById('workouts-container').style.display='none'; document.getElementById('combat-hub-container').style.display='block'; renderCombatHub('maraton');">
+            🏃‍♂️ Maratón 42K
+          </button>
+          <button class="btn-jaguar" style="background: linear-gradient(135deg, rgba(197, 160, 89, 0.25) 0%, rgba(138, 75, 40, 0.4) 100%); border: 1.5px solid var(--imperial-gold); color: #FFF; font-weight: 700;" onclick="document.getElementById('workouts-container').style.display='none'; document.getElementById('combat-hub-container').style.display='block'; renderCombatHub('escalada');">
+            🧗‍♂️ Escalada (Muro & Outdoor)
+          </button>
+        </div>
+
+        <div class="grid-2" id="workouts-container"></div>
+        <div id="combat-hub-container" style="display: none;"></div>
+
+        <!-- ENLACE AL CALENDARIO DE VESTIMENTA & ALIMENTACIÓN -->
+        <div style="margin-top: 24px; text-align: center; background: rgba(14, 20, 28, 0.85); border: 1.5px solid var(--border-gold); padding: 18px 24px; border-radius: var(--radius-md); box-shadow: 0 8px 24px rgba(0,0,0,0.6);">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+            <div style="text-align: left;">
+              <h4 style="font-family: 'Cinzel', serif; color: #FFF; font-size: 1.15rem; margin: 0;">👔 Calendario de Vestimenta, Nutrición & Hábitos Somáticos</h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin: 4px 0 0 0;">Prendas recomendadas (outfit), menús por día de la semana y estado neurobiológico.</p>
+            </div>
+            <button class="btn-jaguar btn-gold-chrome" style="color: #0E0905; font-weight: 800; font-size: 0.85rem; padding: 8px 18px;" onclick="selectMainTab('lifestyle'); renderLifestyleArchitectApp();">
+              Ver Menú Completo ➔
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PESTAÑA: BIBLIOTECA -->
+    <section class="tab-content" id="tab-lectura">
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        
+        <!-- BANNER MOTIVACIONAL BIBLIOTECA & CONOCIMIENTO -->
+        <div style="position: relative; border-radius: var(--radius-lg); overflow: hidden; height: 360px; border: 2px solid var(--neon-gold); box-shadow: 0 0 25px rgba(255, 215, 0, 0.35);">
+          <img src="assets/banner_lectura.jpg" alt="Biblioteca Estoica & Expansión Mental" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7) contrast(1.15);" class="animated-jaguar-bg">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 28px; background: linear-gradient(to top, rgba(7,3,18,0.96) 0%, rgba(7,3,18,0.5) 70%, transparent 100%);">
+            <span class="badge-tag badge-gold" style="font-size: 0.85rem;">📜 Estoicismo, Psicología & Soberanía Mental</span>
+            <h2 class="title-rose-neon" style="font-size: 2.2rem; margin-top: 6px; text-shadow: 0 0 25px rgba(255, 215, 0, 0.5);">Biblioteca Jaguar & Expansión Intelectual</h2>
+            <p style="font-size: 1rem; color: #FFF; margin-top: 4px;">50+ Obras maestras de filosofía estoica, hábitos de élite, psicología y estrategia.</p>
+          </div>
+        </div>
+
+        <!-- GENERADOR DE CITAS ESTOICAS E INSPIRACIONALES -->
+        <div class="jaguar-card card-highlight" style="border-color: #C0392B; background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(7, 3, 18, 0.95) 100%);">
+          <div class="card-title-bar">
+            <h3 class="card-title">📜 Oráculo & Sabiduría Estoica del Día</h3>
+            <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #000; font-weight: 800;" onclick="generateRandomStoicQuote()">✨ Nueva Cita</button>
+          </div>
+          
+          <div id="stoic-quote-display" style="padding: 10px 0;">
+            <blockquote style="font-size: 1.02rem; font-style: italic; color: #FFF; line-height: 1.5; margin-bottom: 8px;">
+              "No tienes dominio sobre los eventos externos, pero sí sobre tu mente. Comprende esto y hallarás la verdadera fuerza."
+            </blockquote>
+            <div style="font-size: 0.85rem; font-weight: 800; color: #C0392B; text-align: right;">
+              — Marco Aurelio
+            </div>
+          </div>
+        </div>
+
+        <!-- REGISTRO & MONITOR DE LECTURA ESTOICA (BANDERÍN CAFÉ) -->
+        <div class="jaguar-card card-highlight" style="border: 2px solid #8D6E63; background: linear-gradient(135deg, rgba(141, 110, 99, 0.12) 0%, rgba(14, 14, 19, 0.95) 100%);">
+          <div class="card-title-bar">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.6rem;">📖</span>
+              <div>
+                <span class="badge-tag badge-gold" style="font-size: 0.7rem;">BANDERÍN CAFÉ • DISCIPLINA MENTAL</span>
+                <h3 class="card-title" style="margin: 0; color: #3E2723;">Bitácora & Monitor de Lectura Diaria</h3>
+              </div>
+            </div>
+            <span class="badge-tag badge-cyan" style="font-size: 0.75rem;">1.3x Multiplicador Intelectual</span>
+          </div>
+
+          <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 16px;">
+            El Caballero Jaguar forja su mente leyendo al menos 15 páginas diarias. Registra tus códices leídos y otorga experiencia inmediata al Banderín Café en tu heráldica.
+          </p>
+
+          <div style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 12px; align-items: flex-end;">
+            <div>
+              <label style="font-size: 0.75rem; color: #5D4E3E; font-weight: 700; font-family: 'Cinzel', serif; display: block; margin-bottom: 4px;">Seleccionar Códice / Libro:</label>
+              <select id="reading-book-select" class="kcd-task-select" style="width: 100%;">
+                <option value="Meditaciones de Marco Aurelio">🏛️ Meditaciones — Marco Aurelio</option>
+                <option value="Cartas a Lucilio de Séneca">📜 Cartas a Lucilio — Séneca</option>
+                <option value="Manual de Vida (Enquiridión) de Epicteto">🛡️ Manual de Vida (Enquiridión) — Epicteto</option>
+                <option value="El Obstáculo es el Camino de Ryan Holiday">⛰️ El Obstáculo es el Camino — Ryan Holiday</option>
+                <option value="Hábitos Atómicos de James Clear">⚛️ Hábitos Atómicos — James Clear</option>
+                <option value="Deep Work de Cal Newport">⚡ Deep Work — Cal Newport</option>
+                <option value="Antifrágil de Nassim Taleb">💎 Antifrágil — Nassim Nicholas Taleb</option>
+                <option value="custom">✍️ Otro Códice / Libro personalizado...</option>
+              </select>
+            </div>
+
+            <div>
+              <label style="font-size: 0.75rem; color: #5D4E3E; font-weight: 700; font-family: 'Cinzel', serif; display: block; margin-bottom: 4px;">Páginas Leídas:</label>
+              <input type="number" id="reading-pages-input" class="kcd-task-input" placeholder="Ej: 15" min="1" max="500" value="15" style="width: 100%;">
+            </div>
+
+            <div>
+              <label style="font-size: 0.75rem; color: #5D4E3E; font-weight: 700; font-family: 'Cinzel', serif; display: block; margin-bottom: 4px;">Tiempo (Min):</label>
+              <input type="number" id="reading-mins-input" class="kcd-task-input" placeholder="Ej: 25" min="5" max="360" value="25" style="width: 100%;">
+            </div>
+
+            <div>
+              <button class="btn-jaguar btn-gold-chrome" style="color: #1A1410; font-weight: 900; padding: 10px 18px; font-size: 0.85rem;" onclick="submitReadingLog()">
+                ⚡ Registrar Lectura (+XP)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- BUSCADOR & BARRA DE ESTADÍSTICAS DE LECTURA -->
+        <div class="library-search-container">
+          <span style="font-size: 1.2rem; color: var(--parchment-light);">🔍</span>
+          <input type="text" id="library-search-input" class="library-search-input" placeholder="Buscar por título, autor o concepto clave..." oninput="onLibrarySearchInput(this.value)">
+          <button class="btn-jaguar btn-sm btn-secondary-dark" onclick="clearLibrarySearch()">Limpiar</button>
+        </div>
+
+        <div class="library-stats-strip" id="library-stats-bar">
+          <span>📚 Cargando biblioteca...</span>
+        </div>
+
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="btn-jaguar btn-sm book-filter-btn active" onclick="filterBooks('all')">Todos (50+ Libros)</button>
+          <button class="btn-jaguar btn-sm book-filter-btn" onclick="filterBooks('filosofia')">Filosofía & Estoicismo</button>
+          <button class="btn-jaguar btn-sm book-filter-btn" onclick="filterBooks('psicologia')">Psicología & Hábitos</button>
+          <button class="btn-jaguar btn-sm book-filter-btn" onclick="filterBooks('enfoque')">Enfoque & Productividad</button>
+          <button class="btn-jaguar btn-sm book-filter-btn" onclick="filterBooks('relaciones')">Relaciones & Empatía</button>
+          <button class="btn-jaguar btn-sm book-filter-btn" onclick="filterBooks('finanzas')">Finanzas & Estrategia</button>
+        </div>
+
+        <!-- GRILLA UNIFORME DE CÓDICES DE LECTURA -->
+        <div class="books-uniform-grid" id="books-grid"></div>
+      </div>
+    </section>
+
+    <!-- PESTAÑA: AYURVEDA & SALUD HOLÍSTICA -->
+    <section class="tab-content" id="tab-ayurveda">
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        
+        <!-- BANNER INSPIRACIONAL AYURVEDA BOHO CHIC -->
+        <div style="position: relative; border-radius: var(--radius-lg); overflow: hidden; height: 380px; border: 2px solid var(--emerald-bright); box-shadow: 0 0 30px rgba(52, 211, 153, 0.4);">
+          <img src="assets/banner_ayurveda.jpg" onerror="this.onerror=null; this.src='assets/img_ayurveda_holistic_wellness.jpg';" alt="Chica Ayurveda Hippie Elegante & Medicina Holística" style="width: 100%; height: 100%; object-fit: cover; object-position: center; filter: brightness(0.75) saturate(1.35);" class="animated-jaguar-bg">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 28px; background: linear-gradient(to top, rgba(7,3,18,0.96) 0%, rgba(7,3,18,0.45) 65%, transparent 100%);">
+            <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+              <span class="badge-tag badge-emerald" style="font-size: 0.85rem;">🌿 Chica Ayurveda Hippie Elegante & Boho Wellness</span>
+              <span class="badge-tag badge-gold" style="font-size: 0.85rem;">Equilibrio Doshas Vata, Pitta, Kapha</span>
+            </div>
+            <h2 class="title-rose-neon" style="font-size: 2.3rem; text-shadow: 0 0 25px rgba(52, 211, 153, 0.6);">Ayurveda & Salud Holística</h2>
+            <p style="font-size: 1rem; color: #FFF; margin-top: 4px; text-shadow: 0 2px 10px rgba(0,0,0,0.9);">
+              La ciencia milenaria del equilibrio de la vida: vitalidad natural, belleza consciente, rituales de Dinacharya y nutrición biológica.
+            </p>
+          </div>
+        </div>
+
+
+        <!-- DIAGNÓSTICO INTERACTIVO DE DOSHAS -->
+        <div class="jaguar-card card-highlight" style="border-color: var(--emerald-bright); background: linear-gradient(135deg, rgba(52, 211, 153, 0.08) 0%, rgba(7, 3, 18, 0.95) 100%);">
+          <div class="card-title-bar">
+            <h3 class="card-title">☯️ Test de Constitución Biológica (Tu Dosha Predominante)</h3>
+            <span class="badge-tag badge-emerald">Diagnóstico Holístico</span>
+          </div>
+
+          <div class="grid-3" style="margin-top: 14px;">
+            <div style="background: rgba(7,3,18,0.8); border: 1px solid rgba(0, 240, 255, 0.3); padding: 18px; border-radius: var(--radius-md); text-align: center;">
+              <div style="font-size: 2rem; margin-bottom: 6px;">🌬️</div>
+              <h4 style="font-size: 1.1rem; color: rgba(255, 255, 255, 0.7); margin-bottom: 6px;">Vata (Aire & Éter)</h4>
+              <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px;">Creativo, rápido y entusiasta. Tiende a la piel seca, digestión variable y ansiedad bajo estrés.</p>
+              <button class="btn-jaguar btn-sm btn-electric-cyan" style="width: 100%; font-size: 0.78rem;" onclick="showNotification('Recomendación Vata: Alimentos calientes, grasas saludables (Ghee) y rutinas de sueño regulares.')">Ver Dieta Vata</button>
+            </div>
+
+            <div style="background: rgba(7,3,18,0.8); border: 1px solid rgba(255, 0, 127, 0.3); padding: 18px; border-radius: var(--radius-md); text-align: center;">
+              <div style="font-size: 2rem; margin-bottom: 6px;">🔥</div>
+              <h4 style="font-size: 1.1rem; color: var(--neon-pink-bright); margin-bottom: 6px;">Pitta (Fuego & Agua)</h4>
+              <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px;">Inteligente, enfocado y de digestión potente. Tiende al calor corporal, exigencia y acidez.</p>
+              <button class="btn-jaguar btn-sm btn-primary-pink" style="width: 100%; font-size: 0.78rem;" onclick="showNotification('Recomendación Pitta: Alimentos frescos, tés de menta y práctica de meditación refrescante.')">Ver Dieta Pitta</button>
+            </div>
+
+            <div style="background: rgba(7,3,18,0.8); border: 1px solid rgba(255, 215, 0, 0.3); padding: 18px; border-radius: var(--radius-md); text-align: center;">
+              <div style="font-size: 2rem; margin-bottom: 6px;">🌊</div>
+              <h4 style="font-size: 1.1rem; color: #C0392B; margin-bottom: 6px;">Kapha (Tierra & Agua)</h4>
+              <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px;">Calmo, leal y de estructura fuerte. Tiende a la acumulación, retención de líquidos y letargo.</p>
+              <button class="btn-jaguar btn-sm btn-gold-chrome" style="width: 100%; font-size: 0.78rem; color: #000; font-weight: 800;" onclick="showNotification('Recomendación Kapha: Ejercicio aeróbico vigoroso, especias picantes (Jengibre) y ayuno intermitente.')">Ver Dieta Kapha</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- RITUALES DIARIOS DINACHARYA -->
+        <div class="jaguar-card">
+          <div class="card-title-bar">
+            <h3 class="card-title">☀️ Rituales Matutinos de Dinacharya (Limpieza & Energía)</h3>
+            <span class="badge-tag badge-emerald">Hábitos Holísticos</span>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <div class="task-item">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="font-size: 1.2rem;">👅</div>
+                <div>
+                  <strong style="color: #FFF; font-size: 0.92rem;">Raspado de Lengua (Jivha Dhauti)</strong>
+                  <div style="font-size: 0.78rem; color: var(--text-dim);">Elimina toxinas acumuladas (Ama) al despertar antes de tomar agua.</div>
+                </div>
+              </div>
+              <span class="badge-tag badge-cyan">Mañana</span>
+            </div>
+
+            <div class="task-item">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="font-size: 1.2rem;">🥛</div>
+                <div>
+                  <strong style="color: #FFF; font-size: 0.92rem;">Agua Tibia con Limón & Jengibre</strong>
+                  <div style="font-size: 0.78rem; color: var(--text-dim);">Enciende el fuego digestivo (Agni) e hidrata los tejidos en profundidad.</div>
+                </div>
+              </div>
+              <span class="badge-tag badge-gold">Digestión</span>
+            </div>
+
+            <div class="task-item">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="font-size: 1.2rem;">🧘‍♀️</div>
+                <div>
+                  <strong style="color: #FFF; font-size: 0.92rem;">Pranayama & Respiración Nadi Shodhana</strong>
+                  <div style="font-size: 0.78rem; color: var(--text-dim);">Respiración alterna de fosas nasales para equilibrar los hemisferios cerebrales.</div>
+                </div>
+              </div>
+              <span class="badge-tag badge-pink">Mente</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PESTAÑA: MEDITACIÓN & CALMA SOMÁTICA (BANDERÍN ROSA) -->
+    <section class="tab-content" id="tab-meditacion">
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        
+        <!-- BANNER MOTIVACIONAL MEDITACIÓN -->
+        <div style="position: relative; border-radius: var(--radius-lg); overflow: hidden; height: 320px; border: 2px solid #E91E63; box-shadow: 0 0 30px rgba(233, 30, 99, 0.35);">
+          <img src="assets/german_castle_snow_day.jpg" alt="Templo de Calma Somática" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.65) saturate(1.2) hue-rotate(310deg);" class="animated-jaguar-bg">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 28px; background: linear-gradient(to top, rgba(14,10,18,0.96) 0%, rgba(14,10,18,0.45) 65%, transparent 100%);">
+            <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+              <span class="badge-tag badge-pink" style="font-size: 0.85rem;">🧘 Banderín Rosa Heráldico • Calma Somática</span>
+              <span class="badge-tag badge-gold" style="font-size: 0.85rem;">Regulación del Nervio Vago • 1.4x XP</span>
+            </div>
+            <h2 class="title-rose-neon" style="font-size: 2.2rem; text-shadow: 0 0 25px rgba(233, 30, 99, 0.6);">Templo de Meditación & Quietud Estoica</h2>
+            <p style="font-size: 1rem; color: #FFF; margin-top: 4px; text-shadow: 0 2px 10px rgba(0,0,0,0.9);">
+              El anclaje del guerrero en el momento presente. La mente serena es el escudo inquebrantable frente a las turbulencias del mundo exterior.
+            </p>
+          </div>
+        </div>
+
+        <!-- CÍRCULO REACTIVO DE RESPIRACIÓN & TEMPORIZADOR -->
+        <div class="jaguar-card card-highlight" style="border-color: #E91E63; background: linear-gradient(135deg, rgba(233, 30, 99, 0.08) 0%, rgba(14, 14, 19, 0.95) 100%); text-align: center;">
+          <div class="card-title-bar" style="border-bottom-color: rgba(233, 30, 99, 0.3);">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 1.8rem;">🌬️</span>
+              <h3 class="card-title" style="margin: 0; color: #880E4F;">Guía Respiratoria Activa & Campana Tibetana</h3>
+            </div>
+            <button class="btn-jaguar btn-sm btn-gold-chrome" onclick="playTibetanBellChime();" title="Sonar Campana Tibetana Acústica de 432 Hz">
+              🔔 Sonar Campana (432 Hz)
+            </button>
+          </div>
+
+          <!-- CONTENEDOR DEL CÍRCULO DE RESPIRACIÓN -->
+          <div class="meditation-breathe-container">
+            <div id="meditation-ring" class="meditation-pulse-ring">
+              <div id="meditation-phase-text" class="meditation-phase-text">LISTO</div>
+              <div id="meditation-timer-display" class="meditation-timer-display">15:00</div>
+            </div>
+          </div>
+
+          <!-- BOTONES DE CONTROL DE SESIÓN -->
+          <div style="display: flex; justify-content: center; gap: 12px; margin-top: 14px; flex-wrap: wrap;">
+            <button class="btn-jaguar btn-gold-chrome" id="btn-start-meditation" style="color: #0E0905; font-weight: 900; padding: 12px 28px; font-size: 0.95rem;" onclick="startMeditationSession(15, 'box');">
+              ▶️ Iniciar Box Breathing (15 Min)
+            </button>
+            <button class="btn-jaguar btn-primary-pink" id="btn-stop-meditation" style="display: none; padding: 12px 24px; font-size: 0.95rem;" onclick="stopMeditationSession();">
+              ⏹️ Pausar / Finalizar Sesión
+            </button>
+          </div>
+
+          <!-- SELECTORES DE PRESETS RÁPIDOS -->
+          <div style="margin-top: 20px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap;">
+            <span style="font-size: 0.85rem; color: #5D4E3E; font-weight: 700; align-self: center; margin-right: 6px;">Sesiones Rápidas:</span>
+            <button class="btn-jaguar btn-sm btn-secondary-dark" onclick="startMeditationSession(5, 'box');">⏱️ 5 Min Express</button>
+            <button class="btn-jaguar btn-sm btn-secondary-dark" onclick="startMeditationSession(10, 'box');">⏱️ 10 Min Reset</button>
+            <button class="btn-jaguar btn-sm btn-secondary-dark" onclick="startMeditationSession(20, 'vipassana');">🧘 20 Min Vipassana</button>
+            <button class="btn-jaguar btn-sm btn-secondary-dark" onclick="startMeditationSession(30, 'zazen');">🪷 30 Min Profundo</button>
+          </div>
+        </div>
+
+        <!-- 4 TÉCNICAS DE MEDITACIÓN & REGISTRO MANUAL -->
+        <div class="grid-2">
+          <!-- TÉCNICAS EXPLICADAS -->
+          <div class="jaguar-card">
+            <div class="card-title-bar">
+              <h3 class="card-title">📜 Códice de Disciplinas de Quietud</h3>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 14px;">
+              <div style="background: rgba(233, 30, 99, 0.06); border-left: 3px solid #E91E63; padding: 12px 16px; border-radius: 4px;">
+                <strong style="color: #880E4F; font-size: 0.95rem; font-family: 'Cinzel', serif;">1. Box Breathing (Respiración Cuadrada 4x4x4x4)</strong>
+                <p style="font-size: 0.85rem; color: #5D4E3E; margin-top: 4px; line-height: 1.4;">
+                  4 segundos de inhalación, 4 de retención con pulmones llenos, 4 de exhalación lenta, 4 de retención con pulmones vacíos. Calma instantánea del sistema nervioso simpático.
+                </p>
+              </div>
+
+              <div style="background: rgba(155, 35, 53, 0.06); border-left: 3px solid #9B2335; padding: 12px 16px; border-radius: 4px;">
+                <strong style="color: #6D4C41; font-size: 0.95rem; font-family: 'Cinzel', serif;">2. Meditación Vipassana (Atención a las Sensaciones)</strong>
+                <p style="font-size: 0.85rem; color: #5D4E3E; margin-top: 4px; line-height: 1.4;">
+                  Observación pura y ecuánime de las sensaciones físicas en el cuerpo sin reaccionar con apego ni aversión. Desarrolla la resiliencia estoica pura.
+                </p>
+              </div>
+
+              <div style="background: rgba(42, 84, 122, 0.08); border-left: 3px solid #2A547A; padding: 12px 16px; border-radius: 4px;">
+                <strong style="color: #1A3E60; font-size: 0.95rem; font-family: 'Cinzel', serif;">3. Zazen & Silencio Interior</strong>
+                <p style="font-size: 0.85rem; color: #5D4E3E; margin-top: 4px; line-height: 1.4;">
+                  Postura sentada recta, mirada desenfocada a 45 grados y dejar pasar los pensamientos como nubes en el cielo sin aferrarse a ninguno.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- REGISTRO MANUAL DE SESIÓN -->
+          <div class="jaguar-card card-highlight">
+            <div class="card-title-bar">
+              <h3 class="card-title">✍️ Registro Manual de Meditación (+XP)</h3>
+              <span class="badge-tag badge-pink">Banderín Rosa</span>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 14px;">
+              ¿Meditaste fuera de la app (en cojín zafu, templo o parque)? Registra los minutos para actualizar tu progreso heráldico.
+            </p>
+
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div>
+                <label style="font-size: 0.78rem; font-weight: 700; color: #5D4E3E; display: block; margin-bottom: 4px; font-family: 'Cinzel', serif;">Técnica Empleada:</label>
+                <select id="meditation-tech-select" class="kcd-task-select" style="width: 100%;">
+                  <option value="box">🌬️ Box Breathing (4x4x4x4)</option>
+                  <option value="vipassana">🧘 Vipassana & Conciencia Corporal</option>
+                  <option value="zazen">🪷 Zazen & Silencio Profundo</option>
+                  <option value="scan">🌊 Escaneo Somático & Nervio Vago</option>
+                </select>
+              </div>
+
+              <div>
+                <label style="font-size: 0.78rem; font-weight: 700; color: #5D4E3E; display: block; margin-bottom: 4px; font-family: 'Cinzel', serif;">Minutos de Práctica:</label>
+                <input type="number" id="meditation-custom-mins" class="kcd-task-input" value="15" min="5" max="180" style="width: 100%;">
+              </div>
+
+              <button class="btn-jaguar btn-gold-chrome" style="color: #0E0905; font-weight: 900; padding: 12px; margin-top: 6px;" onclick="submitCustomMeditation();">
+                ✨ Registrar Sesión (+XP al Banderín Rosa)
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PESTAÑA: MASAJES (PAREJA & AUTO-MASAJE MIOFASCIAL) -->
+    <section class="tab-content" id="tab-masajes">
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        
+        <!-- BANNER MASAJES & RECUPERACIÓN -->
+        <div style="position: relative; border-radius: var(--radius-lg); overflow: hidden; height: 320px; border: 2px solid var(--imperial-gold); box-shadow: 0 0 30px rgba(197, 154, 40, 0.35);">
+          <img src="assets/german_castle_snow_day.jpg" alt="Tratados de Masaje & Recuperación" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.65) saturate(1.3) hue-rotate(180deg);" class="animated-jaguar-bg">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 28px; background: linear-gradient(to top, rgba(14,18,24,0.96) 0%, rgba(14,18,24,0.45) 65%, transparent 100%);">
+            <div style="display: flex; gap: 10px; margin-bottom: 8px;">
+              <span class="badge-tag badge-gold" style="font-size: 0.85rem;">💆 Masajes & Recuperación Miofascial</span>
+              <span class="badge-tag badge-cyan" style="font-size: 0.85rem;">Vínculo Afectivo & Alivio Muscular</span>
+            </div>
+            <h2 class="title-rose-neon" style="font-size: 2.2rem; text-shadow: 0 0 25px rgba(155, 35, 53, 0.25);">Tratados de Masaje: Pareja & Auto-Masaje</h2>
+            <p style="font-size: 1rem; color: #FFF; margin-top: 4px; text-shadow: 0 2px 10px rgba(0,0,0,0.9);">
+              Rúbricas milenarias para disolver nudos miofasciales del combate, cuidar el cuerpo y nutrir el afecto tántrico y la intimidad sana.
+            </p>
+          </div>
+        </div>
+
+        <!-- SELECTOR DE MODO: PAREJA VS AUTO-MASAJE -->
+        <div style="display: flex; gap: 12px; justify-content: center;">
+          <button class="btn-jaguar btn-gold-chrome" id="btn-mode-pareja" style="color: #0E0905; font-weight: 900; padding: 10px 24px; font-size: 0.95rem;" onclick="switchMassageMode('pareja');">
+            💑 Masajes en Pareja
+          </button>
+          <button class="btn-jaguar btn-secondary-dark" id="btn-mode-automasaje" style="padding: 10px 24px; font-size: 0.95rem;" onclick="switchMassageMode('automasaje');">
+            🥋 Auto-Masaje Miofascial (Foam Roller)
+          </button>
+        </div>
+
+        <!-- BARRA FLOTANTE DE TEMPORIZADOR ACTIVO DE MASAJE -->
+        <div id="massage-timer-bar" style="display: none; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #1C232B 0%, #121820 100%); border: 1.5px solid #9B2335; border-radius: var(--radius-md); padding: 12px 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.4);">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="font-size: 1.5rem;">⏱️</span>
+            <div>
+              <div style="font-size: 0.72rem; color: #9B2335; font-family: 'Cinzel', serif; letter-spacing: 1px;">RUTINA EN CURSO</div>
+              <strong id="massage-active-routine-label" style="color: #FFF6E5; font-size: 0.95rem;">Masaje de Espalda</strong>
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 16px;">
+            <div id="massage-active-timer-display" style="font-family: 'Orbitron', monospace; font-size: 1.4rem; color: #D4464E; font-weight: 900;">20:00</div>
+            <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #0E0905; font-weight: 800;" onclick="submitQuickMassage('Rutina de Masaje Finalizada', 20);">
+              ✓ Concluir & Guardar (+XP)
+            </button>
+          </div>
+        </div>
+
+        <!-- CONTENIDO: MODO PAREJA -->
+        <div id="massage-pareja-container" class="grid-2" style="gap: 18px;">
+          <!-- PROTOCOLO 1: ESPALDA & TRAPECIOS -->
+          <div class="massage-technique-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+              <div>
+                <span class="massage-step-pill">💑 PAREJA • 20 MIN</span>
+                <h3 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #0E0E13; margin-top: 6px;">Alivio de Tensión en Hombros y Trapecios</h3>
+              </div>
+              <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #0E0905; font-weight: 800;" onclick="startMassageRoutineTimer(20, 'Alivio de Trapecios en Pareja');">
+                ▶️ Iniciar Timer
+              </button>
+            </div>
+            <p style="font-size: 0.88rem; color: #5D4E3E; line-height: 1.45; margin-bottom: 12px;">
+              Ideal tras jornadas largas de pantalla o tesis. Disuelve contracturas en el músculo trapecio superior, angular de la escápula y cuello.
+            </p>
+            <div style="font-size: 0.82rem; color: #4A3C2F; line-height: 1.4;">
+              <strong>Paso a paso:</strong><br>
+              1. Aplica 5 gotas de aceite tibio de almendras o lavanda sobre las palmas.<br>
+              2. Pases largos (Effleurage) desde la base de la columna hacia los hombros.<br>
+              3. Amasamiento suave (Pétrissage) con los pulgares sobre las bandas tensas del trapecio.<br>
+              4. Presión estática de 8 segundos en puntos dolorosos al exhalar.
+            </div>
+          </div>
+
+          <!-- PROTOCOLO 2: MASAJE RELAJANTE DE ESPALDA COMPLETA -->
+          <div class="massage-technique-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+              <div>
+                <span class="massage-step-pill">💑 PAREJA • 30 MIN</span>
+                <h3 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #0E0E13; margin-top: 6px;">Masaje Relajante de Espalda & Lumbar</h3>
+              </div>
+              <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #0E0905; font-weight: 800;" onclick="startMassageRoutineTimer(30, 'Masaje de Espalda Completa en Pareja');">
+                ▶️ Iniciar Timer
+              </button>
+            </div>
+            <p style="font-size: 0.88rem; color: #5D4E3E; line-height: 1.45; margin-bottom: 12px;">
+              Protocolo para descompresión vertebral profunda. Calma el sistema nervioso e induce a un sueño restaurador.
+            </p>
+            <div style="font-size: 0.82rem; color: #4A3C2F; line-height: 1.4;">
+              <strong>Paso a paso:</strong><br>
+              1. Pasa antebrazos con presión media paralelos a la columna (nunca sobre las vértebras).<br>
+              2. Círculos con los pulgares en el sacro y zona lumbar.<br>
+              3. Fricción suave en abanico sobre la musculatura dorsal.<br>
+              4. Cierre con toalla tibia y respiración sincronizada.
+            </div>
+          </div>
+
+          <!-- PROTOCOLO 3: TÁNTTRICO & SENSORIAL -->
+          <div class="massage-technique-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+              <div>
+                <span class="massage-step-pill">✨ TÁNTTRICO • 25 MIN</span>
+                <h3 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #0E0E13; margin-top: 6px;">Masaje Tántrico & Presencia de Piel</h3>
+              </div>
+              <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #0E0905; font-weight: 800;" onclick="startMassageRoutineTimer(25, 'Masaje Tántrico Sensorial');">
+                ▶️ Iniciar Timer
+              </button>
+            </div>
+            <p style="font-size: 0.88rem; color: #5D4E3E; line-height: 1.45; margin-bottom: 12px;">
+              Enfoque en la sensibilidad dérmica, contacto sin prisa ni metas genitales. Estimula la liberación de oxitocina y conexión afectiva.
+            </p>
+            <div style="font-size: 0.82rem; color: #4A3C2F; line-height: 1.4;">
+              <strong>Aceites sugeridos:</strong> Aceite de sésamo prensado en frío con esencia de sándalo o jazmín.
+            </div>
+          </div>
+
+          <!-- PROTOCOLO 4: PIES & REFLEXOLOGÍA -->
+          <div class="massage-technique-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+              <div>
+                <span class="massage-step-pill">🦶 PIES • 15 MIN</span>
+                <h3 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #0E0E13; margin-top: 6px;">Reflexología & Descarga de Pies</h3>
+              </div>
+              <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #0E0905; font-weight: 800;" onclick="startMassageRoutineTimer(15, 'Reflexología de Pies en Pareja');">
+                ▶️ Iniciar Timer
+              </button>
+            </div>
+            <p style="font-size: 0.88rem; color: #5D4E3E; line-height: 1.45; margin-bottom: 12px;">
+              Los pies sostienen el peso del caballero. Masajear la fascia plantar y el talón relaja todo el eje somático.
+            </p>
+          </div>
+        </div>
+
+        <!-- CONTENIDO: MODO AUTO-MASAJE MIOFASCIAL -->
+        <div id="massage-automasaje-container" class="grid-2" style="gap: 18px; display: none;">
+          <!-- FOAM ROLLER ESPALDA -->
+          <div class="massage-technique-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+              <div>
+                <span class="massage-step-pill">🥋 FOAM ROLLER • 10 MIN</span>
+                <h3 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #0E0E13; margin-top: 6px;">Liberación Torácica & Dorsales</h3>
+              </div>
+              <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #0E0905; font-weight: 800;" onclick="startMassageRoutineTimer(10, 'Foam Roller Torácico y Dorsal');">
+                ▶️ Iniciar Timer
+              </button>
+            </div>
+            <p style="font-size: 0.88rem; color: #5D4E3E; line-height: 1.45;">
+              Coloca el rodillo transversalmente bajo la espalda media. Cruza los brazos sobre el pecho y rueda lentamente 20 cm arriba y abajo. Deténte en zonas con restricción.
+            </p>
+          </div>
+
+          <!-- PELOTA EN GLÚTEOS & PIRAMIDAL -->
+          <div class="massage-technique-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+              <div>
+                <span class="massage-step-pill">🎾 TRIGGER POINT • 8 MIN</span>
+                <h3 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #0E0E13; margin-top: 6px;">Puntos Gatillo en Glúteo & Piramidal</h3>
+              </div>
+              <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #0E0905; font-weight: 800;" onclick="startMassageRoutineTimer(8, 'Pelota en Glúteos y Piramidal');">
+                ▶️ Iniciar Timer
+              </button>
+            </div>
+            <p style="font-size: 0.88rem; color: #5D4E3E; line-height: 1.45;">
+              Sentado en el suelo con una pelota de lacrosse o tenis bajo un glúteo. Cruza la pierna formando un cuatro. Aplica presión constante en el centro del glúteo para liberar el nervio ciático.
+            </p>
+          </div>
+
+          <!-- LIBERACIÓN FASCIA PLANTAR -->
+          <div class="massage-technique-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+              <div>
+                <span class="massage-step-pill">🦶 FASCIA • 6 MIN</span>
+                <h3 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #0E0E13; margin-top: 6px;">Liberación de Fascia Plantar</h3>
+              </div>
+              <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #0E0905; font-weight: 800;" onclick="startMassageRoutineTimer(6, 'Fascia Plantar con Pelota');">
+                ▶️ Iniciar Timer
+              </button>
+            </div>
+            <p style="font-size: 0.88rem; color: #5D4E3E; line-height: 1.45;">
+              De pie, rueda la planta del pie sobre una pelota pequeña desde el talón hasta los metatarsos. Vital para corredores y practicantes de Muay Thai.
+            </p>
+          </div>
+
+          <!-- CUELLO & SUBOCCIPITALES -->
+          <div class="massage-technique-card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+              <div>
+                <span class="massage-step-pill">🧠 CRÁNEO • 8 MIN</span>
+                <h3 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #0E0E13; margin-top: 6px;">Descompresión Suboccipital</h3>
+              </div>
+              <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #0E0905; font-weight: 800;" onclick="startMassageRoutineTimer(8, 'Descompresión Suboccipital');">
+                ▶️ Iniciar Timer
+              </button>
+            </div>
+            <p style="font-size: 0.88rem; color: #5D4E3E; line-height: 1.45;">
+              Tumbado boca arriba, coloca dos pelotas unidas bajo la base del cráneo. Respira hondo dejando que la gravedad relaje los músculos de la cabeza y mandíbula.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- PESTAÑA: SISTEMA MAESTRO DE PROGRESIÓN, MISIONES Y CABALLERÍA JAGUAR (PITCH) -->
+    <section class="tab-content" id="tab-progresion">
+      <div class="pitch-deck-container">
+        <!-- RENDERIZADO DEL PITCH DECK -->
+        <div class="pitch-hero-banner">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 14px;">
+            <span class="badge-tag badge-gold">📜 PITCH DECK MAESTRO • CÓDICE DE LA ORDEN</span>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button class="btn-jaguar btn-sm btn-secondary-dark" id="pitch-prev-btn" onclick="prevPitchSlide();">◀ Anterior</button>
+              <div style="display: flex; gap: 6px; align-items: center;" id="pitch-dots-container">
+                <span class="pitch-dot" id="pitch-dot-0" onclick="showPitchSlide(0)" style="width: 10px; height: 10px; border-radius: 50%; background: #9B2335; display: inline-block; cursor: pointer;"></span>
+                <span class="pitch-dot" id="pitch-dot-1" onclick="showPitchSlide(1)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(197,154,40,0.3); display: inline-block; cursor: pointer;"></span>
+                <span class="pitch-dot" id="pitch-dot-2" onclick="showPitchSlide(2)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(197,154,40,0.3); display: inline-block; cursor: pointer;"></span>
+                <span class="pitch-dot" id="pitch-dot-3" onclick="showPitchSlide(3)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(197,154,40,0.3); display: inline-block; cursor: pointer;"></span>
+                <span class="pitch-dot" id="pitch-dot-4" onclick="showPitchSlide(4)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(197,154,40,0.3); display: inline-block; cursor: pointer;"></span>
+              </div>
+              <button class="btn-jaguar btn-sm btn-gold-chrome" id="pitch-next-btn" style="color: #0E0905; font-weight: 800;" onclick="nextPitchSlide();">Siguiente ▶</button>
+            </div>
+          </div>
+
+          <!-- SLIDE 0: MANIFIESTO -->
+          <div id="pitch-slide-0" class="pitch-slide">
+            <span style="font-size: 0.8rem; color: #D4464E; font-family: 'Cinzel', serif; letter-spacing: 2px;">DIAPOSITIVA 1 DE 5 • FILOSOFÍA DE BASE</span>
+            <h2 style="font-family: 'Cinzel', serif; font-size: 2.2rem; color: #FFF; margin: 6px 0 14px 0;">El Manifiesto de la Caballería Jaguar</h2>
+            <p style="font-size: 1.05rem; color: #EFE4CE; line-height: 1.6; max-width: 850px; margin-bottom: 16px;">
+              El <strong>Caballero Jaguar</strong> no compite contra otros, sino contra la entropía, la dispersión dopaminérgica y la procrastinación. Esta plataforma convierte cada minuto de tu vida real en una experiencia tangible de rol RPG medieval-renacentista, anclada en hábitos físicos, académicos y espirituales medibles.
+            </p>
+            <div class="grid-3" style="margin-top: 20px;">
+              <div style="background: rgba(0,0,0,0.4); padding: 16px; border-radius: 8px; border: 1px solid rgba(197,154,40,0.3);">
+                <div style="font-size: 1.5rem; margin-bottom: 6px;">🛡️</div>
+                <strong style="color: #D4464E; font-family: 'Cinzel', serif;">Anti-Dispersión</strong>
+                <p style="font-size: 0.85rem; color: #D7CCC8; margin-top: 4px;">Blindaje contra el scrolling pasivo y el consumo de dopamina barata.</p>
+              </div>
+              <div style="background: rgba(0,0,0,0.4); padding: 16px; border-radius: 8px; border: 1px solid rgba(197,154,40,0.3);">
+                <div style="font-size: 1.5rem; margin-bottom: 6px;">⚔️</div>
+                <strong style="color: #D4464E; font-family: 'Cinzel', serif;">Traducción Real = XP</strong>
+                <p style="font-size: 0.85rem; color: #D7CCC8; margin-top: 4px;">Cada entrenamiento, lectura, ahorro o tesis incrementa atributos reales.</p>
+              </div>
+              <div style="background: rgba(0,0,0,0.4); padding: 16px; border-radius: 8px; border: 1px solid rgba(197,154,40,0.3);">
+                <div style="font-size: 1.5rem; margin-bottom: 6px;">👑</div>
+                <strong style="color: #D4464E; font-family: 'Cinzel', serif;">Soberanía Integral</strong>
+                <p style="font-size: 0.85rem; color: #D7CCC8; margin-top: 4px;">Equilibrio absoluto entre mente, cuerpo, finanzas, territorio y espíritu.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SLIDE 1: LOS 5 PILARES -->
+          <div id="pitch-slide-1" class="pitch-slide" style="display: none;">
+            <span style="font-size: 0.8rem; color: #D4464E; font-family: 'Cinzel', serif; letter-spacing: 2px;">DIAPOSITIVA 2 DE 5 • ARQUITECTURA DE DOMINIO</span>
+            <h2 style="font-family: 'Cinzel', serif; font-size: 2.2rem; color: #FFF; margin: 6px 0 14px 0;">Los 5 Pilares de Caballería</h2>
+            <div class="grid-3" style="gap: 14px; margin-top: 16px;">
+              <div class="pitch-pillar-card">
+                <div style="font-size: 1.8rem;">🧘 Mente & Foco</div>
+                <p style="font-size: 0.85rem; color: #5D4E3E; margin-top: 6px;">Tesis Hannover, Filosofía Estoica, Bloques Pomodoro, Códices de Lectura.</p>
+                <span class="badge-tag badge-gold" style="margin-top: 8px;">1.3x - 1.5x Multiplicador</span>
+              </div>
+              <div class="pitch-pillar-card">
+                <div style="font-size: 1.8rem;">⚔️ Fuerza & Combate</div>
+                <p style="font-size: 0.85rem; color: #5D4E3E; margin-top: 6px;">Gym, Hipertrofia, Sparrings de Muay Thai, Running y Calistenia.</p>
+                <span class="badge-tag badge-pink" style="margin-top: 8px;">1.25x - 1.4x Multiplicador</span>
+              </div>
+              <div class="pitch-pillar-card">
+                <div style="font-size: 1.8rem;">🌲 Territorio & Proyectos</div>
+                <p style="font-size: 0.85rem; color: #5D4E3E; margin-top: 6px;">ReWild bosque nativo, idiomas (Alemán/Euskera) y campañas de vida.</p>
+                <span class="badge-tag badge-emerald" style="margin-top: 8px;">1.4x - 1.6x Multiplicador</span>
+              </div>
+              <div class="pitch-pillar-card">
+                <div style="font-size: 1.8rem;">🪙 Soberanía & Finanzas</div>
+                <p style="font-size: 0.85rem; color: #5D4E3E; margin-top: 6px;">Tesorería Sparkasse & Banco Chile, tasa de ahorro e inversión.</p>
+                <span class="badge-tag badge-gold" style="margin-top: 8px;">1.2x Multiplicador</span>
+              </div>
+              <div class="pitch-pillar-card">
+                <div style="font-size: 1.8rem;">🩵 Vitalidad Somática</div>
+                <p style="font-size: 0.85rem; color: #5D4E3E; margin-top: 6px;">Meditación (Banderín Rosa), Masajes, Dinacharya, Outfits somáticos y descanso.</p>
+                <span class="badge-tag badge-cyan" style="margin-top: 8px;">1.3x - 1.4x Multiplicador</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SLIDE 2: MOTOR MATEMÁTICO & PUNTOS -->
+          <div id="pitch-slide-2" class="pitch-slide" style="display: none;">
+            <span style="font-size: 0.8rem; color: #D4464E; font-family: 'Cinzel', serif; letter-spacing: 2px;">DIAPOSITIVA 3 DE 5 • MOTOR DE PUNTUACIÓN</span>
+            <h2 style="font-family: 'Cinzel', serif; font-size: 2.2rem; color: #FFF; margin: 6px 0 14px 0;">¿Cómo Funcionan los Puntos & XP?</h2>
+            
+            <div class="pitch-formula-box" style="margin-bottom: 18px;">
+              <div style="font-size: 1.25rem; color: #D4464E; margin-bottom: 6px;">
+                ⚡ FÓRMULA MAESTRA: XP = Minutos × Tasa Base (1.0) × Multiplicador de Disciplina × Bonus Novedad
+              </div>
+              <div style="font-size: 0.95rem; color: #E0D7C5; font-family: 'Cormorant Garamond', serif; line-height: 1.5;">
+                • Ejemplo: 45 min de Trompeta (Nueva Habilidad 1.8x) = <strong>93 XP</strong>.<br>
+                • Ejemplo: 60 min de Muay Thai (1.4x) = <strong>84 XP</strong>.<br>
+                • Ejemplo: 20 min de Meditación Somática (1.4x) = <strong>28 XP</strong> (suma al Banderín Rosa).<br>
+                • Ejemplo: 30 min de Lectura Estoica (1.3x) + 15 páginas = <strong>62 XP</strong> (suma al Banderín Café).
+              </div>
+            </div>
+
+            <div class="grid-2">
+              <div style="background: rgba(0,0,0,0.3); padding: 16px; border-radius: 8px;">
+                <strong style="color: #D4464E; font-family: 'Cinzel', serif;">Bonus de Curva de Aprendizaje (+15% a +80%)</strong>
+                <p style="font-size: 0.85rem; color: #D7CCC8; margin-top: 4px;">Aprender nuevas destrezas de alta demanda cognitiva (música, pintura, idiomas) premia con mayor experiencia para acelerar la neuroplasticidad.</p>
+              </div>
+              <div style="background: rgba(0,0,0,0.3); padding: 16px; border-radius: 8px;">
+                <strong style="color: #D4464E; font-family: 'Cinzel', serif;">Banderines Heráldicos Dinámicos</strong>
+                <p style="font-size: 0.85rem; color: #D7CCC8; margin-top: 4px;">La longitud de los 10 banderines heráldicos crece de 36px a 86px en tiempo real según el XP acumulado en cada disciplina.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- SLIDE 3: ESCALAFÓN DE 5 RANGOS -->
+          <div id="pitch-slide-3" class="pitch-slide" style="display: none;">
+            <span style="font-size: 0.8rem; color: #D4464E; font-family: 'Cinzel', serif; letter-spacing: 2px;">DIAPOSITIVA 4 DE 5 • ESCALAFÓN DE LA ORDEN</span>
+            <h2 style="font-family: 'Cinzel', serif; font-size: 2.2rem; color: #FFF; margin: 6px 0 14px 0;">Escala de Rangos RPG Equilibrada</h2>
+            
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 14px;">
+              <div style="display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,0.4); padding: 12px 18px; border-radius: 8px; border-left: 4px solid #78909C;">
+                <span style="font-size: 1.5rem;">🛡️</span>
+                <div style="flex: 1;">
+                  <strong style="color: #FFF; font-family: 'Cinzel', serif;">Rango 1: Caballero Explorador (0 - 1.000 XP)</strong>
+                  <div style="font-size: 0.82rem; color: #B0BEC5;">Iniciación, anclaje físico somático y racha base de 3 días sin dispersión.</div>
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,0.4); padding: 12px 18px; border-radius: 8px; border-left: 4px solid #9B2335;">
+                <span style="font-size: 1.5rem;">⚔️</span>
+                <div style="flex: 1;">
+                  <strong style="color: #FFF; font-family: 'Cinzel', serif;">Rango 2: Caballero de Línea Imperial (1.000 - 3.500 XP)</strong>
+                  <div style="font-size: 0.82rem; color: #B0BEC5;">Consolidación metódica, tesis Hannover en marcha y racha de 7 días.</div>
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,0.4); padding: 12px 18px; border-radius: 8px; border-left: 4px solid #E57373;">
+                <span style="font-size: 1.5rem;">🐎</span>
+                <div style="flex: 1;">
+                  <strong style="color: #FFF; font-family: 'Cinzel', serif;">Rango 3: Capitán de Caballería Jaguar (3.500 - 8.500 XP)</strong>
+                  <div style="font-size: 0.82rem; color: #B0BEC5;">Comando de proyectos de vida, defensa de tesis de grado y expedición a Bilbao.</div>
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,0.4); padding: 12px 18px; border-radius: 8px; border-left: 4px solid #AB47BC;">
+                <span style="font-size: 1.5rem;">🦅</span>
+                <div style="flex: 1;">
+                  <strong style="color: #FFF; font-family: 'Cinzel', serif;">Rango 4: Mariscal de Campaña (8.500 - 18.000 XP)</strong>
+                  <div style="font-size: 0.82rem; color: #B0BEC5;">Soberanía territorial en Europa, capital autónomo consolidado y liderazgo de frentes.</div>
+                </div>
+              </div>
+
+              <div style="display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,0.4); padding: 12px 18px; border-radius: 8px; border-left: 4px solid #FFD700;">
+                <span style="font-size: 1.5rem;">👑</span>
+                <div style="flex: 1;">
+                  <strong style="color: #FFF; font-family: 'Cinzel', serif;">Rango 5: Gran Maestre de la Orden Jaguar (18.000+ XP)</strong>
+                  <div style="font-size: 0.82rem; color: #B0BEC5;">Soberanía total, legado de vida completado y maestría en los 5 Pilares.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SLIDE 4: SIMULADOR INTERACTIVO -->
+          <div id="pitch-slide-4" class="pitch-slide" style="display: none;">
+            <span style="font-size: 0.8rem; color: #D4464E; font-family: 'Cinzel', serif; letter-spacing: 2px;">DIAPOSITIVA 5 DE 5 • SIMULADOR EN VIVO</span>
+            <h2 style="font-family: 'Cinzel', serif; font-size: 2.2rem; color: #FFF; margin: 6px 0 14px 0;">Simulador de Puntos & Misiones</h2>
+            <p style="font-size: 1rem; color: #EFE4CE; margin-bottom: 16px;">
+              Experimenta cómo tus hábitos diarios se convierten en experiencia tangible antes de registrar tus victorias reales.
+            </p>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+              <button class="btn-jaguar btn-gold-chrome" style="color: #0E0905; font-weight: 900; padding: 12px 24px;" onclick="openKCDInspector({ type: 'calculator' });">
+                📐 Abrir Calculadora Matemática de Caballería
+              </button>
+              <button class="btn-jaguar btn-secondary-dark" style="padding: 12px 24px;" onclick="openKCDInspector({ type: 'tasks' });">
+                📜 Abrir Códice de Deberes & Misiones
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PESTAÑA: MÚSICA & INSTRUMENTOS DE VIENTO -->
+    <section class="tab-content" id="tab-musica">
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        <div style="position: relative; border-radius: 12px; overflow: hidden; height: 260px; border: 1.5px solid rgba(155, 35, 53, 0.4); box-shadow: 0 14px 40px rgba(0,0,0,0.85);">
+          <img src="assets/banner_musica.jpg" alt="Música & Viento" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7) contrast(1.15);">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 24px; background: linear-gradient(to top, rgba(5,5,8,0.95) 0%, rgba(5,5,8,0.4) 65%, transparent 100%);">
+            <span class="badge-tag" style="margin-bottom: 6px;">🎺 Viento & Cuerda</span>
+            <h2 style="font-family: 'Cinzel', serif; font-size: 1.8rem; color: #FFF; margin: 4px 0 0 0; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Música de Cámara, Jazz & Blues</h2>
+            <p style="font-size: 0.88rem; color: #CBD5E1; margin: 4px 0 0 0;">Trompeta de bolsillo, armónica diatónica, saxofón y laúd medieval</p>
+          </div>
+        </div>
+        <div id="music-instruments-container"></div>
+      </div>
+    </section>
+
+    <!-- PESTAÑA: CAMPAÑAS (GRILLA DE 3 COLUMNAS CON BARRA DE PROGRESO & BOTÓN +1) -->
+    <section class="tab-content" id="tab-proyectos">
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        
+        <!-- BANNER PROYECTOS DE CAMPAÑA -->
+        <div style="position: relative; border-radius: 12px; overflow: hidden; height: 260px; border: 1.5px solid rgba(155, 35, 53, 0.4); box-shadow: 0 14px 40px rgba(0,0,0,0.85);">
+          <img src="assets/banner_proyectos.jpg" alt="Sala de Estrategas de Campaña" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7) contrast(1.15);">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 24px; background: linear-gradient(to top, rgba(5,5,8,0.95) 0%, rgba(5,5,8,0.4) 65%, transparent 100%);">
+            <span class="badge-tag" style="margin-bottom: 6px;">⚔️ Campañas Territoriales</span>
+            <h2 style="font-family: 'Cinzel', serif; font-size: 1.8rem; color: #FFF; margin: 4px 0 0 0; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Mando de Operaciones & Proyectos</h2>
+            <p style="font-size: 0.88rem; color: #CBD5E1; margin: 4px 0 0 0;">6 Frentes estratégicos de vida • Despliegue de recursos y objetivos</p>
+          </div>
+        </div>
+        <div class="jaguar-card card-highlight">
+          <div class="card-title-bar">
+            <div>
+              <span class="badge-tag badge-pink">Ecosistema Integral</span>
+              <h3 class="card-title" style="margin-top: 4px; font-size: 1.5rem;">🚀 Campañas de Vida & Frentes Estratégicos</h3>
+            </div>
+            <span class="badge-tag badge-gold">6 Frentes Activos</span>
+          </div>
+          <p style="font-size: 0.92rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">
+            Cada frente estratégico cuenta con su propio cronograma, presupuesto y tareas asociadas. Haz clic en <strong>+1 Tarea</strong> en cualquier proyecto para registrar el cumplimiento de un hito en la vida real, avanzar tu barra de progreso y ganar <strong>+20 XP</strong> de disciplina.
+          </p>
+
+          <div style="display: grid; grid-template-columns: 2fr 1fr 2fr auto; gap: 10px;">
+            <input type="text" id="new-proj-title" class="input-jaguar" placeholder="Nombre del nuevo proyecto...">
+            <select id="new-proj-cat" class="input-jaguar">
+              <option value="Investigación Científica">🎓 Academia & Ciencia</option>
+              <option value="Ecología & Transición Territorial">🌲 Ecología & Territorio</option>
+              <option value="Agrotech & Ecología Aplicada">🚜 Agrotech & Permacultura</option>
+              <option value="Inteligencia Artificial & Edutainment">🤖 IA & Medios Digitales</option>
+              <option value="Arte, Narrativa & Historia Naval">🏴‍☠️ Arte & Cómic</option>
+              <option value="Divulgación Científica & Comunicación Pública">🎙️ Divulgación Territorial</option>
+            </select>
+            <input type="text" id="new-proj-desc" class="input-jaguar" placeholder="Descripción / entregable principal...">
+            <button class="btn-jaguar btn-electric-cyan" onclick="addProject()">+ Crear Proyecto</button>
+          </div>
+        </div>
+
+        <!-- GRILLA DE 3 COLUMNAS DE PROYECTOS -->
+        <div id="projects-grid-3col" class="projects-grid-3col"></div>
+      </div>
+    </section>
+
+    <!-- PESTAÑA: APRENDER FOTOGRAFÍA (ÓPTICA & EXPEDICIÓN) -->
+    <section class="tab-content" id="tab-fotografia">
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        <div style="position: relative; border-radius: 12px; overflow: hidden; height: 260px; border: 1.5px solid rgba(155, 35, 53, 0.4); box-shadow: 0 14px 40px rgba(0,0,0,0.85);">
+          <img src="assets/banner_fotografia.jpg" alt="Aprender Fotografía" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7) contrast(1.15);">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 24px; background: linear-gradient(to top, rgba(5,5,8,0.95) 0%, rgba(5,5,8,0.4) 65%, transparent 100%);">
+            <span class="badge-tag" style="margin-bottom: 6px;">📷 Óptica & Luz</span>
+            <h2 style="font-family: 'Cinzel', serif; font-size: 1.8rem; color: #FFF; margin: 4px 0 0 0; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Fotografía de Expedición & Composición</h2>
+            <p style="font-size: 0.88rem; color: #CBD5E1; margin: 4px 0 0 0;">Geometría áurea, luz natural, claroscuro y encuadre documental</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PESTAÑA: APRENDER PINTURA (ATELIER & ÓLEO) -->
+    <section class="tab-content" id="tab-pintura">
+      <div style="display: flex; flex-direction: column; gap: 22px;">
+        <div style="position: relative; border-radius: 12px; overflow: hidden; height: 260px; border: 1.5px solid rgba(155, 35, 53, 0.4); box-shadow: 0 14px 40px rgba(0,0,0,0.85);">
+          <img src="assets/banner_pintura.jpg" alt="Aprender Pintura" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.7) contrast(1.15);">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 24px; background: linear-gradient(to top, rgba(5,5,8,0.95) 0%, rgba(5,5,8,0.4) 65%, transparent 100%);">
+            <span class="badge-tag" style="margin-bottom: 6px;">🎨 Bellas Artes</span>
+            <h2 style="font-family: 'Cinzel', serif; font-size: 1.8rem; color: #FFF; margin: 4px 0 0 0; text-shadow: 0 2px 10px rgba(0,0,0,0.8);">Pintura al Óleo, Paleta Zorn & Claroscuro</h2>
+            <p style="font-size: 0.88rem; color: #CBD5E1; margin: 4px 0 0 0;">Pigmentos minerales, valores tonales, veladuras y anatomía clásica</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="js/data-books.js"></script>
+  <script src="js/data-workouts.js"></script>
+  <script src="js/agents-scifi.js"></script>
+  <script src="js/financial-engine.js"></script>
+  <script src="js/projects-hub.js"></script>
+  <script src="js/music-player.js"></script>
+  <script src="js/music-learning.js"></script>
+  <script src="js/jaguar-adventure-map.js"></script>
+  <script src="js/combat-fitness-hub.js"></script>
+  <script src="js/lifestyle-architect.js"></script>
+  <script src="js/art-academy.js"></script>
+  <script src="js/scoring-engine.js?v=20261012_v27"></script>
+  <script src="js/imperivm-engine.js?v=20261012_v27"></script>
+  <script src="js/rey-jaguar-engine.js?v=20261012_v27"></script>
+  <script src="js/app.js?v=20261012_v27"></script>
+
+  <!-- MODAL DE MODO FOCO • POMODORO CYBERPUNK -->
+  <div id="pomodoro-modal" class="jaguar-modal-overlay" onclick="if(event.target === this) closePomodoroModal();">
+    <div class="jaguar-modal-card" style="max-width: 480px; text-align: center; border-color: var(--neon-pink); box-shadow: 0 0 35px rgba(255,0,128,0.35); background: linear-gradient(145deg, rgba(23,10,35,0.98) 0%, rgba(11,14,20,0.99) 100%);">
+      <button onclick="closePomodoroModal()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: #FFF; font-size: 1.4rem; cursor: pointer; z-index: 10;">✕</button>
+      
+      <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px;">
+        <span class="badge-tag badge-pink">MODO FOCO</span>
+        <span class="badge-tag badge-cyan">CYBERPUNK</span>
+      </div>
+
+      <h2 style="font-size: 1.8rem; color: #FFF; font-family: 'Cinzel', serif; font-weight: 900; letter-spacing: 1px; margin-bottom: 4px;">
+        ⏱️ Modo <span class="title-rose-neon">Foco</span>
+      </h2>
+      <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 18px;">
+        Bloque de concentración profunda y protección dopaminérgica.
+      </p>
+
+      <!-- Presets de Duración -->
+      <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 18px; flex-wrap: wrap;">
+        <button class="btn-jaguar btn-sm pomo-preset-btn active" id="preset-btn-25" onclick="setPomodoroDuration(25, this)" style="padding: 6px 14px; font-size: 0.82rem; border-color: var(--neon-pink); color: #FFF;">25 min (Foco)</button>
+        <button class="btn-jaguar btn-sm btn-secondary-dark pomo-preset-btn" id="preset-btn-50" onclick="setPomodoroDuration(50, this)" style="padding: 6px 14px; font-size: 0.82rem;">50 min (Profundo)</button>
+        <button class="btn-jaguar btn-sm btn-secondary-dark pomo-preset-btn" id="preset-btn-5" onclick="setPomodoroDuration(5, this)" style="padding: 6px 14px; font-size: 0.82rem;">5 min (Pausa)</button>
+        <button class="btn-jaguar btn-sm btn-secondary-dark pomo-preset-btn" id="preset-btn-15" onclick="setPomodoroDuration(15, this)" style="padding: 6px 14px; font-size: 0.82rem;">15 min (Descanso)</button>
+      </div>
+
+      <!-- Pantalla Digital Pomodoro -->
+      <div style="text-align: center; padding: 20px 0; background: rgba(7,3,18,0.85); border-radius: var(--radius-lg); border: 1.5px solid var(--border-neon-pink); margin-bottom: 20px; box-shadow: inset 0 0 25px rgba(255,0,128,0.2);">
+        <div style="font-size: 4rem; font-weight: 900; font-family: 'Orbitron', monospace; color: #FFF; text-shadow: 0 0 25px var(--neon-pink);" id="pomo-display">
+          25:00
+        </div>
+        <div id="pomo-status-label" style="font-size: 0.82rem; color: rgba(255, 255, 255, 0.7); margin-top: 6px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase;">
+          ⚡ BLOQUE DE ENFOQUE INTENSO
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; justify-content: center; margin-bottom: 14px;">
+        <button class="btn-jaguar btn-primary-pink" id="pomo-btn" style="flex: 2; padding: 12px 20px; font-size: 1rem; font-weight: 800;" onclick="togglePomodoro()">Iniciar Bloque 25 Min</button>
+        <button class="btn-jaguar btn-secondary-dark" style="flex: 1; padding: 12px 16px;" onclick="resetPomodoro()">Reiniciar</button>
+      </div>
+
+      <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 8px;">
+        💡 Puedes cerrar esta ventana. El temporizador continuará corriendo en la barra superior.
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE DETALLE DE OBJETOS: ¿CÓMO SE OBTIENE? -->
+  <div id="item-detail-modal" class="jaguar-modal-overlay" onclick="if(event.target === this) closeItemDetailModal();">
+    <div class="jaguar-modal-card">
+      <button onclick="closeItemDetailModal()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: #FFF; font-size: 1.4rem; cursor: pointer; z-index: 10;">✕</button>
+      <div id="item-detail-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- MODAL DE MENÚ DE LOGIN / AUTENTICACIÓN & SELECCIÓN DE PARTIDA -->
+  <div id="game-start-menu-modal" class="jaguar-modal-overlay" onclick="if(event.target === this) closeGameStartMenu();">
+    <div class="jaguar-modal-card" style="max-width: 580px; text-align: center; border-color: rgba(255, 255, 255, 0.08); background: linear-gradient(145deg, rgba(23,30,40,0.98) 0%, rgba(11,14,20,0.99) 100%);">
+      <button onclick="closeGameStartMenu()" style="position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--imperial-gold-light); font-size: 1.4rem; cursor: pointer; z-index: 10;">✕</button>
+      
+      <!-- LOGO MEDALLÓN 150x150 E IDENTIDAD DE CABALLERÍA IMPERIAL -->
+      <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 20px;">
+        <div class="login-header-emblem">
+          <img src="assets/jungle_jaguar_logo.jpg" alt="Caballero Jaguar Logo Oficial" class="login-logo-glow">
+        </div>
+        <h2 style="font-size: 2.1rem; color: var(--parchment-light); font-family: 'Cinzel', serif; font-weight: 900; letter-spacing: 1.5px;">
+          CABALLERO <span class="title-rose-neon">JAGUAR</span>
+        </h2>
+        <div style="font-size: 0.8rem; color: var(--imperial-gold-light); font-weight: 800; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; font-family: 'Cinzel', serif;">
+          ⚔️ SANTUARIO IMPERIAL • ORDEN DE CABALLERÍA ⚔️
+        </div>
+      </div>
+
+      <!-- SECCIÓN PERFIL ACTIVO E HISTORIAL DE PARTIDAS -->
+      <div style="background: rgba(11,14,20,0.6); border-radius: var(--radius-md); border: 1.5px solid var(--border-gold); padding: 18px; margin-bottom: 16px; text-align: left;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <span style="font-size: 0.8rem; font-weight: 800; color: var(--imperial-gold-light); font-family: 'Cinzel', serif;">
+            👤 SESIÓN ACTIVA GUARDADA:
+          </span>
+          <span class="badge-tag badge-gold">🟢 Conectado</span>
+        </div>
+
+        <div id="start-menu-profiles-list"></div>
+      </div>
+
+      <!-- FORMULARIO DE CONTRASEÑA OBLIGATORIA ('meow') -->
+      <div style="background: rgba(17,23,32,0.85); padding: 16px; border-radius: var(--radius-md); border: 1.5px solid var(--border-glass); margin-bottom: 8px; text-align: left;">
+        <label style="font-size: 0.82rem; font-weight: 800; color: var(--imperial-gold-light); font-family: 'Cinzel', serif; display: block; margin-bottom: 8px;">
+          🔑 CREDENCIAL DE ACCESO:
+        </label>
+        <div style="display: flex; gap: 10px;">
+          <input type="password" id="login-password-input" class="input-jaguar" placeholder="Ingresa contraseña ('meow')..." style="flex-grow: 1;" onkeyup="if(event.key==='Enter') submitGamePasswordLogin();">
+          <button class="btn-jaguar btn-gold-chrome" style="white-space: nowrap; font-weight: 900; color: #0B0E14;" onclick="submitGamePasswordLogin()">
+            🔓 AUTENTICAR
+          </button>
+        </div>
+        <div id="login-password-feedback" style="font-size: 0.78rem; margin-top: 8px; font-weight: 700; display: none;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL PANTALLA COMPLETA BITÁCORAS (INSPIRADO EN DIABLO II LORD OF DESTRUCTION - CODEX RENACENTISTA) -->
+  <div id="bitacoras-fullscreen-modal" class="bitacoras-fullscreen-overlay">
+    
+    <!-- CAPA VIGNETTE OSCURA ESTILO DIABLO II & LUZ DE VELA RENACENTISTA -->
+    <div class="diablo-vignette-overlay"></div>
+
+    <!-- BOTÓN DE CERRAR 'X' MEDALLÓN GÓTICO SUPERIOR DERECHO -->
+    <button class="diablo-close-top-right" onclick="closeBitacorasModal();" title="Cerrar Bitácoras y Volver al Juego">
+      ✕
+    </button>
+
+    <!-- CONTENEDOR MAESTRO DIABLO II -->
+    <div class="diablo-container">
+      
+      <!-- TÍTULO SUPERIOR EN GÓTICO / RENACIMIENTO DORADO -->
+      <div class="diablo-title-banner">
+        <h1 class="diablo-title-text">⚜️ CÓDICE DEL CABALLERO JAGUAR ⚜️</h1>
+        <p class="diablo-subtitle-text">📜 CRÓNICAS & BITÁCORAS DE LA ORDEN IMPERIAL 📜</p>
+      </div>
+
+      <!-- MARCO DUAL INTERACTIVO ESTILO DIABLO II (LIBRO DUAL DE CODEX) -->
+      <div class="diablo-codex-window">
+        
+        <!-- PANEL IZQUIERDO: SELECCIÓN DE BITÁCORAS -->
+        <div class="diablo-left-panel">
+          <div class="diablo-grid-menu">
+            <button class="diablo-menu-btn active-preview" onclick="selectDiabloPreview('finanzas'); navigateToBitacora('finanzas');" id="btn-diablo-finanzas">
+              <span class="title">💰 Tesorería & Finanzas</span>
+              <span class="sub">Sparkasse & Chile • Extractos CSV</span>
+            </button>
+
+            <button class="diablo-menu-btn" onclick="selectDiabloPreview('ejercicio'); navigateToBitacora('ejercicio');" id="btn-diablo-ejercicio">
+              <span class="title">🏋️‍♂️ Ejercicio & Combat</span>
+              <span class="sub">Sparrings & Rutinas Nivel Caballero</span>
+            </button>
+
+            <button class="diablo-menu-btn" onclick="selectDiabloPreview('ritos'); openRitosModal();" id="btn-diablo-ritos">
+              <span class="title">🕯️ Ritos Sagrados</span>
+              <span class="sub">Navaho, Andino & Amazónico • 21 Días</span>
+            </button>
+
+            <button class="diablo-menu-btn" onclick="selectDiabloPreview('lectura'); navigateToBitacora('lectura');" id="btn-diablo-lectura">
+              <span class="title">📚 Biblioteca Estoica</span>
+              <span class="sub">Filosofía, Lecturas & Banderín Café</span>
+            </button>
+
+            <button class="diablo-menu-btn" onclick="selectDiabloPreview('ayurveda'); navigateToBitacora('ayurveda');" id="btn-diablo-ayurveda">
+              <span class="title">🌿 Ayurveda & Holística</span>
+              <span class="sub">Doshas Vata/Pitta/Kapha & Dinacharya</span>
+            </button>
+
+            <button class="diablo-menu-btn" onclick="selectDiabloPreview('meditacion'); navigateToBitacora('meditacion');" id="btn-diablo-meditacion">
+              <span class="title">🧘 Meditación & Calma</span>
+              <span class="sub">Box Breathing & Banderín Rosa</span>
+            </button>
+
+            <button class="diablo-menu-btn" onclick="selectDiabloPreview('masajes'); navigateToBitacora('masajes');" id="btn-diablo-masajes">
+              <span class="title">💆 Masajes (Pareja & Auto)</span>
+              <span class="sub">Liberación Miofascial & Trigger Points</span>
+            </button>
+
+            <button class="diablo-menu-btn" onclick="selectDiabloPreview('progresion'); openSistemaMaestroModal();" id="btn-diablo-progresion">
+              <span class="title">📜 Sistema Maestro de Progresión</span>
+              <span class="sub">Misiones, Puntos & Caballería (Pitch)</span>
+            </button>
+
+            <button class="diablo-menu-btn" onclick="selectDiabloPreview('astral'); navigateToBitacora('astral');" id="btn-diablo-astral">
+              <span class="title">🔮 Carta Astral Profunda</span>
+              <span class="sub">Sol en Aries • Regente Marte</span>
+            </button>
+
+            <button class="diablo-menu-btn" onclick="selectDiabloPreview('idiomas'); navigateToBitacora('idiomas');" id="btn-diablo-idiomas">
+              <span class="title">🌐 Práctica de Idiomas</span>
+              <span class="sub">Alemán, Euskera & Portugués</span>
+            </button>
+
+            <button class="diablo-menu-btn" onclick="selectDiabloPreview('musica'); navigateToBitacora('musica');" id="btn-diablo-musica">
+              <span class="title">🎵 Música & Viento</span>
+              <span class="sub">Trompeta, Saxofón & Ranking</span>
+            </button>
+
+            <button class="diablo-menu-btn" onclick="selectDiabloPreview('fotografia'); navigateToBitacora('fotografia');" id="btn-diablo-fotografia">
+              <span class="title">📷 Aprender Fotografía</span>
+              <span class="sub">Óptica, Composición & Luz</span>
+            </button>
+
+            <button class="diablo-menu-btn" onclick="selectDiabloPreview('pintura'); navigateToBitacora('pintura');" id="btn-diablo-pintura">
+              <span class="title">🎨 Aprender Pintura</span>
+              <span class="sub">Color, Óleo, Acuarela & Zorn</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- PANEL DERECHO: DETALLE DE BITÁCORA SELECCIONADA & BOTÓN DE ENTRADA -->
+        <div class="diablo-right-panel" id="diablo-right-detail-panel">
+          <div>
+            <div class="diablo-detail-header">
+              <span class="badge-tag badge-gold" id="diablo-preview-badge">👑 ORDEN ACTIVA</span>
+              <h2 class="diablo-detail-title" id="diablo-preview-title">💰 Tesorería & Finanzas</h2>
+            </div>
+            <p class="diablo-detail-desc" id="diablo-preview-desc">
+              Control de tesorería de la Orden del Caballero Jaguar. Carga extractos bancarios de Sparkasse Alemania y Banco de Chile, calcula ahorros netos y convierte divisas CLP ⇄ EUR.
+            </p>
+            <div style="background: rgba(11,14,20,0.6); padding: 14px; border-radius: 8px; border: 1.5px solid var(--border-gold); margin-top: 14px;">
+              <strong style="color: var(--imperial-gold-light); font-family: 'Cinzel', serif;">📜 Requisito de Acceso:</strong>
+              <div style="font-size: 0.95rem; color: var(--parchment-warm); margin-top: 4px;" id="diablo-preview-req">Nivel Caballero Activo • Acceso Total Garantizado</div>
+            </div>
+          </div>
+
+          <div>
+            <button class="diablo-entry-action-btn" id="diablo-entry-btn" onclick="executeDiabloNavigation()">
+              ⚔️ ENTRAR A LA BITÁCORA SELECCIONADA
+            </button>
+            
+            <button class="diablo-exit-btn" onclick="closeBitacorasModal();">
+              🚪 SALIR AL MAPA PRINCIPAL
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL DE RITOS SAGRADOS DE INICIACIÓN (21 DÍAS) -->
+  <div id="ritos-sacred-modal" class="jaguar-modal-overlay" style="display: none;" onclick="if(event.target === this) closeRitosModal();">
+    <div class="jaguar-modal-card custom-scrollbar" style="max-width: 920px; width: 95%; max-height: 90vh; background: #0B0E14; border: 2px solid var(--border-gold); box-shadow: 0 0 50px rgba(0,0,0,0.95); padding: 24px; border-radius: var(--radius-lg); overflow-y: auto;">
+      <div id="ritos-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- MODAL: CONSTRUCCIÓN & FORJA APOLÍNEA (DATEMASTER APEX) -->
+  <div id="construccion-apex-modal" class="jaguar-modal-overlay" style="display: none;" onclick="if(event.target === this) { if(window.imperivmEngine) window.imperivmEngine.closeConstruccionModal(); }">
+    <div class="jaguar-modal-card custom-scrollbar" style="max-width: 960px; width: 95%; max-height: 92vh; background: #0B0E14; border: 2px solid var(--imperivm-border-gold, #C59A28); box-shadow: 0 0 50px rgba(0,0,0,0.95); padding: 24px; border-radius: 14px; overflow-y: auto;">
+      <div id="construccion-modal-content"></div>
+    </div>
+  </div>
+
+  <!-- MODAL LIGHTBOX: OUTFIT SOMÁTICO DE CUERPO ENTERO -->
+  <div id="outfit-lightbox-modal" class="jaguar-modal-overlay" style="display: none;" onclick="if(event.target === this) closeOutfitLightbox();">
+    <div class="jaguar-modal-card custom-scrollbar" id="outfit-lightbox-card" style="max-width: 860px; width: 95%; max-height: 90vh; background: #0B0E14; border: 2px solid var(--border-gold); box-shadow: 0 0 50px rgba(0,0,0,0.95); padding: 24px; border-radius: var(--radius-lg); overflow-y: auto;">
+      <div id="outfit-lightbox-content"></div>
+    </div>
+  </div>
+
+  <!-- MODAL INSPECTOR KCD: PROGRESSIVE DISCLOSURE ("ZOOM PARA MÁS DETALLE") -->
+  <div id="kcd-inspector-modal" class="kcd-inspector-backdrop" onclick="if(event.target === this) closeKCDInspector();">
+    <div class="kcd-inspector-codex" id="kcd-inspector-content">
+      <!-- Contenido dinámico inyectado por openKCDInspector() en rey-jaguar-engine.js -->
+    </div>
+  </div>
+
+  <!-- MODAL: CABALLERO JAGUAR CHALLENGE (DÍAS SIN PORNO & MATRIZ 21 DÍAS) -->
+  <div id="caballero-challenge-modal" class="kcd-inspector-backdrop" onclick="if(event.target === this) closeCaballeroChallengeModal();">
+    <div class="kcd-inspector-codex custom-scrollbar" id="caballero-challenge-content" style="max-width: 920px; max-height: 90vh; overflow-y: auto;">
+      <!-- Llenado dinámico por openCaballeroChallengeModal() -->
+    </div>
+  </div>
+
+  <!-- MODAL: CELESTIAL HORÓSCOPOS & COSMOGRAFÍA (GRIEGO, MAYA, CHINO, VÉDICO) -->
+  <div id="celestial-horoscopes-modal" class="kcd-inspector-backdrop" onclick="if(event.target === this) closeCelestialHoroscopesModal();">
+    <div class="kcd-inspector-codex custom-scrollbar" id="celestial-horoscopes-content" style="max-width: 960px; max-height: 90vh; overflow-y: auto;">
+      <!-- Llenado dinámico por openCelestialHoroscopesModal() -->
+    </div>
+  </div>
+
+  <!-- MODAL FULLSCREEN: SISTEMA MAESTRO DE PROGRESIÓN, MISIONES & CABALLERÍA JAGUAR (INFO PITCH) -->
+  <div id="sistema-maestro-modal" class="bitacoras-fullscreen-overlay" style="display: none;" onclick="if(event.target === this) closeSistemaMaestroModal();">
+    <div class="diablo-vignette-overlay"></div>
+    <button class="diablo-close-top-right" onclick="closeSistemaMaestroModal();" title="Cerrar Sistema Maestro">✕</button>
+
+    <div class="diablo-container" style="max-width: 1000px; padding: 20px;">
+      <div class="diablo-title-banner" style="margin-bottom: 20px;">
+        <h1 class="diablo-title-text">⚜️ SISTEMA MAESTRO DE PROGRESIÓN ⚜️</h1>
+        <p class="diablo-subtitle-text">📜 MANIFIESTO, LOS 5 PILARES, PUNTUACIÓN & CABALLERÍA JAGUAR 📜</p>
+      </div>
+
+      <div class="pitch-hero-banner" style="background: linear-gradient(135deg, rgba(28,22,18,0.98) 0%, rgba(14,10,8,0.99) 100%);">
+        <!-- HEADER DE NAVEGACIÓN DEL PITCH -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; border-bottom: 1px solid rgba(197,154,40,0.3); padding-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span class="badge-tag badge-gold">📜 PITCH INTERACTIVO</span>
+            <span id="modal-pitch-counter" style="font-size: 0.8rem; color: #D4464E; font-family: 'Cinzel', serif; letter-spacing: 1.5px;">DIAPOSITIVA 1 DE 5</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <button class="btn-jaguar btn-sm btn-secondary-dark" id="modal-pitch-prev-btn" onclick="prevPitchSlide();" disabled>◀ Anterior</button>
+            <div style="display: flex; gap: 7px; align-items: center;" id="modal-pitch-dots-container">
+              <span class="pitch-dot" id="modal-pitch-dot-0" onclick="showPitchSlide(0)" style="width: 10px; height: 10px; border-radius: 50%; background: #9B2335; display: inline-block; cursor: pointer; transform: scale(1.3); box-shadow: 0 0 10px rgba(197,154,40,0.8); transition: all 0.2s ease;"></span>
+              <span class="pitch-dot" id="modal-pitch-dot-1" onclick="showPitchSlide(1)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(197,154,40,0.3); display: inline-block; cursor: pointer; transition: all 0.2s ease;"></span>
+              <span class="pitch-dot" id="modal-pitch-dot-2" onclick="showPitchSlide(2)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(197,154,40,0.3); display: inline-block; cursor: pointer; transition: all 0.2s ease;"></span>
+              <span class="pitch-dot" id="modal-pitch-dot-3" onclick="showPitchSlide(3)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(197,154,40,0.3); display: inline-block; cursor: pointer; transition: all 0.2s ease;"></span>
+              <span class="pitch-dot" id="modal-pitch-dot-4" onclick="showPitchSlide(4)" style="width: 10px; height: 10px; border-radius: 50%; background: rgba(197,154,40,0.3); display: inline-block; cursor: pointer; transition: all 0.2s ease;"></span>
+            </div>
+            <button class="btn-jaguar btn-sm btn-gold-chrome" id="modal-pitch-next-btn" style="color: #0E0905; font-weight: 800;" onclick="nextPitchSlide();">Siguiente ▶</button>
+          </div>
+        </div>
+
+        <!-- SLIDE 0: MANIFIESTO -->
+        <div id="modal-pitch-slide-0" class="pitch-slide">
+          <span style="font-size: 0.8rem; color: #D4464E; font-family: 'Cinzel', serif; letter-spacing: 2px;">DIAPOSITIVA 1 DE 5 • FILOSOFÍA DE BASE</span>
+          <h2 style="font-family: 'Cinzel', serif; font-size: 2.1rem; color: #FFF; margin: 6px 0 14px 0;">El Manifiesto de la Caballería Jaguar</h2>
+          <p style="font-size: 1.05rem; color: #EFE4CE; line-height: 1.6; max-width: 850px; margin-bottom: 16px;">
+            El <strong>Caballero Jaguar</strong> no compite contra otros, sino contra la entropía, la dispersión dopaminérgica y la procrastinación. Esta plataforma convierte cada minuto de tu vida real en una experiencia tangible de rol RPG medieval-renacentista, anclada en hábitos físicos, académicos y espirituales medibles.
+          </p>
+          <div class="grid-3" style="margin-top: 20px;">
+            <div style="background: rgba(0,0,0,0.4); padding: 16px; border-radius: 8px; border: 1px solid rgba(197,154,40,0.3);">
+              <div style="font-size: 1.5rem; margin-bottom: 6px;">🛡️</div>
+              <strong style="color: #D4464E; font-family: 'Cinzel', serif;">Anti-Dispersión</strong>
+              <p style="font-size: 0.85rem; color: #D7CCC8; margin-top: 4px;">Blindaje contra el scrolling pasivo y el consumo de dopamina barata.</p>
+            </div>
+            <div style="background: rgba(0,0,0,0.4); padding: 16px; border-radius: 8px; border: 1px solid rgba(197,154,40,0.3);">
+              <div style="font-size: 1.5rem; margin-bottom: 6px;">⚔️</div>
+              <strong style="color: #D4464E; font-family: 'Cinzel', serif;">Traducción Real = XP</strong>
+              <p style="font-size: 0.85rem; color: #D7CCC8; margin-top: 4px;">Cada entrenamiento, lectura, ahorro o tesis incrementa atributos reales.</p>
+            </div>
+            <div style="background: rgba(0,0,0,0.4); padding: 16px; border-radius: 8px; border: 1px solid rgba(197,154,40,0.3);">
+              <div style="font-size: 1.5rem; margin-bottom: 6px;">👑</div>
+              <strong style="color: #D4464E; font-family: 'Cinzel', serif;">Soberanía Integral</strong>
+              <p style="font-size: 0.85rem; color: #D7CCC8; margin-top: 4px;">Equilibrio absoluto entre mente, cuerpo, finanzas, territorio y espíritu.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 1: LOS 5 PILARES -->
+        <div id="modal-pitch-slide-1" class="pitch-slide" style="display: none;">
+          <span style="font-size: 0.8rem; color: #D4464E; font-family: 'Cinzel', serif; letter-spacing: 2px;">DIAPOSITIVA 2 DE 5 • ARQUITECTURA DE DOMINIO</span>
+          <h2 style="font-family: 'Cinzel', serif; font-size: 2.1rem; color: #FFF; margin: 6px 0 14px 0;">Los 5 Pilares de Caballería</h2>
+          <div class="grid-3" style="gap: 14px; margin-top: 16px;">
+            <div class="pitch-pillar-card">
+              <div style="font-size: 1.6rem;">🧘 Mente & Foco</div>
+              <p style="font-size: 0.85rem; color: #5D4E3E; margin-top: 6px;">Tesis Hannover, Filosofía Estoica, Bloques Pomodoro, Códices de Lectura.</p>
+              <span class="badge-tag badge-gold" style="margin-top: 8px;">1.3x - 1.5x Multiplicador</span>
+            </div>
+            <div class="pitch-pillar-card">
+              <div style="font-size: 1.6rem;">⚔️ Fuerza & Combate</div>
+              <p style="font-size: 0.85rem; color: #5D4E3E; margin-top: 6px;">Gym, Hipertrofia, Sparrings de Muay Thai, Running y Calistenia.</p>
+              <span class="badge-tag badge-pink" style="margin-top: 8px;">1.25x - 1.4x Multiplicador</span>
+            </div>
+            <div class="pitch-pillar-card">
+              <div style="font-size: 1.6rem;">🌲 Territorio & Proyectos</div>
+              <p style="font-size: 0.85rem; color: #5D4E3E; margin-top: 6px;">ReWild bosque nativo, idiomas (Alemán/Euskera) y campañas de vida.</p>
+              <span class="badge-tag badge-emerald" style="margin-top: 8px;">1.4x - 1.6x Multiplicador</span>
+            </div>
+            <div class="pitch-pillar-card">
+              <div style="font-size: 1.6rem;">🪙 Soberanía & Finanzas</div>
+              <p style="font-size: 0.85rem; color: #5D4E3E; margin-top: 6px;">Tesorería Sparkasse & Banco Chile, tasa de ahorro e inversión.</p>
+              <span class="badge-tag badge-gold" style="margin-top: 8px;">1.2x Multiplicador</span>
+            </div>
+            <div class="pitch-pillar-card">
+              <div style="font-size: 1.6rem;">🩵 Vitalidad Somática</div>
+              <p style="font-size: 0.85rem; color: #5D4E3E; margin-top: 6px;">Meditación (Banderín Rosa), Masajes, Dinacharya, Outfits somáticos y descanso.</p>
+              <span class="badge-tag badge-cyan" style="margin-top: 8px;">1.3x - 1.4x Multiplicador</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 2: MOTOR MATEMÁTICO & PUNTOS -->
+        <div id="modal-pitch-slide-2" class="pitch-slide" style="display: none;">
+          <span style="font-size: 0.8rem; color: #D4464E; font-family: 'Cinzel', serif; letter-spacing: 2px;">DIAPOSITIVA 3 DE 5 • MOTOR DE PUNTUACIÓN</span>
+          <h2 style="font-family: 'Cinzel', serif; font-size: 2.1rem; color: #FFF; margin: 6px 0 14px 0;">¿Cómo Funcionan los Puntos & XP?</h2>
+          <div class="pitch-formula-box" style="margin-bottom: 18px;">
+            <div style="font-size: 1.15rem; color: #D4464E; margin-bottom: 6px;">
+              ⚡ FÓRMULA MAESTRA: XP = Minutos × Tasa Base (1.0) × Multiplicador de Disciplina × Bonus Novedad
+            </div>
+            <div style="font-size: 0.95rem; color: #E0D7C5; font-family: 'Cormorant Garamond', serif; line-height: 1.5;">
+              • Ejemplo: 45 min de Trompeta (Nueva Habilidad 1.8x) = <strong>93 XP</strong>.<br>
+              • Ejemplo: 60 min de Muay Thai (1.4x) = <strong>84 XP</strong>.<br>
+              • Ejemplo: 20 min de Meditación Somática (1.4x) = <strong>28 XP</strong> (suma al Banderín Rosa).<br>
+              • Ejemplo: 30 min de Lectura Estoica (1.3x) + 15 páginas = <strong>62 XP</strong> (suma al Banderín Café).
+            </div>
+          </div>
+          <div class="grid-2">
+            <div style="background: rgba(0,0,0,0.3); padding: 16px; border-radius: 8px;">
+              <strong style="color: #D4464E; font-family: 'Cinzel', serif;">Bonus de Curva de Aprendizaje (+15% a +80%)</strong>
+              <p style="font-size: 0.85rem; color: #D7CCC8; margin-top: 4px;">Aprender nuevas destrezas de alta demanda cognitiva (música, pintura, idiomas) premia con mayor experiencia para acelerar la neuroplasticidad.</p>
+            </div>
+            <div style="background: rgba(0,0,0,0.3); padding: 16px; border-radius: 8px;">
+              <strong style="color: #D4464E; font-family: 'Cinzel', serif;">Banderines Heráldicos Dinámicos</strong>
+              <p style="font-size: 0.85rem; color: #D7CCC8; margin-top: 4px;">La longitud de los 10 banderines heráldicos crece de 36px a 86px en tiempo real según el XP acumulado en cada disciplina.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 3: ESCALAFÓN DE 5 RANGOS -->
+        <div id="modal-pitch-slide-3" class="pitch-slide" style="display: none;">
+          <span style="font-size: 0.8rem; color: #D4464E; font-family: 'Cinzel', serif; letter-spacing: 2px;">DIAPOSITIVA 4 DE 5 • ESCALAFÓN DE LA ORDEN</span>
+          <h2 style="font-family: 'Cinzel', serif; font-size: 2.1rem; color: #FFF; margin: 6px 0 14px 0;">Escala de Rangos RPG Equilibrada</h2>
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 14px;">
+            <div style="display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,0.4); padding: 12px 18px; border-radius: 8px; border-left: 4px solid #78909C;">
+              <span style="font-size: 1.5rem;">🛡️</span>
+              <div style="flex: 1;">
+                <strong style="color: #FFF; font-family: 'Cinzel', serif;">Rango 1: Caballero Explorador (0 - 1.000 XP)</strong>
+                <div style="font-size: 0.82rem; color: #B0BEC5;">Iniciación, anclaje físico somático y racha base de 3 días sin dispersión.</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,0.4); padding: 12px 18px; border-radius: 8px; border-left: 4px solid #9B2335;">
+              <span style="font-size: 1.5rem;">⚔️</span>
+              <div style="flex: 1;">
+                <strong style="color: #FFF; font-family: 'Cinzel', serif;">Rango 2: Caballero de Línea Imperial (1.000 - 3.500 XP)</strong>
+                <div style="font-size: 0.82rem; color: #B0BEC5;">Consolidación metódica, tesis Hannover en marcha y racha de 7 días.</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,0.4); padding: 12px 18px; border-radius: 8px; border-left: 4px solid #E57373;">
+              <span style="font-size: 1.5rem;">🐎</span>
+              <div style="flex: 1;">
+                <strong style="color: #FFF; font-family: 'Cinzel', serif;">Rango 3: Capitán de Caballería Jaguar (3.500 - 8.500 XP)</strong>
+                <div style="font-size: 0.82rem; color: #B0BEC5;">Comando de proyectos de vida, defensa de tesis de grado y expedición a Bilbao.</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,0.4); padding: 12px 18px; border-radius: 8px; border-left: 4px solid #AB47BC;">
+              <span style="font-size: 1.5rem;">🦅</span>
+              <div style="flex: 1;">
+                <strong style="color: #FFF; font-family: 'Cinzel', serif;">Rango 4: Mariscal de Campaña (8.500 - 18.000 XP)</strong>
+                <div style="font-size: 0.82rem; color: #B0BEC5;">Soberanía territorial en Europa, capital autónomo consolidado y liderazgo de frentes.</div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 14px; background: rgba(0,0,0,0.4); padding: 12px 18px; border-radius: 8px; border-left: 4px solid #FFD700;">
+              <span style="font-size: 1.5rem;">👑</span>
+              <div style="flex: 1;">
+                <strong style="color: #FFF; font-family: 'Cinzel', serif;">Rango 5: Gran Maestre de la Orden Jaguar (18.000+ XP)</strong>
+                <div style="font-size: 0.82rem; color: #B0BEC5;">Soberanía total, legado de vida completado y maestría en los 5 Pilares.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 4: SIMULADOR INTERACTIVO -->
+        <div id="modal-pitch-slide-4" class="pitch-slide" style="display: none;">
+          <span style="font-size: 0.8rem; color: #D4464E; font-family: 'Cinzel', serif; letter-spacing: 2px;">DIAPOSITIVA 5 DE 5 • SIMULADOR EN VIVO</span>
+          <h2 style="font-family: 'Cinzel', serif; font-size: 2.1rem; color: #FFF; margin: 6px 0 14px 0;">Simulador de Puntos & Misiones</h2>
+          <p style="font-size: 1rem; color: #EFE4CE; margin-bottom: 16px;">
+            Experimenta cómo tus hábitos diarios se convierten en experiencia tangible antes de registrar tus victorias reales.
+          </p>
+          <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+            <button class="btn-jaguar btn-gold-chrome" style="color: #0E0905; font-weight: 900; padding: 12px 24px;" onclick="closeSistemaMaestroModal(); openKCDInspector({ type: 'calculator' });">
+              📐 Abrir Calculadora Matemática de Caballería
+            </button>
+            <button class="btn-jaguar btn-secondary-dark" style="padding: 12px 24px;" onclick="closeSistemaMaestroModal(); openKCDInspector({ type: 'tasks' });">
+              📜 Abrir Códice de Deberes & Misiones
+            </button>
+          </div>
+        </div>
+
+        <!-- FOOTER ACCIONES RÁPIDAS -->
+        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(197,154,40,0.3); padding-top: 16px; margin-top: 20px; flex-wrap: wrap; gap: 10px;">
+          <button class="btn-jaguar btn-gold-chrome" style="color: #0E0905; font-weight: 900;" onclick="closeSistemaMaestroModal(); openKCDInspector({ type: 'calculator' });">
+            📐 Abrir Simulador en Vivo
+          </button>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn-jaguar btn-secondary-dark" onclick="closeSistemaMaestroModal(); openKCDInspector({ type: 'tasks' });">
+              📜 Códice de Misiones
+            </button>
+            <button class="btn-jaguar btn-secondary-dark" onclick="closeSistemaMaestroModal(); selectMainTab('progresion');">
+              📖 Ver en Pestaña
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  <!-- DRAWER LATERAL IMPERIVM: ORDO VIVENDI & DETALLES (RAÍZ DE BODY PARA VIEWPORT REAL) -->
+  <div id="imperivm-drawer-backdrop" class="imperivm-drawer-backdrop" onclick="imperivmEngine.closeDrawer();"></div>
+  <div id="imperivm-drawer" class="imperivm-drawer">
+    <div class="imperivm-drawer-header">
+      <h3 class="imperivm-drawer-title" id="imperivm-drawer-title">🏛️ ORDO VIVENDI <span class="dev-section-label">#imperivm-drawer</span></h3>
+      <button class="imperivm-drawer-close" onclick="imperivmEngine.closeDrawer();">&times;</button>
+    </div>
+    <div class="imperivm-drawer-content" id="imperivm-drawer-body"></div>
+  </div>
+
+  <!-- TRIGGER FLOTANTE DISCRETO (AMPOLLETA ESQUINA INFERIOR DERECHA) -->
+  <button class="dev-labels-corner-trigger" onclick="imperivmEngine.toggleDevSectionLabels();" title="💡 Conmutar Etiquetas de Referencia (Inspector Técnico)">
+    💡
+  </button>
+
+
+  <script>
+    // --- GATEKEEPER / VERIFICACIÓN OFUSCADA DE ACCESO ---
+    function checkGatekeeperStatus() {
+      var overlay = document.getElementById("stoic-gatekeeper-overlay");
+      if (!overlay) return;
+
+      // Limpiar residuos en almacenamiento para que siempre solicite credencial al cargar o recargar
+      try {
+        localStorage.removeItem("imperivm_stoic_auth");
+        sessionStorage.removeItem("imperivm_stoic_auth");
+      } catch(e) {}
+
+      overlay.classList.remove("unlocked", "gatekeeper-unlocking");
+      overlay.style.removeProperty("display");
+      overlay.style.removeProperty("pointer-events");
+      overlay.style.display = "flex";
+
+      var input = document.getElementById("gatekeeper-pass-input");
+      if (input) {
+        input.value = "";
+        setTimeout(function() { input.focus(); }, 120);
+      }
+      var feedback = document.getElementById("gatekeeper-feedback");
+      if (feedback) feedback.style.display = "none";
+    }
+
+    function lockGatekeeper() {
+      checkGatekeeperStatus();
+    }
+    window.lockGatekeeper = lockGatekeeper;
+
+    function verifyGatekeeperPass() {
+      var input = document.getElementById("gatekeeper-pass-input");
+      var feedback = document.getElementById("gatekeeper-feedback");
+      var overlay = document.getElementById("stoic-gatekeeper-overlay");
+      if (!input || !overlay) return;
+
+      // Validación ofuscada en Base64 (btoa("2026") === "MjAyNg==")
+      if (btoa(input.value.trim()) === "MjAyNg==") {
+        sessionStorage.setItem("imperivm_stoic_auth", "granted");
+        overlay.classList.add("gatekeeper-unlocking");
+        setTimeout(function() {
+          overlay.classList.add("unlocked");
+          overlay.style.setProperty("display", "none", "important");
+          overlay.style.setProperty("pointer-events", "none", "important");
+        }, 380);
+      } else {
+        if (feedback) {
+          feedback.innerText = "✕ Credencial no reconocida. Acceso denegado.";
+          feedback.style.display = "block";
+        }
+        input.classList.add("gatekeeper-error-shake");
+        setTimeout(function() {
+          input.classList.remove("gatekeeper-error-shake");
+        }, 500);
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+      checkGatekeeperStatus();
+      if (typeof updateCelestialClock === "function") updateCelestialClock();
+    });
+    checkGatekeeperStatus();
+    if (typeof updateCelestialClock === "function") updateCelestialClock();
+  </script>
+</body>
+
+</html>

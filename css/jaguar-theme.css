@@ -1,0 +1,3971 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Garamond:wght@400;700&display=swap');
+
+/* ==========================================================================
+   TEMA IMPERIAL & ORDEN DEL CABALLERO JAGUAR (EDAD IMPERIAL & CABALLERÍA)
+   Pizarra imperial, acero damasco, bronce bruñido, pergamino noble y carmesí heráldico
+   ========================================================================== */
+:root, body {
+  /* ==========================================================================
+     PALETA DIURNA RENACENTISTA & CATEDRAL ILUMINADA (KINGDOM COME: DELIVERANCE)
+     Luz solar matutina, roble catedralicio, pergamino iluminado y esmaltes heráldicos
+     ========================================================================== */
+  --bg-deep-space: #EBE3D3;
+  --bg-dark-synth: #DFD5BE;
+  --bg-dark-card: #FAF6EE;
+  --bg-dark-card-hover: #FFFDF9;
+  --bg-glass: rgba(250, 246, 238, 0.94);
+
+  /* Pergamino Iluminado & Textos Heráldicos */
+  --parchment-light: #FAF6EE;
+  --parchment-warm: #EFE4CE;
+  --parchment-muted: #7E6C56;
+
+  /* Metales de Caballería & Acentos */
+  --steel-bright: #F8FAFC;
+  --steel-plate: #64748B;
+  --steel-shadow: #334155;
+
+  --imperial-gold: #C59A28;
+  --imperial-gold-light: #F4E5B2;
+  --imperial-gold-dim: #977318;
+
+  --imperial-crimson: #9B2C3B;
+  --imperial-crimson-light: #C53D52;
+  --imperial-navy: #1E3A5F;
+  --chivalry-green: #2B6847;
+
+  /* Colores de Atributos KCD (Idénticos a Kingdom Come 2) */
+  --kcd-gold: #E5B842;
+  --kcd-purple: #9F7AEA;
+  --kcd-green: #48BB78;
+  --kcd-red: #F56565;
+  --kcd-slate-panel: #141B24;
+  --kcd-slate-border: #3A4759;
+  --kcd-wood-dark: #241810;
+  --kcd-wood-panel: #332317;
+  --kcd-wood-light: #523824;
+
+  /* Aliases para compatibilidad con módulos */
+  --rose-gold: #C59A28;
+  --rose-gold-light: #F4E5B2;
+  --neon-pink: #9B2C3B;
+  --neon-pink-bright: #C53D52;
+  --neon-cyan: #2A547A;
+  --neon-gold: #C59A28;
+  --emerald-bright: #2B6847;
+
+  /* Gradientes Metálicos & Heráldicos Pulidos y Claros */
+  --gradient-gold-chrome: linear-gradient(135deg, #FFF6E5 0%, #C59A28 50%, #8A6815 100%);
+  --gradient-neonwave: linear-gradient(135deg, #FAF6EE 0%, #EFE4CE 50%, #DFD5BE 100%);
+  --gradient-electric-cyan: linear-gradient(135deg, #2A547A 0%, #1A3752 100%);
+  --gradient-rose-gold: linear-gradient(135deg, #F4E5B2 0%, #C59A28 50%, #9B2C3B 100%);
+  --gradient-glass-card: linear-gradient(145deg, rgba(253, 250, 244, 0.92) 0%, rgba(244, 237, 224, 0.90) 100%);
+  --gradient-glass-dark: linear-gradient(145deg, rgba(20, 16, 24, 0.92) 0%, rgba(10, 8, 14, 0.94) 100%);
+  --gradient-chivalry-banner: linear-gradient(180deg, #EFE4CE 0%, #DFD5BE 100%);
+
+  /* Tipografía & Máxima Legibilidad Diurna */
+  --text-main: #1A1410;
+  --text-muted: #524334;
+  --text-dim: #786550;
+  --text-on-dark: #FAF6EE;
+
+  /* Bordes Metálicos & Finos */
+  --border-glass: rgba(197, 154, 40, 0.40);
+  --border-rose-gold: rgba(197, 154, 40, 0.45);
+  --border-neon-pink: rgba(155, 44, 59, 0.45);
+  --border-neon-cyan: rgba(42, 84, 122, 0.45);
+  --border-steel: rgba(100, 116, 139, 0.35);
+  --border-gold: #C59A28;
+
+  /* Sombras Nobles y Cálidas */
+  --shadow-rose: 0 8px 24px rgba(60, 45, 30, 0.15);
+  --shadow-cyan: 0 8px 24px rgba(40, 55, 75, 0.15);
+  --shadow-metallic: 0 8px 24px rgba(40, 28, 18, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  --shadow-gold-soft: 0 4px 16px rgba(197, 154, 40, 0.25);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-full: 9999px;
+
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Reset & Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Cormorant Garamond', 'Garamond', Georgia, serif;
+  background-color: #17130F;
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+  /* Fondo Maestro Panorámico Fijo: Campos, Castillos, Montañas y Mar con Velo Diurno de Iluminación */
+  background-image: 
+    radial-gradient(ellipse at 50% 12%, rgba(255, 248, 225, 0.30) 0%, rgba(28, 20, 14, 0.40) 65%, rgba(12, 9, 6, 0.70) 100%),
+    linear-gradient(180deg, rgba(235, 227, 211, 0.14) 0%, rgba(18, 14, 10, 0.35) 100%),
+    url('../assets/jaguar_master_wallpaper.jpg');
+  background-size: cover;
+  background-position: center top;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+/* Typography */
+h1, h2, h3, h4, .font-cinzel {
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.05em;
+}
+
+.title-rose-neon {
+  background: var(--gradient-gold-chrome);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+.text-cyan { color: #64B5F6; }
+.text-gold { color: var(--imperial-gold-light); }
+.text-pink { color: #E57373; }
+
+/* Layout App Container Estilizado (Centrado & Compacto para evitar desparrame horizontal) */
+.app-container {
+  position: relative;
+  z-index: 1;
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 16px 20px 60px 20px;
+}
+
+/* Header & Navbar */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px;
+  background: rgba(253, 250, 244, 0.94);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 2px solid rgba(197, 154, 40, 0.55);
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+  box-shadow: 0 12px 32px rgba(20, 14, 8, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Royal Emblem Logo Container (3x el tamaño original: ~115px) */
+.logo-icon-container {
+  width: 115px;
+  height: 115px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3.5px solid var(--imperial-gold);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 18px rgba(197, 154, 40, 0.35), inset 0 0 12px rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+  flex-shrink: 0;
+  background: #14100C;
+}
+
+.logo-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.brand-logo:hover .logo-icon-container {
+  transform: scale(1.04) rotate(2deg);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.65), 0 0 24px rgba(197, 154, 40, 0.6);
+}
+
+.brand-logo:hover .logo-icon-img {
+  transform: scale(1.08);
+}
+
+.brand-text-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.brand-name {
+  font-family: 'Cinzel', serif;
+  font-size: 1.85rem;
+  font-weight: 900;
+  line-height: 1.05;
+  color: #120D08;
+  text-transform: uppercase;
+  letter-spacing: 2.2px;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.9), 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.brand-sub {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-sub-badge {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #7A5610;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+}
+
+/* Botón de Información Directo "i" del Sistema Maestro */
+.btn-header-info {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFF6E5 0%, #E5B842 50%, #977318 100%);
+  border: 1.5px solid #241D17;
+  color: #14100C;
+  font-family: 'Cinzel', serif;
+  font-weight: 900;
+  font-size: 0.88rem;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25), 0 0 8px rgba(197, 154, 40, 0.4);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-left: 6px;
+}
+
+.btn-header-info:hover {
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35), 0 0 14px rgba(229, 184, 66, 0.8);
+}
+
+/* User Status Bar */
+.user-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.level-badge-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #FAF6EE;
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--border-gold);
+  box-shadow: 0 2px 8px rgba(60, 45, 30, 0.08);
+  transition: all var(--transition-fast);
+}
+
+.level-badge-card .level-name {
+  color: #1A1612 !important;
+  font-weight: 800;
+}
+
+.level-badge-card:hover {
+  border-color: var(--imperial-gold-light);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.6), 0 0 12px rgba(197, 160, 89, 0.2);
+}
+
+.level-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2D3A4B 0%, #151D26 100%);
+  border: 1.5px solid var(--imperial-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+}
+
+/* Navigation Tabs Bar */
+.nav-tabs-container {
+  display: flex;
+  gap: 14px;
+  overflow: visible;
+  padding-bottom: 8px;
+  margin-bottom: 24px;
+}
+
+.dropdown-container {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background: var(--gradient-chivalry-banner);
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  color: var(--parchment-light);
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+  transition: all var(--transition-fast);
+}
+
+.dropdown-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--imperial-gold-light);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6), 0 0 12px rgba(197, 160, 89, 0.2);
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 22px;
+  background: linear-gradient(180deg, #FAF6EE 0%, #EFE4CE 100%);
+  border: 1.5px solid rgba(197, 154, 40, 0.45);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(60, 45, 30, 0.08), inset 0 1px 0 rgba(255,255,255,0.9);
+  transition: all var(--transition-fast);
+}
+
+.tab-btn:hover {
+  color: #1A1612;
+  border-color: var(--imperial-gold);
+  background: linear-gradient(180deg, #FFFFFF 0%, #F5ECDA 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(60, 45, 30, 0.14), 0 0 10px rgba(197, 154, 40, 0.25);
+}
+
+.tab-btn.active {
+  color: #FAF6EE;
+  background: linear-gradient(180deg, #243447 0%, #15212E 100%);
+  border: 1.5px solid var(--imperial-gold);
+  box-shadow: 0 6px 18px rgba(30, 45, 65, 0.35), inset 0 0 10px rgba(197, 154, 40, 0.3);
+}
+
+/* Main Content */
+.tab-content {
+  display: none;
+  animation: fadeIn 0.35s ease-out forwards;
+}
+
+.tab-content.active { display: block !important; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Cards & Containers con Glassmorphism Esmerilado Translúcido */
+.jaguar-card {
+  background: var(--gradient-glass-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: 0 8px 24px rgba(24, 18, 12, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.85);
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.jaguar-card:hover {
+  border-color: var(--imperial-gold-light);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 34px rgba(20, 14, 8, 0.24), 0 0 16px rgba(197, 154, 40, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.jaguar-card.card-highlight {
+  border: 1.8px solid var(--imperial-gold);
+  box-shadow: 0 12px 32px rgba(20, 14, 8, 0.22), inset 0 0 20px rgba(197, 154, 40, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.card-title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(197, 160, 89, 0.22);
+  padding-bottom: 12px;
+}
+
+.card-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-main);
+  letter-spacing: 0.04em;
+}
+
+/* Gantt Chart Component */
+.gantt-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: rgba(12, 16, 22, 0.9);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  margin-top: 16px;
+}
+
+.gantt-row {
+  display: grid;
+  grid-template-columns: 220px 1fr 100px;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px dashed rgba(197, 160, 89, 0.18);
+}
+
+.gantt-bar-bg {
+  width: 100%;
+  height: 12px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.gantt-bar-fill {
+  height: 100%;
+  background: var(--gradient-gold-chrome);
+  border-radius: 6px;
+  transition: width 0.5s ease;
+}
+
+/* Grid Layouts */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 22px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+.grid-main-sidebar { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
+
+@media (max-width: 1024px) {
+  .grid-main-sidebar, .grid-3, .grid-2 { grid-template-columns: 1fr; }
+}
+
+/* Buttons */
+.btn-jaguar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-gold);
+  background: linear-gradient(180deg, #243447 0%, #17222E 100%);
+  color: #FAF6EE;
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-emerald-neon {
+  background: linear-gradient(180deg, #1C4533 0%, #0D2B1E 100%) !important;
+  color: #86EFAC !important;
+  border-color: #22C55E !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5), 0 0 10px rgba(34, 197, 94, 0.25) !important;
+}
+
+.btn-emerald-neon:hover {
+  background: linear-gradient(180deg, #235841 0%, #123928 100%) !important;
+  border-color: #4ADE80 !important;
+  color: #FFFFFF !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6), 0 0 16px rgba(74, 222, 128, 0.4) !important;
+}
+
+.btn-primary-pink {
+  background: linear-gradient(180deg, #6E232E 0%, #43141B 100%);
+  color: #FFF;
+  border-color: #9B3444;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+
+.btn-primary-pink:hover {
+  background: linear-gradient(180deg, #872C39 0%, #541922 100%);
+  border-color: var(--imperial-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6), 0 0 10px rgba(155, 52, 68, 0.3);
+}
+
+.btn-gold-chrome {
+  background: linear-gradient(180deg, #C5A059 0%, #8A6E38 100%);
+  color: #0B0E14;
+  border-color: #E4CCA0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+
+.btn-gold-chrome:hover {
+  background: linear-gradient(180deg, #D6B46F 0%, #9B7D42 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6), 0 0 14px rgba(197, 160, 89, 0.3);
+}
+
+.btn-electric-cyan {
+  background: linear-gradient(180deg, #243547 0%, #15212E 100%);
+  color: var(--parchment-light);
+  border-color: #4A6B82;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+
+.btn-electric-cyan:hover {
+  background: linear-gradient(180deg, #2F445B 0%, #1C2B3C 100%);
+  border-color: var(--imperial-gold);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6), 0 0 10px rgba(74, 107, 130, 0.3);
+}
+
+.btn-secondary-dark {
+  background: rgba(23, 30, 40, 0.9);
+  color: var(--text-main);
+  border: 1.5px solid var(--border-steel);
+}
+
+.btn-secondary-dark:hover {
+  background: rgba(33, 44, 58, 0.95);
+  border-color: var(--imperial-gold);
+}
+
+.btn-sm { padding: 6px 14px; font-size: 0.8rem; border-radius: var(--radius-sm); }
+
+/* Form Inputs */
+.input-jaguar {
+  width: 100%;
+  padding: 12px 16px;
+  background: #FAF6EE;
+  border: 1.5px solid rgba(197, 154, 40, 0.45);
+  border-radius: var(--radius-md);
+  color: var(--text-main);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.05rem;
+  outline: none;
+  box-shadow: inset 0 1px 3px rgba(60, 45, 30, 0.08);
+  transition: all var(--transition-fast);
+}
+
+.input-jaguar:focus {
+  border-color: var(--imperial-gold);
+  box-shadow: 0 0 12px rgba(197, 154, 40, 0.25), inset 0 1px 3px rgba(60, 45, 30, 0.08);
+}
+
+select.input-jaguar option {
+  background-color: #FAF6EE;
+  color: var(--text-main);
+}
+
+/* Wax Seal Badges */
+.badge-tag {
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 800;
+  font-family: 'Cinzel', serif;
+  letter-spacing: 0.05em;
+}
+.badge-pink { background: rgba(110, 35, 46, 0.35); color: #F0B3BC; border: 1.5px solid #9B3444; }
+.badge-cyan { background: rgba(36, 53, 71, 0.4); color: #B0CEE3; border: 1.5px solid #4A6B82; }
+.badge-gold { background: rgba(197, 160, 89, 0.22); color: #E4CCA0; border: 1.5px solid #C5A059; }
+.badge-emerald { background: rgba(43, 104, 71, 0.35); color: #86EFAC; border: 1.5px solid #22C55E; }
+.badge-amber { background: rgba(180, 83, 9, 0.35); color: #FDE68A; border: 1.5px solid #F59E0B; }
+
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.mb-14 { margin-bottom: 14px; }
+
+/* Spritesheet Utility */
+.sprite-item {
+  display: inline-block;
+  background-image: url('../assets/jaguar_king_items_sprite_grid.jpg');
+  background-size: 400% 400%;
+  background-repeat: no-repeat;
+}
+.sprite-item.item-1 { background-position: 0% 0%; }
+.sprite-item.item-2 { background-position: 33.333% 0%; }
+.sprite-item.item-3 { background-position: 66.666% 0%; }
+.sprite-item.item-4 { background-position: 100% 0%; }
+.sprite-item.item-5 { background-position: 0% 33.333%; }
+.sprite-item.item-6 { background-position: 33.333% 33.333%; }
+.sprite-item.item-7 { background-position: 66.666% 33.333%; }
+.sprite-item.item-8 { background-position: 100% 33.333%; }
+.sprite-item.item-9 { background-position: 0% 66.666%; }
+.sprite-item.item-10 { background-position: 33.333% 66.666%; }
+.sprite-item.item-11 { background-position: 66.666% 66.666%; }
+.sprite-item.item-12 { background-position: 100% 66.666%; }
+.sprite-item.item-13 { background-position: 0% 100%; }
+.sprite-item.item-14 { background-position: 33.333% 100%; }
+.sprite-item.item-15 { background-position: 66.666% 100%; }
+.sprite-item.item-16 { background-position: 100% 100%; }
+
+/* Modal overlay general */
+.jaguar-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 10, 15, 0.88);
+  backdrop-filter: blur(12px);
+  z-index: 9999;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.jaguar-modal-overlay.active {
+  display: flex !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.jaguar-modal-card {
+  background: linear-gradient(145deg, rgba(23, 30, 40, 0.98) 0%, rgba(11, 14, 20, 0.99) 100%);
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.95), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  width: 100%;
+  padding: 24px;
+  position: relative;
+  transform: translateY(20px) scale(0.95);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.jaguar-modal-overlay.active .jaguar-modal-card {
+  transform: translateY(0) scale(1);
+}
+
+/* Login Header Emblem & Cards (150x150 Medallion) */
+.login-header-emblem {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  margin: 0 auto 16px auto;
+  border-radius: 50%;
+  border: 2px solid var(--imperial-gold);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.9), inset 0 0 15px rgba(0, 0, 0, 0.8);
+  background: #0B0E14;
+  overflow: hidden;
+}
+
+.login-logo-glow {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  filter: contrast(1.05) brightness(0.95);
+}
+
+.login-card-user {
+  background: rgba(12, 16, 22, 0.9);
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+}
+
+/* ==========================================================================
+   MODAL DE BITÁCORAS - DIABLO II LORD OF DESTRUCTION / CÓDICE IMPERIAL DUAL
+   ========================================================================== */
+.bitacoras-fullscreen-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: #090C12;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.bitacoras-fullscreen-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.diablo-vignette-overlay {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 50% 50%, rgba(0,0,0,0.3) 0%, rgba(9,12,18,0.85) 70%, rgba(0,0,0,0.98) 100%),
+    radial-gradient(circle at 50% 10%, rgba(197,160,89,0.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+.diablo-close-top-right {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  z-index: 50;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #222B36 0%, #131922 100%);
+  border: 1.5px solid var(--imperial-gold);
+  color: var(--imperial-gold-light);
+  font-size: 1.3rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.7);
+}
+
+.diablo-close-top-right:hover {
+  background: var(--imperial-crimson);
+  border-color: #FFF;
+  color: #FFF;
+  transform: rotate(90deg) scale(1.08);
+  box-shadow: 0 6px 18px rgba(110, 35, 46, 0.6);
+}
+
+/* Diablo Master Container */
+.diablo-container {
+  position: relative;
+  width: 100%;
+  max-width: 1280px;
+  height: 92vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 10;
+}
+
+.diablo-title-banner {
+  text-align: center;
+  z-index: 5;
+  margin-bottom: 14px;
+}
+
+.diablo-title-text {
+  font-family: 'Cinzel', serif;
+  font-size: 2.3rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: var(--parchment-light);
+  text-transform: uppercase;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.9);
+  margin-bottom: 4px;
+}
+
+.diablo-subtitle-text {
+  font-family: 'Cinzel', serif;
+  font-size: 0.88rem;
+  letter-spacing: 0.14em;
+  color: var(--imperial-gold-light);
+  text-transform: uppercase;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.9);
+}
+
+/* Master Dual Codex Window Frame */
+.diablo-codex-window {
+  width: 100%;
+  height: calc(100% - 90px);
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 20px;
+  background: linear-gradient(180deg, rgba(23, 30, 40, 0.98) 0%, rgba(11, 14, 20, 0.99) 100%);
+  border: 2px solid var(--border-gold);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.95),
+    inset 0 0 25px rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(16px);
+  overflow: hidden;
+}
+
+@media (max-width: 900px) {
+  .diablo-codex-window {
+    grid-template-columns: 1fr;
+    overflow-y: auto;
+  }
+}
+
+/* Left Codex Panel: List of Bitácoras */
+.diablo-left-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+.diablo-grid-menu {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+  .diablo-grid-menu {
+    grid-template-columns: 1fr;
+  }
+}
+
+.diablo-menu-btn {
+  width: 100%;
+  padding: 14px 18px;
+  background: linear-gradient(180deg, #1C2430 0%, #121820 100%);
+  border: 1.5px solid rgba(197, 160, 89, 0.28);
+  border-radius: 8px;
+  color: var(--parchment-warm);
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 4px 12px rgba(0,0,0,0.6);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.diablo-menu-btn:hover, .diablo-menu-btn.active-preview {
+  background: linear-gradient(180deg, #273444 0%, #19222E 100%);
+  border-color: var(--imperial-gold);
+  color: #FFF;
+  box-shadow: 
+    0 6px 18px rgba(0,0,0,0.7),
+    inset 0 0 10px rgba(197, 160, 89, 0.15);
+  transform: translateY(-2px);
+}
+
+.diablo-menu-btn span.title {
+  font-size: 1.02rem;
+  color: var(--parchment-light);
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.diablo-menu-btn span.sub {
+  font-size: 0.8rem;
+  color: var(--imperial-gold-light);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+}
+
+/* Right Codex Panel: Active Detail & Entry Button */
+.diablo-right-panel {
+  background: rgba(12, 16, 22, 0.95);
+  border: 1.5px solid var(--border-gold);
+  border-radius: 10px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+}
+
+.diablo-detail-header {
+  border-bottom: 1.5px solid var(--border-gold);
+  padding-bottom: 14px;
+  margin-bottom: 16px;
+}
+
+.diablo-detail-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.55rem;
+  color: var(--parchment-light);
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+
+.diablo-detail-desc {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.15rem;
+  color: var(--parchment-warm);
+  line-height: 1.55;
+  margin-bottom: 16px;
+}
+
+.diablo-entry-action-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(180deg, #C5A059 0%, #8A6E38 100%);
+  border: 1.5px solid #E4CCA0;
+  border-radius: 8px;
+  color: #0B0E14;
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.6);
+  transition: all 0.2s ease;
+}
+
+.diablo-entry-action-btn:hover {
+  background: linear-gradient(180deg, #D6B46F 0%, #9B7D42 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.7), 0 0 14px rgba(197, 160, 89, 0.3);
+}
+
+.diablo-exit-btn {
+  width: 100%;
+  padding: 12px 20px;
+  margin-top: 12px;
+  background: linear-gradient(180deg, #43141B 0%, #20070B 100%);
+  border: 1.5px solid var(--imperial-crimson);
+  border-radius: 6px;
+  color: #F0B3BC;
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s ease;
+}
+
+.diablo-exit-btn:hover {
+  background: linear-gradient(180deg, #6E232E 0%, #360A10 100%);
+  border-color: #FFF;
+  color: #FFF;
+}
+
+/* ==========================================================================
+   GRILLA DE 3 COLUMNAS DE PROYECTOS & BARRA DE PROGRESO CON BOTÓN +1
+   ========================================================================== */
+.projects-grid-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+@media (max-width: 1100px) {
+  .projects-grid-3col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .projects-grid-3col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.project-card-codex {
+  background: linear-gradient(145deg, rgba(23, 30, 40, 0.96) 0%, rgba(11, 14, 20, 0.98) 100%);
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-rose);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  position: relative;
+}
+
+.project-card-codex:hover {
+  transform: translateY(-4px);
+  border-color: var(--imperial-gold-light);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.9), 0 0 16px rgba(197, 160, 89, 0.15);
+}
+
+.project-codex-banner {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+  border-bottom: 1.5px solid var(--border-glass);
+}
+
+.project-codex-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.95) contrast(1.05);
+  transition: transform 0.4s ease;
+}
+
+.project-card-codex:hover .project-codex-banner img {
+  transform: scale(1.05);
+}
+
+.project-codex-banner-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(11, 14, 20, 0.7) 0%, rgba(11, 14, 20, 0.1) 35%, transparent 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 12px 14px;
+  pointer-events: none;
+}
+
+.project-codex-banner-overlay .badge-tag {
+  pointer-events: auto;
+}
+
+.project-codex-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.project-progress-wrapper {
+  background: rgba(11, 14, 20, 0.7);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 10px 12px;
+}
+
+.project-progress-bar-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(17, 23, 32, 0.9);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-top: 6px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.project-progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #8A6E38 0%, #C5A059 50%, #E4CCA0 100%);
+  border-radius: var(--radius-full);
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-plus-task {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, #243547 0%, #1A2633 100%);
+  border: 1.5px solid var(--imperial-gold);
+  color: #FFF;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.5);
+}
+
+.btn-plus-task:hover {
+  background: linear-gradient(135deg, #2F445B 0%, #202D3C 100%);
+  border-color: var(--imperial-gold-light);
+  transform: translateY(-2px);
+}
+
+.btn-plus-task:active {
+  transform: scale(0.96);
+}
+
+/* ==========================================================================
+   NIEVE FRONTAL SOBRE EL AVATAR Y ESCENARIO
+   ========================================================================== */
+@keyframes snowDriftFront {
+  0% {
+    transform: translateY(-25px) translateX(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 0.95;
+  }
+  88% {
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateY(500px) translateX(45px);
+    opacity: 0;
+  }
+}
+
+.snow-overlay-front {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 15;
+  overflow: hidden;
+}
+
+.snowflake-front {
+  position: absolute;
+  background: radial-gradient(circle, #FFFFFF 0%, rgba(226, 235, 245, 0.8) 70%, transparent 100%);
+  border-radius: 50%;
+  filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.8));
+  animation: snowDriftFront linear infinite;
+}
+
+/* ==========================================================================
+   MATRIZ DE 21 DÍAS EN DASHBOARD (SENDERO DE CABALLERÍA)
+   ========================================================================== */
+.neuro-matrix-dashboard-card {
+  background: linear-gradient(145deg, rgba(23, 30, 40, 0.97) 0%, rgba(11, 14, 20, 0.99) 100%);
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-metallic);
+  margin-top: 24px;
+  position: relative;
+}
+
+.scales-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 18px;
+}
+
+@media (max-width: 880px) {
+  .scales-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.scale-column-box {
+  background: rgba(11, 14, 20, 0.75);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+}
+
+.scale-column-box.active-scale {
+  border-color: var(--imperial-gold);
+  background: linear-gradient(180deg, rgba(33, 46, 64, 0.4) 0%, rgba(11, 14, 20, 0.85) 100%);
+  box-shadow: inset 0 0 15px rgba(197, 160, 89, 0.1);
+}
+
+.day-node-grid-7 {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.day-node-btn {
+  background: rgba(17, 23, 32, 0.8);
+  border: 1px solid var(--border-glass);
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  padding: 8px 4px;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  transition: all var(--transition-fast);
+}
+
+.day-node-btn:hover {
+  border-color: var(--imperial-gold-light);
+  transform: translateY(-2px);
+  color: #FFF;
+}
+
+.day-node-btn.done {
+  background: linear-gradient(135deg, #243547 0%, #1A2633 100%);
+  border-color: var(--imperial-gold);
+  color: #FFF;
+}
+
+.day-node-btn.current {
+  border: 1.5px dashed var(--imperial-gold-light);
+  color: #FFF;
+  animation: pulseCurrentDay 2s infinite;
+}
+
+@keyframes pulseCurrentDay {
+  0% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4); }
+  70% { box-shadow: 0 0 0 6px rgba(197, 160, 89, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); }
+}
+
+/* ==========================================================================
+   BIBLIOTECA IMPERIAL ORDENADA
+   ========================================================================== */
+.library-search-container {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: rgba(11, 14, 20, 0.8);
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border-glass);
+  margin-bottom: 16px;
+}
+
+.library-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #FFF;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.library-stats-strip {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 10px 16px;
+  background: rgba(23, 30, 40, 0.6);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-glass);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.books-uniform-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+  gap: 20px;
+}
+
+.book-codex-card {
+  background: linear-gradient(145deg, rgba(23, 30, 40, 0.95) 0%, rgba(11, 14, 20, 0.98) 100%);
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 290px;
+  box-shadow: var(--shadow-rose);
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.book-codex-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, var(--imperial-gold) 0%, #243547 100%);
+}
+
+.book-codex-card.read::before {
+  background: linear-gradient(180deg, var(--imperial-gold-light) 0%, #34D399 100%);
+}
+
+.book-codex-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--imperial-gold-light);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
+}
+
+.book-synopsis-clamp {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-top: 8px;
+}
+
+/* ==========================================================================
+   CARTA ASTRAL: OBSERVATORIO CELESTE
+   ========================================================================== */
+.celestial-observatory-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 980px) {
+  .celestial-observatory-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.celestial-wheel-box {
+  background: radial-gradient(circle, rgba(17, 23, 32, 0.98) 0%, rgba(7, 10, 15, 0.99) 100%);
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-metallic);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.astro-planet-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+  .astro-planet-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.astro-planet-pill {
+  background: rgba(11, 14, 20, 0.75);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  transition: all var(--transition-fast);
+}
+
+.astro-planet-pill:hover {
+  border-color: var(--imperial-gold-light);
+  background: rgba(23, 30, 40, 0.75);
+}
+
+/* ==========================================================================
+   ARSENAL & PERTRECHOS (INVENTARIO DE CABALLERÍA)
+   ========================================================================== */
+.inventory-container-wrapper {
+  padding: 10px 18px 40px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  max-width: 1380px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.inventory-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 14px;
+  border-bottom: 1.5px solid var(--border-glass);
+  margin-bottom: 20px;
+}
+
+.inventory-grid-4col {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 1180px) {
+  .inventory-grid-4col {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+}
+
+@media (max-width: 820px) {
+  .inventory-grid-4col {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+@media (max-width: 520px) {
+  .inventory-grid-4col {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+.item-card-codex {
+  background: linear-gradient(145deg, rgba(23, 30, 40, 0.95) 0%, rgba(11, 14, 20, 0.98) 100%);
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 168px;
+  cursor: pointer;
+  box-shadow: var(--shadow-rose);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.item-card-codex:hover {
+  transform: translateY(-4px);
+  border-color: var(--imperial-gold-light);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.9), 0 0 14px rgba(197, 160, 89, 0.15);
+}
+
+.item-card-codex.unlocked {
+  border-color: var(--imperial-gold);
+}
+
+.item-card-codex.unlocked::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #8A6E38 0%, #C5A059 100%);
+}
+
+.item-card-codex.locked {
+  opacity: 0.82;
+  border-color: rgba(110, 35, 46, 0.4);
+  background: linear-gradient(145deg, rgba(17, 13, 18, 0.95) 0%, rgba(9, 8, 11, 0.98) 100%);
+}
+
+.item-card-codex.locked:hover {
+  opacity: 1;
+  border-color: var(--imperial-crimson-light);
+}
+
+.item-card-codex.locked::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #6E232E 0%, #3B4A54 100%);
+}
+
+.item-sprite-frame {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(7, 10, 15, 0.85);
+  border: 1.5px solid var(--border-glass);
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.8);
+  flex-shrink: 0;
+}
+
+.item-card-codex.unlocked .item-sprite-frame {
+  border-color: var(--imperial-gold);
+}
+
+/* Modo Foco & Pomodoro Cyberpunk Header/Nav Enhancements */
+#nav-btn-foco {
+  border-color: rgba(255, 0, 128, 0.4);
+}
+
+#nav-btn-foco:hover {
+  border-color: var(--neon-pink);
+  box-shadow: 0 0 16px rgba(255, 0, 128, 0.35);
+  color: #FFF;
+}
+
+#header-foco-btn:hover {
+  background: rgba(255, 0, 128, 0.3) !important;
+  box-shadow: 0 0 18px rgba(255, 0, 128, 0.5) !important;
+  transform: translateY(-1px);
+}
+
+.pomo-preset-btn {
+  border-radius: var(--radius-full);
+  transition: all 0.2s ease;
+}
+
+.pomo-preset-btn.active {
+  background: rgba(255, 0, 128, 0.25) !important;
+  border-color: var(--neon-pink) !important;
+  color: #FFF !important;
+  box-shadow: 0 0 12px rgba(255, 0, 128, 0.35);
+}
+
+.screen-time-compact-bar strong {
+  text-shadow: 0 0 8px currentColor;
+}
+
+/* ==========================================================================
+   ARQUITECTO DE ESTILO DE VIDA & CALENDARIO DE VIDA SANA (SOMÁTICA)
+   ========================================================================== */
+.lifestyle-architect-card {
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.lifestyle-pillar-pill {
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.lifestyle-pillar-pill:hover {
+  background: rgba(23, 30, 40, 0.95) !important;
+  border-color: var(--imperial-gold) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(197, 160, 89, 0.2);
+}
+
+.somatic-block-card {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+.somatic-block-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--imperial-gold) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7), 0 0 15px rgba(197, 160, 89, 0.15);
+}
+
+.somatic-block-card ul {
+  list-style-type: square;
+}
+
+.somatic-block-card li {
+  margin-bottom: 2px;
+}
+
+/* ==========================================================================
+   BOTONES HEADER DE ALTO CONTRASTE (FOCO, GOOGLE CALENDAR & DATEMASTER)
+   ========================================================================== */
+.btn-micro-pill {
+  padding: 6px 14px !important;
+  font-size: 0.82rem !important;
+  border-radius: var(--radius-full) !important;
+  font-weight: 900 !important;
+  font-family: 'Cinzel', serif !important;
+  letter-spacing: 0.6px !important;
+  background: linear-gradient(145deg, rgba(155, 44, 59, 0.95) 0%, rgba(110, 20, 35, 0.98) 100%) !important;
+  border: 1.5px solid #E5B842 !important;
+  color: #FFF6E5 !important;
+  box-shadow: 0 4px 12px rgba(110, 20, 35, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8) !important;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.btn-micro-pill:hover {
+  background: linear-gradient(145deg, #B23B4E 0%, #8A1526 100%) !important;
+  border-color: #FFF2A1 !important;
+  box-shadow: 0 6px 16px rgba(155, 44, 59, 0.55), 0 0 10px rgba(229, 184, 66, 0.4) !important;
+  transform: translateY(-2px);
+  color: #FFFFFF !important;
+}
+
+.btn-micro-calendar {
+  background: linear-gradient(145deg, rgba(30, 60, 95, 0.95) 0%, rgba(18, 38, 62, 0.98) 100%) !important;
+  border-color: #82B1FF !important;
+  color: #F0F6FF !important;
+  box-shadow: 0 4px 12px rgba(18, 38, 62, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+.btn-micro-calendar:hover {
+  background: linear-gradient(145deg, #2A547A 0%, #15324E 100%) !important;
+  border-color: #B3D4FF !important;
+  box-shadow: 0 6px 16px rgba(42, 84, 122, 0.55), 0 0 10px rgba(130, 177, 255, 0.4) !important;
+  transform: translateY(-2px);
+  color: #FFFFFF !important;
+}
+
+.btn-micro-datemaster {
+  background: linear-gradient(145deg, rgba(36, 26, 18, 0.96) 0%, rgba(18, 12, 8, 0.98) 100%) !important;
+  border-color: #E5A93C !important;
+  color: #FFECC7 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(229, 169, 60, 0.3) !important;
+}
+
+.btn-micro-datemaster:hover {
+  background: linear-gradient(145deg, #3A2A1C 0%, #22160C 100%) !important;
+  border-color: #FFF2A1 !important;
+  box-shadow: 0 6px 16px rgba(229, 169, 60, 0.4), 0 0 10px rgba(229, 169, 60, 0.3) !important;
+  transform: translateY(-2px);
+  color: #FFFFFF !important;
+}
+
+/* ==========================================================================
+   REPRODUCTOR AMBIENT IMPERIAL (ESTILO GRAMÓFONO ACÚSTICO DE LATÓN)
+   ========================================================================== */
+.ambient-player-widget {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  background: linear-gradient(145deg, #241D17 0%, #14100C 100%) !important;
+  padding: 6px 14px !important;
+  border-radius: var(--radius-full) !important;
+  border: 1.8px solid #C59A28 !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(244, 229, 178, 0.3) !important;
+  transition: all 0.25s ease !important;
+  max-width: 100%;
+}
+
+.ambient-player-widget:hover {
+  border-color: #F4E5B2 !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 14px rgba(197, 154, 40, 0.35) !important;
+}
+
+.ambient-controls-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.btn-ambient-control {
+  background: linear-gradient(145deg, #32251A 0%, #1A120B 100%) !important;
+  border: 1.2px solid #C59A28 !important;
+  color: #FFF2A1 !important;
+  width: 26px !important;
+  height: 26px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.72rem !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  padding: 0 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+}
+
+.btn-ambient-control:hover {
+  background: linear-gradient(145deg, #4A3725 0%, #2A1D12 100%) !important;
+  border-color: #FFF6E5 !important;
+  color: #FFFFFF !important;
+  transform: scale(1.1) !important;
+  box-shadow: 0 0 8px rgba(229, 184, 66, 0.5) !important;
+}
+
+#ambient-play-btn {
+  background: linear-gradient(135deg, #FFE082 0%, #C59A28 50%, #8A6815 100%) !important;
+  color: #120D08 !important;
+  font-weight: 900 !important;
+  font-size: 0.78rem !important;
+  padding: 6px 12px !important;
+  border-radius: var(--radius-full) !important;
+  border: 1.5px solid #FFF6E5 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35) !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  white-space: nowrap !important;
+}
+
+#ambient-play-btn:hover {
+  transform: scale(1.05) !important;
+  box-shadow: 0 4px 14px rgba(229, 184, 66, 0.6) !important;
+}
+
+#ambient-play-btn.playing-gold-glow {
+  background: linear-gradient(135deg, #FFF0B3 0%, #E5B842 45%, #9E7915 100%) !important;
+  box-shadow: 0 0 16px rgba(229, 184, 66, 0.8), inset 0 0 6px rgba(255, 255, 255, 0.6) !important;
+  animation: pulse-gold-glow 2.2s infinite ease-in-out !important;
+}
+
+@keyframes pulse-gold-glow {
+  0% { box-shadow: 0 0 10px rgba(229, 184, 66, 0.6); }
+  50% { box-shadow: 0 0 20px rgba(229, 184, 66, 0.95), 0 0 8px rgba(255, 240, 179, 0.8); }
+  100% { box-shadow: 0 0 10px rgba(229, 184, 66, 0.6); }
+}
+
+.ambient-info-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 3px !important;
+}
+
+.ambient-track-select {
+  background: #19120B !important;
+  color: #FFF6E5 !important;
+  border: 1.4px solid #C59A28 !important;
+  border-radius: 6px !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  padding: 3px 8px !important;
+  cursor: pointer !important;
+  outline: none !important;
+  font-family: 'Cinzel', 'Outfit', serif !important;
+  max-width: 230px !important;
+  transition: all 0.2s ease !important;
+  box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.6) !important;
+}
+
+.ambient-track-select:hover,
+.ambient-track-select:focus {
+  border-color: #FFF2A1 !important;
+  box-shadow: 0 0 10px rgba(229, 184, 66, 0.4) !important;
+}
+
+.ambient-track-select option {
+  background: #1A130C !important;
+  color: #FFF2A1 !important;
+  font-size: 0.8rem !important;
+  padding: 4px 8px !important;
+}
+
+/* Ecualizador animado en vivo */
+.ambient-equalizer-bars {
+  display: flex !important;
+  align-items: flex-end !important;
+  gap: 2.5px !important;
+  height: 18px !important;
+  padding: 0 2px !important;
+}
+
+.ambient-eq-bar {
+  width: 3px !important;
+  height: 4px;
+  background: linear-gradient(180deg, #FFF2A1 0%, #C59A28 100%) !important;
+  border-radius: 1.5px !important;
+  transition: height 0.08s ease !important;
+}
+
+.ambient-eq-bar.animating.bar-1 { animation: eq-bounce-1 0.75s infinite ease-in-out alternate; }
+.ambient-eq-bar.animating.bar-2 { animation: eq-bounce-2 0.55s infinite ease-in-out alternate; }
+.ambient-eq-bar.animating.bar-3 { animation: eq-bounce-3 0.85s infinite ease-in-out alternate; }
+.ambient-eq-bar.animating.bar-4 { animation: eq-bounce-4 0.65s infinite ease-in-out alternate; }
+
+@keyframes eq-bounce-1 { 0% { height: 4px; } 100% { height: 16px; } }
+@keyframes eq-bounce-2 { 0% { height: 14px; } 100% { height: 5px; } }
+@keyframes eq-bounce-3 { 0% { height: 5px; } 100% { height: 18px; } }
+@keyframes eq-bounce-4 { 0% { height: 12px; } 100% { height: 6px; } }
+
+/* Fila de volumen */
+.ambient-volume-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.btn-ambient-vol-icon {
+  background: none !important;
+  border: none !important;
+  color: #E5B842 !important;
+  font-size: 0.72rem !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  transition: transform 0.15s ease !important;
+}
+
+.btn-ambient-vol-icon:hover {
+  transform: scale(1.2) !important;
+}
+
+.ambient-vol-slider {
+  width: 65px !important;
+  height: 4px !important;
+  accent-color: #E5B842 !important;
+  cursor: pointer !important;
+}
+
+.ambient-vol-label {
+  font-size: 0.66rem !important;
+  color: #EFE4CE !important;
+  font-weight: 800 !important;
+  font-family: 'Cinzel', monospace !important;
+  min-width: 28px !important;
+}
+
+#ambient-track-title {
+  color: #FFF6E5 !important;
+  font-weight: 800 !important;
+  font-size: 0.78rem !important;
+  letter-spacing: 0.4px !important;
+}
+
+@media (max-width: 860px) {
+  .ambient-player-widget {
+    padding: 4px 10px !important;
+    gap: 8px !important;
+  }
+  .ambient-track-select {
+    max-width: 170px !important;
+    font-size: 0.7rem !important;
+  }
+  .ambient-vol-slider {
+    width: 48px !important;
+  }
+}
+
+@media (max-width: 520px) {
+  .ambient-player-widget {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+  .ambient-track-select {
+    max-width: 140px !important;
+  }
+}
+
+/* ==========================================================================
+   ARSENAL: ÍTEMS EQUIPADOS Y EN MOCHILA
+   ========================================================================== */
+.item-card-codex.equipped {
+  border-color: var(--imperial-gold) !important;
+  background: linear-gradient(145deg, rgba(45, 58, 77, 0.98) 0%, rgba(30, 40, 54, 0.99) 100%) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), 0 0 12px rgba(212, 175, 55, 0.2) !important;
+}
+
+.item-card-codex.in-bag {
+  border-color: var(--border-steel) !important;
+  opacity: 0.92;
+  background: linear-gradient(145deg, rgba(34, 43, 56, 0.95) 0%, rgba(24, 31, 41, 0.98) 100%) !important;
+}
+
+/* ==========================================================================
+   ESTÉTICA KINGDOM COME: DELIVERANCE (KCD) - HORNACINA DIURNA & RETABLO
+   Inspirado directamente en los menús de equipamiento, códice y ledger
+   ========================================================================== */
+
+/* Contenedor Maestro KCD */
+.kcd-game-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* 1. RETABLO GÓTICO SUPERIOR (HORNACINA CENTRAL + NICHOS DE EQUIPO) */
+.kcd-altarpiece-stage {
+  display: grid;
+  grid-template-columns: 210px 1fr 210px;
+  gap: 16px;
+  align-items: stretch;
+  background: linear-gradient(180deg, #382518 0%, #22160E 100%);
+  border: 3px solid #C59A28;
+  border-radius: var(--radius-lg);
+  padding: 18px 16px;
+  box-shadow: 0 16px 40px rgba(50, 35, 20, 0.35), inset 0 0 35px rgba(0, 0, 0, 0.6);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Friso Arquitectónico Superior de Tracería */
+.kcd-altarpiece-stage::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background: linear-gradient(90deg, #977318 0%, #F4E5B2 50%, #977318 100%);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  z-index: 10;
+}
+
+/* Columnas de Nichos de Equipo (Izquierda y Derecha - 8 Ranuras por Columna) */
+.kcd-gear-column {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  justify-content: space-between;
+  z-index: 2;
+}
+
+/* Nicho de Equipo Individual (Estilo Estantería de Roble y Bronce KCD) */
+.kcd-niche-slot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(145deg, #1C130B 0%, #2A1D12 100%);
+  border: 1.5px solid #8A6A2E;
+  border-radius: var(--radius-sm);
+  padding: 5px 8px;
+  cursor: pointer;
+  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.7), 0 2px 6px rgba(0, 0, 0, 0.3);
+  position: relative;
+  transition: all var(--transition-fast);
+  user-select: none;
+  min-height: 48px;
+}
+
+.kcd-niche-slot:hover {
+  border-color: #F4E5B2;
+  background: linear-gradient(145deg, #2D1E12 0%, #3B2919 100%);
+  transform: translateY(-2px);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5), 0 6px 14px rgba(197, 154, 40, 0.35);
+}
+
+.kcd-niche-slot.active-slot {
+  border-color: #D4AF37;
+  background: linear-gradient(145deg, #251B10 0%, #382717 100%);
+  box-shadow: 0 0 14px rgba(212, 175, 55, 0.5), inset 0 0 10px rgba(212, 175, 55, 0.2);
+}
+
+.kcd-niche-slot.empty-slot {
+  background: linear-gradient(145deg, #16100B 0%, #1F150D 100%);
+  border: 1px dashed rgba(197, 154, 40, 0.4);
+  opacity: 0.88;
+}
+
+.kcd-niche-slot.empty-slot:hover {
+  border-color: #C59A28;
+  opacity: 1;
+  background: linear-gradient(145deg, #241910 0%, #332316 100%);
+}
+
+.kcd-niche-slot.locked-slot {
+  background: linear-gradient(145deg, #120C08 0%, #18100B 100%);
+  border: 1px solid rgba(138, 106, 46, 0.22);
+  opacity: 0.65;
+}
+
+.kcd-niche-slot.locked-slot:hover {
+  opacity: 0.9;
+  border-color: rgba(229, 193, 88, 0.45);
+}
+
+/* Mini Escudo Heráldico en la esquina del Nicho */
+.kcd-niche-crest {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 16px;
+  height: 16px;
+  font-size: 0.62rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.6));
+}
+
+.kcd-niche-icon-frame {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background: radial-gradient(circle, #2A3644 0%, #121820 100%);
+  border: 1px solid #C59A28;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  box-shadow: inset 0 0 6px rgba(0,0,0,0.8);
+}
+
+.kcd-niche-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.kcd-niche-label {
+  font-size: 0.68rem;
+  color: #C5A059;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-family: 'Cinzel', serif;
+}
+
+.kcd-niche-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #FAF6EE;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.kcd-niche-stat {
+  font-size: 0.7rem;
+  color: #A0C4E2;
+  margin-top: 1px;
+}
+
+/* 2. HORNACINA CENTRAL CON RAYOS DE LUZ SOLAR (ALCOVE KCD) */
+.kcd-alcove-center {
+  position: relative;
+  border-radius: var(--radius-md);
+  border: 2px solid #C59A28;
+  background: 
+    linear-gradient(180deg, rgba(14, 10, 7, 0.35) 0%, rgba(20, 16, 12, 0.1) 40%, rgba(14, 10, 7, 0.85) 100%),
+    url('../assets/german_castle_snow_day.jpg') center 18% / cover no-repeat;
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.75), 0 8px 24px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 16px 14px 16px;
+  overflow: hidden;
+  min-height: 560px;
+}
+
+/* Arco Ojival Gótico Superior */
+.kcd-gothic-arch-frame {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 280px;
+  height: 120px;
+  border-left: 2px solid rgba(212, 175, 55, 0.45);
+  border-right: 2px solid rgba(212, 175, 55, 0.45);
+  border-top: 2px solid rgba(212, 175, 55, 0.6);
+  border-radius: 140px 140px 0 0;
+  pointer-events: none;
+  z-index: 3;
+}
+
+/* Rayos de Luz Solar Cenital (Volumetric Sunbeams de Día) */
+.kcd-sunbeams {
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(ellipse at 50% 0%, rgba(255, 240, 195, 0.55) 0%, rgba(255, 230, 170, 0.22) 40%, transparent 75%),
+    linear-gradient(135deg, transparent 40%, rgba(255, 248, 220, 0.18) 48%, transparent 56%),
+    linear-gradient(225deg, transparent 40%, rgba(255, 248, 220, 0.18) 48%, transparent 56%);
+  pointer-events: none;
+  z-index: 1;
+  animation: kcdSunLightDrift 6s ease-in-out infinite alternate;
+}
+
+@keyframes kcdSunLightDrift {
+  0% { opacity: 0.85; transform: scale(1); }
+  100% { opacity: 1; transform: scale(1.03); }
+}
+
+/* Escudo de la Orden en la Cúspide del Arco */
+.kcd-apex-crest {
+  position: relative;
+  z-index: 4;
+  margin-top: -6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(22, 15, 10, 0.85);
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+  border: 1px solid #C59A28;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+}
+
+.kcd-apex-crest span {
+  font-family: 'Cinzel', serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #F4E5B2;
+}
+
+/* Banderín de Caballería Colgante sobre el Avatar (Gonfalon Medieval KCD) */
+.kcd-hanging-pennant {
+  position: relative;
+  z-index: 5;
+  margin-top: 4px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #7A1919 0%, #4D0E0E 75%, #2B0707 100%);
+  border: 1.5px solid #E5C158;
+  border-top: none;
+  padding: 6px 16px 12px 16px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.65), 0 0 10px rgba(229, 193, 88, 0.25);
+  clip-path: polygon(0 0, 100% 0, 100% 82%, 50% 100%, 0 82%);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+  user-select: none;
+  min-width: 210px;
+}
+
+.kcd-hanging-pennant:hover {
+  transform: translateY(2px) scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8), 0 0 16px rgba(229, 193, 88, 0.4);
+}
+
+.kcd-hanging-pennant-ribbon {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #F4E5B2;
+  border-bottom: 1px solid rgba(229, 193, 88, 0.35);
+  padding-bottom: 2px;
+  margin-bottom: 3px;
+}
+
+.kcd-hanging-pennant-day {
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  font-weight: 900;
+  color: #FFF;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+}
+
+.kcd-hanging-pennant-pct {
+  font-size: 0.72rem;
+  color: #FFD56B;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+/* Muñeco del Caballero en el Centro (Character Stage Completo y Majestuoso) */
+.kcd-character-stage {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: auto;
+  margin-bottom: 4px;
+  width: 100%;
+}
+
+.kcd-character-avatar-box {
+  width: 100%;
+  max-width: 280px;
+  height: 380px;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: visible;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 16px rgba(212, 175, 55, 0.35));
+}
+
+.kcd-character-avatar-img {
+  max-width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: bottom center;
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), filter 0.35s ease;
+}
+
+.kcd-character-avatar-box:hover .kcd-character-avatar-img {
+  transform: scale(1.04);
+  filter: brightness(1.08);
+}
+
+/* Pedestal de Piedra Labrada del Caballero */
+.kcd-character-pedestal {
+  margin-top: 6px;
+  padding: 8px 22px;
+  background: linear-gradient(180deg, #3A281A 0%, #20140D 100%);
+  border: 1.5px solid #C59A28;
+  border-radius: var(--radius-sm);
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.7), 0 0 12px rgba(197, 154, 40, 0.25);
+  z-index: 4;
+}
+
+.kcd-character-pedestal h4 {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #FAF6EE;
+  margin: 0;
+  letter-spacing: 1.5px;
+}
+
+.kcd-character-pedestal p {
+  font-size: 0.74rem;
+  color: #D4AF37;
+  margin: 2px 0 0 0;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+}
+
+/* 3. TABLERO DE ATRIBUTOS INFERIOR KCD CON AVATAR SPRITE COMPLEMENTARIO */
+.kcd-stat-ledger-wrapper {
+  display: flex;
+  gap: 14px;
+  align-items: stretch;
+  width: 100%;
+}
+
+.kcd-sprite-companion-box {
+  width: 120px;
+  background: linear-gradient(180deg, #1C2430 0%, #101620 100%);
+  border: 2px solid #C59A28;
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 36px rgba(40, 28, 18, 0.35), inset 0 0 20px rgba(0,0,0,0.6);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 10px;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.kcd-sprite-companion-box:hover {
+  border-color: #F4E5B2;
+  box-shadow: 0 12px 36px rgba(197,154,40,0.35), inset 0 0 25px rgba(212,175,55,0.25);
+  transform: translateY(-2px);
+}
+
+.kcd-sprite-companion-frame {
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(197,154,40,0.3) 0%, rgba(10,14,20,0.95) 80%);
+  border: 2px solid #E5C158;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 8px 0;
+  box-shadow: 0 0 16px rgba(229,193,88,0.35);
+  overflow: hidden;
+}
+
+.kcd-stat-ledger {
+  background: #121822;
+  border: 2px solid #C59A28;
+  border-radius: var(--radius-md);
+  box-shadow: 0 12px 36px rgba(40, 28, 18, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+/* Grilla de 4 Columnas Cromáticas */
+.kcd-ledger-columns {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  divide-x: 1px solid rgba(197, 154, 40, 0.2);
+  background: linear-gradient(180deg, #141C26 0%, #0E131A 100%);
+  padding: 16px 20px;
+  gap: 16px;
+}
+
+.kcd-ledger-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 8px;
+  border-right: 1px solid rgba(197, 154, 40, 0.15);
+}
+
+.kcd-ledger-col:last-child {
+  border-right: none;
+}
+
+.kcd-ledger-header {
+  font-family: 'Cinzel', serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Fila de Atributo KCD (Nombre, Icono, Valor) */
+.kcd-stat-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  padding: 4px 6px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.kcd-stat-row:hover {
+  background: rgba(255, 255, 255, 0.07);
+  transform: translateX(2px);
+}
+
+.kcd-stat-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #E2E8F0;
+}
+
+.kcd-stat-val {
+  font-family: 'Cinzel', serif;
+  font-weight: 900;
+  font-size: 1rem;
+}
+
+/* Colores cromáticos específicos KCD (Imagen 2) */
+.kcd-col-gold .kcd-ledger-header { color: #E5B842; }
+.kcd-col-gold .kcd-stat-val { color: #F4E5B2; }
+
+.kcd-col-purple .kcd-ledger-header { color: #B794F4; }
+.kcd-col-purple .kcd-stat-val { color: #D6BCFA; }
+
+.kcd-col-green .kcd-ledger-header { color: #48BB78; }
+.kcd-col-green .kcd-stat-val { color: #9AE6B4; }
+
+.kcd-col-red .kcd-ledger-header { color: #F56565; }
+.kcd-col-red .kcd-stat-val { color: #FEB2B2; }
+
+/* Encabezado Interactivo para Abrir Pergamino KCD */
+.kcd-ledger-header.clickable-ledger-header {
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+  padding: 3px 6px;
+  border-radius: var(--radius-sm);
+  user-select: none;
+}
+
+.kcd-ledger-header.clickable-ledger-header:hover {
+  background: rgba(255, 255, 255, 0.08);
+  filter: brightness(1.25);
+  transform: translateY(-1px);
+}
+
+.kcd-ledger-parchment-pill {
+  font-size: 0.62rem;
+  font-family: var(--font-body);
+  font-weight: 800;
+  color: #0E0905;
+  background: linear-gradient(135deg, #FFF2A1 0%, #E5C158 50%, #C59A28 100%);
+  padding: 2px 7px;
+  border-radius: 12px;
+  letter-spacing: 0.4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+  text-transform: none;
+  transition: all 0.15s ease;
+}
+
+.kcd-ledger-header.clickable-ledger-header:hover .kcd-ledger-parchment-pill {
+  transform: scale(1.06);
+  box-shadow: 0 0 10px rgba(255, 242, 161, 0.7);
+}
+
+.kcd-stat-row-more {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.72rem;
+  color: #E5C158;
+  font-weight: 700;
+  padding: 5px 6px;
+  margin-top: 4px;
+  border-top: 1px dashed rgba(197, 154, 40, 0.35);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.kcd-stat-row-more:hover {
+  background: rgba(197, 154, 40, 0.18);
+  color: #FFFDF9;
+  padding-left: 9px;
+}
+
+.kcd-parchment-activity-card {
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.kcd-parchment-activity-card:hover {
+  border-color: #C59A28 !important;
+  box-shadow: 0 4px 12px rgba(197, 154, 40, 0.2) !important;
+  transform: translateY(-1px);
+}
+
+/* Banderín Inferior de Nivel Maestro KCD */
+.kcd-ledger-footer-banner {
+  background: linear-gradient(90deg, #1C130B 0%, #2F1E10 50%, #1C130B 100%);
+  border-top: 1.5px solid #C59A28;
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.kcd-level-emblem-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.kcd-level-title-text {
+  font-family: 'Cinzel', serif;
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #FAF6EE;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.kcd-xp-progress-wrapper {
+  flex: 1;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* 4. MODAL / CAJÓN DE ZOOM DE INSPECCIÓN (ESTILO CÓDICE ILUMINADO IMAGEN 1 & 3) */
+.kcd-inspector-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 12, 8, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 99999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.kcd-inspector-backdrop.active {
+  display: flex !important;
+  opacity: 1 !important;
+}
+
+.kcd-inspector-codex {
+  width: 100%;
+  max-width: 620px;
+  background: #FAF6EE;
+  border: 3px solid #C59A28;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7), inset 0 0 25px rgba(197, 154, 40, 0.15);
+  padding: 24px 28px;
+  position: relative;
+  transform: scale(0.92);
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.kcd-inspector-backdrop.active .kcd-inspector-codex {
+  transform: scale(1);
+}
+
+/* Orla y Remates Florales Dorados en Esquinas (Imagen 1) */
+.kcd-inspector-codex::before {
+  content: "⚜️";
+  position: absolute;
+  top: 6px;
+  left: 10px;
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+.kcd-inspector-codex::after {
+  content: "⚜️";
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  font-size: 1rem;
+  opacity: 0.8;
+}
+
+/* Tabla de Comparación de Atributos KCD (Idéntico a Imagen 1 de Caballos) */
+.kcd-comparison-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1.5px solid #C59A28;
+}
+
+.kcd-comparison-table th {
+  padding: 10px 14px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #FFF;
+  letter-spacing: 1px;
+}
+
+.kcd-comparison-table th.col-mine {
+  background: #1D533B; /* Verde Esmeralda KCD */
+}
+
+.kcd-comparison-table th.col-other {
+  background: #84232C; /* Carmesí KCD */
+}
+
+.kcd-comparison-table th.col-label {
+  background: #1A314B; /* Azul Oscuro Códice KCD */
+  text-align: left;
+}
+
+.kcd-comparison-table td {
+  padding: 10px 14px;
+  font-family: 'Cinzel', serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-align: center;
+  border-bottom: 1px solid rgba(197, 154, 40, 0.2);
+}
+
+.kcd-comparison-table td.cell-label {
+  text-align: left;
+  background: #F0E8D6;
+  color: #2D2319;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.kcd-comparison-table td.cell-mine {
+  background: #E8F3ED;
+  color: #164631;
+}
+
+.kcd-comparison-table td.cell-other {
+  background: #F8EBEB;
+  color: #7E1C25;
+}
+
+/* Sub-menú de Personaje Secundario: 1. Rangos | 2. Objetos & Alijo | 3. Campañas */
+.subview-tabs-bar {
+  display: flex;
+  gap: 10px;
+  background: rgba(14, 20, 28, 0.85);
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 6px;
+  box-shadow: var(--shadow-metallic);
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.subview-tab-btn {
+  flex: 1;
+  min-width: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  background: #182330;
+  border: 1.5px solid rgba(197, 154, 40, 0.28);
+  color: #CBD5E1;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.subview-tab-btn:hover {
+  color: #FAF6EE;
+  background: #243447;
+  border-color: var(--imperial-gold);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), 0 0 8px rgba(197, 154, 40, 0.25);
+}
+
+.subview-tab-btn.active {
+  background: linear-gradient(135deg, rgba(197, 154, 40, 0.35) 0%, rgba(244, 229, 178, 0.2) 100%) !important;
+  border-color: #C59A28 !important;
+  color: #FFF !important;
+  box-shadow: 0 0 12px rgba(197, 154, 40, 0.4) !important;
+}
+
+/* ==========================================================================
+   PESTAÑAS DE LA BITÁCORA DE FINANZAS (FONDO SÓLIDO, ALTO CONTRASTE Y ORO)
+   ========================================================================== */
+.finance-nav-tabs-bar {
+  display: flex;
+  gap: 10px;
+  background: #10161F;
+  border: 1.5px solid rgba(197, 154, 40, 0.45);
+  border-radius: var(--radius-md);
+  padding: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.finance-nav-tab {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border-radius: var(--radius-sm);
+  background: #182330;
+  border: 1.5px solid rgba(197, 154, 40, 0.28);
+  color: #CBD5E1;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.finance-nav-tab:hover {
+  color: #FFFFFF;
+  background: #243447;
+  border-color: var(--imperial-gold);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5), 0 0 8px rgba(197, 154, 40, 0.25);
+}
+
+.finance-nav-tab.active {
+  background: linear-gradient(180deg, #C5A059 0%, #8A6E38 100%) !important;
+  color: #0B0E14 !important;
+  border-color: #FAF0D7 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6), 0 0 12px rgba(197, 160, 89, 0.4) !important;
+}
+
+.finance-tab-pill {
+  font-size: 0.72rem;
+  background: rgba(0, 0, 0, 0.4);
+  color: #FAF6EE;
+  padding: 2px 7px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-weight: bold;
+}
+
+.finance-nav-tab.active .finance-tab-pill {
+  background: #0B0E14;
+  color: #E6C875;
+  border-color: #8A6E38;
+}
+
+/* Filtros de Biblioteca & Botones de Pestañas de Idiomas */
+.book-filter-btn, .lang-tab-btn {
+  background: #182330 !important;
+  color: #CBD5E1 !important;
+  border: 1.5px solid rgba(197, 154, 40, 0.28) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4) !important;
+}
+
+.book-filter-btn:hover, .lang-tab-btn:hover {
+  background: #243447 !important;
+  color: #FFFFFF !important;
+  border-color: var(--imperial-gold) !important;
+  transform: translateY(-1px);
+}
+
+.book-filter-btn.active, .lang-tab-btn.active {
+  background: linear-gradient(180deg, #C5A059 0%, #8A6E38 100%) !important;
+  color: #0B0E14 !important;
+  border-color: #FAF0D7 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6), 0 0 10px rgba(197, 160, 89, 0.35) !important;
+}
+
+/* ==========================================================================
+   TABLERO DE 3 COLUMNAS: DEBERES DIARIOS, SEMANALES & REGISTRO DE TIEMPO
+   ========================================================================== */
+.kcd-tasks-board-3col {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  align-items: stretch;
+}
+
+@media (max-width: 960px) {
+  .kcd-tasks-board-3col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Grilla 2x2 para Campañas Territoriales */
+.campanas-grid-2x2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 820px) {
+  .campanas-grid-2x2 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.kcd-task-col-box {
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.kcd-task-col-box:hover {
+  border-color: rgba(197, 154, 40, 0.55);
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(10, 14, 22, 0.7);
+  border: 1px solid rgba(197, 154, 40, 0.25);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.task-item:hover {
+  background: rgba(20, 28, 40, 0.9);
+  border-color: rgba(197, 154, 40, 0.5);
+  transform: translateY(-1px);
+}
+
+.task-item.completed {
+  opacity: 0.65;
+  background: rgba(8, 12, 18, 0.45);
+  border-color: rgba(197, 154, 40, 0.15);
+}
+
+.task-item.completed span {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.custom-checkbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1.5px solid #C59A28;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 900;
+  color: #0E0905;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.custom-checkbox:hover {
+  border-color: #F4E5B2;
+  box-shadow: 0 0 8px rgba(197, 154, 40, 0.4);
+}
+
+.custom-checkbox.checked {
+  background: #C59A28;
+  color: #0E0905;
+  box-shadow: 0 0 6px rgba(197, 154, 40, 0.5);
+}
+
+@media (max-width: 900px) {
+  .kcd-altarpiece-stage {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .kcd-stat-ledger-wrapper {
+    flex-direction: column;
+  }
+  .kcd-sprite-companion-box {
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+    gap: 16px;
+    padding: 10px;
+  }
+  .kcd-ledger-columns {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .kcd-ledger-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   SECCIÓN EQUIPO: SPLIT LAYOUT (OUTFITS DÍA / SEMANA + EQUIPO COMPACTO)
+   ========================================================================== */
+.equipo-master-split-layout {
+  display: grid;
+  grid-template-columns: 380px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1120px) {
+  .equipo-master-split-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.equipo-outfit-panel {
+  background: linear-gradient(145deg, rgba(23, 30, 40, 0.96) 0%, rgba(14, 18, 25, 0.98) 100%);
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 1px rgba(229, 184, 66, 0.3);
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.equipo-items-panel {
+  background: linear-gradient(145deg, rgba(23, 30, 40, 0.96) 0%, rgba(14, 18, 25, 0.98) 100%);
+  border: 1.5px solid var(--border-gold);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), inset 0 0 1px rgba(229, 184, 66, 0.3);
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.outfit-day-pill {
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(197, 154, 40, 0.35);
+  background: rgba(14, 18, 25, 0.85);
+  font-family: 'Cinzel', serif;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #CBD5E0;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.outfit-day-pill:hover {
+  border-color: #E5B842;
+  color: #FFF;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(197, 154, 40, 0.3);
+}
+
+.outfit-day-pill.active {
+  background: linear-gradient(135deg, #E5B842 0%, #C59A28 100%);
+  color: #0E0905;
+  border-color: #FFF2A1;
+  font-weight: 900;
+  box-shadow: 0 2px 10px rgba(197, 154, 40, 0.5);
+}
+
+/* COMPACT ITEM CARD (EQUIPO MÁS PEQUEÑITO) */
+.inventory-compact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+.item-card-compact {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 10px;
+  border-radius: var(--radius-sm);
+  background: #FFFDF9;
+  border: 1px solid rgba(197, 154, 40, 0.28);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  gap: 8px;
+}
+
+.item-card-compact:hover {
+  border-color: #C59A28;
+  box-shadow: 0 3px 8px rgba(197, 154, 40, 0.2);
+  transform: translateY(-1px);
+}
+
+.item-card-compact.equipped {
+  border-left: 3.5px solid #2B6847;
+  background: rgba(43, 104, 71, 0.05);
+}
+
+.item-card-compact.in-bag {
+  border-left: 3.5px solid #C59A28;
+}
+
+.item-card-compact.locked {
+  opacity: 0.65;
+  border-left: 3.5px solid #CBD5E0;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.item-compact-sprite {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  background: #101520;
+  border: 1px solid rgba(197, 154, 40, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Grilla 2x2 de Instrumentos & Tarjetas con Foto de Perfil */
+.instruments-grid-2x2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+
+@media (max-width: 860px) {
+  .instruments-grid-2x2 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.instrument-card-2x2 {
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.instrument-card-2x2:hover {
+  transform: translateY(-5px);
+  border-color: var(--imperial-gold-light) !important;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(197, 160, 89, 0.25) !important;
+}
+
+.instrument-card-2x2:hover .instrument-banner-img {
+  transform: scale(1.05);
+  filter: brightness(0.95) contrast(1.15) !important;
+}
+
+/* ==========================================================================
+   BANDERINES HERÁLDICOS SUSPENDIDOS (REEMPLAZO DE AURAS DE COLORES)
+   ========================================================================== */
+.kcd-hanging-heraldic-pennants-row {
+  position: absolute;
+  top: 36px;
+  left: 20px;
+  right: 20px;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+  z-index: 6;
+  pointer-events: auto;
+}
+
+.kcd-heraldic-pennant-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.kcd-heraldic-pennant-item:hover {
+  transform: translateY(4px) scale(1.12);
+  filter: brightness(1.2);
+}
+
+.kcd-pennant-cloth {
+  width: 22px;
+  border-radius: 2px 2px 0 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.7), 0 0 8px rgba(197, 154, 40, 0.3);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 4px;
+}
+
+/* ==========================================================================
+   PLACA DE NIVEL Y PROGRESO BAJO EL SPRITE COMPANION (PANEL IZQUIERDO)
+   ========================================================================== */
+.kcd-sprite-companion-box {
+  width: 170px !important;
+  padding: 12px 10px !important;
+}
+
+.kcd-sprite-level-badge-card {
+  width: 100%;
+  margin-top: 8px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(197, 154, 40, 0.6);
+  border-radius: var(--radius-sm);
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.kcd-sprite-level-badge-card:hover {
+  border-color: #FFF2A1;
+  background: rgba(0, 0, 0, 0.65);
+  box-shadow: 0 0 10px rgba(197, 154, 40, 0.4);
+}
+
+.kcd-sprite-level-title-text {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #F4E5B2;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+.kcd-sprite-xp-bar-wrap {
+  width: 100%;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid #C59A28;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 2px;
+}
+
+.kcd-sprite-xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #C59A28, #FFF2A1);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+/* ==========================================================================
+   INSPECTOR CÓDICE: 2 COLUMNAS (DIARIAS Y SEMANALES) Y ANCHO EXPANDIDO
+   ========================================================================== */
+.kcd-inspector-codex.codex-wide {
+  max-width: 880px !important;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.kcd-codex-2col-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .kcd-codex-2col-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.kcd-codex-task-column {
+  background: #FFFDF9;
+  border: 1.5px solid rgba(197, 154, 40, 0.4);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+/* ==========================================================================
+   WIDGET DE EXPERIENCIA POR CATEGORÍA & CALCULADORA
+   ========================================================================== */
+.kcd-category-xp-pill {
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kcd-category-xp-pill:hover {
+  transform: translateY(-2px);
+  border-color: #C59A28 !important;
+  box-shadow: 0 4px 12px rgba(197, 154, 40, 0.2) !important;
+}
+
+/* ==========================================================================
+   BANDERINES HERÁLDICOS COLGANTES ADICIONALES (MEDITACIÓN ROSA & LECTURA MARRÓN)
+   ========================================================================== */
+.pennant-pink-glow {
+  box-shadow: 0 0 14px rgba(216, 27, 96, 0.5) !important;
+}
+.pennant-brown-glow {
+  box-shadow: 0 0 14px rgba(93, 64, 55, 0.5) !important;
+}
+
+/* ==========================================================================
+   SISTEMA DE MEDITACIÓN & CALMA SOMÁTICA (CIRCULO DE RESPIRACIÓN & MONITOR)
+   ========================================================================== */
+.meditation-breathe-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 36px 20px;
+  background: radial-gradient(circle, rgba(216, 27, 96, 0.08) 0%, rgba(20, 16, 24, 0.85) 80%);
+  border: 1.5px solid rgba(244, 143, 177, 0.4);
+  border-radius: var(--radius-lg);
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
+  margin: 16px 0;
+}
+
+.meditation-pulse-ring {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  border: 3px solid #F48FB1;
+  background: radial-gradient(circle, rgba(233, 30, 99, 0.35) 0%, rgba(216, 27, 96, 0.05) 75%);
+  box-shadow: 0 0 30px rgba(233, 30, 99, 0.35), inset 0 0 25px rgba(244, 143, 177, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: transform 4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 4s ease;
+  position: relative;
+}
+
+.meditation-pulse-ring.inhale {
+  transform: scale(1.35);
+  box-shadow: 0 0 50px rgba(233, 30, 99, 0.7), inset 0 0 40px rgba(244, 143, 177, 0.6);
+}
+
+.meditation-pulse-ring.hold {
+  transform: scale(1.35);
+  box-shadow: 0 0 60px rgba(255, 215, 0, 0.6), inset 0 0 35px rgba(255, 235, 150, 0.5);
+  border-color: #E5B842;
+}
+
+.meditation-pulse-ring.exhale {
+  transform: scale(0.85);
+  box-shadow: 0 0 20px rgba(42, 84, 122, 0.5), inset 0 0 15px rgba(100, 181, 246, 0.3);
+  border-color: #64B5F6;
+}
+
+.meditation-phase-text {
+  font-family: 'Cinzel', serif;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #FFF6E5;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9);
+  letter-spacing: 1.5px;
+}
+
+.meditation-timer-display {
+  font-family: 'Orbitron', monospace, sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #FFE082;
+  margin-top: 4px;
+  text-shadow: 0 0 10px rgba(255, 224, 130, 0.5);
+}
+
+/* ==========================================================================
+   BITÁCORA DE MASAJES (PAREJA & AUTO-MASAJE MIOFASCIAL)
+   ========================================================================== */
+.massage-technique-card {
+  background: var(--gradient-glass-card);
+  backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(197, 154, 40, 0.35);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.massage-technique-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--imperial-gold);
+  box-shadow: 0 8px 24px rgba(197, 154, 40, 0.2);
+}
+
+.massage-step-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(197, 154, 40, 0.15);
+  border: 1px solid var(--imperial-gold);
+  border-radius: var(--radius-full);
+  padding: 4px 12px;
+  font-size: 0.78rem;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  color: #241D17;
+}
+
+/* ==========================================================================
+   SISTEMA MAESTRO DE PROGRESIÓN (PITCH DECK IMPERIAL)
+   ========================================================================== */
+.pitch-deck-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pitch-hero-banner {
+  background: linear-gradient(135deg, rgba(36, 29, 23, 0.95) 0%, rgba(18, 14, 10, 0.98) 100%);
+  border: 2px solid var(--imperial-gold);
+  border-radius: var(--radius-lg);
+  padding: 32px 36px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.6), inset 0 0 24px rgba(197, 154, 40, 0.2);
+  color: #FAF6EE;
+  position: relative;
+  overflow: hidden;
+}
+
+.pitch-pillar-card {
+  background: rgba(253, 250, 244, 0.94);
+  backdrop-filter: blur(14px);
+  border: 1.5px solid rgba(197, 154, 40, 0.4);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.pitch-pillar-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--imperial-gold);
+  box-shadow: 0 10px 28px rgba(197, 154, 40, 0.25);
+}
+
+.pitch-formula-box {
+  background: linear-gradient(145deg, #1C232B 0%, #10151C 100%);
+  border: 1.8px solid #E5B842;
+  border-radius: var(--radius-md);
+  padding: 22px;
+  color: #FFF6E5;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  font-family: 'Cinzel', serif;
+}
+
+/* ==========================================================================
+   SISTEMA DE 9 BANDERINES HERÁLDICOS SUPERPUESTOS (CASCADA CENTRAL KCD)
+   ========================================================================== */
+.kcd-hanging-heraldic-pennants-row {
+  position: absolute;
+  top: 36px;
+  left: 8px;
+  right: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  z-index: 6;
+  pointer-events: auto;
+  user-select: none;
+}
+
+.kcd-heraldic-pennant-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.25s ease;
+  position: relative;
+  width: 58px;
+  margin: 0 -13px; /* Superposición lateral de ~50% */
+}
+
+.kcd-heraldic-pennant-item:hover {
+  transform: translateY(6px) scale(1.12);
+  z-index: 30 !important;
+  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.95)) brightness(1.15);
+}
+
+.kcd-heraldic-pennant-item:hover .kcd-pennant-cloth {
+  border-color: #FFF2A1 !important;
+  box-shadow: 0 8px 22px rgba(229, 193, 88, 0.6) !important;
+}
+
+/* Z-Index escalonado desde el centro hacia los extremos */
+.kcd-pennant-idx-0 { z-index: 6; }  /* Exploración (Extremo Izq) */
+.kcd-pennant-idx-1 { z-index: 7; }  /* Naturaleza */
+.kcd-pennant-idx-2 { z-index: 8; }  /* Deporte */
+.kcd-pennant-idx-3 { z-index: 9; }  /* Salud (Cubre la mitad de Deporte) */
+.kcd-pennant-idx-4 { z-index: 10; } /* VIDA (CENTRAL - Cubre mitad de Salud y mitad de Soberanía) */
+.kcd-pennant-idx-5 { z-index: 9; }  /* Soberanía */
+.kcd-pennant-idx-6 { z-index: 8; }  /* Amor */
+.kcd-pennant-idx-7 { z-index: 7; }  /* Mente */
+.kcd-pennant-idx-8 { z-index: 6; }  /* Espiritualidad (Extremo Der) */
+
+.kcd-pennant-cloth {
+  width: 54px;
+  border-radius: 4px 4px 0 0;
+  border-bottom: none;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.7);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 5px 3px 2px 3px;
+  transition: height 0.4s ease, background 0.3s ease;
+}
+
+.kcd-pennant-v-fringe {
+  position: absolute;
+  bottom: -14px;
+  left: -1.5px;
+  width: 0;
+  height: 0;
+  border-left: 27px solid transparent;
+  border-right: 27px solid transparent;
+  filter: drop-shadow(0 3px 4px rgba(0,0,0,0.5));
+}
+
+.kcd-pennant-name-tag {
+  font-family: 'Cinzel', serif;
+  font-size: 0.58rem;
+  font-weight: 800;
+  color: #FFF;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.95);
+  letter-spacing: 0.5px;
+  line-height: 1;
+  text-transform: uppercase;
+  margin-top: 2px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.kcd-pennant-points-badge {
+  font-size: 0.62rem;
+  font-weight: 900;
+  color: #FFF2A1;
+  background: rgba(0, 0, 0, 0.45);
+  padding: 1px 5px;
+  border-radius: 6px;
+  margin-top: 3px;
+  border: 1px solid rgba(255, 242, 161, 0.3);
+  font-family: 'Cinzel', serif;
+}
+
+/* ==========================================================================
+   BANDERÍN COLGANTE HERÁLDICO: CABALLERO JAGUAR CHALLENGE
+   ========================================================================== */
+.header-challenge-hanging-pennant,
+.header-challenge-pennant {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease;
+  margin: 0 4px;
+  text-decoration: none;
+}
+
+.header-challenge-hanging-pennant:hover,
+.header-challenge-pennant:hover {
+  transform: translateY(2px) rotate(0.8deg);
+  filter: drop-shadow(0 6px 14px rgba(212, 175, 55, 0.5));
+}
+
+.pennant-brass-rod {
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, #8B6508 0%, #F5D77F 45%, #FFFFFF 50%, #F5D77F 55%, #8B6508 100%);
+  border-radius: 3px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.8);
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+
+.rod-ring {
+  width: 7px;
+  height: 9px;
+  border: 1.5px solid #E5C158;
+  border-radius: 50%;
+  margin-top: -5px;
+  background: rgba(0,0,0,0.5);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.6);
+}
+
+.pennant-velvet-body {
+  background: linear-gradient(165deg, #7A1919 0%, #4A0808 50%, #200404 100%);
+  border-left: 2px solid #C59A28;
+  border-right: 2px solid #C59A28;
+  border-top: 1px solid #FFE082;
+  box-shadow: inset 0 0 12px rgba(0,0,0,0.7), 0 4px 10px rgba(0,0,0,0.5);
+  padding: 4px 12px 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+}
+
+.pennant-heraldic-crest {
+  font-size: 1.2rem;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,0.8));
+}
+
+.pennant-text-wrap {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.pennant-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #F7E7B4;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+}
+
+.pennant-streak {
+  font-family: 'Cinzel', serif;
+  font-size: 0.76rem;
+  font-weight: 900;
+  color: #FFFFFF;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.95);
+}
+
+.pennant-bottom-tip {
+  width: 100%;
+  height: 10px;
+  background: linear-gradient(180deg, #200404 0%, #120202 100%);
+  border-left: 2px solid #C59A28;
+  border-right: 2px solid #C59A28;
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  margin-top: -1px;
+  position: relative;
+}
+
+.challenge-pennant-badge {
+  background: linear-gradient(135deg, #D4AF37 0%, #AA7C11 100%);
+  color: #0E0905;
+  font-size: 0.68rem;
+  font-weight: 900;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-family: 'Cinzel', serif;
+}
+
+.challenge-pennant-days {
+  font-family: 'Cinzel', serif;
+  font-size: 0.78rem;
+  font-weight: 900;
+  color: #FFF;
+  letter-spacing: 1px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+}
+
+/* ==========================================================================
+   MATRIZ RENACENTISTA DE 21 DÍAS & DESAFÍOS DE CABALLERÍA (ALTO CONTRASTE)
+   ========================================================================== */
+.challenge-parchment-matrix-wrap {
+  background: #FFFDF8;
+  border: 1.5px solid rgba(197, 154, 40, 0.4);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+}
+
+.matrix-scales-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.matrix-scale-box {
+  background: #FFFFFF;
+  border: 1.5px solid rgba(197, 154, 40, 0.35);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 220px;
+  transition: all 0.2s ease;
+}
+
+.matrix-scale-box.active-scale {
+  border: 2px solid #C59A28;
+  background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF5 100%);
+  box-shadow: 0 4px 14px rgba(197, 154, 40, 0.15);
+}
+
+.matrix-days-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin: 10px 0;
+}
+
+.matrix-day-btn {
+  background: #FAF6EE;
+  border: 1.5px solid rgba(197, 154, 40, 0.35);
+  border-radius: 6px;
+  padding: 6px 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.matrix-day-btn:hover {
+  transform: translateY(-2px);
+  border-color: #C59A28;
+  box-shadow: 0 3px 8px rgba(197, 154, 40, 0.25);
+  background: #FFFDF9;
+}
+
+.matrix-day-btn.active-today {
+  background: linear-gradient(135deg, #FFF6D8 0%, #FFE69C 100%);
+  border: 2px solid #C59A28;
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.45);
+  animation: gentlePulse 2.5s infinite ease-in-out;
+}
+
+.matrix-day-btn.done {
+  background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+  border: 2px solid #2E7D32;
+  color: #1B5E20;
+}
+
+.matrix-day-btn.locked {
+  background: #F7F3EB;
+  border: 1px dashed rgba(160, 140, 115, 0.4);
+  color: #8C7B6B;
+}
+
+/* Tarjetas de Desafíos de Caballería con Experiencia Extra */
+.challenge-action-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.challenge-action-card {
+  background: #FFFFFF;
+  border: 1.5px solid rgba(197, 154, 40, 0.35);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.challenge-action-card:hover {
+  border-color: #C59A28;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 12px rgba(197, 154, 40, 0.16);
+}
+
+.challenge-action-card.done {
+  background: linear-gradient(135deg, #FAFFFA 0%, #F1F8F1 100%);
+  border: 1.5px solid #2E7D32;
+}
+
+/* ==========================================================================
+   RELOJ CELESTIAL & CALENDARIO SINCRONIZADO
+   ========================================================================== */
+.celestial-header-widget {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(14, 18, 25, 0.85);
+  border: 1.5px solid rgba(197, 154, 40, 0.45);
+  padding: 5px 12px;
+  border-radius: 24px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+.celestial-time-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+}
+
+.celestial-time-text {
+  font-family: 'Cinzel', monospace;
+  font-size: 0.9rem;
+  font-weight: 900;
+  color: #FFF;
+  letter-spacing: 1px;
+  text-shadow: 0 0 8px rgba(255, 242, 161, 0.4);
+}
+
+.celestial-date-text {
+  font-size: 0.68rem;
+  color: #D4AF37;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+}
+
+.celestial-sun-moon-dial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #2C1F14 0%, #0D1117 100%);
+  border: 1.5px solid #E5C158;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  font-size: 1.15rem;
+  position: relative;
+}
+
+.celestial-sun-moon-dial:hover {
+  transform: scale(1.15) rotate(15deg);
+  box-shadow: 0 0 16px rgba(229, 193, 88, 0.7);
+  border-color: #FFF2A1;
+}
+
+.celestial-calendar-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: #F4E5B2;
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background: rgba(197, 154, 40, 0.15);
+  border: 1px solid rgba(197, 154, 40, 0.3);
+  transition: all 0.2s ease;
+}
+
+.celestial-calendar-link:hover {
+  background: rgba(197, 154, 40, 0.35);
+  color: #FFF;
+  border-color: #E5C158;
+}
+
+/* ==========================================================================
+   GRILLA DE ÍTEMS EN EL ALIJO & ARSENAL IMPERIAL (DARK THEME RPG)
+   ========================================================================== */
+.alijo-grid-8x5 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+  margin-top: 14px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1280px) {
+  .alijo-grid-8x5 {
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .alijo-grid-8x5 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.alijo-item-card {
+  background: linear-gradient(160deg, rgba(20, 26, 36, 0.95) 0%, rgba(12, 16, 23, 0.98) 100%);
+  border: 1.5px solid rgba(197, 154, 40, 0.35);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  min-width: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.alijo-item-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--imperial-gold-light);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(197, 154, 40, 0.25);
+  background: linear-gradient(160deg, rgba(26, 35, 48, 0.97) 0%, rgba(16, 22, 32, 0.99) 100%);
+}
+
+.alijo-item-card.equipped {
+  border-color: #38A169;
+  background: linear-gradient(160deg, rgba(16, 34, 25, 0.95) 0%, rgba(10, 22, 16, 0.98) 100%);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), 0 0 14px rgba(56, 161, 105, 0.25);
+}
+
+.alijo-item-card.equipped:hover {
+  border-color: #48BB78;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 18px rgba(72, 187, 120, 0.35);
+}
+
+.alijo-item-card.locked {
+  opacity: 0.72;
+  border-color: rgba(148, 163, 184, 0.22);
+}
+
+.alijo-item-card.locked:hover {
+  opacity: 0.95;
+  border-color: rgba(197, 154, 40, 0.45);
+}
+
+/* Header inside card */
+.alijo-card-header {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  min-width: 0;
+}
+
+.alijo-sprite-frame {
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(197, 154, 40, 0.5);
+  background-color: #0A0D13;
+  background-repeat: no-repeat;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.6), inset 0 0 4px rgba(0, 0, 0, 0.8);
+}
+
+.alijo-item-card.equipped .alijo-sprite-frame {
+  border-color: #38A169;
+  box-shadow: 0 0 10px rgba(56, 161, 105, 0.4);
+}
+
+.alijo-card-title-group {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.alijo-card-top-pills {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px;
+}
+
+.alijo-item-num {
+  font-family: monospace;
+  font-size: 0.65rem;
+  color: var(--imperial-gold-light);
+  opacity: 0.8;
+}
+
+.alijo-item-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.84rem;
+  font-weight: 800;
+  color: #FFF;
+  margin: 1px 0 0 0;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.alijo-item-aura-pill {
+  font-size: 0.62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #E5B842;
+  opacity: 0.85;
+}
+
+/* Body inside card */
+.alijo-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.alijo-item-lore {
+  font-size: 0.73rem;
+  color: #CBD5E0;
+  line-height: 1.35;
+  min-height: 30px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.alijo-item-objective {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  font-size: 0.69rem;
+  color: #F4E5B2;
+  background: rgba(197, 154, 40, 0.1);
+  border-left: 2.5px solid #C59A28;
+  padding: 4px 6px;
+  border-radius: 3px;
+  line-height: 1.3;
+  min-height: 28px;
+  max-height: 48px;
+  overflow: hidden;
+  word-break: break-word;
+}
+
+.alijo-objective-icon {
+  flex-shrink: 0;
+  font-size: 0.75rem;
+}
+
+.alijo-objective-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Footer inside card */
+.alijo-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(197, 154, 40, 0.2);
+  margin-top: auto;
+}
+
+.alijo-btn-action {
+  font-size: 0.7rem;
+  padding: 4px 10px;
+  font-weight: 800;
+  flex: 1;
+  text-align: center;
+}
+
+.alijo-btn-inspect {
+  font-size: 0.7rem;
+  padding: 4px 8px;
+  white-space: nowrap;
+}
+
+.alijo-locked-badge {
+  font-size: 0.68rem;
+  color: #94A3B8;
+  font-weight: 600;
+  font-style: italic;
+}
+
+/* ==========================================================================
+/* ==========================================================================
+   LOGO DATEMASTER EMPAREJADO CON EL LOGO JAGUAR (MITAD DE SU RADIO: ~58px, ROSA ENFOCADA)
+   ========================================================================== */
+.header-datemaster-paired-logo {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2.5px solid #E5A93C;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45), 0 0 12px rgba(229, 169, 60, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: radial-gradient(circle, #2A180E 0%, #120A05 100%);
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  position: relative;
+  text-decoration: none;
+}
+
+.header-datemaster-paired-logo:hover {
+  transform: scale(1.1) rotate(-3deg);
+  border-color: #FFF2A1;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6), 0 0 18px rgba(229, 169, 60, 0.75);
+}
+
+.datemaster-paired-rose-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.6);
+  transition: transform 0.35s ease;
+}
+
+.header-datemaster-paired-logo:hover .datemaster-paired-rose-img {
+  transform: scale(1.75);
+}
+
+
+
+

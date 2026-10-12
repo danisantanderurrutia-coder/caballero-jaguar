@@ -1,0 +1,40 @@
+# ============================================================
+# 🚫 DATEMASTER — NUNCA SUBIR (cualquier ruta/archivo que lo mencione)
+# ============================================================
+**/*[Dd]ate[Mm]aster*
+**/*[Dd]ate-[Mm]aster*
+**/*[Dd]ate_[Mm]aster*
+*.app/
+*.dmg
+*.pkg
+DateMaster*/
+datemaster*/
+# Imágenes importadas de DateMaster (academia tantra)
+assets/tantra_*
+
+# ============================================================
+# 🔒 Datos personales / secretos
+# ============================================================
+assets/daniel_reference_photo.jpg
+Ejemplo_*.csv
+finanzas/*.csv
+*.env
+.env*
+*.pem
+*.key
+secrets*
+backup_*.json
+cj_backup*
+
+# ============================================================
+# Sistema / herramientas
+# ============================================================
+.DS_Store
+node_modules/
+*.log
+.vscode/
+.idea/
+__pycache__/
+*.pyc
+*.sqlite
+*.db

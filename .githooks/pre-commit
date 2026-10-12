@@ -1,0 +1,25 @@
+#!/bin/sh
+# Guardia anti-fugas: bloquea commits con archivos de DateMaster o datos personales.
+# Se activa con:  git config core.hooksPath .githooks   (ver scripts/setup-git-guards.sh)
+
+BLOCK_PATHS='([Dd]ate[-_ ]?[Mm]aster|assets/tantra_|daniel_reference_photo|Ejemplo_.*\.csv|(^|/)\.env|\.pem$|\.key$|\.app/|\.dmg$|\.pkg$|\.sqlite$|\.db$)'
+
+# Rutas que SÍ pueden mencionar DateMaster en su contenido (solo el lanzador/UI), nunca como nombre de archivo
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+
+bad=$(echo "$staged" | grep -E "$BLOCK_PATHS")
+if [ -n "$bad" ]; then
+  echo "❌ COMMIT BLOQUEADO: archivos prohibidos (DateMaster / datos personales):"
+  echo "$bad" | sed 's/^/   - /'
+  echo "   Quítalos con: git reset HEAD <archivo>"
+  exit 1
+fi
+
+# Escaneo de contenido: rutas de la app DateMaster, bases de datos o credenciales
+leak=$(git diff --cached -U0 | grep -E '^\+' | grep -E "DateMaster Apex\.app|/Applications/DateMaster|AKIA[0-9A-Z]{16}|gho_[A-Za-z0-9]{20,}|ghp_[A-Za-z0-9]{20,}|BEGIN (RSA|OPENSSH|PRIVATE) KEY")
+if [ -n "$leak" ]; then
+  echo "❌ COMMIT BLOQUEADO: contenido sensible detectado en los cambios:"
+  echo "$leak" | cut -c1-140 | sed 's/^/   /'
+  exit 1
+fi
+exit 0

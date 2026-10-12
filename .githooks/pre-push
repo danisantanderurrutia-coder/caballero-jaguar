@@ -1,0 +1,10 @@
+#!/bin/sh
+# Segunda barrera: revisa TODO el árbol rastreado antes de subir.
+bad=$(git ls-files | grep -E '([Dd]ate[-_ ]?[Mm]aster|assets/tantra_|daniel_reference_photo|Ejemplo_.*\.csv|(^|/)\.env|\.pem$|\.key$|\.app/|\.dmg$|\.pkg$|\.sqlite$|\.db$)')
+if [ -n "$bad" ]; then
+  echo "❌ PUSH BLOQUEADO: hay archivos prohibidos rastreados por git:"
+  echo "$bad" | sed 's/^/   - /'
+  echo "   Corrige con: git rm --cached <archivo>"
+  exit 1
+fi
+exit 0

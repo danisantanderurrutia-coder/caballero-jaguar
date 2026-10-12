@@ -1,0 +1,3680 @@
+/* ==========================================================================
+   IMPERIVM THEME • ARQUITECTURA IDE DE ALTO RENDIMIENTO & VISOR STREAMING
+   Filosofía: Roma Clásica, Senado, Cursus Honorum, Vexilla & Workspace IDE
+   ========================================================================== */
+
+:root, body {
+  /* --- PALETA NOCHE IMPERIAL ROMANA (OBSIDIANA, MÁRMOL NEGRO & LATÓN) --- */
+  --imperivm-bg-space: #07090E;
+  --imperivm-bg-card: #0D121D;
+  --imperivm-bg-card-hover: #141B2A;
+  --imperivm-surface: #101522;
+  --imperivm-surface-elevated: #161D2E;
+
+  --imperivm-gold: #C59A28;
+  --imperivm-gold-light: #F6E2A3;
+  --imperivm-gold-glow: rgba(197, 154, 40, 0.35);
+  --imperivm-gold-gradient: linear-gradient(135deg, #F3D079 0%, #C59A28 50%, #8C6514 100%);
+
+  --imperivm-purple-tyrian: #4E1022;
+  --imperivm-crimson: #7F1D2A;
+  --imperivm-crimson-glow: rgba(127, 29, 42, 0.45);
+  --imperivm-bronze: #8A6424;
+
+  --imperivm-text-main: #F4F6F9;
+  --imperivm-text-muted: #94A3B8;
+  --imperivm-text-dim: #64748B;
+  --imperivm-text-gold: #E5BE53;
+
+  --imperivm-border: rgba(197, 154, 40, 0.28);
+  --imperivm-border-gold: #C59A28;
+  --imperivm-border-steel: rgba(148, 163, 184, 0.2);
+
+  --imperivm-shadow-card: 0 10px 28px rgba(0, 0, 0, 0.65);
+  --imperivm-shadow-hover: 0 16px 36px rgba(0, 0, 0, 0.85), 0 0 18px rgba(197, 154, 40, 0.3);
+
+  --imperivm-radius-sm: 6px;
+  --imperivm-radius-md: 10px;
+  --imperivm-radius-lg: 16px;
+
+  --imperivm-font-title: 'Cinzel', 'Times New Roman', serif;
+  --imperivm-font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  /* Forzar modo oscuro en toda la plataforma */
+  --bg-deep-space: #07090E !important;
+  --bg-dark-synth: #0B0E16 !important;
+  --bg-dark-card: #0D121D !important;
+  --bg-dark-card-hover: #131A29 !important;
+  --bg-glass: rgba(13, 18, 29, 0.94) !important;
+
+  --parchment-light: #161D2E !important;
+  --parchment-warm: #111724 !important;
+  --parchment-muted: #94A3B8 !important;
+
+  --text-main: #F4F6F9 !important;
+  --text-muted: #94A3B8 !important;
+  --text-dim: #64748B !important;
+  --text-on-dark: #FFFFFF !important;
+
+  --border-glass: rgba(197, 154, 40, 0.28) !important;
+  --border-gold: #C59A28 !important;
+  --border-rose-gold: rgba(197, 154, 40, 0.4) !important;
+}
+
+/* --- RESET & FONDO MAESTRO IMPERIAL --- */
+body {
+  background-color: var(--imperivm-bg-space) !important;
+  background-image: 
+    radial-gradient(ellipse at 50% 0%, rgba(30, 41, 62, 0.45) 0%, transparent 70%),
+    radial-gradient(circle at 15% 30%, rgba(138, 100, 36, 0.12) 0%, transparent 45%),
+    linear-gradient(180deg, #07090E 0%, #0A0D15 100%) !important;
+  color: var(--imperivm-text-main) !important;
+  font-family: var(--imperivm-font-body) !important;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.app-container {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 16px 24px 60px 24px;
+}
+
+/* ==========================================================================
+   HEADER SUPERIOR IMPERIAL ROMANO (CURSUS HONORUM, VEXILLUM & CELESTIAL)
+   ========================================================================== */
+.app-header {
+  background: linear-gradient(135deg, rgba(14, 18, 29, 0.96) 0%, rgba(9, 12, 19, 0.98) 100%) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid var(--imperivm-border) !important;
+  border-radius: var(--imperivm-radius-md) !important;
+  padding: 14px 24px !important;
+  margin-bottom: 20px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 16px rgba(197, 154, 40, 0.15) !important;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.brand-name {
+  font-family: var(--imperivm-font-title) !important;
+  font-size: 1.35rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 1px !important;
+  color: #FFF !important;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+}
+
+.brand-sub-badge {
+  background: rgba(197, 154, 40, 0.15) !important;
+  border: 1px solid rgba(197, 154, 40, 0.4) !important;
+  color: var(--imperivm-text-gold) !important;
+  font-size: 0.68rem !important;
+  letter-spacing: 1px !important;
+}
+
+.btn-header-info {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid var(--imperivm-border) !important;
+  color: var(--imperivm-text-gold) !important;
+  border-radius: 50% !important;
+  width: 28px !important;
+  height: 28px !important;
+  font-size: 0.85rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-header-info:hover {
+  background: var(--imperivm-gold) !important;
+  color: #07090E !important;
+  transform: scale(1.1) !important;
+}
+
+#header-foco-btn {
+  background: linear-gradient(135deg, rgba(30, 41, 62, 0.9) 0%, rgba(14, 18, 29, 0.9) 100%) !important;
+  border: 1px solid var(--imperivm-border) !important;
+  color: var(--imperivm-text-gold) !important;
+  font-weight: 700 !important;
+  padding: 8px 14px !important;
+  border-radius: var(--imperivm-radius-sm) !important;
+  transition: all 0.25s ease !important;
+}
+
+#header-foco-btn:hover {
+  border-color: var(--imperivm-gold) !important;
+  box-shadow: 0 0 12px var(--imperivm-gold-glow) !important;
+  transform: translateY(-2px) !important;
+}
+
+.celestial-header-widget {
+  background: rgba(10, 13, 20, 0.75) !important;
+  border: 1px solid var(--imperivm-border) !important;
+  border-radius: var(--imperivm-radius-sm) !important;
+  padding: 6px 12px !important;
+}
+
+.celestial-time-text {
+  font-family: var(--imperivm-font-title) !important;
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  color: #FFF !important;
+  letter-spacing: 1px !important;
+}
+
+.celestial-calendar-link {
+  color: var(--imperivm-text-muted) !important;
+  font-size: 0.74rem !important;
+  text-decoration: none !important;
+  transition: color 0.2s ease !important;
+}
+
+.celestial-calendar-link:hover {
+  color: var(--imperivm-text-gold) !important;
+}
+
+/* ==========================================================================
+   ESTANDARTE ROMANO HERÁLDICO: VEXILLUM LEGIONIS (DÍAS EN RACHA)
+   ========================================================================== */
+.header-challenge-hanging-pennant {
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  position: relative !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease !important;
+  margin: 0 4px !important;
+  text-decoration: none !important;
+}
+
+.header-challenge-hanging-pennant:hover {
+  transform: translateY(3px) scale(1.03) !important;
+  filter: drop-shadow(0 8px 18px rgba(197, 154, 40, 0.55)) !important;
+}
+
+.pennant-brass-rod {
+  width: 100% !important;
+  min-width: 130px !important;
+  height: 6px !important;
+  background: linear-gradient(90deg, #5C410A 0%, #E5BE53 35%, #FFF4C2 50%, #E5BE53 65%, #5C410A 100%) !important;
+  border-radius: 4px !important;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.8), inset 0 1px 1px rgba(255,255,255,0.7) !important;
+  position: relative !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  padding: 0 8px !important;
+  box-sizing: border-box !important;
+}
+
+.rod-ring {
+  width: 8px !important;
+  height: 10px !important;
+  border: 1.5px solid #F3D079 !important;
+  border-radius: 50% !important;
+  margin-top: -6px !important;
+  background: rgba(0,0,0,0.6) !important;
+}
+
+.pennant-velvet-body {
+  background: linear-gradient(180deg, #4A0E18 0%, #2A060C 100%) !important;
+  border-left: 2px solid var(--imperivm-gold) !important;
+  border-right: 2px solid var(--imperivm-gold) !important;
+  border-top: 1px solid var(--imperivm-gold-light) !important;
+  box-shadow: inset 0 0 12px rgba(0,0,0,0.8), 0 6px 14px rgba(0,0,0,0.6) !important;
+  padding: 6px 12px 8px 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-width: 124px !important;
+  transition: all 0.4s ease !important;
+}
+
+.pennant-heraldic-crest {
+  font-size: 1.25rem !important;
+  filter: drop-shadow(0 0 4px rgba(243, 208, 121, 0.6)) !important;
+}
+
+.pennant-title {
+  font-family: var(--imperivm-font-title) !important;
+  font-size: 0.68rem !important;
+  font-weight: 800 !important;
+  color: var(--imperivm-gold-light) !important;
+  letter-spacing: 1px !important;
+  display: block !important;
+}
+
+.pennant-streak {
+  font-size: 0.72rem !important;
+  font-weight: 900 !important;
+  color: #FFF !important;
+  letter-spacing: 0.5px !important;
+  display: block !important;
+}
+
+.pennant-bottom-tip {
+  width: 0 !important;
+  height: 0 !important;
+  border-left: 62px solid transparent !important;
+  border-right: 62px solid transparent !important;
+  border-top: 14px solid #2A060C !important;
+  filter: drop-shadow(0 3px 2px rgba(0,0,0,0.4)) !important;
+  position: relative !important;
+}
+
+.vexillum-streak-tier-1 .pennant-velvet-body { min-height: 44px; }
+.vexillum-streak-tier-2 .pennant-velvet-body {
+  min-height: 56px;
+  border-bottom: 2px solid var(--imperivm-gold);
+  background: linear-gradient(180deg, #5A111E 0%, #30080F 80%, #1A0407 100%) !important;
+}
+.vexillum-streak-tier-3 .pennant-velvet-body {
+  min-height: 70px;
+  border-bottom: 3px solid var(--imperivm-gold);
+  box-shadow: inset 0 0 16px rgba(0,0,0,0.9), 0 0 14px rgba(197, 154, 40, 0.4) !important;
+}
+.vexillum-streak-tier-4 .pennant-velvet-body {
+  min-height: 86px;
+  border-bottom: 4px solid #FFF4C2;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.9), 0 0 22px rgba(197, 154, 40, 0.7) !important;
+}
+
+/* Cursus Honorum Badge */
+.level-badge-card {
+  background: rgba(13, 18, 29, 0.9) !important;
+  border: 1px solid var(--imperivm-border) !important;
+  border-radius: var(--imperivm-radius-sm) !important;
+  padding: 8px 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  transition: all 0.2s ease !important;
+}
+
+.level-name {
+  font-family: var(--imperivm-font-title) !important;
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  color: var(--imperivm-text-gold) !important;
+}
+
+/* Barra principal de navegación y botones maestros */
+.nav-tabs-container {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  flex-wrap: wrap !important;
+}
+
+/* ==========================================================================
+   ARQUITECTURA DE WORKSPACE / IDE IMPERIAL (DOCK & STAGE)
+   ========================================================================== */
+.imperivm-ide-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+/* Barra de Herramientas / Activity Dock estilo IDE */
+.imperivm-categories-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px 12px;
+  background: rgba(12, 16, 26, 0.92);
+  border: 1px solid var(--imperivm-border);
+  border-radius: var(--imperivm-radius-md);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  scrollbar-width: none;
+}
+
+.imperivm-categories-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.btn-category-rail {
+  background: rgba(20, 26, 40, 0.7);
+  border: 1px solid rgba(197, 154, 40, 0.2);
+  color: var(--imperivm-text-muted);
+  font-family: var(--imperivm-font-body);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: 6px;
+  white-space: nowrap;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.2s ease;
+}
+
+.btn-category-rail:hover {
+  background: rgba(30, 42, 64, 0.9);
+  color: #FFF;
+  border-color: var(--imperivm-gold);
+}
+
+.btn-category-rail.active {
+  background: var(--imperivm-gold-gradient);
+  color: #07090E;
+  border-color: var(--imperivm-gold-light);
+  font-weight: 800;
+  box-shadow: 0 4px 14px rgba(197, 154, 40, 0.4);
+}
+
+/* ==========================================================================
+   HERO BILLBOARD CINEMÁTICO (PORTADA EN VIVO)
+   ========================================================================== */
+.imperivm-hero-billboard {
+  position: relative !important;
+  border-radius: var(--imperivm-radius-lg) !important;
+  overflow: hidden !important;
+  min-height: 290px !important;
+  border: 1.5px solid var(--imperivm-border) !important;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.75) !important;
+  display: flex !important;
+  align-items: flex-end !important;
+}
+
+.imperivm-hero-bg {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  filter: brightness(0.36) contrast(1.15) saturate(1.1) !important;
+  transition: transform 10s ease !important;
+}
+
+.imperivm-hero-billboard:hover .imperivm-hero-bg {
+  transform: scale(1.03) !important;
+}
+
+.imperivm-hero-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(0deg, #07090E 5%, rgba(7, 9, 14, 0.75) 55%, rgba(7, 9, 14, 0.2) 100%),
+              linear-gradient(90deg, #07090E 0%, rgba(7, 9, 14, 0.85) 45%, transparent 100%) !important;
+  pointer-events: none !important;
+}
+
+.imperivm-hero-content {
+  position: relative !important;
+  z-index: 2 !important;
+  padding: 32px 36px !important;
+  max-width: 820px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+.imperivm-hero-live-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: rgba(127, 29, 42, 0.35) !important;
+  border: 1px solid var(--imperivm-crimson) !important;
+  color: #FFA4A4 !important;
+  padding: 4px 12px !important;
+  border-radius: 20px !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1px !important;
+  width: fit-content !important;
+}
+
+.imperivm-live-dot {
+  width: 8px !important;
+  height: 8px !important;
+  border-radius: 50% !important;
+  background: #FF3B30 !important;
+  box-shadow: 0 0 8px #FF3B30 !important;
+  animation: pulseDot 2s infinite ease-in-out !important;
+}
+
+@keyframes pulseDot {
+  0% { transform: scale(0.9); opacity: 0.7; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.9); opacity: 0.7; }
+}
+
+.imperivm-hero-title {
+  font-family: var(--imperivm-font-title) !important;
+  font-size: 2.1rem !important;
+  font-weight: 800 !important;
+  line-height: 1.15 !important;
+  color: #FFF !important;
+  margin: 0 !important;
+  letter-spacing: 0.5px !important;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.8) !important;
+}
+
+.imperivm-hero-quote {
+  font-size: 0.95rem !important;
+  color: #CBD5E1 !important;
+  font-style: italic !important;
+  line-height: 1.45 !important;
+  margin: 0 !important;
+  max-width: 640px !important;
+}
+
+.imperivm-hero-actions {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  margin-top: 8px !important;
+}
+
+.btn-imperivm-primary {
+  background: var(--imperivm-gold-gradient) !important;
+  color: #07090E !important;
+  border: none !important;
+  font-weight: 800 !important;
+  font-size: 0.88rem !important;
+  letter-spacing: 0.5px !important;
+  padding: 12px 24px !important;
+  border-radius: var(--imperivm-radius-sm) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  box-shadow: 0 4px 18px rgba(197, 154, 40, 0.4) !important;
+  transition: all 0.25s ease !important;
+  text-transform: uppercase !important;
+}
+
+.btn-imperivm-primary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 24px rgba(197, 154, 40, 0.6) !important;
+  filter: brightness(1.1) !important;
+}
+
+.btn-imperivm-secondary {
+  background: rgba(20, 26, 40, 0.8) !important;
+  backdrop-filter: blur(8px) !important;
+  color: var(--imperivm-text-main) !important;
+  border: 1px solid var(--imperivm-border) !important;
+  font-weight: 700 !important;
+  font-size: 0.84rem !important;
+  padding: 12px 20px !important;
+  border-radius: var(--imperivm-radius-sm) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+}
+
+.btn-imperivm-secondary:hover {
+  background: rgba(30, 42, 64, 0.95) !important;
+  border-color: var(--imperivm-border-gold) !important;
+  color: var(--imperivm-text-gold) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* ==========================================================================
+   FILAS DE CARRUSELES NETFLIX (NO COLAPSADAS • HORIZONTAL FLEX CON ANCHOS FIJOS)
+   ========================================================================== */
+.imperivm-rail-section {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  width: 100% !important;
+}
+
+.imperivm-rail-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 0 4px !important;
+}
+
+.imperivm-rail-title-group {
+  display: flex !important;
+  align-items: baseline !important;
+  gap: 12px !important;
+}
+
+.imperivm-rail-title {
+  font-family: var(--imperivm-font-title) !important;
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.8px !important;
+  color: #FFF !important;
+  text-transform: uppercase !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.imperivm-rail-subtitle {
+  font-size: 0.8rem !important;
+  color: var(--imperivm-text-muted) !important;
+}
+
+.imperivm-rail-controls {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.imperivm-nav-arrow {
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50% !important;
+  background: rgba(20, 26, 40, 0.9) !important;
+  border: 1px solid var(--imperivm-border) !important;
+  color: var(--imperivm-text-main) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  font-size: 0.95rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.imperivm-nav-arrow:hover {
+  background: var(--imperivm-border-gold) !important;
+  color: #07090E !important;
+  transform: scale(1.1) !important;
+}
+
+/* TRACK HORIZONTAL DE STREAMING (CRÍTICO: FLEX ROW + OVERFLOW-X + WRAP NOWRAP) */
+.imperivm-carousel-track {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: nowrap !important;
+  align-items: stretch !important;
+  gap: 20px !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-behavior: smooth !important;
+  scroll-snap-type: x mandatory !important;
+  padding: 10px 4px 22px 4px !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(197, 154, 40, 0.4) transparent !important;
+  width: 100% !important;
+}
+
+.imperivm-carousel-track::-webkit-scrollbar {
+  height: 7px;
+}
+
+.imperivm-carousel-track::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+}
+
+.imperivm-carousel-track::-webkit-scrollbar-thumb {
+  background: rgba(197, 154, 40, 0.35);
+  border-radius: 10px;
+}
+
+.imperivm-carousel-track::-webkit-scrollbar-thumb:hover {
+  background: var(--imperivm-border-gold);
+}
+
+/* ==========================================================================
+   TARJETAS CINEMÁTICAS 16:9 (ANCHO FIJO • IMPOSIBLE QUE SE COLAPSEN)
+   ========================================================================== */
+.imperivm-card,
+.bitacora-cinematic-card,
+.finance-streaming-card {
+  flex: 0 0 340px !important;
+  min-width: 340px !important;
+  max-width: 340px !important;
+  width: 340px !important;
+  scroll-snap-align: start !important;
+  background: var(--imperivm-bg-card) !important;
+  border: 1px solid var(--imperivm-border) !important;
+  border-radius: var(--imperivm-radius-md) !important;
+  overflow: hidden !important;
+  box-shadow: var(--imperivm-shadow-card) !important;
+  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease !important;
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+}
+
+.imperivm-card:hover,
+.bitacora-cinematic-card:hover,
+.finance-streaming-card:hover {
+  transform: translateY(-5px) !important;
+  box-shadow: var(--imperivm-shadow-hover) !important;
+  border-color: var(--imperivm-border-gold) !important;
+}
+
+/* Medios de la Tarjeta */
+.imperivm-card-media,
+.bitacora-card-media {
+  position: relative !important;
+  height: 165px !important;
+  min-height: 165px !important;
+  max-height: 165px !important;
+  overflow: hidden !important;
+  background: #080A0F !important;
+  width: 100% !important;
+}
+
+.imperivm-card-media img,
+.bitacora-card-media img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transition: transform 0.45s ease !important;
+  filter: brightness(0.72) contrast(1.1) !important;
+}
+
+.imperivm-card:hover .imperivm-card-media img,
+.bitacora-cinematic-card:hover .bitacora-card-media img {
+  transform: scale(1.08) !important;
+  filter: brightness(0.9) !important;
+}
+
+.imperivm-card-badge,
+.bitacora-card-badge {
+  position: absolute !important;
+  top: 10px !important;
+  left: 10px !important;
+  background: rgba(7, 9, 14, 0.88) !important;
+  backdrop-filter: blur(6px) !important;
+  border: 1px solid var(--imperivm-border) !important;
+  color: var(--imperivm-text-gold) !important;
+  font-size: 0.7rem !important;
+  font-weight: 700 !important;
+  padding: 3px 8px !important;
+  border-radius: 4px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+  z-index: 2 !important;
+}
+
+.imperivm-card-status-pill {
+  position: absolute !important;
+  top: 10px !important;
+  right: 10px !important;
+  background: rgba(7, 9, 14, 0.88) !important;
+  backdrop-filter: blur(6px) !important;
+  border-radius: 20px !important;
+  padding: 3px 10px !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  z-index: 2 !important;
+}
+
+.status-completed { color: #52C41A !important; border: 1px solid #52C41A !important; }
+.status-active { color: #FFA940 !important; border: 1px solid #FFA940 !important; }
+.status-pending { color: #8F9CAE !important; border: 1px solid #485568 !important; }
+
+/* Cuerpo de la Tarjeta */
+.imperivm-card-body,
+.bitacora-card-body {
+  padding: 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  flex: 1 !important;
+}
+
+.imperivm-card-title,
+.bitacora-card-title {
+  font-family: var(--imperivm-font-title) !important;
+  font-size: 1.05rem !important;
+  font-weight: 700 !important;
+  color: #FFF !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.imperivm-card-desc,
+.bitacora-card-desc {
+  font-size: 0.8rem !important;
+  color: var(--imperivm-text-muted) !important;
+  line-height: 1.45 !important;
+  margin: 0 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 3 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+.imperivm-card-footer,
+.bitacora-card-footer {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.06) !important;
+  padding-top: 12px !important;
+  margin-top: auto !important;
+  gap: 8px !important;
+}
+
+.imperivm-card-action-btn {
+  background: rgba(197, 154, 40, 0.12) !important;
+  border: 1px solid rgba(197, 154, 40, 0.35) !important;
+  color: var(--imperivm-text-gold) !important;
+  border-radius: 4px !important;
+  font-size: 0.76rem !important;
+  font-weight: 700 !important;
+  padding: 6px 12px !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+.imperivm-card-action-btn:hover {
+  background: var(--imperivm-border-gold) !important;
+  color: #07090E !important;
+}
+
+/* ==========================================================================
+   TARJETAS DE ARMAMENTARIUM (48 OBJETOS • ANCHO FIJO 260px)
+   ========================================================================== */
+.imperivm-item-card {
+  flex: 0 0 260px !important;
+  min-width: 260px !important;
+  max-width: 260px !important;
+  width: 260px !important;
+  scroll-snap-align: start !important;
+  background: var(--imperivm-bg-card) !important;
+  border: 1px solid var(--imperivm-border) !important;
+  border-radius: var(--imperivm-radius-md) !important;
+  padding: 16px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  box-shadow: var(--imperivm-shadow-card) !important;
+  transition: all 0.25s ease !important;
+}
+
+.imperivm-item-card:hover {
+  transform: translateY(-4px) !important;
+  border-color: var(--imperivm-border-gold) !important;
+  box-shadow: var(--imperivm-shadow-hover) !important;
+}
+
+.imperivm-item-top {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.imperivm-item-icon-box {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 8px !important;
+  background: #151D2C !important;
+  border: 1px solid rgba(197, 154, 40, 0.35) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.35rem !important;
+}
+
+.imperivm-item-name {
+  font-weight: 700 !important;
+  font-size: 0.92rem !important;
+  color: #FFF !important;
+  margin: 0 !important;
+}
+
+.imperivm-item-lore {
+  font-size: 0.76rem !important;
+  color: var(--imperivm-text-muted) !important;
+  line-height: 1.4 !important;
+  margin: 0 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+/* ==========================================================================
+   DRAWER LATERAL CINEMÁTICO & OVERLAY DE FOCO
+   ========================================================================== */
+.imperivm-drawer {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 520px !important;
+  max-width: 94vw !important;
+  z-index: 10000 !important;
+  background: #0B0E16 !important;
+  border-left: 1.5px solid var(--imperivm-border) !important;
+  box-shadow: -15px 0 50px rgba(0, 0, 0, 0.85) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  transform: translateX(100%) !important;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  overflow-y: auto !important;
+  color: var(--imperivm-text-main) !important;
+}
+
+.imperivm-drawer.active {
+  transform: translateX(0) !important;
+}
+
+.imperivm-drawer-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 9999 !important;
+  background: rgba(0, 0, 0, 0.75) !important;
+  backdrop-filter: blur(5px) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.3s ease !important;
+}
+
+.imperivm-drawer-backdrop.active {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.imperivm-drawer-header {
+  padding: 20px 24px !important;
+  border-bottom: 1px solid var(--imperivm-border) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  background: #111624 !important;
+}
+
+.imperivm-drawer-title {
+  font-family: var(--imperivm-font-title) !important;
+  font-size: 1.2rem !important;
+  font-weight: 700 !important;
+  color: var(--imperivm-text-gold) !important;
+  margin: 0 !important;
+}
+
+.imperivm-drawer-close {
+  background: transparent !important;
+  border: none !important;
+  color: var(--imperivm-text-muted) !important;
+  font-size: 1.4rem !important;
+  cursor: pointer !important;
+  line-height: 1 !important;
+  transition: color 0.2s ease !important;
+}
+
+.imperivm-drawer-close:hover {
+  color: #FFF !important;
+}
+
+.imperivm-drawer-tabs {
+  display: flex !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+  background: #090C14 !important;
+}
+
+.imperivm-drawer-tab-btn {
+  flex: 1 !important;
+  padding: 12px !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  color: var(--imperivm-text-muted) !important;
+  font-size: 0.82rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.imperivm-drawer-tab-btn.active {
+  color: var(--imperivm-text-gold) !important;
+  border-bottom-color: var(--imperivm-border-gold) !important;
+  background: rgba(197, 154, 40, 0.08) !important;
+}
+
+.imperivm-drawer-content {
+  padding: 24px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 20px !important;
+}
+
+/* OVERLAY FOCUS */
+.imperivm-focus-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 10001 !important;
+  background: radial-gradient(circle at center, #0F1422 0%, #05070A 100%) !important;
+  display: none !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 30px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.3s ease !important;
+}
+
+.imperivm-focus-overlay.active {
+  display: flex !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.imperivm-focus-timer {
+  font-family: var(--imperivm-font-title) !important;
+  font-size: 6rem !important;
+  font-weight: 800 !important;
+  color: #FFF !important;
+  line-height: 1 !important;
+  letter-spacing: 3px !important;
+  text-shadow: 0 0 28px rgba(197, 154, 40, 0.45) !important;
+}
+
+/* BANNER LEGADO */
+.legado-banner {
+  background: linear-gradient(135deg, #1A130B 0%, #2A1F13 100%) !important;
+  border: 1.5px solid var(--imperivm-border-gold) !important;
+  border-radius: var(--imperivm-radius-md) !important;
+  padding: 18px 24px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 14px !important;
+}
+
+/* ==========================================================================
+   FILA 1: COMANDOS RÁPIDOS & CENTRO DE MANDO ELEMENTAL
+   ========================================================================== */
+.imperivm-command-bar {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  background: linear-gradient(135deg, rgba(14, 18, 29, 0.95) 0%, rgba(9, 12, 19, 0.98) 100%) !important;
+  border: 1px solid var(--imperivm-border) !important;
+  border-radius: var(--imperivm-radius-md) !important;
+  padding: 12px 18px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6) !important;
+}
+
+.imperivm-live-clock-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(10, 13, 20, 0.85);
+  border: 1px solid var(--imperivm-border);
+  padding: 6px 14px;
+  border-radius: var(--imperivm-radius-sm);
+  color: var(--imperivm-text-gold);
+  font-family: var(--imperivm-font-title);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.btn-command-pill {
+  background: rgba(20, 26, 40, 0.85);
+  border: 1px solid var(--imperivm-border);
+  color: var(--imperivm-text-main);
+  padding: 8px 14px;
+  border-radius: var(--imperivm-radius-sm);
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-command-pill:hover {
+  background: rgba(30, 42, 64, 0.95);
+  border-color: var(--imperivm-gold);
+  color: var(--imperivm-text-gold);
+  transform: translateY(-2px);
+}
+
+.btn-command-pill-gold {
+  background: var(--imperivm-gold-gradient) !important;
+  color: #07090E !important;
+  border-color: var(--imperivm-gold-light) !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 12px rgba(197, 154, 40, 0.4) !important;
+}
+
+/* ==========================================================================
+   ESTILOS CONDICIONALES DE OBJETOS: EQUIPADOS, DESBLOQUEADOS Y BLOQUEADOS
+   ========================================================================== */
+.imperivm-item-card.item-equipped {
+  border: 2px solid var(--imperivm-gold) !important;
+  box-shadow: 0 0 16px rgba(197, 154, 40, 0.45) !important;
+  background: linear-gradient(160deg, #151D2E 0%, #0D121D 100%) !important;
+}
+
+.imperivm-item-card.item-unlocked {
+  border: 1.5px solid rgba(197, 154, 40, 0.35) !important;
+  background: var(--imperivm-bg-card) !important;
+}
+
+.imperivm-item-card.item-blocked {
+  border: 1.5px solid #FF3B30 !important;
+  box-shadow: 0 0 12px rgba(255, 59, 48, 0.28) !important;
+  background: linear-gradient(160deg, #180F12 0%, #0D080A 100%) !important;
+  position: relative !important;
+}
+
+.imperivm-item-card.item-blocked::before {
+  content: '❌';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  font-size: 1.15rem;
+  filter: drop-shadow(0 0 6px rgba(255, 59, 48, 0.8));
+  z-index: 3;
+}
+
+.badge-equipped-tag {
+  background: rgba(197, 154, 40, 0.2);
+  color: var(--imperivm-text-gold);
+  border: 1px solid var(--imperivm-gold);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.badge-blocked-tag {
+  background: rgba(255, 59, 48, 0.15);
+  color: #FF6B6B;
+  border: 1px solid #FF3B30;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   ESTILOS DE TÍTULOS Y CONTRA-TÍTULOS
+   ========================================================================== */
+.title-card {
+  flex: 0 0 280px !important;
+  min-width: 280px !important;
+  max-width: 280px !important;
+  background: var(--imperivm-bg-card);
+  border: 1px solid var(--imperivm-border);
+  border-radius: var(--imperivm-radius-md);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--imperivm-shadow-card);
+  transition: transform 0.25s ease, border-color 0.25s ease;
+}
+
+.title-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--imperivm-gold);
+}
+
+.title-card.counter-title {
+  border-left: 3px solid var(--imperivm-crimson) !important;
+}
+
+.title-card.honorum-title {
+  border-left: 3px solid var(--imperivm-gold) !important;
+}
+
+/* ==========================================================================
+   CHECKLIST DE TAREAS EN LA TARJETA DEL DÍA
+   ========================================================================== */
+.daily-tasks-preview-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.daily-task-preview-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  font-size: 0.78rem;
+}
+
+.daily-task-preview-item.completed {
+  opacity: 0.6;
+  text-decoration: line-through;
+}
+
+/* ==========================================================================
+   BANDERINES HERÁLDICOS POR CATEGORÍA EN EL HEADER ROMANO (COHORTE DE GUERRA)
+   ========================================================================== */
+.header-category-pennants-container {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  height: auto !important;
+  min-height: 85px !important;
+  overflow: visible !important;
+  position: relative !important;
+  width: 100% !important;
+}
+
+.header-category-pennants-container .kcd-hanging-heraldic-pennants-row {
+  position: relative !important;
+  top: 0 !important;
+  left: auto !important;
+  right: auto !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: flex-start !important;
+  gap: 6px !important;
+  margin: 0 auto !important;
+  padding: 2px 0 10px 0 !important;
+  height: auto !important;
+  width: auto !important;
+}
+
+.header-category-pennants-container .kcd-heraldic-pennant-item {
+  width: 58px !important;
+  margin: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  cursor: pointer !important;
+  transition: transform 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.28s ease !important;
+  position: relative !important;
+}
+
+.header-category-pennants-container .kcd-heraldic-pennant-item:hover {
+  transform: translateY(6px) scale(1.08) !important;
+  z-index: 50 !important;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 12px rgba(197, 154, 40, 0.6)) !important;
+}
+
+.header-category-pennants-container .kcd-pennant-cloth {
+  width: 54px !important;
+  padding: 4px 3px 2px 3px !important;
+  border-radius: 3px 3px 0 0 !important;
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  box-sizing: border-box !important;
+}
+
+.header-category-pennants-container .kcd-pennant-central-maestro .kcd-pennant-cloth {
+  width: 60px !important;
+  padding-top: 6px !important;
+}
+
+.header-category-pennants-container .kcd-pennant-name-tag {
+  font-family: 'Cinzel', serif !important;
+  font-size: 0.60rem !important;
+  letter-spacing: 0.6px !important;
+  text-transform: uppercase !important;
+  margin: 2px 0 !important;
+  line-height: 1.1 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+}
+
+/* Falera Romana: Medalla Circular Metálica con Puntos */
+.header-category-pennants-container .kcd-pennant-points-badge {
+  font-family: 'Cinzel', monospace, serif !important;
+  font-size: 0.62rem !important;
+  font-weight: 800 !important;
+  color: #E2E8F0 !important;
+  background: radial-gradient(circle, #2A2418 0%, #100E08 100%) !important;
+  border: 1px solid rgba(197, 154, 40, 0.5) !important;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.8), inset 0 1px 1px rgba(246, 226, 163, 0.4) !important;
+  border-radius: 10px !important;
+  padding: 1px 6px !important;
+  margin-top: 2px !important;
+  line-height: 1.2 !important;
+  letter-spacing: 0.5px !important;
+}
+
+.header-category-pennants-container .kcd-pennant-points-badge.badge-earned {
+  color: #07090E !important;
+  background: var(--imperivm-gold-gradient) !important;
+  border-color: #F6E2A3 !important;
+  box-shadow: 0 0 10px rgba(197, 154, 40, 0.7), inset 0 1px 1px #FFF !important;
+}
+
+/* Punta en V de lanza legionaria */
+.header-category-pennants-container .kcd-pennant-v-fringe {
+  position: absolute !important;
+  bottom: -15px !important;
+  left: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  border-left: 27px solid transparent !important;
+  border-right: 27px solid transparent !important;
+  border-top: 15px solid #0A0D15 !important;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.8)) !important;
+  z-index: 2 !important;
+}
+
+.header-category-pennants-container .kcd-pennant-central-maestro .kcd-pennant-v-fringe {
+  border-left-width: 30px !important;
+  border-right-width: 30px !important;
+  border-top-width: 17px !important;
+  bottom: -17px !important;
+}
+
+/* ==========================================================================
+   ARMAMENTARIUM MODAL & FILTROS DE 48 OBJETOS
+   ========================================================================== */
+.armamentarium-filter-bar {
+  display: flex !important;
+  gap: 8px !important;
+  margin-bottom: 16px !important;
+  flex-wrap: wrap !important;
+}
+
+.btn-armamentarium-filter {
+  background: #151D2E !important;
+  border: 1px solid var(--imperivm-border) !important;
+  color: var(--imperivm-text-muted) !important;
+  padding: 6px 14px !important;
+  border-radius: 6px !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-armamentarium-filter.active,
+.btn-armamentarium-filter:hover {
+  background: var(--imperivm-gold-gradient) !important;
+  color: #07090E !important;
+  border-color: var(--imperivm-gold-light) !important;
+}
+
+.armamentarium-48-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
+  gap: 12px !important;
+  max-height: 60vh !important;
+  overflow-y: auto !important;
+  padding: 4px 6px !important;
+}
+
+.armamentarium-grid-card {
+  background: #0E1422 !important;
+  border: 1px solid var(--imperivm-border) !important;
+  border-radius: 8px !important;
+  padding: 10px 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  text-align: center !important;
+  cursor: pointer !important;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease !important;
+  position: relative !important;
+}
+
+.armamentarium-grid-card:hover {
+  transform: translateY(-3px) scale(1.03) !important;
+  border-color: var(--imperivm-gold) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6) !important;
+}
+
+.armamentarium-grid-card.is-equipped {
+  border: 1.5px solid var(--imperivm-gold) !important;
+  box-shadow: 0 0 14px rgba(197, 154, 40, 0.45) !important;
+  background: linear-gradient(180deg, #182032 0%, #0F1522 100%) !important;
+}
+
+.armamentarium-grid-card.is-blocked {
+  border: 1.5px solid #FF3B30 !important;
+  opacity: 0.85 !important;
+}
+
+.armamentarium-grid-card.is-blocked::after {
+  content: '❌';
+  position: absolute !important;
+  top: 4px !important;
+  right: 4px !important;
+  font-size: 0.85rem !important;
+  filter: drop-shadow(0 0 4px rgba(255, 59, 48, 0.9)) !important;
+}
+
+.btn-imperivm-return-floating {
+  position: fixed !important;
+  bottom: 24px !important;
+  right: 24px !important;
+  z-index: 9999 !important;
+  background: var(--imperivm-gold-gradient) !important;
+  color: #07090E !important;
+  font-family: var(--imperivm-font-title) !important;
+  font-weight: 800 !important;
+  border: none !important;
+  border-radius: 30px !important;
+  padding: 12px 24px !important;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.8), 0 0 15px rgba(197, 154, 40, 0.4) !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  transition: transform 0.2s ease !important;
+}
+
+.btn-imperivm-return-floating:hover {
+  transform: translateY(-2px) scale(1.05) !important;
+}
+
+/* ==========================================================================
+   DRAWER MEJORADO: STICKY HEADER & SUBNIGHT TABS
+   ========================================================================== */
+.imperivm-drawer {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 560px !important;
+  max-width: 95vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  z-index: 100000 !important;
+  background: linear-gradient(180deg, #0C101A 0%, #06080E 100%) !important;
+  border-left: 2px solid var(--imperivm-border-gold) !important;
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.9) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  transform: translateX(100%) !important;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+  color: var(--imperivm-text-main) !important;
+}
+
+.imperivm-drawer.active {
+  transform: translateX(0) !important;
+}
+
+.imperivm-drawer-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99999 !important;
+  background: rgba(0, 0, 0, 0.75) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transition: opacity 0.3s ease !important;
+}
+
+.imperivm-drawer-backdrop.active {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+body.imperivm-drawer-open {
+  overflow: hidden !important;
+  touch-action: none !important;
+}
+
+html.imperivm-drawer-open {
+  overflow: hidden !important;
+}
+
+.imperivm-drawer-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 30 !important;
+  background: rgba(14, 18, 29, 0.98) !important;
+  backdrop-filter: blur(10px) !important;
+  border-bottom: 1.5px solid var(--imperivm-border-gold) !important;
+  padding: 18px 24px !important;
+}
+
+.day-contextual-subtabs {
+  display: flex !important;
+  gap: 6px !important;
+  overflow-x: auto !important;
+  padding-bottom: 4px !important;
+  margin-bottom: 14px !important;
+}
+
+.btn-day-subtab {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid var(--imperivm-border) !important;
+  color: var(--imperivm-text-muted) !important;
+  padding: 6px 12px !important;
+  border-radius: 6px !important;
+  font-size: 0.76rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  white-space: nowrap !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-day-subtab.active,
+.btn-day-subtab:hover {
+  background: var(--imperivm-gold-gradient) !important;
+  color: #07090E !important;
+  border-color: var(--imperivm-gold-light) !important;
+}
+
+/* ==========================================================================
+   ARMAMENTARIUM IMPERIAL DE ÉLITE (PEDESTAL & HORNACINAS)
+   ========================================================================== */
+.armamentarium-hero-pedestal {
+  background: radial-gradient(circle at center, #1B2438 0%, #0E1320 100%) !important;
+  border: 2px solid var(--imperivm-border-gold) !important;
+  border-radius: 12px !important;
+  padding: 20px !important;
+  display: flex !important;
+  gap: 18px !important;
+  align-items: center !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(197, 154, 40, 0.2) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.armamentarium-hero-pedestal::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(197, 154, 40, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.armamentarium-medallion {
+  width: 86px !important;
+  height: 86px !important;
+  min-width: 86px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #1C2333 0%, #0B0E16 100%) !important;
+  border: 3px solid var(--imperivm-gold) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 2.8rem !important;
+  box-shadow: 0 0 25px rgba(197, 154, 40, 0.5), inset 0 0 15px rgba(197, 154, 40, 0.3) !important;
+}
+
+.armamentarium-medallion.is-blocked {
+  border-color: #FF3B30 !important;
+  box-shadow: 0 0 20px rgba(255, 59, 48, 0.4) !important;
+}
+
+.aura-tag-pill {
+  font-size: 0.68rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  padding: 2px 8px !important;
+  border-radius: 4px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+/* ==========================================================================
+   HISTORIAL DE CONQUISTAS (CAMPAÑA)
+   ========================================================================== */
+.campaign-view-toggle-bar {
+  display: flex !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+
+.btn-campaign-toggle {
+  background: rgba(20, 26, 40, 0.8) !important;
+  border: 1px solid var(--imperivm-border) !important;
+  color: var(--imperivm-text-muted) !important;
+  padding: 4px 12px !important;
+  border-radius: 6px !important;
+  font-size: 0.74rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-campaign-toggle.active {
+  background: var(--imperivm-gold-gradient) !important;
+  color: #07090E !important;
+  border-color: var(--imperivm-gold-light) !important;
+}
+
+.quest-conquered-card {
+  border: 2px solid var(--imperivm-gold) !important;
+  box-shadow: 0 0 20px rgba(197, 154, 40, 0.35) !important;
+  background: linear-gradient(160deg, #182030 0%, #0D121D 100%) !important;
+}
+
+
+
+/* ==========================================================================
+   STOIC THEME • ESTÉTICA ESTOICA MONOCROMÁTICA
+   Paleta: Negro obsidiana, mármol blanco, acero frío, luminosidad cenital
+   ========================================================================== */
+
+/* --- OVERRIDE: PALETA ESTOICA (BLANCO, NEGRO, PLATA) --- */
+:root, body {
+  --stoic-void: #050507 !important;
+  --stoic-bg-1: #0A0A0E !important;
+  --stoic-bg-2: #121217 !important;
+  --stoic-bg-card: rgba(18, 18, 23, 0.88) !important;
+  --stoic-bg-card-hover: rgba(28, 28, 35, 0.95) !important;
+  --stoic-marble: #FFFFFF !important;
+  --stoic-marble-off: #E8E8EC !important;
+  --stoic-text-muted: #8E8E93 !important;
+  --stoic-text-dim: #545458 !important;
+  --stoic-steel-border: rgba(255, 255, 255, 0.10) !important;
+  --stoic-steel-bright: rgba(255, 255, 255, 0.30) !important;
+  --stoic-iron: #1E1E24 !important;
+  --stoic-glow: 0 0 20px rgba(255, 255, 255, 0.35) !important;
+  --stoic-glow-subtle: 0 0 10px rgba(255, 255, 255, 0.15) !important;
+  --stoic-shadow: 0 14px 40px rgba(0, 0, 0, 0.9) !important;
+
+  /* Override existing gold variables to silver/white */
+  --imperivm-bg-space: #050507 !important;
+  --imperivm-bg-card: #0E0E13 !important;
+  --imperivm-bg-card-hover: #18181F !important;
+  --imperivm-surface: #0C0C11 !important;
+  --imperivm-surface-elevated: #141419 !important;
+  --imperivm-gold: #C0C0C8 !important;
+  --imperivm-gold-light: #E8E8F0 !important;
+  --imperivm-gold-glow: rgba(200, 200, 210, 0.25) !important;
+  --imperivm-gold-gradient: linear-gradient(135deg, #E0E0E8 0%, #A0A0A8 50%, #707078 100%) !important;
+  --imperivm-text-gold: #D0D0D8 !important;
+  --imperivm-border: rgba(255, 255, 255, 0.10) !important;
+  --imperivm-border-gold: rgba(255, 255, 255, 0.25) !important;
+
+  --bg-deep-space: #050507 !important;
+  --bg-dark-synth: #080810 !important;
+  --bg-dark-card: #0E0E13 !important;
+  --bg-dark-card-hover: #18181F !important;
+  --bg-glass: rgba(14, 14, 19, 0.94) !important;
+  --parchment-light: #141419 !important;
+  --parchment-warm: #101015 !important;
+  --border-glass: rgba(255, 255, 255, 0.10) !important;
+  --border-gold: rgba(255, 255, 255, 0.25) !important;
+  --border-rose-gold: rgba(255, 255, 255, 0.15) !important;
+
+  --neon-cyan: rgba(255, 255, 255, 0.7) !important;
+  --neon-pink-bright: #FF6B6B !important;
+  --neon-gold: #FFFFFF !important;
+  --emerald-bright: #7ED87E !important;
+}
+
+/* --- FONDO MAESTRO ESTOICO --- */
+body {
+  background-color: #050507 !important;
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(40, 40, 50, 0.3) 0%, transparent 70%),
+    linear-gradient(180deg, #050507 0%, #08080D 100%) !important;
+}
+
+/* ==========================================================================
+   TOP NAVBAR ESTOICO (BARRA SUPERIOR COMPACTA)
+   ========================================================================== */
+.stoic-top-navbar {
+  background: linear-gradient(180deg, rgba(12, 12, 17, 0.97) 0%, rgba(8, 8, 12, 0.99) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 0 !important;
+  margin-bottom: 0 !important;
+  padding: 10px 24px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.9), 0 1px 0 rgba(255, 255, 255, 0.04) inset !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: wrap !important;
+  gap: 12px !important;
+  position: relative !important;
+  z-index: 100 !important;
+}
+
+.stoic-nav-segment {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+}
+
+.stoic-nav-left {
+  gap: 14px !important;
+}
+
+.stoic-nav-center {
+  flex: 1 !important;
+  justify-content: center !important;
+}
+
+.stoic-nav-right {
+  gap: 14px !important;
+}
+
+/* Brand text in stoic navbar */
+.stoic-brand-text .brand-name {
+  font-size: 1.05rem !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  letter-spacing: 2px !important;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Info button as stoic iron seal */
+.stoic-info-seal {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.stoic-info-seal:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  color: #FFF !important;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Stoic ambient player compact */
+.stoic-ambient-widget {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px !important;
+  padding: 6px 14px !important;
+}
+
+.stoic-ambient-widget .btn-ambient-control {
+  color: rgba(255, 255, 255, 0.5) !important;
+  background: none !important;
+  border: none !important;
+  font-size: 0.9rem !important;
+  cursor: pointer !important;
+  transition: color 0.2s ease !important;
+}
+
+.stoic-ambient-widget .btn-ambient-control:hover {
+  color: #FFF !important;
+}
+
+.stoic-play-btn {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  font-size: 0.78rem !important;
+  transition: all 0.25s ease !important;
+}
+
+.stoic-play-btn:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.15) !important;
+}
+
+.stoic-track-select {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  border-radius: 5px !important;
+  font-size: 0.72rem !important;
+  padding: 3px 8px !important;
+}
+
+.stoic-eq-bars .ambient-eq-bar {
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Stoic XP badge */
+.stoic-xp-badge {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+}
+
+.stoic-xp-badge .level-name {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 1px !important;
+}
+
+/* Stoic celestial widget */
+.stoic-celestial {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 8px !important;
+}
+
+.stoic-celestial .celestial-time-text {
+  color: #FFF !important;
+  font-size: 0.95rem !important;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.2) !important;
+}
+
+.stoic-celestial .celestial-calendar-link {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.stoic-celestial .celestial-calendar-link:hover {
+  color: #FFF !important;
+}
+
+/* Stoic focus button */
+.stoic-foco-btn {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  border-radius: 6px !important;
+  padding: 8px 14px !important;
+  transition: all 0.3s ease !important;
+}
+
+.stoic-foco-btn:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2) !important;
+  color: #FFF !important;
+}
+
+/* ==========================================================================
+   HERO HEADER MONUMENTAL ESTOICO
+   ========================================================================== */
+.stoic-hero-header {
+  position: relative !important;
+  width: 100% !important;
+  height: 420px !important;
+  overflow: hidden !important;
+  margin-bottom: 0 !important;
+}
+
+.stoic-hero-bg-img {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center 30% !important;
+  filter: brightness(0.55) contrast(1.15) !important;
+  z-index: 1 !important;
+}
+
+.stoic-hero-gradient-overlay {
+  position: absolute !important;
+  inset: 0 !important;
+  z-index: 2 !important;
+  background:
+    linear-gradient(180deg, rgba(5, 5, 7, 0.6) 0%, rgba(5, 5, 7, 0.15) 35%, rgba(5, 5, 7, 0.5) 70%, rgba(5, 5, 7, 0.97) 100%),
+    radial-gradient(ellipse at 30% 50%, rgba(255, 255, 255, 0.04) 0%, transparent 60%) !important;
+}
+
+.stoic-hero-content {
+  position: relative !important;
+  z-index: 3 !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 30px 24px 20px 24px !important;
+  gap: 20px !important;
+}
+
+/* --- GRAN VEXILLVM MAESTRO (BANDERA PRINCIPAL) --- */
+.stoic-vexillum-maestro {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  cursor: pointer !important;
+  user-select: none !important;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease !important;
+  animation: stoicVexillumFloat 6s ease-in-out infinite !important;
+}
+
+.stoic-vexillum-maestro:hover {
+  transform: translateY(4px) scale(1.03) !important;
+  filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.3)) !important;
+}
+
+.stoic-vexillum-iron-crossbar {
+  width: 180px !important;
+  height: 7px !important;
+  background: linear-gradient(90deg, #2A2A30 0%, #606068 30%, #909098 50%, #606068 70%, #2A2A30 100%) !important;
+  border-radius: 4px !important;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.9), inset 0 1px 1px rgba(255, 255, 255, 0.3) !important;
+  position: relative !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  padding: 0 12px !important;
+  box-sizing: border-box !important;
+}
+
+.stoic-crossbar-ring {
+  width: 9px !important;
+  height: 11px !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.35) !important;
+  border-radius: 50% !important;
+  margin-top: -5px !important;
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+
+.stoic-vexillum-cloth {
+  width: 170px !important;
+  background: linear-gradient(180deg, #0C0C10 0%, #060608 60%, #030304 100%) !important;
+  border-left: 2px solid rgba(255, 255, 255, 0.2) !important;
+  border-right: 2px solid rgba(255, 255, 255, 0.2) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8), 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 40px rgba(255, 255, 255, 0.06) !important;
+  padding: 16px 14px 20px 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 4px !important;
+  text-align: center !important;
+}
+
+.stoic-vexillum-eagle {
+  font-size: 2rem !important;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4)) grayscale(0.3) !important;
+  line-height: 1 !important;
+}
+
+.stoic-vexillum-title {
+  font-family: 'Cinzel', 'Times New Roman', serif !important;
+  font-size: 0.65rem !important;
+  font-weight: 800 !important;
+  color: rgba(255, 255, 255, 0.55) !important;
+  letter-spacing: 2px !important;
+  text-transform: uppercase !important;
+}
+
+.stoic-vexillum-days {
+  font-family: 'Cinzel', 'Times New Roman', serif !important;
+  font-size: 1.15rem !important;
+  font-weight: 900 !important;
+  color: #FFFFFF !important;
+  letter-spacing: 1px !important;
+  text-shadow: 0 0 15px rgba(255, 255, 255, 0.5), 0 0 40px rgba(255, 255, 255, 0.2) !important;
+  margin: 4px 0 !important;
+}
+
+.stoic-vexillum-sub {
+  font-family: 'Cinzel', 'Times New Roman', serif !important;
+  font-size: 0.55rem !important;
+  font-weight: 700 !important;
+  color: rgba(255, 255, 255, 0.35) !important;
+  letter-spacing: 2.5px !important;
+  text-transform: uppercase !important;
+}
+
+.stoic-vexillum-v-tip {
+  width: 0 !important;
+  height: 0 !important;
+  border-left: 85px solid #060608 !important;
+  border-right: 85px solid #060608 !important;
+  border-bottom: 22px solid transparent !important;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.8)) !important;
+}
+
+@keyframes stoicVexillumFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+
+/* --- FORMACIÓN DE 9 ESTANDARTES DE GUERRA --- */
+.stoic-pennants-formation {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  width: 100% !important;
+  max-width: 800px !important;
+}
+
+.stoic-iron-bar-rail {
+  width: 100% !important;
+  height: 4px !important;
+  background: linear-gradient(90deg, transparent 0%, #3A3A42 15%, #68686E 50%, #3A3A42 85%, transparent 100%) !important;
+  border-radius: 2px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  margin-bottom: -2px !important;
+}
+
+/* Override pennant items for stoic hero formation */
+.stoic-hero-header .kcd-heraldic-pennant-item {
+  transition: transform 0.28s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.28s ease !important;
+}
+
+.stoic-hero-header .kcd-heraldic-pennant-item:hover {
+  transform: translateY(6px) scale(1.08) !important;
+  filter: drop-shadow(0 10px 22px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 12px rgba(197, 154, 40, 0.6)) !important;
+}
+
+.stoic-iron-bar-rail {
+  width: 90% !important;
+  max-width: 660px !important;
+  height: 5px !important;
+  background: linear-gradient(90deg, transparent 0%, #604A1E 15%, #C59A28 50%, #604A1E 85%, transparent 100%) !important;
+  border-radius: 3px !important;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.9), 0 0 12px rgba(197, 154, 40, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.4) !important;
+  margin-bottom: 0 !important;
+}
+
+/* ==========================================================================
+   STOIC OVERRIDES: NAV TABS (BOTONES MAESTROS)
+   ========================================================================== */
+.nav-tabs-container {
+  background: rgba(8, 8, 12, 0.95) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-top: none !important;
+  border-radius: 0 0 10px 10px !important;
+  padding: 10px 20px !important;
+  margin-bottom: 24px !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6) !important;
+}
+
+.tab-btn {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+  border-radius: 6px !important;
+  padding: 8px 16px !important;
+  font-weight: 700 !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.5px !important;
+  transition: all 0.3s ease !important;
+}
+
+.tab-btn:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.tab-btn.active {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #FFF !important;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ==========================================================================
+   STOIC OVERRIDES: TARJETAS, BADGES, BOTONES GENERALES
+   ========================================================================== */
+.jaguar-card, .card-highlight {
+  background: var(--stoic-bg-card) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+  transition: all 0.3s ease !important;
+}
+
+.jaguar-card:hover {
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7), 0 0 12px rgba(255, 255, 255, 0.06) !important;
+}
+
+.badge-tag {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+.badge-tag.badge-gold, .badge-tag.badge-cyan {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.title-rose-neon {
+  color: #FFFFFF !important;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.2) !important;
+}
+
+.btn-jaguar, .btn-gold-chrome {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-jaguar:hover, .btn-gold-chrome:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  color: #FFF !important;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Stoic command bar */
+.imperivm-command-bar {
+  background: rgba(10, 10, 15, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 8px !important;
+}
+
+.btn-command-pill {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-command-pill:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #FFF !important;
+}
+
+.btn-command-pill-gold {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: #FFF !important;
+}
+
+.btn-command-pill-gold:hover {
+  background: rgba(255, 255, 255, 0.18) !important;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.15) !important;
+}
+
+.imperivm-live-clock-badge {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Stoic scrollbar */
+::-webkit-scrollbar {
+  width: 6px !important;
+  background: #050507 !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-radius: 3px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Stoic finance tabs override */
+.finance-nav-tab {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+  transition: all 0.2s ease !important;
+}
+
+.finance-nav-tab:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.finance-nav-tab.active {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #FFF !important;
+}
+
+/* Vexillum tier glow overrides for stoic theme */
+.stoic-vexillum-maestro.vexillum-streak-tier-2 .stoic-vexillum-cloth {
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8), 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 25px rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.stoic-vexillum-maestro.vexillum-streak-tier-3 .stoic-vexillum-cloth {
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8), 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 35px rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+}
+
+.stoic-vexillum-maestro.vexillum-streak-tier-4 .stoic-vexillum-cloth {
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8), 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 50px rgba(255, 255, 255, 0.18) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.stoic-vexillum-maestro.vexillum-streak-tier-4 .stoic-vexillum-days {
+  text-shadow: 0 0 25px rgba(255, 255, 255, 0.7), 0 0 60px rgba(255, 255, 255, 0.3) !important;
+}
+
+/* ==========================================================================
+   STOIC RESPONSIVE
+   ========================================================================== */
+@media (max-width: 900px) {
+  .stoic-hero-header {
+    height: 320px !important;
+  }
+  .stoic-vexillum-cloth {
+    width: 140px !important;
+  }
+  .stoic-vexillum-iron-crossbar {
+    width: 150px !important;
+  }
+  .stoic-vexillum-v-tip {
+    border-left-width: 70px !important;
+    border-right-width: 70px !important;
+  }
+  .stoic-top-navbar {
+    padding: 8px 14px !important;
+  }
+}
+
+@media (max-width: 600px) {
+  .stoic-hero-header {
+    height: 260px !important;
+  }
+  .stoic-nav-center {
+    display: none !important;
+  }
+  .stoic-brand-text {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   STOIC FORCE-OVERRIDES: ANULA COMPLETAMENTE jaguar-theme.css
+   Estos selectores son más específicos para ganar la guerra de !important
+   ========================================================================== */
+
+/* --- NAVBAR: Estructura limpia horizontal de 3 columnas --- */
+.stoic-top-navbar.app-header {
+  background: linear-gradient(180deg, #0A0A0F 0%, #070709 100%) !important;
+  border: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 0 !important;
+  margin-bottom: 0 !important;
+  padding: 8px 24px !important;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.95) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important;
+  gap: 16px !important;
+  min-height: 58px !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 999 !important;
+}
+
+/* Izquierda: Reproductor Compacto */
+.stoic-nav-left {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex: 1 1 0% !important;
+  justify-content: flex-start !important;
+}
+
+/* Centro: Logo Prominente Centrado */
+.stoic-nav-center.stoic-logo-center-wrap {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 auto !important;
+}
+
+.header-center-brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  cursor: pointer !important;
+}
+
+.header-center-brand:hover .header-logo-prominent {
+  border-color: rgba(255, 215, 0, 0.6) !important;
+  box-shadow: 0 0 16px rgba(255, 215, 0, 0.25) !important;
+  transform: scale(1.04) !important;
+}
+
+/* Logo Jaguar Agrandado */
+.stoic-top-navbar .logo-icon-container.header-logo-prominent {
+  width: 48px !important;
+  height: 48px !important;
+  border: 2px solid rgba(255, 215, 0, 0.35) !important;
+  border-radius: 50% !important;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.8), 0 0 8px rgba(155, 35, 53, 0.3) !important;
+  background: #0A0A0E !important;
+  padding: 0 !important;
+  transition: all 0.25s ease !important;
+}
+
+.stoic-top-navbar .logo-icon-img.header-logo-img-prominent {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  filter: brightness(1) contrast(1.1) !important;
+  object-fit: cover !important;
+}
+
+/* DateMaster paired logo al lado del logo centrado */
+.stoic-top-navbar .header-datemaster-paired-logo {
+  display: flex !important;
+  align-items: center !important;
+}
+
+.stoic-top-navbar .datemaster-paired-rose-img {
+  width: 30px !important;
+  height: 30px !important;
+  border-radius: 50% !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  filter: brightness(0.9) saturate(0.4) !important;
+  transition: all 0.3s ease !important;
+}
+
+.stoic-top-navbar .datemaster-paired-rose-img:hover {
+  filter: brightness(1) saturate(0.7) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Texto de la marca centrado con el logo */
+.stoic-top-navbar .stoic-brand-text {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+.stoic-top-navbar .stoic-brand-text .brand-name {
+  font-family: 'Cinzel', 'Times New Roman', serif !important;
+  font-size: 0.95rem !important;
+  font-weight: 800 !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+  letter-spacing: 2px !important;
+  text-shadow: 0 0 10px rgba(0,0,0,0.8) !important;
+  white-space: nowrap !important;
+}
+
+/* Derecha: XP, Hora/Calendario, Foco */
+.stoic-nav-right {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  flex: 1 1 0% !important;
+  justify-content: flex-end !important;
+}
+
+/* Reproductor compacto a la izquierda */
+.ambient-compact-left {
+  padding: 3px 8px !important;
+  gap: 6px !important;
+  background: rgba(255, 255, 255, 0.02) !important;
+  border: 1px solid rgba(255, 255, 255, 0.07) !important;
+  border-radius: 6px !important;
+}
+
+.ambient-select-compact {
+  max-width: 105px !important;
+  font-size: 0.65rem !important;
+  padding: 2px 4px !important;
+}
+
+.ambient-vol-mini {
+  width: 45px !important;
+}
+
+/* --- INFO SEAL: Sello circular minimalista --- */
+.stoic-top-navbar .stoic-info-seal {
+  background: transparent !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.15) !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  border-radius: 50% !important;
+  font-size: 0.75rem !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+}
+
+.stoic-top-navbar .stoic-info-seal:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  color: #FFF !important;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.15) !important;
+  transform: none !important;
+}
+
+/* --- AMBIENT PLAYER: Override completo del viejo gramófono dorado --- */
+.stoic-top-navbar .ambient-player-widget,
+.stoic-ambient-widget.ambient-player-widget {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px !important;
+  padding: 4px 12px !important;
+  box-shadow: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.stoic-top-navbar .ambient-player-widget:hover {
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  box-shadow: none !important;
+}
+
+.stoic-top-navbar .btn-ambient-control {
+  background: transparent !important;
+  border: none !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 50% !important;
+  font-size: 0.7rem !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  box-shadow: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: color 0.2s ease !important;
+}
+
+.stoic-top-navbar .btn-ambient-control:hover {
+  background: transparent !important;
+  color: #FFF !important;
+  transform: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.stoic-top-navbar #ambient-play-btn {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-weight: 600 !important;
+  font-size: 0.72rem !important;
+  padding: 3px 10px !important;
+  border-radius: 5px !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.stoic-top-navbar #ambient-play-btn:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #FFF !important;
+}
+
+.stoic-top-navbar .ambient-track-select {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  border-radius: 4px !important;
+  font-size: 0.68rem !important;
+  padding: 2px 6px !important;
+  outline: none !important;
+  max-width: 180px !important;
+}
+
+.stoic-top-navbar .ambient-equalizer-bars .ambient-eq-bar {
+  background: rgba(255, 255, 255, 0.4) !important;
+}
+
+.stoic-top-navbar .ambient-volume-row {
+  gap: 4px !important;
+}
+
+.stoic-top-navbar .btn-ambient-vol-icon {
+  background: transparent !important;
+  border: none !important;
+  color: rgba(255, 255, 255, 0.4) !important;
+  font-size: 0.75rem !important;
+  padding: 0 !important;
+  cursor: pointer !important;
+  box-shadow: none !important;
+}
+
+.stoic-top-navbar .btn-ambient-vol-icon:hover {
+  color: #FFF !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.stoic-top-navbar .ambient-vol-slider {
+  width: 60px !important;
+  height: 3px !important;
+  accent-color: rgba(255, 255, 255, 0.6) !important;
+}
+
+.stoic-top-navbar .ambient-vol-label {
+  color: rgba(255, 255, 255, 0.4) !important;
+  font-size: 0.65rem !important;
+}
+
+.stoic-top-navbar .ambient-info-group {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+/* --- XP BADGE: Compacto y monocromático --- */
+.stoic-top-navbar .level-badge-card,
+.stoic-xp-badge.level-badge-card {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  box-shadow: none !important;
+}
+
+.stoic-top-navbar .level-badge-card:hover {
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.08) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+}
+
+.stoic-top-navbar .level-icon {
+  font-size: 1.1rem !important;
+}
+
+.stoic-top-navbar .level-name {
+  font-family: 'Cinzel', serif !important;
+  font-size: 0.65rem !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  letter-spacing: 0.8px !important;
+}
+
+/* --- CELESTIAL WIDGET: Minimalista & Visible --- */
+.stoic-top-navbar .celestial-header-widget,
+.stoic-celestial.celestial-header-widget {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 6px !important;
+  padding: 4px 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-width: 130px !important;
+}
+
+.stoic-top-navbar .celestial-sun-moon-dial {
+  cursor: pointer !important;
+  font-size: 1.1rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+}
+
+.stoic-top-navbar .celestial-datetime-box {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  line-height: 1.25 !important;
+}
+
+.stoic-top-navbar .celestial-time-text {
+  font-family: 'Cinzel', monospace, sans-serif !important;
+  font-size: 0.92rem !important;
+  font-weight: 800 !important;
+  color: #FFFFFF !important;
+  letter-spacing: 1px !important;
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.3) !important;
+  display: block !important;
+}
+
+.stoic-top-navbar .celestial-calendar-link {
+  color: rgba(255, 255, 255, 0.7) !important;
+  font-size: 0.72rem !important;
+  font-weight: 600 !important;
+  font-family: 'Cinzel', monospace, sans-serif !important;
+  text-decoration: none !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  margin-top: 1px !important;
+  transition: color 0.2s ease !important;
+}
+
+.stoic-top-navbar .celestial-calendar-link:hover {
+  color: #FFD700 !important;
+}
+
+/* --- FOCO BUTTON: Limpio y estoico --- */
+.stoic-top-navbar .stoic-foco-btn,
+.stoic-foco-btn#header-foco-btn {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  border-radius: 5px !important;
+  padding: 5px 12px !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  box-shadow: none !important;
+}
+
+.stoic-top-navbar .stoic-foco-btn:hover,
+.stoic-foco-btn#header-foco-btn:hover {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  color: #FFF !important;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.12) !important;
+  transform: none !important;
+}
+
+/* --- RESPONSIVE: Adaptación en pantallas pequeñas --- */
+@media (max-width: 1100px) {
+  .stoic-top-navbar.app-header {
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 10px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .ambient-select-compact {
+    max-width: 80px !important;
+  }
+  .stoic-top-navbar .ambient-vol-mini {
+    display: none !important;
+  }
+  .stoic-top-navbar .stoic-brand-text {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   PALETA ROMANA VIVIENTE • CARMESÍ & ÁMBAR SOBRE OBSIDIANA
+   Estoico pero vivo: el rojo del paludamentum, el bronce de la lorica
+   ========================================================================== */
+
+:root, body {
+  /* --- ACENTOS ROMANOS VIVOS --- */
+  --roman-crimson: #9B2335 !important;
+  --roman-crimson-bright: #C0392B !important;
+  --roman-crimson-light: #D4464E !important;
+  --roman-crimson-glow: rgba(155, 35, 53, 0.35) !important;
+  --roman-crimson-subtle: rgba(155, 35, 53, 0.12) !important;
+  --roman-amber: #B8860B !important;
+  --roman-amber-light: #DAA520 !important;
+  --roman-amber-glow: rgba(184, 134, 11, 0.25) !important;
+  --roman-bronze: #8B7355 !important;
+  --roman-ivory: #F0EDE8 !important;
+
+  /* Remap legacy gold vars to Roman crimson/amber */
+  --neon-gold: #C0392B !important;
+  --neon-cyan: rgba(255, 255, 255, 0.7) !important;
+  --imperial-gold: #9B2335 !important;
+  --shadow-metallic: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 8px rgba(155, 35, 53, 0.15) !important;
+  --shadow-cyan: 0 8px 24px rgba(0, 0, 0, 0.7), 0 0 8px rgba(255, 255, 255, 0.1) !important;
+}
+
+/* ==========================================================================
+   OVERRIDE: COMPONENTES BASE DE jaguar-theme.css → PALETA ROMANA
+   ========================================================================== */
+
+/* --- Tarjetas: borde sutil con hover carmesí --- */
+.jaguar-card {
+  background: rgba(14, 14, 19, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.06) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  transition: all 0.3s ease !important;
+}
+
+.jaguar-card:hover {
+  border-color: rgba(155, 35, 53, 0.4) !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6), 0 0 15px rgba(155, 35, 53, 0.12) !important;
+}
+
+.jaguar-card.card-highlight {
+  border-color: rgba(155, 35, 53, 0.25) !important;
+  background: rgba(155, 35, 53, 0.04) !important;
+}
+
+.jaguar-card.card-highlight:hover {
+  border-color: rgba(155, 35, 53, 0.5) !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6), 0 0 20px rgba(155, 35, 53, 0.18) !important;
+}
+
+/* --- Badges: Carmesí sutil --- */
+.badge-tag {
+  background: rgba(155, 35, 53, 0.1) !important;
+  border: 1px solid rgba(155, 35, 53, 0.3) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  padding: 3px 10px !important;
+  border-radius: 5px !important;
+}
+
+.badge-tag.badge-gold {
+  background: rgba(155, 35, 53, 0.15) !important;
+  border: 1px solid rgba(192, 57, 43, 0.4) !important;
+  color: #D4464E !important;
+}
+
+.badge-tag.badge-cyan {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* --- Títulos: Blanco puro con sombra carmesí sutil --- */
+.title-rose-neon {
+  color: #FFFFFF !important;
+  text-shadow: 0 0 25px rgba(155, 35, 53, 0.2), 0 2px 8px rgba(0, 0, 0, 0.8) !important;
+}
+
+/* --- Botones principales: Base oscura con acento carmesí --- */
+.btn-jaguar {
+  background: rgba(155, 35, 53, 0.08) !important;
+  border: 1px solid rgba(155, 35, 53, 0.25) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-weight: 700 !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+}
+
+.btn-jaguar:hover {
+  background: rgba(155, 35, 53, 0.2) !important;
+  border-color: rgba(192, 57, 43, 0.5) !important;
+  color: #FFF !important;
+  box-shadow: 0 0 15px rgba(155, 35, 53, 0.2) !important;
+}
+
+.btn-gold-chrome {
+  background: linear-gradient(135deg, rgba(155, 35, 53, 0.15) 0%, rgba(155, 35, 53, 0.25) 100%) !important;
+  border: 1px solid rgba(192, 57, 43, 0.4) !important;
+  color: #FFF !important;
+  font-weight: 800 !important;
+}
+
+.btn-gold-chrome:hover {
+  background: linear-gradient(135deg, rgba(155, 35, 53, 0.25) 0%, rgba(192, 57, 43, 0.35) 100%) !important;
+  border-color: rgba(192, 57, 43, 0.6) !important;
+  box-shadow: 0 0 18px rgba(155, 35, 53, 0.25) !important;
+}
+
+/* --- Command bar pills: Carmesí en gold, blanco en normal --- */
+.btn-command-pill {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.55) !important;
+  font-size: 0.76rem !important;
+  font-weight: 600 !important;
+  padding: 5px 12px !important;
+  border-radius: 5px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-command-pill:hover {
+  background: rgba(155, 35, 53, 0.1) !important;
+  border-color: rgba(155, 35, 53, 0.3) !important;
+  color: #FFF !important;
+}
+
+.btn-command-pill-gold {
+  background: rgba(155, 35, 53, 0.12) !important;
+  border: 1px solid rgba(192, 57, 43, 0.3) !important;
+  color: #D4464E !important;
+  font-weight: 800 !important;
+}
+
+.btn-command-pill-gold:hover {
+  background: rgba(155, 35, 53, 0.22) !important;
+  border-color: rgba(192, 57, 43, 0.5) !important;
+  color: #FFF !important;
+  box-shadow: 0 0 12px rgba(155, 35, 53, 0.2) !important;
+}
+
+/* --- Imperivm Command Bar --- */
+.imperivm-command-bar {
+  background: rgba(8, 8, 12, 0.92) !important;
+  border: 1px solid rgba(155, 35, 53, 0.08) !important;
+  border-radius: 8px !important;
+  padding: 10px 16px !important;
+}
+
+.imperivm-live-clock-badge {
+  color: rgba(255, 255, 255, 0.65) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-radius: 5px !important;
+  padding: 4px 10px !important;
+}
+
+/* --- Grids generales --- */
+.grid-2, .grid-3, .grid-4 {
+  gap: 16px !important;
+}
+
+/* --- Select / Input overrides --- */
+select, input[type="text"], input[type="number"], textarea {
+  background: rgba(14, 14, 19, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  border-radius: 5px !important;
+  outline: none !important;
+}
+
+select:focus, input[type="text"]:focus, textarea:focus {
+  border-color: rgba(155, 35, 53, 0.5) !important;
+  box-shadow: 0 0 8px rgba(155, 35, 53, 0.15) !important;
+}
+
+/* --- Sección banners: overlays estandarizados --- */
+.tab-content > div > div[style*="position: relative"] {
+  border: 1px solid rgba(155, 35, 53, 0.15) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* --- XP bar fill: Carmesí degradado --- */
+.xp-bar-fill {
+  background: linear-gradient(90deg, #6B1A24, #9B2335, #C0392B) !important;
+}
+
+/* --- Finance tabs --- */
+.finance-nav-tab {
+  background: rgba(14, 14, 19, 0.8) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.finance-nav-tab.active {
+  background: rgba(155, 35, 53, 0.12) !important;
+  border-color: rgba(155, 35, 53, 0.35) !important;
+  color: #FFF !important;
+}
+
+.finance-nav-tab:hover {
+  background: rgba(155, 35, 53, 0.08) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.finance-tab-pill {
+  background: rgba(155, 35, 53, 0.2) !important;
+  color: #D4464E !important;
+  border-radius: 4px !important;
+  padding: 1px 6px !important;
+  font-size: 0.65rem !important;
+}
+
+/* --- Nav tabs override: carmesí activo --- */
+.tab-btn.active {
+  background: rgba(155, 35, 53, 0.15) !important;
+  border-color: rgba(192, 57, 43, 0.35) !important;
+  color: #FFF !important;
+  box-shadow: 0 0 15px rgba(155, 35, 53, 0.12), inset 0 1px 0 rgba(155, 35, 53, 0.15) !important;
+}
+
+.tab-btn:hover {
+  background: rgba(155, 35, 53, 0.08) !important;
+  border-color: rgba(155, 35, 53, 0.2) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* --- Vexillum tiers con carmesí creciente --- */
+.stoic-vexillum-maestro.vexillum-streak-tier-2 .stoic-vexillum-cloth {
+  border-color: rgba(155, 35, 53, 0.3) !important;
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8), 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(155, 35, 53, 0.1) !important;
+}
+
+.stoic-vexillum-maestro.vexillum-streak-tier-3 .stoic-vexillum-cloth {
+  border-color: rgba(192, 57, 43, 0.4) !important;
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8), 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 30px rgba(155, 35, 53, 0.15) !important;
+}
+
+.stoic-vexillum-maestro.vexillum-streak-tier-4 .stoic-vexillum-cloth {
+  border-color: rgba(192, 57, 43, 0.55) !important;
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.8), 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 45px rgba(155, 35, 53, 0.25) !important;
+}
+
+.stoic-vexillum-maestro.vexillum-streak-tier-4 .stoic-vexillum-days {
+  text-shadow: 0 0 20px rgba(192, 57, 43, 0.6), 0 0 50px rgba(155, 35, 53, 0.3) !important;
+  color: #D4464E !important;
+}
+
+/* --- Selection color --- */
+::selection {
+  background: rgba(155, 35, 53, 0.4) !important;
+  color: #FFF !important;
+}
+
+::-moz-selection {
+  background: rgba(155, 35, 53, 0.4) !important;
+  color: #FFF !important;
+}
+
+/* --- Links generales --- */
+a {
+  color: rgba(212, 70, 78, 0.8);
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #D4464E;
+}
+
+/* --- Campaign toggle buttons --- */
+.btn-campaign-toggle.active {
+  background: linear-gradient(135deg, rgba(155, 35, 53, 0.2) 0%, rgba(192, 57, 43, 0.3) 100%) !important;
+  color: #FFF !important;
+  border-color: rgba(192, 57, 43, 0.4) !important;
+}
+
+.quest-conquered-card {
+  border: 2px solid rgba(155, 35, 53, 0.4) !important;
+  box-shadow: 0 0 20px rgba(155, 35, 53, 0.15) !important;
+  background: linear-gradient(160deg, #121217 0%, #0E0E13 100%) !important;
+}
+
+/* --- Armamentarium medallion --- */
+.armamentarium-medallion {
+  border: 3px solid rgba(155, 35, 53, 0.4) !important;
+  box-shadow: 0 0 25px rgba(155, 35, 53, 0.2), inset 0 0 15px rgba(155, 35, 53, 0.1) !important;
+  background: linear-gradient(135deg, #121217 0%, #0A0A0E 100%) !important;
+}
+
+/* --- Aura tag pills --- */
+.aura-tag-pill {
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+
+/* ==========================================================================
+   ESTANDARIZACIÓN MAESTRA DE MODALES (31 MODALES) • ESTILO CÓDICE ESTOICO
+   Transforma todos los modales de pergamino amarillo a losa de obsidiana romana
+   ========================================================================== */
+
+/* --- OVERLAYS / BACKDROPS DE MODAL --- */
+.jaguar-modal-overlay,
+.kcd-inspector-backdrop,
+.bitacoras-fullscreen-overlay {
+  background: rgba(3, 3, 5, 0.88) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  z-index: 100000 !important;
+}
+
+.jaguar-modal-overlay.active {
+  display: flex !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* --- TARJETA DE MODAL ESTÁNDAR --- */
+.jaguar-modal-card {
+  background: linear-gradient(160deg, #101017 0%, #07070A 100%) !important;
+  border: 1.5px solid rgba(155, 35, 53, 0.35) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.95), 0 0 30px rgba(155, 35, 53, 0.15) !important;
+  color: #F0EDE8 !important;
+}
+
+/* --- CÓDICE INSPECTOR KCD (OVERRIDE DE PERGAMINO AMARILLO A OBSIDIANA) --- */
+.kcd-inspector-codex {
+  background: linear-gradient(165deg, #12121A 0%, #08080C 100%) !important;
+  border: 1.5px solid rgba(155, 35, 53, 0.4) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.95), 0 0 35px rgba(155, 35, 53, 0.18) !important;
+  color: #F0EDE8 !important;
+  padding: 24px 28px !important;
+}
+
+/* Reemplazar flores de lis doradas por remate limpio */
+.kcd-inspector-codex::before,
+.kcd-inspector-codex::after {
+  content: "🏛️" !important;
+  font-size: 0.85rem !important;
+  opacity: 0.3 !important;
+}
+
+/* Textos dentro del códice inspector */
+.kcd-inspector-codex h2,
+.kcd-inspector-codex h3,
+.kcd-inspector-codex h4 {
+  color: #FFFFFF !important;
+  font-family: 'Cinzel', serif !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8) !important;
+}
+
+.kcd-inspector-codex p,
+.kcd-inspector-codex span,
+.kcd-inspector-codex div {
+  color: #E2E8F0;
+}
+
+.kcd-inspector-codex .text-muted,
+.kcd-inspector-codex [style*="color: #5D4E3E"],
+.kcd-inspector-codex [style*="color: #977318"] {
+  color: #94A3B8 !important;
+}
+
+/* Botones de cerrar en modales */
+.kcd-inspector-codex button[onclick*="close"],
+.jaguar-modal-card button[onclick*="close"],
+.btn-close-modal {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  border-radius: 50% !important;
+  width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1rem !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+}
+
+.kcd-inspector-codex button[onclick*="close"]:hover,
+.jaguar-modal-card button[onclick*="close"]:hover,
+.btn-close-modal:hover {
+  background: rgba(155, 35, 53, 0.3) !important;
+  border-color: rgba(192, 57, 43, 0.6) !important;
+  color: #FFF !important;
+  box-shadow: 0 0 12px rgba(155, 35, 53, 0.3) !important;
+}
+
+/* --- TABLAS KCD DENTRO DE MODALES --- */
+.kcd-comparison-table {
+  border: 1px solid rgba(155, 35, 53, 0.25) !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  background: #0B0B10 !important;
+}
+
+.kcd-comparison-table th {
+  background: linear-gradient(135deg, rgba(155, 35, 53, 0.25) 0%, rgba(10, 10, 15, 0.95) 100%) !important;
+  color: #FFFFFF !important;
+  font-family: 'Cinzel', serif !important;
+  font-size: 0.78rem !important;
+  letter-spacing: 1px !important;
+  border-bottom: 1px solid rgba(155, 35, 53, 0.3) !important;
+  padding: 10px 14px !important;
+}
+
+.kcd-comparison-table td {
+  padding: 8px 14px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  color: #E2E8F0 !important;
+  font-size: 0.85rem !important;
+}
+
+.kcd-comparison-table tr:hover td {
+  background: rgba(155, 35, 53, 0.06) !important;
+}
+
+.kcd-comparison-table td.cell-label {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 600 !important;
+}
+
+.kcd-comparison-table td.cell-mine {
+  color: #D4464E !important;
+  font-weight: 700 !important;
+}
+
+/* --- SISTEMA MAESTRO / PITCH SLIDES --- */
+#sistema-maestro-modal .bitacoras-fullscreen-card,
+.bitacoras-fullscreen-card {
+  background: linear-gradient(165deg, #101018 0%, #060609 100%) !important;
+  border: 1.5px solid rgba(155, 35, 53, 0.3) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.98), 0 0 40px rgba(155, 35, 53, 0.15) !important;
+  color: #F0EDE8 !important;
+}
+
+.pitch-formula-box {
+  background: rgba(155, 35, 53, 0.06) !important;
+  border: 1px solid rgba(155, 35, 53, 0.25) !important;
+  border-radius: 8px !important;
+  color: #FFFFFF !important;
+}
+
+/* --- MODAL POMODORO / FOCO --- */
+#pomodoro-modal .jaguar-modal-card {
+  border-color: rgba(155, 35, 53, 0.45) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.95), 0 0 35px rgba(155, 35, 53, 0.25) !important;
+}
+
+/* --- MODAL HORÓSCOPOS CÓSMICOS --- */
+#celestial-horoscopes-modal .kcd-inspector-codex {
+  max-width: 780px !important;
+}
+
+/* ==========================================================================
+   TEXTURA MINERAL DE FONDO (SUBTLE STONE GRAIN)
+   ========================================================================== */
+body::before {
+  content: "" !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+  opacity: 0.03 !important;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E") !important;
+}
+
+.app-container {
+  position: relative !important;
+  z-index: 1 !important;
+}
+
+/* ==========================================================================
+   MICRO-ANIMACIONES DE LUZ & FOCUS PULSE
+   ========================================================================== */
+@keyframes stoicFocusPulse {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(155, 35, 53, 0.2);
+    border-color: rgba(192, 57, 43, 0.35);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(192, 57, 43, 0.55), 0 0 40px rgba(155, 35, 53, 0.2);
+    border-color: rgba(212, 70, 78, 0.7);
+  }
+}
+
+.stoic-foco-btn.focus-active,
+#header-foco-btn.focus-active {
+  animation: stoicFocusPulse 2.5s ease-in-out infinite !important;
+  background: rgba(155, 35, 53, 0.18) !important;
+  border-color: rgba(192, 57, 43, 0.6) !important;
+  color: #FFF !important;
+}
+
+/* Rim light suave al pasar el cursor sobre tarjetas */
+.jaguar-card {
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease !important;
+}
+
+.jaguar-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 18px rgba(155, 35, 53, 0.16) !important;
+  border-color: rgba(155, 35, 53, 0.35) !important;
+}
+
+/* ==========================================================================
+   SCROLLBAR UNIVERSAL PARA SUB-CONTENEDORES
+   ========================================================================== */
+*::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+  background: #060609 !important;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(10, 10, 15, 0.9) !important;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-radius: 4px !important;
+  transition: background 0.2s ease !important;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(192, 57, 43, 0.5) !important;
+  box-shadow: 0 0 8px rgba(155, 35, 53, 0.4) !important;
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(255, 255, 255, 0.15) #060609 !important;
+}
+
+/* ==========================================================================
+   TABLAS FINANCIERAS Y FORMULARIOS DE EXTRACTOS
+   ========================================================================== */
+.finance-nav-tabs-bar {
+  background: rgba(8, 8, 12, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 8px !important;
+  padding: 6px 10px !important;
+}
+
+.input-jaguar {
+  background: rgba(12, 12, 17, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #FFF !important;
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+  transition: all 0.2s ease !important;
+}
+
+.input-jaguar:focus {
+  border-color: rgba(192, 57, 43, 0.5) !important;
+  box-shadow: 0 0 10px rgba(155, 35, 53, 0.2) !important;
+}
+
+/* Ingestión drag & drop de extractos */
+div[style*="border: 2px dashed"] {
+  border: 1.5px dashed rgba(155, 35, 53, 0.35) !important;
+  background: rgba(155, 35, 53, 0.03) !important;
+  border-radius: 10px !important;
+}
+
+div[style*="border: 2px dashed"]:hover {
+  border-color: rgba(192, 57, 43, 0.6) !important;
+  background: rgba(155, 35, 53, 0.06) !important;
+}
+
+
+
+/* ==========================================================================
+   FONDO MAESTRO FIJO: GUERRERO CENTURIÓN ESTOICO (INTERCAMBIADO CON EL HERO)
+   ========================================================================== */
+body {
+  background-color: #060609 !important;
+  background-image: 
+    linear-gradient(180deg, rgba(6, 7, 10, 0.45) 0%, rgba(6, 7, 10, 0.65) 50%, rgba(6, 7, 10, 0.88) 100%),
+    url('../assets/stoic_centurion_hero_header.jpg') !important;
+  background-attachment: fixed !important;
+  background-position: center top !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  min-height: 100vh !important;
+}
+
+/* Efecto de cristal translúcido en contenedores para que respire la luz y color del fondo */
+.jaguar-card,
+.card-highlight,
+.imperivm-command-bar,
+.nav-tabs-container,
+.finance-nav-tabs-bar {
+  background: rgba(12, 12, 18, 0.86) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+.jaguar-card:hover {
+  background: rgba(16, 16, 24, 0.92) !important;
+}
+
+
+/* ==========================================================================
+   GATEKEEPER / PANEL DE ACCESO STOIC ROMAN (PASSWORD GATE)
+   ========================================================================== */
+.stoic-gatekeeper-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 999999 !important;
+  background: radial-gradient(ellipse at 50% 40%, rgba(14, 14, 22, 0.96) 0%, rgba(5, 5, 8, 0.99) 100%) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+  transition: opacity 0.4s ease, visibility 0.4s ease !important;
+}
+
+.stoic-gatekeeper-overlay.unlocked,
+.stoic-gatekeeper-overlay.gatekeeper-unlocking {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+.stoic-gatekeeper-card {
+  width: 100% !important;
+  max-width: 440px !important;
+  background: linear-gradient(165deg, rgba(18, 18, 26, 0.96) 0%, rgba(8, 8, 12, 0.99) 100%) !important;
+  border: 1.5px solid rgba(197, 154, 40, 0.4) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.98), 0 0 35px rgba(197, 154, 40, 0.2), 0 0 20px rgba(155, 35, 53, 0.25) !important;
+  padding: 34px 28px 24px 28px !important;
+  text-align: center !important;
+  animation: gatekeeperEntrance 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+}
+
+@keyframes gatekeeperEntrance {
+  from { transform: scale(0.9) translateY(20px); opacity: 0; }
+  to { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.gatekeeper-jaguar-logo {
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.gatekeeper-jaguar-logo:hover {
+  transform: scale(1.06) !important;
+  box-shadow: 0 0 30px rgba(197, 154, 40, 0.7), 0 0 16px rgba(155, 35, 53, 0.8) !important;
+}
+
+.gatekeeper-eagle {
+  font-size: 2rem !important;
+  filter: drop-shadow(0 0 14px rgba(197, 154, 40, 0.6)) !important;
+}
+
+.gatekeeper-badge {
+  display: inline-block !important;
+  font-size: 0.65rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 2.5px !important;
+  color: #D4464E !important;
+  background: rgba(155, 35, 53, 0.15) !important;
+  border: 1px solid rgba(192, 57, 43, 0.35) !important;
+  border-radius: 4px !important;
+  padding: 3px 10px !important;
+  margin-bottom: 12px !important;
+  text-transform: uppercase !important;
+}
+
+.gatekeeper-title {
+  font-family: 'Cinzel', serif !important;
+  font-size: 1.45rem !important;
+  font-weight: 800 !important;
+  color: #FFFFFF !important;
+  letter-spacing: 1.5px !important;
+  margin: 0 0 6px 0 !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8) !important;
+}
+
+.gatekeeper-subtitle {
+  font-size: 0.82rem !important;
+  color: #94A3B8 !important;
+  margin: 0 0 24px 0 !important;
+}
+
+.gatekeeper-input-group {
+  display: flex !important;
+  gap: 8px !important;
+}
+
+.gatekeeper-input {
+  flex: 1 !important;
+  background: rgba(6, 6, 10, 0.9) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 6px !important;
+  padding: 11px 14px !important;
+  color: #FFFFFF !important;
+  font-size: 0.9rem !important;
+  outline: none !important;
+  transition: all 0.25s ease !important;
+}
+
+.gatekeeper-input:focus {
+  border-color: rgba(192, 57, 43, 0.6) !important;
+  box-shadow: 0 0 15px rgba(155, 35, 53, 0.3) !important;
+}
+
+.gatekeeper-input.gatekeeper-error-shake {
+  animation: gatekeeperShake 0.4s ease !important;
+  border-color: #E74C3C !important;
+}
+
+@keyframes gatekeeperShake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-8px); }
+  40%, 80% { transform: translateX(8px); }
+}
+
+.gatekeeper-btn {
+  background: linear-gradient(135deg, #9B2335 0%, #C0392B 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: #FFFFFF !important;
+  font-family: 'Cinzel', serif !important;
+  font-size: 0.78rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 1px !important;
+  padding: 0 18px !important;
+  border-radius: 6px !important;
+  cursor: pointer !important;
+  transition: all 0.25s ease !important;
+  white-space: nowrap !important;
+}
+
+.gatekeeper-btn:hover {
+  background: linear-gradient(135deg, #C0392B 0%, #D4464E 100%) !important;
+  box-shadow: 0 0 20px rgba(192, 57, 43, 0.5) !important;
+}
+
+.gatekeeper-feedback {
+  margin-top: 14px !important;
+  font-size: 0.76rem !important;
+  font-weight: 700 !important;
+  color: #E74C3C !important;
+  display: none;
+}
+
+/* ==========================================================================
+   PIRÁMIDE INVERTIDA DE COMANDOS (EN EL CENTRO DEL HERO)
+   ========================================================================== */
+.stoic-hero-header {
+  min-height: 520px !important;
+  height: auto !important;
+  padding-bottom: 24px !important;
+}
+
+.stoic-pyramid-command-dock {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 8px !important;
+  margin-top: 16px !important;
+  z-index: 5 !important;
+  width: 100% !important;
+  max-width: 680px !important;
+}
+
+/* Fila 1: 4 botones (Base ancha de la pirámide invertida) */
+.stoic-pyramid-command-dock .pyramid-row {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  gap: 8px !important;
+  flex-wrap: wrap !important;
+}
+
+.stoic-pyramid-command-dock .btn-command-pill {
+  background: rgba(14, 14, 20, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: rgba(255, 255, 255, 0.78) !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  padding: 5px 12px !important;
+  border-radius: 5px !important;
+  letter-spacing: 0.4px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6) !important;
+  text-decoration: none !important;
+}
+
+.stoic-pyramid-command-dock .btn-command-pill:hover {
+  background: rgba(155, 35, 53, 0.25) !important;
+  border-color: rgba(192, 57, 43, 0.5) !important;
+  color: #FFF !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.8), 0 0 12px rgba(155, 35, 53, 0.25) !important;
+}
+
+.stoic-pyramid-command-dock .btn-command-pill-gold {
+  background: linear-gradient(135deg, rgba(155, 35, 53, 0.3) 0%, rgba(192, 57, 43, 0.4) 100%) !important;
+  border-color: rgba(212, 70, 78, 0.5) !important;
+  color: #FFF !important;
+  font-weight: 800 !important;
+}
+
+/* ==========================================================================
+   ENCUADRE DE FOTOS SEMANALES: LEVANTAR PARA MOSTRAR CARAS
+   ========================================================================== */
+#other-days-track .imperivm-card-media img,
+.other-days-track .imperivm-card-media img,
+.weekly-explorer-img {
+  object-position: center 10% !important;
+  filter: brightness(0.8) contrast(1.1) !important;
+}
+
+/* ==========================================================================
+   MINIMALISMO NETFLIX / APPLE TV: CARTELES, TEXTOS BREVES & MICRO-BOTONES
+   ========================================================================== */
+/* Tarjeta de Carrusel más esbelta y cinematográfica - Solo Título y Poster */
+.imperivm-card {
+  flex: 0 0 280px !important;
+  min-width: 280px !important;
+  max-width: 280px !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  transition: transform 0.3s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.3s ease !important;
+}
+
+.imperivm-card:hover {
+  transform: translateY(-4px) scale(1.02) !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.75), 0 0 16px rgba(212, 175, 55, 0.25) !important;
+}
+
+.imperivm-card-media {
+  height: 180px !important;
+  min-height: 180px !important;
+  max-height: 180px !important;
+}
+
+.imperivm-card-body {
+  padding: 12px 14px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 52px !important;
+  background: rgba(14, 18, 29, 0.95) !important;
+}
+
+.imperivm-card-title {
+  font-size: 0.92rem !important;
+  font-weight: 700 !important;
+  color: #FFFFFF !important;
+  letter-spacing: 0.3px !important;
+  text-align: center !important;
+  line-height: 1.35 !important;
+  white-space: normal !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+/* Descripción de tarjeta estrictamente en 1 SOLA LÍNEA de viñetas limpias */
+.imperivm-card-desc {
+  font-size: 0.74rem !important;
+  color: #94A3B8 !important;
+  line-height: 1.3 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  display: block !important;
+  -webkit-line-clamp: 1 !important;
+}
+
+.imperivm-card-footer {
+  padding-top: 8px !important;
+  margin-top: 6px !important;
+}
+
+/* Micro-botones de acción estilo streaming */
+.imperivm-card-action-btn,
+.btn-imperivm-primary {
+  padding: 4px 10px !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  border-radius: 4px !important;
+  background: rgba(155, 35, 53, 0.15) !important;
+  border: 1px solid rgba(192, 57, 43, 0.4) !important;
+  color: #E2E8F0 !important;
+  transition: all 0.2s ease !important;
+}
+
+.imperivm-card-action-btn:hover,
+.btn-imperivm-primary:hover {
+  background: #9B2335 !important;
+  border-color: #C0392B !important;
+  color: #FFF !important;
+  box-shadow: 0 0 10px rgba(155, 35, 53, 0.35) !important;
+}
+
+/* Títulos de riel limpios sin subtítulos largos */
+.imperivm-rail-header {
+  margin-bottom: 10px !important;
+}
+
+.imperivm-rail-title {
+  font-size: 1.15rem !important;
+  color: #FFFFFF !important;
+  letter-spacing: 0.5px !important;
+}
+
+.imperivm-rail-subtitle {
+  display: none !important; /* Oculta subtítulos largos y redundantes */
+}
+
+/* ==========================================================================
+   DEV SECTION LABELS & DISCREET LIGHTBULB TOGGLE (INSPECTOR DE SECCIONES)
+   ========================================================================== */
+.dev-section-label {
+  display: none;
+  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, Menlo, monospace !important;
+  font-size: 0.62rem !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  padding: 2px 6px !important;
+  border-radius: 3px !important;
+  background: rgba(3, 14, 24, 0.94) !important;
+  color: #00E5FF !important;
+  border: 1px solid rgba(0, 229, 255, 0.6) !important;
+  box-shadow: 0 0 8px rgba(0, 229, 255, 0.35) !important;
+  text-transform: none !important;
+  letter-spacing: 0.3px !important;
+  pointer-events: none !important;
+  user-select: all !important;
+  white-space: nowrap !important;
+  vertical-align: middle !important;
+  margin-left: 6px !important;
+  z-index: 100 !important;
+}
+
+/* Card-level dev labels */
+.dev-card-label {
+  position: absolute !important;
+  bottom: 8px !important;
+  left: 8px !important;
+  margin-left: 0 !important;
+  background: rgba(5, 10, 20, 0.95) !important;
+  border: 1px solid rgba(0, 229, 255, 0.7) !important;
+  color: #00E5FF !important;
+  font-size: 0.58rem !important;
+  padding: 2px 5px !important;
+}
+
+/* Visibilidad cuando el modo dev está encendido con la ampolleta */
+body.dev-labels-visible .dev-section-label {
+  display: inline-flex !important;
+  align-items: center !important;
+  animation: devLabelPulse 0.3s ease-out forwards;
+}
+
+@keyframes devLabelPulse {
+  0% { transform: scale(0.85); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Botón ampolleta discreto en la barra superior */
+.stoic-lightbulb-toggle {
+  background: transparent !important;
+  border: 1px solid rgba(255, 215, 0, 0.2) !important;
+  border-radius: 50% !important;
+  width: 28px !important;
+  height: 28px !important;
+  padding: 0 !important;
+  font-size: 0.92rem !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  opacity: 0.38 !important;
+  transition: all 0.25s ease !important;
+  margin-left: 4px !important;
+}
+
+.stoic-lightbulb-toggle:hover {
+  opacity: 0.9 !important;
+  border-color: rgba(255, 215, 0, 0.6) !important;
+  transform: scale(1.08) !important;
+}
+
+body.dev-labels-visible .stoic-lightbulb-toggle {
+  opacity: 1 !important;
+  border-color: #00E5FF !important;
+  background: rgba(0, 229, 255, 0.15) !important;
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.6), 0 0 4px #FFD700 !important;
+  filter: drop-shadow(0 0 4px #FFE082) !important;
+}
+
+/* Gatillo flotante sutil en esquina inferior derecha */
+.dev-labels-corner-trigger {
+  position: fixed !important;
+  bottom: 14px !important;
+  right: 14px !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 50% !important;
+  background: rgba(13, 18, 29, 0.85) !important;
+  border: 1px solid rgba(197, 154, 40, 0.3) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.95rem !important;
+  cursor: pointer !important;
+  opacity: 0.3 !important;
+  z-index: 99999 !important;
+  transition: all 0.25s ease !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+.dev-labels-corner-trigger:hover {
+  opacity: 1 !important;
+  transform: scale(1.15) !important;
+  border-color: #00E5FF !important;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.5) !important;
+}
+
+body.dev-labels-visible .dev-labels-corner-trigger {
+  opacity: 0.95 !important;
+  border-color: #00E5FF !important;
+  background: rgba(0, 229, 255, 0.2) !important;
+  box-shadow: 0 0 14px rgba(0, 229, 255, 0.6) !important;
+}
+
+
