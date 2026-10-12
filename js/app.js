@@ -62,10 +62,10 @@ let appState = {
   projects: [
     { id: "lauwersmeer", title: "🌊 Climate Risk en Lauwersmeer", category: "academia", status: "en_desarrollo", desc: "Artículo científico sobre evaluación y modelación de riesgo climático costero." },
     { id: "rewild", title: "🔥 ReWild: Libro de Incendios & Modelo Forestal", category: "politica", status: "en_desarrollo", desc: "Libro de análisis ecológico y propuesta de reconversión del monocultivo forestal + App." },
-    { id: "incel", title: "🤖 Proyecto INCEL: AI Influencers & YouTube Kids", category: "ingresos", status: "en_desarrollo", desc: "Gestión de avatares IA y producción de contenidos educativos para niños." },
+    { id: "incel", title: "🎭 Los Manejadores (Agencia Digital & IA)", category: "ingresos", status: "en_desarrollo", desc: "Gestión de avatares IA, storytelling para YouTube y arquitectura de presencia digital." },
     { id: "piratas", title: "🏴‍☠️ Cómic de Piratas: Guerra del Pacífico", category: "academia", status: "en_desarrollo", desc: "Cómic histórico-fantástico sobre contienda naval y mitología del Pacífico Sur." },
     { id: "divulgacion", title: "🎙️ Ciencia & Territorios", category: "politica", status: "en_desarrollo", desc: "Plataforma de divulgación científica territorial y comunicación pública de la ciencia." },
-    { id: "permacultura", title: "🌱 Permacultura Online & Urrutia Agrotech", category: "ingresos", status: "en_desarrollo", desc: "Emprendimiento agrotecnológico de base ecológica, IA, satélites, IoE y diseño predial." }
+    { id: "permacultura", title: "🌾 Chile Agrotech (Tecnología de Precisión)", category: "ingresos", status: "en_desarrollo", desc: "Gemelo digital AgriTwin, sensores IoT y analítica satelital multiespectral en el Maule." }
   ],
   chatHistories: {
     therapist: { addictions: [], empathy: [], sexaffective: [] },

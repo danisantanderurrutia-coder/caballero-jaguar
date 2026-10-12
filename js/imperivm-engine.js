@@ -657,7 +657,7 @@ const imperivmEngine = {
       { id: "ayurveda", title: "🌿 Hábitos Digestivos & Hierbas", img: IMPERIVM_MEDIA.bitacora_ayurveda, type: "bitacora" },
       { id: "masajes", title: "💆 Alivio Muscular & Fascia", img: IMPERIVM_MEDIA.bitacora_masajes, type: "bitacora" },
       { id: "meditacion", title: "🧘 Meditación & Respiración", img: IMPERIVM_MEDIA.bitacora_meditacion, type: "bitacora" },
-      { id: "datemaster", title: "💘 DateMaster Apex", img: "assets/datemaster_logo.png", type: "datemaster" }
+      { id: "datemaster", title: "💘 DateMaster Apex", img: "assets/logo_dm_apex.png", type: "datemaster" }
     ];
 
     let activeItems = sportsItems;
@@ -873,8 +873,8 @@ const imperivmEngine = {
     const secondaryProjects = [
       { id: "lauwersmeer", title: "🌊 Climate Risk Lauwersmeer", category: "Investigación", desc: "Paper científico sobre modelación de riesgo climático en Holanda.", img: IMPERIVM_MEDIA.provincia_bilbao },
       { id: "rewild", title: "🔥 ReWild: Bosques & Ecosistemas", category: "Ecología", desc: "Propuesta de restauración activa del bosque nativo y plataforma.", img: IMPERIVM_MEDIA.provincia_rewild },
-      { id: "urrutia", title: "🌾 Urrutia Agrotech", category: "Tecnología", desc: "Diseño predial permacultural y análisis satelital.", img: IMPERIVM_MEDIA.provincia_agrotech },
-      { id: "manejadores", title: "🎭 Privacidad & Datos", category: "Software", desc: "Herramientas de soberanía de datos y privacidad digital.", img: IMPERIVM_MEDIA.provincia_manejadores },
+      { id: "permacultura", title: "🌾 Chile Agrotech", category: "Agrotech & ESG", desc: "Plataforma de precisión agrícola, sensores IoT, gemelo digital AgriTwin e inteligencia satelital en Maule.", img: IMPERIVM_MEDIA.provincia_agrotech },
+      { id: "incel", title: "🎭 Los Manejadores", category: "Medios & IA", desc: "Agencia de comunicación digital: avatares IA, canales de YouTube y arquitectura de presencia.", img: IMPERIVM_MEDIA.provincia_manejadores },
       { id: "piratas", title: "🏴‍☠️ Cómic Piratas del Pacífico", category: "Arte", desc: "Narrativa gráfica, guión y dibujo histórico naval.", img: IMPERIVM_MEDIA.provincia_piratas },
       { id: "divulgacion", title: "🎙️ Ciencia & Territorio", category: "Divulgación", desc: "Podcast independiente, salidas de campo y difusión.", img: IMPERIVM_MEDIA.provincia_divulgacion }
     ];

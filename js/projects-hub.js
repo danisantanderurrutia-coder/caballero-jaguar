@@ -58,25 +58,25 @@ let projectsData = {
 
   incel: {
     id: "incel",
-    title: "🤖 Proyecto INCEL: AI Influencers & YouTube Kids",
-    subtitle: "Gestión de avatares IA y producción de contenidos educativos para niños",
-    collaborators: "Equipo de Medios Digitales & Producción IA",
-    category: "Inteligencia Artificial & Edutainment",
+    title: "🎭 Los Manejadores (Agencia Digital & IA)",
+    subtitle: "Conectamos talentos con el mundo · Arquitectura de presencia e influencers virtuales",
+    collaborators: "Equipo de Medios Digitales, Producción IA & Storytelling",
+    category: "Inteligencia Artificial & Media Agency",
     bannerImg: "assets/img_incel_ai_influencer.jpg",
-    desc: "Administración estratégica de influencers generadas mediante Inteligencia Artificial y producción canalizada de videos educativos pedagógicos de alta calidad para YouTube Infantil.",
+    desc: "Agencia de comunicación digital y arquitectura de presencia web. Une precisión analítica europea con energía emprendedora americana para gestionar influencers virtuales generados por IA (Mateo, Alina, Freya, Julia, Laura), canales de YouTube (storytelling de ciencia, historia y entretenimiento) y asesorías comunicacionales estratégicas.",
     gantt: [
-      { id: "g1", stage: "Modelado y Diseño de Personajes IA", startDate: "2026-06-01", endDate: "2026-07-15", progress: 100, status: "Completado" },
-      { id: "g2", stage: "Guionizado de Serie YouTube Kids", startDate: "2026-07-16", endDate: "2026-09-01", progress: 80, status: "En Ejecución" },
-      { id: "g3", stage: "Generación de Videos & Animación IA", startDate: "2026-08-15", endDate: "2026-10-30", progress: 50, status: "En Ejecución" },
-      { id: "g4", stage: "Estrategia de Crecimiento & Monetización", startDate: "2026-10-01", endDate: "2026-12-31", progress: 20, status: "Planificación" }
+      { id: "g1", stage: "Modelado y Biblia de Personajes IA (Avatares)", startDate: "2026-06-01", endDate: "2026-07-15", progress: 100, status: "Completado" },
+      { id: "g2", stage: "Pipeline de Producción & Storytelling YouTube", startDate: "2026-07-16", endDate: "2026-09-01", progress: 85, status: "En Ejecución" },
+      { id: "g3", stage: "Landing Page Completa & Presencia en Redes", startDate: "2026-08-15", endDate: "2026-10-30", progress: 60, status: "En Ejecución" },
+      { id: "g4", stage: "Pitch Deck de Inversores/Clientes & Scripts Comerciales", startDate: "2026-10-01", endDate: "2026-12-31", progress: 35, status: "Planificación" }
     ],
     checklist: [
-      { id: "chk1", text: "Generar biblia de avatares e identidades visuales de influencers IA", completed: true },
-      { id: "chk2", text: "Escribir primeros 10 guiones sobre ciencia y naturaleza para niños", completed: true },
-      { id: "chk3", text: "Renderizar pistas de voz y animación facial mediante difusores IA", completed: false },
-      { id: "chk4", text: "Publicar y optimizar SEO de los primeros 5 episodios en YouTube Kids", completed: false }
+      { id: "chk1", text: "Definir set de influencers digitales e identidades de marca", completed: true },
+      { id: "chk2", text: "Producir primeros guiones y carruseles para redes sociales", completed: true },
+      { id: "chk3", text: "Desarrollar landing page completa y conectar pipeline de difusión", completed: false },
+      { id: "chk4", text: "Finalizar pitch deck de 10 diapositivas para inversores y clientes", completed: false }
     ],
-    notes: "Combinación de contenido educativo riguroso con avatares atractivos e hiperrealistas."
+    notes: "Los Manejadores democratiza el poder de la influencia auténtica: IA + storytelling + resultados medibles."
   },
 
   piratas: {
@@ -127,35 +127,35 @@ let projectsData = {
 
   permacultura: {
     id: "permacultura",
-    title: "🌱 Permacultura Online & Urrutia Agrotech",
-    subtitle: "Emprendimiento agrotecnológico de base ecológica, IA, satélites, IoE y diseño predial",
-    collaborators: "Productores Agrícolas, Ingenieros IoE & Ecólogos",
-    category: "Agrotech & Ecología Aplicada",
+    title: "🌾 Chile Agrotech (Tecnología de Precisión)",
+    subtitle: "Tecnología Agrícola de Precisión & Gemelo Digital (AgriTwin) — Maule, Chile",
+    collaborators: "Productores Agrícolas del Maule, Ingenieros IoT & Especialistas ESG",
+    category: "Agrotech, IoT & Inteligencia Satelital",
     bannerImg: "assets/img_urrutia_agrotech.jpg",
-    desc: "Plataforma integral de Permacultura Online combinada con el emprendimiento de base tecnológica Urrutia Agrotech para la transformación regenerativa del campo.",
+    desc: "Plataforma de ingeniería y tecnología agrícola de precisión para el campo chileno y la Región del Maule. Integra el gemelo digital AgriTwin, sensores de suelo IoT, analítica satelital multiespectral (Sentinel/NDVI, índices hídricos) y diseño regenerativo ReWild.",
     subsections: {
       agrotech: {
-        name: "🚜 Urrutia Agrotech",
-        desc: "Optimización inteligente de procesos agrícolas mediante la integración de Inteligencia Artificial (IA), datos satelitales multispectrales (NDVI, índices de humedad), Internet de las Cosas Agrícola (IoE / sensores de suelo) y principios profundos de ecología de suelos."
+        name: "🚜 Chile Agrotech & AgriTwin",
+        desc: "Optimización inteligente de procesos agrícolas en el Maule mediante gemelos digitales (AgriTwin), sensores de humedad de suelo IoT y análisis satelital multiespectral (NDVI, NDRE) para la máxima eficiencia hídrica y nutricional."
       },
       predios: {
-        name: "📐 Diseño Ecológico de Predios",
-        desc: "Planificación predial basada en escala de permanencia de Keyline (línea clave), zonificación permacultural (Zonas 0 a 5), cosecha e infiltración de agua de lluvia, y bosques comestibles (Food Forests)."
+        name: "📐 Diseño Regenerativo & ReWild",
+        desc: "Planificación predial basada en escala de permanencia Keyline, cosecha e infiltración hídrica, restauración de suelo biológico y transición ecológica para huertos y viñas."
       }
     },
     gantt: [
-      { id: "g1", stage: "Desarrollo del Algoritmo de IA Urrutia Agrotech", startDate: "2026-04-01", endDate: "2026-07-01", progress: 100, status: "Completado" },
-      { id: "g2", stage: "Integración de Capas Satelitales (Sentinel/NDVI)", startDate: "2026-07-02", endDate: "2026-09-15", progress: 80, status: "En Ejecución" },
-      { id: "g3", stage: "Despliegue de Nodos IoE en Predio Piloto", startDate: "2026-08-15", endDate: "2026-11-01", progress: 50, status: "En Ejecución" },
-      { id: "g4", stage: "Curso Online de Diseño de Predios & Permacultura", startDate: "2026-10-01", endDate: "2026-12-31", progress: 15, status: "Planificación" }
+      { id: "g1", stage: "Arquitectura de Plataforma AgroTech Chile (React + Vite)", startDate: "2026-04-01", endDate: "2026-07-01", progress: 100, status: "Completado" },
+      { id: "g2", stage: "Dashboard Satelital & Gemelo Digital AgriTwin", startDate: "2026-07-02", endDate: "2026-09-15", progress: 85, status: "En Ejecución" },
+      { id: "g3", stage: "Despliegue de Nodos IoT en Terreno & Sincronización Maule", startDate: "2026-08-15", endDate: "2026-11-01", progress: 55, status: "En Ejecución" },
+      { id: "g4", stage: "Brochure Ejecutivo & Comercialización con Viñas/Predios", startDate: "2026-10-01", endDate: "2026-12-31", progress: 30, status: "Planificación" }
     ],
     checklist: [
-      { id: "chk1", text: "Probar modelo de IA para predicción de requerimientos hídricos de suelo", completed: true },
-      { id: "chk2", text: "Diseñar plano maestro en Keyline para el primer predio cliente", completed: true },
-      { id: "chk3", text: "Conectar API de imágenes satelitales al dashboard de Urrutia Agrotech", completed: false },
-      { id: "chk4", text: "Lanzar plataforma de formación online en Permacultura", completed: false }
+      { id: "chk1", text: "Configurar entorno oficial y arquitectura de microservicios AgroTech Chile", completed: true },
+      { id: "chk2", text: "Integrar capas satelitales multispectrales (Sentinel-2 / NDVI)", completed: true },
+      { id: "chk3", text: "Conectar telemetría de sensores de humedad de suelo IoT al AgriTwin Hub", completed: false },
+      { id: "chk4", text: "Presentar Brochure Ejecutivo a viñas y predios agrícolas del Maule", completed: false }
     ],
-    notes: "Urrutia Agrotech une la precisión tecnológica del siglo XXI con la sabiduría de la permacultura."
+    notes: "Chile Agrotech une tecnología de frontera con la realidad productiva y ecológica del campo chileno."
   },
 
   paper_fisica: {
@@ -220,9 +220,26 @@ function loadProjectsHubData() {
   const saved = localStorage.getItem(PROJECTS_HUB_STORAGE_KEY);
   if (saved) {
     try {
-      projectsData = Object.assign({}, projectsData, JSON.parse(saved));
+      const parsed = JSON.parse(saved);
+      // Migración automática a los nombres oficiales
+      if (parsed.incel && parsed.incel.title && parsed.incel.title.includes("INCEL")) {
+        delete parsed.incel.title;
+        delete parsed.incel.subtitle;
+        delete parsed.incel.desc;
+      }
+      if (parsed.permacultura && parsed.permacultura.title && parsed.permacultura.title.includes("Urrutia")) {
+        delete parsed.permacultura.title;
+        delete parsed.permacultura.subtitle;
+        delete parsed.permacultura.desc;
+        delete parsed.permacultura.subsections;
+      }
+      projectsData = Object.assign({}, projectsData, parsed);
     } catch (e) { console.error("Error al cargar datos de proyectos:", e); }
   }
+  // Alias de compatibilidad
+  projectsData.manejadores = projectsData.incel;
+  projectsData.agrotech = projectsData.permacultura;
+  projectsData.chile_agrotech = projectsData.permacultura;
 }
 
 function saveProjectsHubData() {

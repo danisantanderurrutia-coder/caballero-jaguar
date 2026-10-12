@@ -198,11 +198,11 @@ const KCD_AURAS_CONFIG = {
       { key: "idiomas", name: "Alemán B1", fullName: "Alemán B1 & Políglota", icon: "🌐", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, desc: "Práctica diaria de Alemán, Euskera o Portugués.", tab: "idiomas" },
       { key: "musica", name: "Música / Jazz", fullName: "Trompeta de Jazz & Viento", icon: "🎺", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, desc: "Embocadura, lenguaje armónico y escalas de jazz.", tab: "musica" },
       { key: "fotografia", name: "Fotografía & Óptica", fullName: "Fotografía Territorial & Óptica", icon: "📷", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, desc: "Composición visual, encuadre y revelado.", tab: "fotografia" },
-      { key: "agrotech", name: "Urrutia Agrotech", fullName: "Agrotech & Permacultura Online", icon: "🌱", defaultVal: 0, xpWeight: "75 XP (Difícil)", difficulty: "dificil", xp: 75, desc: "Diseño predial, sensores IoE, satélites y modelos IA.", tab: "campanas" },
+      { key: "agrotech", name: "Chile Agrotech", fullName: "Chile Agrotech · Precisión & AgriTwin", icon: "🌱", defaultVal: 0, xpWeight: "75 XP (Difícil)", difficulty: "dificil", xp: 75, desc: "Gemelo digital AgriTwin, sensores IoT y analítica satelital en el Maule.", tab: "campanas" },
       { key: "rewild", name: "Libro de Incendios", fullName: "ReWild: Libro de Incendios", icon: "🔥", defaultVal: 0, xpWeight: "75 XP (Difícil)", difficulty: "dificil", xp: 75, desc: "Investigación y co-edición sobre superación del modelo forestal.", tab: "campanas" },
       { key: "lauwersmeer", name: "Paper Lauwersmeer", fullName: "Artículo Científico Lauwersmeer", icon: "🌊", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, desc: "Evaluación de riesgo climático costero y marejadas en Holanda.", tab: "campanas" },
       { key: "piratas", name: "Cómic de Piratas", fullName: "Cómic Guerra del Pacífico & Leyendas", icon: "🏴‍☠️", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, desc: "Guión literario, bocetos y leyendas náuticas chilenas.", tab: "campanas" },
-      { key: "incel", name: "Proyecto INCEL", fullName: "Avatares IA & YouTube Kids", icon: "🤖", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, desc: "Influencers generadas por IA y producción educativa infantil.", tab: "campanas" },
+      { key: "incel", name: "Los Manejadores", fullName: "Los Manejadores · Agencia IA & YouTube", icon: "🎭", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, desc: "Influencers virtuales IA, producción de YouTube y presencia digital.", tab: "campanas" },
       { key: "divulgacion", name: "Ciencia & Territorios", fullName: "Divulgación Científica Territorial", icon: "🎙️", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, desc: "Podcast, reportajes de terreno y mapeo participativo.", tab: "campanas" },
       { key: "paper_fisica", name: "Paper en Física", fullName: "Investigación en Física (Eventual)", icon: "⚛️", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, desc: "Modelación matemática y exploración teórica.", tab: "campanas" },
       { key: "red_maule", name: "Red Noticias Maule", fullName: "Red de Noticias Maule (Eventual)", icon: "📰", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, desc: "Periodismo territorial independiente del Maule.", tab: "campanas" },
@@ -1424,7 +1424,7 @@ function renderRPGLandingHub(targetContainerId) {
               🎒 Alijo ➔
             </button>
             <button class="btn-jaguar btn-sm" style="color: #8C5304; background: rgba(224, 138, 25, 0.15); border: 1.5px solid #C57E16; font-size: 0.75rem; font-weight: 800; display: inline-flex; align-items: center; gap: 6px;" onclick="launchDateMasterApex(event);" title="Ejecutar y Abrir DateMaster Apex (http://127.0.0.1:8000)">
-              <img src="assets/datemaster_logo.png" alt="DateMaster Apex" style="width: 14px; height: 14px; border-radius: 3px; object-fit: cover;"> DateMaster ➔
+              <img src="assets/logo_dm_apex.png" alt="DateMaster Apex" style="width: 14px; height: 14px; border-radius: 3px; object-fit: cover;"> DateMaster ➔
             </button>
           </div>
         </div>
@@ -1723,8 +1723,8 @@ function openKCDInspector(params) {
           <div style="display: flex; align-items: center; gap: 10px;">
             <span style="font-size: 1.8rem;">🌱</span>
             <div>
-              <span style="font-size: 0.72rem; color: #9B2335; font-family: 'Cinzel', serif; letter-spacing: 1.5px; text-transform: uppercase;">TERRITORIO & PROYECTOS • AGROTECH</span>
-              <h3 style="font-family: 'Cinzel', serif; font-size: 1.4rem; color: #0E0E13; margin: 0;">Agrotech & Ecología Aplicada</h3>
+              <span style="font-size: 0.72rem; color: #9B2335; font-family: 'Cinzel', serif; letter-spacing: 1.5px; text-transform: uppercase;">TERRITORIO & PROYECTOS • CHILE AGROTECH</span>
+              <h3 style="font-family: 'Cinzel', serif; font-size: 1.4rem; color: #0E0E13; margin: 0;">Chile Agrotech & Precisión Agrícola</h3>
             </div>
           </div>
           <button onclick="closeKCDInspector()" style="background: none; border: none; font-size: 1.4rem; cursor: pointer; color: rgba(255,255,255,0.4);">✕</button>
@@ -1736,9 +1736,9 @@ function openKCDInspector(params) {
             <div style="font-size: 2.4rem; font-weight: 900; color: #0E0E13; font-family: 'Cinzel', serif;">${statObj.value || 0}</div>
           </div>
           <div>
-            <h4 style="font-family: 'Cinzel', serif; color: #0E0E13; font-size: 1.05rem; margin-bottom: 4px;">🌱 Avance en Ecología y Agrotech</h4>
+            <h4 style="font-family: 'Cinzel', serif; color: #0E0E13; font-size: 1.05rem; margin-bottom: 4px;">🌱 Avance en Chile Agrotech</h4>
             <p style="font-size: 0.9rem; color: rgba(255,255,255,0.4); line-height: 1.4; margin: 0;">
-              Otorga puntos y experiencia (XP) por avanzar en los proyectos de ecología y tecnología agrícola (Agrotech). Cada avance suma +1 punto y +50 XP a tu pilar de Territorio & Proyectos.
+              Otorga puntos y experiencia (XP) por avanzar en Chile Agrotech (AgriTwin, sensores IoT, índices satelitales y diseño regenerativo en Maule). Cada avance suma +1 punto y +50 XP a tu pilar de Territorio & Proyectos.
             </p>
           </div>
         </div>
