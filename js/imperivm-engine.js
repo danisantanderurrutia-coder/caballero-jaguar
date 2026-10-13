@@ -667,17 +667,22 @@ const imperivmEngine = {
         <!-- Barra de comandos ahora integrada en la Pirámide Invertida del Hero -->
 
         <!-- ====================================================================
-             1. HOY: PLAN DEL DÍA (CON EXPLORADOR SEMANAL DESPLEGABLE)
+             1. SECCIÓN DE CABALLERÍA: HÁBITOS, RANGOS, TÍTULOS & STATS INTEGRADOS
+             ==================================================================== -->
+        ${this.renderCaballeriaRail()}
+
+        <!-- ====================================================================
+             2. HOY: PLAN DEL DÍA (CON EXPLORADOR SEMANAL Y MOOD ESPACIOSO)
              ==================================================================== -->
         ${this.renderTodayFlowRail()}
 
         <!-- ====================================================================
-             2. MISIONES Y PROYECTOS (incluye pestaña maestra: Maestría, Rangos y Armamentum)
+             3. MISIONES Y PROYECTOS (PRINCIPALES & CONQUISTADAS UNIFICADAS CON ESTRELLA)
              ==================================================================== -->
         ${this.renderMisionesRail()}
 
         <!-- ====================================================================
-             3. CUERPO Y SALUD: DEPORTES, HÁBITOS, BIENESTAR, DATEMASTER
+             4. CUERPO Y SALUD: DEPORTES, HÁBITOS, BIENESTAR, DATEMASTER
              ==================================================================== -->
         ${this.renderCuerpoYSaludRail()}
 
@@ -817,7 +822,137 @@ const imperivmEngine = {
   },
 
   // ==========================================================================
-  // FILA 1: FLOW MODE DEL DÍA ACTUAL (CON EXPLORADOR SEMANAL DESPLEGABLE)
+  // FILA 1: SECCIÓN DE CABALLERÍA (CABALLERO JAGUAR & STATS INTEGRADOS)
+  // ==========================================================================
+  renderCaballeriaRail() {
+    const P = window.CJProgress;
+    const snap = P ? P.snapshot() : { xp: 0, level: { latin: "Tiro Legionis", gradeRoman: "I", title: "Legionario", desc: "Iniciado", progress: 0 }, today: { date: "", xp: 0, cap: 600 }, streak: { days: 0, todayActive: false } };
+    const lv = snap.level;
+    const st = (typeof reyJaguarState !== "undefined") ? reyJaguarState : (window.reyJaguarState || null);
+    const items = (st && Array.isArray(st.inventory)) ? st.inventory : [];
+    const unlocked = items.filter(i => i.unlocked).length;
+    const titles = (st && Array.isArray(st.titles)) ? st.titles : [];
+    const counterTitles = (st && Array.isArray(st.counterTitles)) ? st.counterTitles : [];
+    const titlesOn = titles.filter(t => t.unlocked).length;
+    const counterOn = counterTitles.filter(t => t.unlocked).length;
+    const byAura = P ? P.xpByAura(7) : {};
+    const maxAura = Math.max(1, ...Object.values(byAura));
+    const auras = (window.CaballeroScoringEngine && window.CaballeroScoringEngine.auras) || {};
+    const week = P ? P.lastDays(7) : [];
+    const maxDay = Math.max((P ? P.CONFIG.dailySoftCap : 600), ...week.map(d => d.xp || 0));
+    const todayPct = Math.min(100, Math.round(((snap.today.xp || 0) / (snap.today.cap || 600)) * 100));
+    const box = "background: rgba(255,255,255,0.04); border: 1px solid var(--imperivm-border); border-radius: 10px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between;";
+    const recent = P ? P.recent(5) : [];
+
+    return `
+      <div class="imperivm-rail-section" id="rail-caballeria-maestria" style="margin-bottom: 24px;">
+        <div class="imperivm-rail-header" style="margin-bottom: 12px;">
+          <div class="imperivm-rail-title-group">
+            <h3 class="imperivm-rail-title">⚔️ Sección de Caballería <span class="dev-section-label">#rail-caballeria</span></h3>
+          </div>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <button class="btn-campaign-toggle" onclick="imperivmEngine.openCaballeriaCodexModal('habitos');" title="Abrir Códice de la Orden">
+              📜 Códice de Caballería
+            </button>
+            <button class="btn-campaign-toggle" onclick="imperivmEngine.openCaballeriaCodexModal('reglas');" title="Ver Reglas de Rango & XP">
+              ⚡ Rangos & Reglas
+            </button>
+            <button class="btn-campaign-toggle" onclick="imperivmEngine.openCaballeriaCodexModal('titulos');" title="Ver Títulos y Sombras">
+              👑 Títulos & Sombras
+            </button>
+            <button class="btn-campaign-toggle" onclick="imperivmEngine.openCaballeriaCodexModal('armamentum');" title="Ver Armamentum Imperial">
+              🎒 Armamentum
+            </button>
+          </div>
+        </div>
+
+        <!-- FILA UNIFICADA: TARJETA MAESTRA CABALLERO JAGUAR + 4 BLOQUES DE STATS -->
+        <div class="cj-caballeria-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; align-items: stretch;">
+          
+          <!-- TARJETA EMBLEMÁTICA 1: CABALLERO JAGUAR (ABRE CÓDICE UNIFICADO) -->
+          <div class="imperivm-card cj-emblem-card" style="cursor: pointer; border: 1.5px solid var(--imperivm-border-gold); background: linear-gradient(135deg, rgba(20,24,36,0.95) 0%, rgba(14,18,29,0.98) 100%); border-radius: 10px; padding: 16px 14px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(0,0,0,0.5); position: relative; transition: all 0.25s ease;" onclick="imperivmEngine.openCaballeriaCodexModal('habitos');" title="Clic para abrir el Códice Unificado de Caballería">
+            <div style="position: absolute; top: 10px; right: 10px; font-size: 0.65rem; color: var(--imperivm-text-gold); font-weight: 800; background: rgba(0,0,0,0.6); padding: 2px 7px; border-radius: 4px; border: 1px solid rgba(212,175,55,0.3);">
+              ORDEN JAGUAR
+            </div>
+            <div style="width: 82px; height: 82px; border-radius: 50%; border: 2.5px solid #C59A28; box-shadow: 0 0 20px rgba(197, 154, 40, 0.4); overflow: hidden; margin-bottom: 8px; margin-top: 4px;">
+              <img src="assets/jungle_jaguar_logo.jpg" alt="Caballero Jaguar" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <h4 style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #FFF; margin: 2px 0; letter-spacing: 0.05em;">Caballero Jaguar</h4>
+            <div style="font-size: 0.72rem; color: var(--imperivm-text-gold); font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;">
+              Códice de la Orden
+            </div>
+            <p style="font-size: 0.74rem; color: var(--imperivm-text-muted); margin: 6px 0 10px 0; line-height: 1.35;">
+              Hábitos, Rangos, Títulos, Sombras y Armamentum.
+            </p>
+            <button class="btn-imperivm-primary" style="padding: 6px 14px; font-size: 0.72rem; width: 100%; border-radius: 6px;" onclick="event.stopPropagation(); imperivmEngine.openCaballeriaCodexModal('habitos');">
+              📜 Abrir Códice ▶
+            </button>
+          </div>
+
+          <!-- BLOQUE DE STATS 2: RANGO ACTUAL -->
+          <div style="${box}">
+            <div>
+              <div style="font-size: 0.7rem; letter-spacing: 1.5px; color: var(--imperivm-text-muted);">RANGO ACTUAL</div>
+              <div style="font-family: var(--imperivm-font-title); font-size: 1.15rem; color: #FFF; margin: 4px 0;">${lv.latin} · Grado ${lv.gradeRoman}</div>
+              <div style="font-size: 0.8rem; color: var(--imperivm-text-muted); margin-bottom: 8px;">${lv.title} — ${lv.desc}</div>
+              <div style="height: 7px; background: rgba(0,0,0,0.5); border-radius: 4px; overflow: hidden;"><div style="height: 100%; width: ${lv.progress}%; background: linear-gradient(90deg, #B8860B, #F3D079);"></div></div>
+            </div>
+            <div style="font-size: 0.75rem; color: #E8A0A8; margin-top: 8px;">${snap.xp.toLocaleString()} XP total ${lv.next ? `· faltan ${lv.toNext.toLocaleString()} XP para ${P ? P.LEVELS[lv.rank].latin : 'siguiente'}` : '· rango máximo'}</div>
+          </div>
+
+          <!-- BLOQUE DE STATS 3: HOY & RACHA -->
+          <div style="${box}">
+            <div>
+              <div style="font-size: 0.7rem; letter-spacing: 1.5px; color: var(--imperivm-text-muted);">HOY · ${snap.today.date}</div>
+              <div style="font-size: 1.15rem; color: #FFF; margin: 4px 0;">${snap.today.xp} / ${snap.today.cap} XP <span style="font-size: 0.75rem; color: var(--imperivm-text-muted);">(tope blando)</span></div>
+              <div style="height: 7px; background: rgba(0,0,0,0.5); border-radius: 4px; overflow: hidden;"><div style="height: 100%; width: ${todayPct}%; background: linear-gradient(90deg, #2E7D32, #81C784);"></div></div>
+              <div style="font-size: 0.78rem; margin-top: 8px; color: ${snap.streak.todayActive ? '#81C784' : '#E8A0A8'};">
+                🔥 Racha: <strong>${snap.streak.days}</strong> día(s) ${snap.streak.todayActive ? '· hoy ya cuenta ✔' : `· hoy aún no cuenta (faltan ${Math.max(0, snap.today.activeAt - snap.today.xp)} XP)`}
+              </div>
+            </div>
+            <div style="display: flex; gap: 3px; align-items: flex-end; height: 34px; margin-top: 8px;">
+              ${week.map(d => `<div title="${d.date}: ${d.xp} XP" style="flex: 1; background: ${d.xp >= snap.today.activeAt ? '#B8860B' : 'rgba(255,255,255,0.15)'}; height: ${Math.max(4, Math.round((d.xp / maxDay) * 100))}%; border-radius: 2px;"></div>`).join('')}
+            </div>
+          </div>
+
+          <!-- BLOQUE DE STATS 4: XP POR AURA (ÚLTIMOS 7 DÍAS) -->
+          <div style="${box}">
+            <div style="font-size: 0.7rem; letter-spacing: 1.5px; color: var(--imperivm-text-muted);">XP POR AURA · ÚLTIMOS 7 DÍAS</div>
+            <div style="display: flex; flex-direction: column; gap: 4px; margin-top: 6px;">
+              ${(P ? P.AURAS : []).map(k => `
+                <div style="display: flex; align-items: center; gap: 6px; font-size: 0.72rem; color: #DDD;">
+                  <span style="width: 88px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${(auras[k] && auras[k].icon) || ''} ${(auras[k] && auras[k].shortName) || k}</span>
+                  <div style="flex: 1; height: 6px; background: rgba(0,0,0,0.5); border-radius: 3px; overflow: hidden;"><div style="height: 100%; width: ${Math.round((byAura[k] / maxAura) * 100)}%; background: ${(auras[k] && auras[k].baseColor) || '#B8860B'};"></div></div>
+                  <span style="width: 36px; text-align: right;">${byAura[k]}</span>
+                </div>`).join('')}
+            </div>
+          </div>
+
+          <!-- BLOQUE DE STATS 5: ÚLTIMOS MOVIMIENTOS & RESUMEN DE ARMAS -->
+          <div style="${box}">
+            <div>
+              <div style="font-size: 0.7rem; letter-spacing: 1.5px; color: var(--imperivm-text-muted);">ÚLTIMOS MOVIMIENTOS DE XP</div>
+              <div style="display: flex; flex-direction: column; gap: 5px; margin-top: 6px; font-size: 0.75rem; color: #DDD;">
+                ${recent.length ? recent.map(e => `
+                  <div style="display: flex; justify-content: space-between; gap: 8px; align-items: center;">
+                    <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${e.desc}">${e.date.slice(5)} · ${e.desc}</span>
+                    <span style="white-space: nowrap;"><strong style="color: #F3D079;">+${e.xp}</strong>
+                      <button onclick="imperivmEngine.undoXPEntry('${e.id}')" title="Deshacer este movimiento" style="background: none; border: none; color: #E8A0A8; cursor: pointer;">↩</button></span>
+                  </div>`).join('') : '<em style="color: var(--imperivm-text-muted);">Aún no hay movimientos registrados hoy.</em>'}
+              </div>
+            </div>
+            <div style="font-size: 0.72rem; color: var(--imperivm-text-muted); margin-top: 8px; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 6px;">
+              🎒 Armamentum: ${unlocked} desbloqueados${titles.length ? ` · 👑 Títulos: ${titlesOn}/${titles.length}` : ''}${counterTitles.length ? ` · 💧 Sombras: ${counterOn}/${counterTitles.length}` : ''}
+            </div>
+          </div>
+
+        </div>
+      </div>
+    `;
+  },
+
+  // ==========================================================================
+  // FILA 2: FLOW MODE DEL DÍA ACTUAL (CON EXPLORADOR SEMANAL DESPLEGABLE)
   // ==========================================================================
   renderTodayFlowRail() {
     const today = this.getTodayKey();
@@ -880,30 +1015,58 @@ const imperivmEngine = {
           </div>
         </div>
 
-        <!-- BANNER CINEMÁTICO DE LA ESTRATEGIA DE LA LANZA EN VIVO -->
-        <div style="margin-bottom: 14px; background: ${currentMood === 'emergency' ? 'linear-gradient(90deg, rgba(225,29,72,0.18) 0%, rgba(15,20,30,0.85) 100%)' : 'linear-gradient(90deg, rgba(16,185,129,0.18) 0%, rgba(15,20,30,0.85) 100%)'}; border: 1px solid ${currentMood === 'emergency' ? 'rgba(244,63,94,0.4)' : 'rgba(16,185,129,0.4)'}; border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; box-shadow: 0 4px 18px rgba(0,0,0,0.4);">
-          <div style="display: flex; align-items: center; gap: 12px;">
-            <div style="font-size: 1.6rem; background: rgba(0,0,0,0.3); border-radius: 8px; padding: 6px 10px; border: 1px solid rgba(255,255,255,0.08);">
-              ${currentMood === 'emergency' ? '🚨' : '🌿'}
+        <!-- PANEL ESTRATÉGICO DE MOOD SEMANAL (ESPACIOSO Y ESTRUCTURADO) -->
+        <div class="imperivm-mood-strategic-card" style="margin-bottom: 16px; background: ${currentMood === 'emergency' ? 'linear-gradient(135deg, rgba(225,29,72,0.15) 0%, rgba(14,18,29,0.92) 100%)' : 'linear-gradient(135deg, rgba(16,185,129,0.15) 0%, rgba(14,18,29,0.92) 100%)'}; border: 1.5px solid ${currentMood === 'emergency' ? 'rgba(244,63,94,0.45)' : 'rgba(16,185,129,0.45)'}; border-radius: 12px; padding: 18px 22px; box-shadow: 0 6px 24px rgba(0,0,0,0.45);">
+          <!-- FILA SUPERIOR: IDENTIDAD DEL MOOD Y ACCIONES -->
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.08);">
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <div style="font-size: 1.8rem; background: rgba(0,0,0,0.4); border-radius: 10px; padding: 8px 12px; border: 1px solid ${currentMood === 'emergency' ? 'rgba(244,63,94,0.4)' : 'rgba(16,185,129,0.4)'};">
+                ${currentMood === 'emergency' ? '🚨' : '🌿'}
+              </div>
+              <div>
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                  <span style="font-size: 1.05rem; font-weight: 800; color: #FFF; font-family: var(--imperivm-font-title); letter-spacing: 0.05em;">
+                    ${scheduleData ? scheduleData.name.toUpperCase() : 'ESTRATEGIA SEMANAL'}
+                  </span>
+                  <span class="badge-tag ${currentMood === 'emergency' ? 'badge-pink' : 'badge-emerald'}" style="font-size: 0.72rem; padding: 3px 10px;">
+                    🎯 ${today.toUpperCase()}: ${todayPlan.focus}
+                  </span>
+                </div>
+                <div style="font-size: 0.8rem; color: var(--imperivm-text-muted); margin-top: 3px;">
+                  ${currentMood === 'emergency' ? 'Asalto Frontal: 2 bloques diarios de empleo en Hannover con máxima concentración.' : 'Ritmo Balanceado: Polimatía armónica entre desarrollo profesional, cuerpo y artes.'}
+                </div>
+              </div>
             </div>
-            <div>
-              <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                <span style="font-size: 0.9rem; font-weight: 800; color: ${currentMood === 'emergency' ? '#FDA4AF' : '#6EE7B7'}; font-family: var(--imperivm-font-title); letter-spacing: 0.04em;">
-                  ${scheduleData ? scheduleData.name.toUpperCase() : 'ESTRATEGIA SEMANAL'}
-                </span>
-                <span class="badge-tag ${currentMood === 'emergency' ? 'badge-pink' : 'badge-emerald'}" style="font-size: 0.65rem; padding: 2px 7px;">
-                  ${today.toUpperCase()}: ${todayPlan.focus}
-                </span>
-              </div>
-              <div style="font-size: 0.77rem; color: #DDD; margin-top: 4px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
-                <span style="color: var(--imperivm-text-gold); font-weight: 700;">Bloques de hoy:</span>
-                ${todayPlan.blocks.map(b => `<span style="background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1);"><strong style="color: #FFF;">${b.time}</strong> ${b.badge} • ${b.title}</span>`).join(' ')}
-              </div>
+
+            <!-- BOTONES DE CONTROL DE MOOD -->
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button onclick="imperivmEngine.switchWeeklyMood('${currentMood === 'emergency' ? 'fresh' : 'emergency'}');" style="background: rgba(0,0,0,0.35); border: 1px solid var(--imperivm-border-gold); color: var(--imperivm-text-gold); padding: 8px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
+                <span>${currentMood === 'emergency' ? '🌿 Alternar a Mood Fresh' : '🚨 Alternar a Mood Emergency'}</span>
+              </button>
             </div>
           </div>
-          <button onclick="imperivmEngine.switchWeeklyMood('${currentMood === 'emergency' ? 'fresh' : 'emergency'}');" style="background: rgba(212,175,55,0.12); border: 1px solid var(--imperivm-border-gold); color: var(--imperivm-text-gold); padding: 8px 14px; border-radius: 6px; font-size: 0.76rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.2s;">
-            <span>${currentMood === 'emergency' ? '🌿 Alternar a Mood Fresh' : '🚨 Alternar a Mood Emergency'}</span>
-          </button>
+
+          <!-- FILA INFERIOR: TIMELINE DE BLOQUES HORARIOS DE HOY (ESPACIOSO) -->
+          <div style="margin-top: 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+              <span style="font-size: 0.74rem; font-weight: 700; letter-spacing: 1.2px; color: var(--imperivm-text-gold); text-transform: uppercase;">
+                ⏱️ Cronograma Táctico de Hoy (${todayPlan.blocks.length} Bloques)
+              </span>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px;">
+              ${todayPlan.blocks.map(b => `
+                <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); border-left: 3.5px solid ${currentMood === 'emergency' ? '#F43F5E' : '#10B981'}; border-radius: 8px; padding: 10px 14px; display: flex; flex-direction: column; gap: 4px;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <strong style="font-size: 0.85rem; color: #FFF; font-family: monospace; letter-spacing: 0.5px;">${b.time}</strong>
+                    <span class="badge-tag ${currentMood === 'emergency' ? 'badge-pink' : 'badge-emerald'}" style="font-size: 0.65rem; padding: 1px 7px;">${b.badge}</span>
+                  </div>
+                  <div style="font-size: 0.82rem; color: #E2E8F0; font-weight: 600;">
+                    ${b.title}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
         </div>
 
         <div class="imperivm-carousel-track" id="today-flow-track">
@@ -1235,11 +1398,11 @@ const imperivmEngine = {
   },
 
   switchCampaignView(view) {
-    this.switchMisionesView(view === 'history' ? 'conquistadas' : 'principales');
+    this.switchMisionesView('principales');
   },
 
   // ==========================================================================
-  // FILA UNIFICADA: MISIONES (PRINCIPALES, SECUNDARIAS & CONQUISTADAS)
+  // FILA 3: MISIONES Y PROYECTOS (PRINCIPALES & CONQUISTADAS UNIFICADAS CON ESTRELLA)
   // ==========================================================================
   renderMisionesRail() {
     const currentView = imperivmState.misionesView || 'principales';
@@ -1261,15 +1424,14 @@ const imperivmEngine = {
       { id: "divulgacion", title: "🎙️ Ciencia & Territorio", category: "Divulgación", desc: "Podcast independiente, salidas de campo y difusión.", img: IMPERIVM_MEDIA.provincia_divulgacion }
     ];
 
+    // Conquistadas al lado de las principales
+    const allMainQuests = [...activeMainQuests, ...completedMainQuests];
+
     let itemsToDisplay = [];
-    if (currentView === 'maestria') {
-      itemsToDisplay = [];
-    } else if (currentView === 'principales') {
-      itemsToDisplay = activeMainQuests;
-    } else if (currentView === 'secundarias') {
+    if (currentView === 'secundarias') {
       itemsToDisplay = secondaryProjects;
-    } else if (currentView === 'conquistadas') {
-      itemsToDisplay = completedMainQuests;
+    } else {
+      itemsToDisplay = allMainQuests;
     }
 
     return `
@@ -1281,17 +1443,11 @@ const imperivmEngine = {
 
           <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
             <div class="campaign-view-toggle-bar">
-              <button class="btn-campaign-toggle ${currentView === 'principales' ? 'active' : ''}" onclick="imperivmEngine.switchMisionesView('principales');" title="Ver misiones principales en curso">
-                ⭐ Principales (${activeMainQuests.length})
+              <button class="btn-campaign-toggle ${currentView !== 'secundarias' ? 'active' : ''}" onclick="imperivmEngine.switchMisionesView('principales');" title="Ver misiones principales y conquistadas">
+                ⭐ Principales & Conquistadas (${allMainQuests.length})
               </button>
               <button class="btn-campaign-toggle ${currentView === 'secundarias' ? 'active' : ''}" onclick="imperivmEngine.switchMisionesView('secundarias');" title="Ver proyectos secundarios">
                 📁 Secundarias (${secondaryProjects.length})
-              </button>
-              <button class="btn-campaign-toggle ${currentView === 'conquistadas' ? 'active' : ''}" onclick="imperivmEngine.switchMisionesView('conquistadas');" title="Ver misiones completadas">
-                🏆 Conquistadas (${completedMainQuests.length})
-              </button>
-              <button class="btn-campaign-toggle ${currentView === 'maestria' ? 'active' : ''}" onclick="imperivmEngine.switchMisionesView('maestria');" title="Títulos, contratítulos, reglas de experiencia y Armamentum Imperial">
-                👑 Maestría y Rangos
               </button>
             </div>
 
@@ -1302,9 +1458,8 @@ const imperivmEngine = {
           </div>
         </div>
 
-        ${currentView === 'maestria' ? this.renderMaestriaStatusPanel() : ''}
         <div class="imperivm-carousel-track" id="misiones-track">
-          ${currentView === 'maestria' ? this.renderMaestriaCards() : (itemsToDisplay.length > 0 ? itemsToDisplay.map((item) => {
+          ${itemsToDisplay.length > 0 ? itemsToDisplay.map((item) => {
             if (currentView === 'secundarias') {
               return `
                 <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openSecondaryQuestModal('${item.id}');">
@@ -1321,12 +1476,20 @@ const imperivmEngine = {
               const img = q.img || (q.id === 'q1' ? IMPERIVM_MEDIA.provincia_hannover : (q.id === 'q2' ? IMPERIVM_MEDIA.provincia_hannover : (q.id === 'q3' ? IMPERIVM_MEDIA.provincia_bilbao : IMPERIVM_MEDIA.provincia_vacaciones)));
 
               return `
-                <div class="imperivm-card ${q.completed ? 'quest-conquered-card' : ''}" style="cursor: pointer;" onclick="imperivmEngine.openMainQuestModal('${q.id}');">
-                  <div class="imperivm-card-media">
+                <div class="imperivm-card ${q.completed ? 'quest-conquered-card' : ''}" style="cursor: pointer; position: relative; ${q.completed ? 'border: 1.5px solid var(--imperivm-border-gold); box-shadow: 0 0 16px rgba(212,175,55,0.25);' : ''}" onclick="imperivmEngine.openMainQuestModal('${q.id}');">
+                  <div class="imperivm-card-media" style="position: relative;">
                     <img src="${img}" alt="${q.title}">
+                    ${q.completed ? `
+                      <div style="position: absolute; top: 10px; right: 10px; background: rgba(14,18,29,0.92); border: 1.5px solid var(--imperivm-border-gold); border-radius: 6px; padding: 3px 8px; font-size: 0.68rem; color: #F3D079; font-weight: 800; display: flex; align-items: center; gap: 4px; box-shadow: 0 2px 10px rgba(0,0,0,0.6);">
+                        <span>⭐ CONQUISTADA</span>
+                      </div>
+                    ` : ''}
                   </div>
                   <div class="imperivm-card-body">
-                    <h4 class="imperivm-card-title">${q.title}</h4>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                      <h4 class="imperivm-card-title" style="margin: 0;">${q.title}</h4>
+                      ${q.completed ? '<span style="color: #F3D079; font-size: 1rem;" title="Misión Conquistada">⭐</span>' : ''}
+                    </div>
                   </div>
                 </div>
               `;
@@ -1335,7 +1498,7 @@ const imperivmEngine = {
             <div style="padding: 24px; color: var(--imperivm-text-muted); font-size: 0.88rem; background: rgba(255,255,255,0.02); border-radius: 8px; border: 1px dashed var(--imperivm-border); width: 100%;">
               No hay elementos en esta vista.
             </div>
-          `)}
+          `}
         </div>
       </div>
     `;
@@ -1421,7 +1584,7 @@ const imperivmEngine = {
   undoXPEntry(id) {
     if (window.CJProgress && window.CJProgress.revokeById(id)) {
       if (typeof showNotification === "function") showNotification("↩️ Movimiento de XP deshecho.");
-      this.switchMisionesView('maestria');
+      this.render();
     }
   },
 
@@ -2235,18 +2398,8 @@ const imperivmEngine = {
     this.openDrawer();
   },
 
-  // --- MODAL UNIFICADO: TÍTULOS DE MAESTRÍA, CONTRATÍTULOS & ARMAMENTUM ---
-  openTitlesModal() {
-    const st = (typeof reyJaguarState !== "undefined") ? reyJaguarState : (window.reyJaguarState || null);
-    const titles = (st && Array.isArray(st.titles)) ? st.titles : [];
-    const counterTitles = (st && Array.isArray(st.counterTitles)) ? st.counterTitles : [];
-    const items = (st && Array.isArray(st.inventory)) ? st.inventory : [];
-    const unlockedItems = items.filter(i => i.unlocked).length;
-    const equippedItems = items.filter(i => i.equipped).length;
-
-    const titlesOn = titles.filter(t => t.unlocked).length;
-    const counterOn = counterTitles.filter(t => t.unlocked).length;
-
+  // --- CÓDICE UNIFICADO DE CABALLERÍA: 5 PESTAÑAS INTEGRADAS ---
+  openCaballeriaCodexModal(activeTab = 'habitos', extraParam = null, extraId = null) {
     const drawer = document.getElementById("imperivm-drawer");
     const backdrop = document.getElementById("imperivm-drawer-backdrop");
     const titleEl = document.getElementById("imperivm-drawer-title");
@@ -2254,51 +2407,155 @@ const imperivmEngine = {
     const body = document.getElementById("imperivm-drawer-body");
     if (!drawer || !backdrop || !body) return;
 
-    if (tabsBar) tabsBar.style.display = "none";
     drawer.scrollTop = 0;
-    titleEl.textContent = "👑 CÓDICE DE VIRTUDES, SOMBRAS & ARMAMENTUM";
+    if (tabsBar) tabsBar.style.display = "none";
+    titleEl.textContent = "⚔️ CÓDICE UNIFICADO DE CABALLERÍA JAGUAR";
 
-    body.innerHTML = `
-      <div style="display: flex; flex-direction: column; gap: 16px;">
+    const P = window.CJProgress;
+    const snap = P ? P.snapshot() : null;
+    const C = P ? P.CONFIG : { difficultyXP: { facil: 25, medio: 50, dificil: 75 }, dailySoftCap: 600, activeDayXP: 100, streakBonus: {} };
+    const L = P ? P.LEVELS : (typeof IMPERIVM_ROMAN_RANKS !== "undefined" ? IMPERIVM_ROMAN_RANKS : []);
+    const st = (typeof reyJaguarState !== "undefined") ? reyJaguarState : (window.reyJaguarState || null);
+    const titles = (st && Array.isArray(st.titles)) ? st.titles : [];
+    const counterTitles = (st && Array.isArray(st.counterTitles)) ? st.counterTitles : [];
+    const items = (st && Array.isArray(st.inventory)) ? st.inventory : [];
+    const titlesOn = titles.filter(t => t.unlocked).length;
+    const counterOn = counterTitles.filter(t => t.unlocked).length;
+    const unlockedItems = items.filter(i => i.unlocked).length;
 
-        <!-- BANNER DE ACCESO DIRECTO AL ARMAMENTUM -->
-        <div style="background: linear-gradient(135deg, rgba(184,134,11,0.18) 0%, rgba(20,24,36,0.95) 100%); border: 1.5px solid var(--imperivm-border-gold); border-radius: 8px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 18px rgba(0,0,0,0.5);">
-          <div>
-            <div style="font-size: 0.7rem; color: var(--imperivm-text-gold); font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase;">
-              PEDESTAL DE ARMAS & VESTIDURAS
-            </div>
-            <div style="font-size: 1rem; color: #FFF; font-weight: 700; margin: 2px 0;">
-              🎒 Armamentum Imperial (48 Objetos)
-            </div>
-            <div style="font-size: 0.76rem; color: var(--imperivm-text-muted);">
-              ${unlockedItems}/48 desbloqueados · ${equippedItems} equipados en servicio activo
-            </div>
+    const box = 'background: rgba(255,255,255,0.04); border: 1px solid var(--imperivm-border); border-radius: 8px; padding: 14px;';
+    const h5 = 'color: var(--imperivm-text-gold); margin: 0 0 8px 0; font-size: 0.95rem; font-family: var(--imperivm-font-title);';
+    const small = 'font-size: 0.8rem; color: var(--imperivm-text-muted); line-height: 1.55; margin: 0;';
+
+    // Barra de pestañas unificada del Códice
+    const tabsHeader = `
+      <div class="day-contextual-subtabs" style="display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; background: rgba(0,0,0,0.4); padding: 6px; border-radius: 8px; border: 1px solid var(--imperivm-border);">
+        <button class="btn-day-subtab ${activeTab === 'habitos' ? 'active' : ''}" onclick="imperivmEngine.openCaballeriaCodexModal('habitos');">📜 Hábitos & 5 Pilares</button>
+        <button class="btn-day-subtab ${activeTab === 'reglas' ? 'active' : ''}" onclick="imperivmEngine.openCaballeriaCodexModal('reglas');">⚡ Rangos & Reglas XP</button>
+        <button class="btn-day-subtab ${activeTab === 'titulos' ? 'active' : ''}" onclick="imperivmEngine.openCaballeriaCodexModal('titulos');">👑 Títulos de Maestría (${titlesOn}/${titles.length})</button>
+        <button class="btn-day-subtab ${activeTab === 'sombras' ? 'active' : ''}" onclick="imperivmEngine.openCaballeriaCodexModal('sombras');">💧 Contratítulos & Sombras (${counterOn}/${counterTitles.length})</button>
+        <button class="btn-day-subtab ${activeTab === 'armamentum' ? 'active' : ''}" onclick="imperivmEngine.openCaballeriaCodexModal('armamentum');">🎒 Armamentum (${unlockedItems}/${items.length})</button>
+      </div>
+    `;
+
+    let contentHTML = "";
+
+    if (activeTab === 'habitos') {
+      contentHTML = `
+        <div style="position: relative; border-radius: 8px; overflow: hidden; height: 140px; border: 1.5px solid var(--imperivm-border-gold); margin-bottom: 6px;">
+          <img src="${IMPERIVM_MEDIA.bitacora_progresion}" style="width: 100%; height: 100%; object-fit: cover;">
+          <div style="position: absolute; inset: 0; background: linear-gradient(180deg, transparent 20%, rgba(7,9,14,0.92) 100%); display: flex; flex-direction: column; justify-content: flex-end; padding: 14px 18px;">
+            <span style="font-size: 0.7rem; color: var(--imperivm-text-gold); font-weight: 800; letter-spacing: 1px; text-transform: uppercase;">Manifiesto de la Orden</span>
+            <h4 style="font-family: var(--imperivm-font-title); font-size: 1.15rem; color: #FFF; margin: 2px 0 0 0;">Los 5 Pilares de Caballería Jaguar</h4>
           </div>
-          <button class="btn-imperivm-primary" style="padding: 8px 16px; font-size: 0.8rem;" onclick="imperivmEngine.openArmamentariumModal();">
-            <span>Ver Inventario ▶</span>
-          </button>
         </div>
 
-        <!-- SECCIÓN 1 (ARRIBA): TÍTULOS DE MAESTRÍA MASCULINA -->
-        <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <h4 style="font-family: var(--imperivm-font-title); font-size: 1.1rem; color: #FFF; margin: 0; display: flex; align-items: center; gap: 8px;">
-              <span>👑 TÍTULOS DE MAESTRÍA MASCULINA</span>
-              <span class="badge-tag badge-gold" style="font-size: 0.7rem;">${titlesOn}/${titles.length} CONSAGRADOS</span>
-            </h4>
+        <div style="${box}">
+          <h5 style="${h5}">🛡️ Filosofía Fundamental</h5>
+          <p style="${small}">
+            El Caballero Jaguar no compite contra otros, sino contra la entropía, la dispersión dopaminérgica y la procrastinación. Cada hábito diario está diseñado para forjar soberanía real, disciplina física y presencia consciente.
+          </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px;">
+          <div style="${box}">
+            <div style="font-size: 1.05rem; color: #FFF; margin-bottom: 4px; font-weight: 700;">🧘 1. Mente & Foco</div>
+            <p style="${small}">Tesis de Máster en Hannover, Filosofía Estoica cotidiana, bloques de Deep Work y códices de lectura viva.</p>
           </div>
-          <p style="font-size: 0.8rem; color: var(--imperivm-text-muted); line-height: 1.45; margin: 0 0 12px 0;">
+          <div style="${box}">
+            <div style="font-size: 1.05rem; color: #FFF; margin-bottom: 4px; font-weight: 700;">⚔️ 2. Fuerza & Combate</div>
+            <p style="${small}">Hipertrofia en gimnasio, sparrings de Muay Thai, running al aire libre, calistenia y postura marcial.</p>
+          </div>
+          <div style="${box}">
+            <div style="font-size: 1.05rem; color: #FFF; margin-bottom: 4px; font-weight: 700;">🌲 3. Territorio & Proyectos</div>
+            <p style="${small}">ReWilding y conexión con la naturaleza, dominio de idiomas (Alemán B1, Euskera A1) y campañas de vida.</p>
+          </div>
+          <div style="${box}">
+            <div style="font-size: 1.05rem; color: #FFF; margin-bottom: 4px; font-weight: 700;">🪙 4. Soberanía & Finanzas</div>
+            <p style="${small}">Tesorería y orden financiero en Sparkasse & Banco Chile, tasa de ahorro, austeridad y blindaje económico.</p>
+          </div>
+          <div style="${box}">
+            <div style="font-size: 1.05rem; color: #FFF; margin-bottom: 4px; font-weight: 700;">🩵 5. Vitalidad Somática</div>
+            <p style="${small}">Meditación somática, Dinacharya ayurvédico, automasajes, outfits conscientes y respeto por el sueño.</p>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 6px;">
+          <button class="btn-imperivm-primary" style="padding: 9px 20px; font-size: 0.82rem;" onclick="imperivmEngine.closeDrawer(); if (typeof openSistemaMaestroModal === 'function') openSistemaMaestroModal();">
+            📜 Abrir Pitch Deck Interactivo Completo ▶
+          </button>
+        </div>
+      `;
+    } else if (activeTab === 'reglas') {
+      const bonus = C.streakBonus ? Object.entries(C.streakBonus).map(([d, x]) => `${d} días → +${x} XP`).join(' · ') : '';
+      const rankRows = (L || []).map(r => {
+        return `<div style="padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; gap: 8px; font-size: 0.78rem;">
+          <span><strong>${r.rank}. ${r.latin}</strong> <span style="color: var(--imperivm-text-muted);">(${r.title})</span></span>
+          <span style="color: var(--imperivm-text-gold); font-family: monospace;">≥ ${r.threshold.toLocaleString()} XP</span>
+        </div>`;
+      }).join('');
+
+      contentHTML = `
+        ${snap ? `<div style="${box} border-color: var(--imperivm-border-gold); background: linear-gradient(135deg, rgba(184,134,11,0.12) 0%, rgba(20,24,36,0.6) 100%);">
+          <div style="font-size: 0.7rem; letter-spacing: 1.5px; color: var(--imperivm-text-gold); font-weight: 800;">ESTADO ACTUAL EN VIVO</div>
+          <h4 style="color: #FFF; margin: 4px 0; font-family: var(--imperivm-font-title); font-size: 1.15rem;">${snap.level.latin} · Grado ${snap.level.gradeRoman}</h4>
+          <p style="${small}">${snap.level.title} — <strong>${snap.xp.toLocaleString()} XP total</strong> · Racha de <strong>${snap.streak.days}</strong> día(s) ${snap.streak.todayActive ? '✔' : ''} · Hoy: <strong>${snap.today.xp}/${snap.today.cap}</strong> XP.</p>
+        </div>` : ''}
+
+        <div style="${box}">
+          <h5 style="${h5}">⚡ 1. Cómo se gana experiencia (XP)</h5>
+          <p style="${small}">Todo avance real se traduce en XP mediante el motor único. Todo movimiento queda registrado en el historial y es reversible con el botón ↩.</p>
+          <div style="display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem; margin-top: 10px;">
+            <div style="display: flex; justify-content: space-between; background: rgba(0,0,0,0.25); padding: 6px 10px; border-radius: 4px;">
+              <span>🟢 <strong style="color: #52C41A;">Fácil</strong> (hasta 20 min): Hidratación, caminata, 15 págs lectura</span>
+              <strong style="color: #52C41A;">+${C.difficultyXP.facil} XP</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; background: rgba(0,0,0,0.25); padding: 6px 10px; border-radius: 4px;">
+              <span>🟡 <strong style="color: #F3D079;">Medio</strong> (21–50 min): Fuerza, Deep Work, estudio de idiomas</span>
+              <strong style="color: #F3D079;">+${C.difficultyXP.medio} XP</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; background: rgba(0,0,0,0.25); padding: 6px 10px; border-radius: 4px;">
+              <span>🔴 <strong style="color: #FF6B6B;">Difícil</strong> (>50 min o hitos): Tesis, sparring, auditoría semanal</span>
+              <strong style="color: #FF6B6B;">+${C.difficultyXP.dificil} XP</strong>
+            </div>
+          </div>
+          <p style="${small} margin-top: 10px;">
+            • <strong>Acciones Fijas:</strong> Tarea del día +20 XP · Bloque somático +15 XP · Tarea de proyecto +20 XP · Subida de atributo +50 XP · Avance de misión +30 XP · Misión conquistada +150 XP · Consagración de Título o Contratítulo +40 XP.
+          </p>
+        </div>
+
+        <div style="${box}">
+          <h5 style="${h5}">🔥 2. Tope diario blando & Racha</h5>
+          <p style="${small}">
+            • <strong>Tope Blando (${C.dailySoftCap} XP):</strong> Una vez alcanzado en el día, los puntos adicionales rinden el <strong>50%</strong>. Premia la disciplina sostenible frente al atracón impulsivo.<br>
+            • <strong>Día Activo (≥ ${C.activeDayXP} XP):</strong> Alcanzar este umbral diario valida el día para mantener encendida la racha.<br>
+            • <strong>Bonos por hito de Racha:</strong> ${bonus || 'Recompensas de XP progresivas al acumular días en virtud'}.
+          </p>
+        </div>
+
+        <div style="${box}">
+          <h5 style="${h5}">🏛️ 3. Cursus Honorum (Escalafón Imperial)</h5>
+          <p style="${small}">La jerarquía se conquista sumando XP total en la vida real. Dentro de cada rango existen tres grados (I, II y III).</p>
+          <div style="margin-top: 10px; display: flex; flex-direction: column; gap: 4px;">
+            ${rankRows}
+          </div>
+        </div>
+      `;
+    } else if (activeTab === 'titulos') {
+      contentHTML = `
+        <div style="${box}">
+          <h5 style="${h5}">👑 TÍTULOS DE MAESTRÍA MASCULINA (${titlesOn}/${titles.length} CONSAGRADOS)</h5>
+          <p style="${small}">
             Los 6 títulos nobles consagran las virtudes del Caballero Jaguar en ciencia, docencia, soberanía marcial y presencia tántrica (+40 XP al consagrar).
           </p>
-
-          <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 12px;">
             ${titles.map(t => `
               <div style="background: rgba(255,255,255,0.04); border: 1px solid ${t.unlocked ? 'var(--imperivm-border-gold)' : 'var(--imperivm-border)'}; border-radius: 8px; padding: 12px 14px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                   <span class="badge-tag ${t.unlocked ? 'badge-gold' : 'badge-pink'}" style="font-size: 0.68rem;">
                     ${t.unlocked ? '⚡ CONSAGRADO' : 'PENDIENTE'}
                   </span>
-                  <button class="imperivm-card-action-btn" onclick="imperivmEngine.toggleTitleStatus('${t.id}', 'titles'); imperivmEngine.openTitlesModal();">
+                  <button class="imperivm-card-action-btn" onclick="imperivmEngine.toggleTitleStatus('${t.id}', 'titles'); imperivmEngine.openCaballeriaCodexModal('titulos');">
                     ${t.unlocked ? 'Desconsagrar' : 'Consagrar (+40 XP)'}
                   </button>
                 </div>
@@ -2308,34 +2565,22 @@ const imperivmEngine = {
             `).join('')}
           </div>
         </div>
-
-        <!-- SEPARACIÓN VISUAL ARRIBA / ABAJO -->
-        <div style="margin: 18px 0 10px 0; border-top: 1px dashed rgba(244,143,177,0.45); padding-top: 16px; text-align: center; position: relative;">
-          <span style="background: #0E121D; padding: 5px 16px; border: 1px solid rgba(244,143,177,0.6); border-radius: 14px; font-size: 0.72rem; letter-spacing: 1.5px; color: #F48FB1; text-transform: uppercase; font-family: var(--imperivm-font-title);">
-            💧 Integración de la Sombra & Vulnerabilidad Consciente
-          </span>
-        </div>
-
-        <!-- SECCIÓN 2 (ABAJO): CONTRATÍTULOS DE VULNERABILIDAD -->
-        <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-            <h4 style="font-family: var(--imperivm-font-title); font-size: 1.1rem; color: #FFF; margin: 0; display: flex; align-items: center; gap: 8px;">
-              <span>💧 CONTRATÍTULOS DE VULNERABILIDAD</span>
-              <span class="badge-tag badge-pink" style="font-size: 0.7rem;">${counterOn}/${counterTitles.length} INTEGRADOS</span>
-            </h4>
-          </div>
-          <p style="font-size: 0.8rem; color: var(--imperivm-text-muted); line-height: 1.45; margin: 0 0 12px 0;">
+      `;
+    } else if (activeTab === 'sombras') {
+      contentHTML = `
+        <div style="${box}">
+          <h5 style="${h5}">💧 CONTRATÍTULOS DE VULNERABILIDAD (${counterOn}/${counterTitles.length} INTEGRADOS)</h5>
+          <p style="${small}">
             Los 5 contratítulos rescatan la integración de la sombra, la ternura masculina, el cuidado del hogar y el desarme consciente del ego competitivo (+40 XP al integrar).
           </p>
-
-          <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 12px;">
             ${counterTitles.map(ct => `
               <div style="background: rgba(255,255,255,0.04); border: 1px solid ${ct.unlocked ? '#F48FB1' : 'var(--imperivm-border)'}; border-radius: 8px; padding: 12px 14px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                   <span class="badge-tag ${ct.unlocked ? 'badge-pink' : 'badge-gold'}" style="font-size: 0.68rem;">
                     ${ct.unlocked ? '💧 INTEGRADO' : 'POR INTEGRAR'}
                   </span>
-                  <button class="imperivm-card-action-btn" onclick="imperivmEngine.toggleTitleStatus('${ct.id}', 'counterTitles'); imperivmEngine.openTitlesModal();">
+                  <button class="imperivm-card-action-btn" onclick="imperivmEngine.toggleTitleStatus('${ct.id}', 'counterTitles'); imperivmEngine.openCaballeriaCodexModal('sombras');">
                     ${ct.unlocked ? 'Desintegrar' : 'Integrar (+40 XP)'}
                   </button>
                 </div>
@@ -2345,14 +2590,124 @@ const imperivmEngine = {
             `).join('')}
           </div>
         </div>
+      `;
+    } else if (activeTab === 'armamentum') {
+      const filter = extraParam || imperivmState.activeArmamentariumFilter || "all";
+      imperivmState.activeArmamentariumFilter = filter;
+      if (extraId !== null && extraId !== undefined) {
+        imperivmState.selectedArmamentariumItemId = extraId;
+      }
+      const curId = imperivmState.selectedArmamentariumItemId || 1;
+      const selectedItem = items.find(i => i.id === curId) || items[0] || {};
+      const isSelEquipped = !!selectedItem.equipped;
+      const isSelUnlocked = !!selectedItem.unlocked;
 
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px; gap: 10px;">
-          <button class="btn-imperivm-primary" style="flex: 1;" onclick="imperivmEngine.openArmamentariumModal();">
-            🎒 Abrir Armamentum Imperial (48)
+      let filteredItems = items;
+      if (filter === "equipped") {
+        filteredItems = items.filter(i => i.equipped);
+      } else if (filter === "unlocked") {
+        filteredItems = items.filter(i => i.unlocked && !i.equipped);
+      } else if (filter === "blocked") {
+        filteredItems = items.filter(i => !i.unlocked);
+      }
+
+      contentHTML = `
+        <!-- 1. PEDESTAL HEROICO ILUMINADO DEL OBJETO SELECCIONADO -->
+        <div class="armamentarium-hero-pedestal">
+          <div class="armamentarium-medallion ${!isSelUnlocked ? 'is-blocked' : ''}">
+            <span>${this.getItemIcon(selectedItem.name)}</span>
+          </div>
+          
+          <div style="flex: 1; min-width: 0; z-index: 2;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+              <span class="badge-tag badge-gold" style="font-size: 0.68rem; font-weight: 800;">#${String(selectedItem.id || 1).padStart(2, '0')}</span>
+              <span class="aura-tag-pill badge-${this.getAuraColorClass(selectedItem.auraKey)}">Aura ${selectedItem.auraKey || 'Somática'}</span>
+              <span class="badge-tag ${isSelEquipped ? 'badge-gold' : (isSelUnlocked ? 'badge-emerald' : 'badge-pink')}" style="font-size: 0.68rem;">
+                ${isSelEquipped ? '⚡ EN SERVICIO' : (isSelUnlocked ? '✓ DISPONIBLE' : '🔴 SELLADO IMPERIAL')}
+              </span>
+            </div>
+
+            <h4 style="font-family: var(--imperivm-font-title); font-size: 1.15rem; color: #FFF; margin: 0 0 6px 0; letter-spacing: 0.5px;">
+              ${selectedItem.name || 'Objeto de la Orden'}
+            </h4>
+
+            <p style="font-size: 0.78rem; color: var(--imperivm-text-muted); line-height: 1.45; margin: 0 0 10px 0;">
+              ${selectedItem.lore || 'Instrumento de alta precisión para el desarrollo del Cursus Honorum.'}
+            </p>
+
+            <div style="background: ${isSelUnlocked ? 'rgba(82, 196, 26, 0.08)' : 'rgba(255, 59, 48, 0.08)'}; border: 1px solid ${isSelUnlocked ? 'rgba(82, 196, 26, 0.3)' : 'rgba(255, 59, 48, 0.3)'}; border-radius: 6px; padding: 8px 10px; margin-bottom: 12px; font-size: 0.75rem;">
+              <strong style="color: ${isSelUnlocked ? '#52C41A' : '#FF6B6B'}; display: block; margin-bottom: 2px;">
+                ${isSelUnlocked ? '✓ Consagración Cumplida:' : '🎯 Requisito de Victoria:'}
+              </strong>
+              <span style="color: #ECEFF1;">${selectedItem.howToObtain || 'Misiones de campaña o hábitos.'}</span>
+            </div>
+
+            <div style="display: flex; gap: 8px;">
+              <button class="btn-imperivm-primary" style="padding: 7px 16px; font-size: 0.78rem;" onclick="imperivmEngine.toggleEquipItem(${selectedItem.id}); imperivmEngine.openCaballeriaCodexModal('armamentum', '${filter}', ${selectedItem.id});">
+                ${isSelEquipped ? '📦 Desactivar a Reserva' : (isSelUnlocked ? '⚡ Equipar en Servicio' : '🔓 Desbloquear (+50 XP)')}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. BARRA DE FILTROS METÁLICOS -->
+        <div class="armamentarium-filter-bar">
+          <button class="btn-armamentarium-filter ${filter === 'all' ? 'active' : ''}" onclick="imperivmEngine.openCaballeriaCodexModal('armamentum', 'all');">
+            Todos (${items.length})
           </button>
-          <button class="btn-imperivm-secondary" onclick="imperivmEngine.closeDrawer();">
-            Cerrar
+          <button class="btn-armamentarium-filter ${filter === 'equipped' ? 'active' : ''}" onclick="imperivmEngine.openCaballeriaCodexModal('armamentum', 'equipped');">
+            ⚡ Equipados (${items.filter(i => i.equipped).length})
           </button>
+          <button class="btn-armamentarium-filter ${filter === 'unlocked' ? 'active' : ''}" onclick="imperivmEngine.openCaballeriaCodexModal('armamentum', 'unlocked');">
+            ✓ Disponibles (${items.filter(i => i.unlocked && !i.equipped).length})
+          </button>
+          <button class="btn-armamentarium-filter ${filter === 'blocked' ? 'active' : ''}" onclick="imperivmEngine.openCaballeriaCodexModal('armamentum', 'blocked');">
+            🔴 Sellados (${items.filter(i => !i.unlocked).length})
+          </button>
+        </div>
+
+        <!-- 3. CUADRÍCULA DE ARCOS IMPERIALES (48 OBJETOS) -->
+        <div class="armamentarium-grid">
+          ${filteredItems.map(item => {
+            const isEquipped = !!item.equipped;
+            const isUnlocked = !!item.unlocked;
+            const isSelected = item.id === curId;
+
+            return `
+              <div class="armamentarium-grid-card ${isEquipped ? 'is-equipped' : (isUnlocked ? '' : 'is-blocked')}" 
+                   style="${isSelected ? 'outline: 2px solid #FFF; outline-offset: 2px; transform: scale(1.03);' : ''}"
+                   onclick="imperivmEngine.openCaballeriaCodexModal('armamentum', '${filter}', ${item.id});" 
+                   title="${item.name}: Clic para inspeccionar en el Pedestal">
+                
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 2px;">
+                  <span style="font-size: 0.65rem; color: var(--imperivm-text-gold); font-weight: 800;">#${String(item.id).padStart(2, '0')}</span>
+                  ${isEquipped ? '<span style="font-size: 0.65rem;">⚡</span>' : (!isUnlocked ? '<span style="font-size: 0.65rem;">🔴</span>' : '')}
+                </div>
+
+                <div class="armamentarium-grid-icon">
+                  ${this.getItemIcon(item.name)}
+                </div>
+
+                <div class="armamentarium-grid-name" title="${item.name}">
+                  ${item.name}
+                </div>
+
+                <div style="font-size: 0.62rem; color: var(--imperivm-text-muted); text-transform: uppercase; margin-top: 2px;">
+                  ${item.auraKey || 'Somática'}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    body.innerHTML = `
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        ${tabsHeader}
+        ${contentHTML}
+        <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+          <button class="btn-imperivm-secondary" onclick="imperivmEngine.closeDrawer();">Cerrar Códice</button>
         </div>
       </div>
     `;
@@ -2360,8 +2715,17 @@ const imperivmEngine = {
     this.openDrawer();
   },
 
-  // --- MODAL UNIFICADO: SISTEMA DE HÁBITOS & REGLAS DE RANGO (CONSOLIDADO CON CJProgress) ---
+  // --- COMPATIBILIDAD CON ACCESOS PREVIOS A TÍTULOS ---
+  openTitlesModal() {
+    this.openCaballeriaCodexModal('titulos');
+  },
+
+  // --- COMPATIBILIDAD CON ACCESOS PREVIOS A HÁBITOS & REGLAS ---
   openHabitosYReglasModal(activeSection = 'reglas') {
+    this.openCaballeriaCodexModal(activeSection === 'habitos' ? 'habitos' : 'reglas');
+  },
+
+  _legacyHabitosModal(activeSection = 'reglas') {
     const drawer = document.getElementById("imperivm-drawer");
     const backdrop = document.getElementById("imperivm-drawer-backdrop");
     const titleEl = document.getElementById("imperivm-drawer-title");
