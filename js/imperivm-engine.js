@@ -230,74 +230,107 @@ const WEEKLY_STRATEGY_SCHEDULE = {
       { id: "vida", name: "Vida", icon: "👑", when: "Lunes a Viernes • 09:30-11:00 (Foco Tesis / Empleo)", status: "✓ ACTIVO" },
       { id: "exploracion", name: "Exploración", icon: "🧭", when: "Lunes (Paper Lauwersmeer), Miércoles (Agrotech / Música), Sábado (Arte)", status: "✓ ACTIVO" },
       { id: "amor", name: "Amor & Pareja", icon: "💖", when: "Martes (Presencia), Jueves (Aftercare), Viernes (Cita), Sábado (Tantra)", status: "✓ ACTIVO" },
-      { id: "mente", name: "Mente & Foco", icon: "🧠", when: "Lunes (Lectura estoica), Martes (Alemán B2/C1), Domingo (Estrategia)", status: "✓ ACTIVO" },
-      { id: "salud", name: "Salud Somática", icon: "🌿", when: "Diario (Dinacharya, nutrición limpia, hidratación 3.2L, sueño reparador)", status: "✓ ACTIVO" },
-      { id: "deporte", name: "Deporte & Combate", icon: "🥊", when: "Lunes (Campus Gym), Martes (Cardio), Jueves (Muay Thai), Sábado (Calistenia)", status: "✓ ACTIVO" },
+      { id: "mente", name: "Mente & Foco", icon: "🧠", when: "Diario • Lectura 10 min + Alemán 10 min", status: "✓ ACTIVO" },
+      { id: "salud", name: "Salud Somática", icon: "🌿", when: "Diario • Blindaje Antiporno (0 Porno) + Nutrición limpia & Sueño", status: "✓ ACTIVO" },
+      { id: "deporte", name: "Deporte & Combate", icon: "🥊", when: "Diario • 100 abs, 100 sentadillas, 100 flexiones o correr (mín 2 min) + Sesión principal", status: "✓ ACTIVO" },
       { id: "soberania", name: "Soberanía Financiera", icon: "🪙", when: "Domingo • 10:00 (Auditoría semanal cuentas Sparkasse / Banco de Chile)", status: "✓ ACTIVO" },
       { id: "naturaleza", name: "Naturaleza & Ecosistemas", icon: "🌲", when: "Viernes tarde (Caminata bosque) y Sábado (ReWild / Conexión tierra)", status: "✓ ACTIVO" },
-      { id: "espiritualidad", name: "Espiritualidad & Ritos", icon: "🕯️", when: "Lunes y Domingo noche (Vipassana, Altar ancestral y detox)", status: "✓ ACTIVO" }
+      { id: "espiritualidad", name: "Espiritualidad & Ritos", icon: "🕯️", when: "Diario • Meditación 5 min + Altar y Vipassana", status: "✓ ACTIVO" }
     ],
     days: {
       lunes: {
         focus: "Fuerza Base & Inicio Armónico",
         blocks: [
-          { time: "09:30 - 11:00", title: "Bloque Foco: Empleo Hannover & Tesis", aura: "vida", badge: "👑 Vida" },
-          { time: "11:30 - 13:00", title: "Paper Lauwersmeer (Análisis & Redacción)", aura: "exploracion", badge: "🧭 Exploración" },
-          { time: "17:00 - 18:30", title: "Campus Martius (Gym Hipertrofia)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "21:30 - 22:00", title: "Vipassana & Lectura Marco Aurelio", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "07:30 - 07:40", title: "🧘 Meditación Somática (5 min Vipassana / Box Breathing)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" },
+          { time: "07:40 - 07:50", title: "🛡️ Templanza: Blindaje Antiporno (0 Porno & Control)", aura: "salud", badge: "🌿 Salud" },
+          { time: "07:50 - 08:15", title: "🥊 Ejercicio: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mín 2 min)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 11:00", title: "👑 Bloque Foco: Empleo Hannover & Tesis", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "🧭 Paper Lauwersmeer (Análisis & Redacción)", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "13:30 - 13:45", title: "🇩🇪 Alemán Diario: 10 min Vocabulario, Gramática & Habla", aura: "mente", badge: "🧠 Mente" },
+          { time: "17:00 - 18:30", title: "🥊 Campus Martius (Gym Hipertrofia & Fuerza)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "21:30 - 21:45", title: "📖 Lectura Estoica: 10 min Marco Aurelio / Códices", aura: "mente", badge: "🧠 Mente" }
         ]
       },
       martes: {
         focus: "Idiomas, Resistencia & Pareja",
         blocks: [
-          { time: "09:30 - 11:00", title: "Networking & Postulaciones Hannover", aura: "vida", badge: "👑 Vida" },
-          { time: "11:30 - 13:00", title: "Alemán Intensivo (B2/C1 Gramática & Habla)", aura: "mente", badge: "🧠 Mente" },
-          { time: "17:30 - 18:30", title: "Running & Resistencia Aeróbica", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "20:00 - 22:00", title: "Presencia Íntima & Cena en Pareja", aura: "amor", badge: "💖 Amor" }
+          { time: "07:30 - 07:40", title: "🧘 Meditación Somática (5 min Vipassana / Presencia)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" },
+          { time: "07:40 - 07:50", title: "🛡️ Templanza: Blindaje Antiporno (0 Porno & Control)", aura: "salud", badge: "🌿 Salud" },
+          { time: "07:50 - 08:15", title: "🥊 Ejercicio: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mín 2 min)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 11:00", title: "👑 Networking & Postulaciones Hannover", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "🇩🇪 Alemán Intensivo (B2/C1 Gramática & Habla - 10 min base + profundización)", aura: "mente", badge: "🧠 Mente" },
+          { time: "17:30 - 18:30", title: "🥊 Running & Resistencia Aeróbica", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "20:00 - 22:00", title: "💖 Presencia Íntima & Cena en Pareja", aura: "amor", badge: "💖 Amor" },
+          { time: "22:15 - 22:30", title: "📖 Lectura Estoica: 10 min Filosofía & Sabiduría", aura: "mente", badge: "🧠 Mente" }
         ]
       },
       miercoles: {
         focus: "Proyectos Piratas & Música Jazz",
         blocks: [
-          { time: "09:30 - 11:00", title: "Proyectos Piratas & Agrotech Huerta", aura: "exploracion", badge: "🧭 Exploración" },
-          { time: "11:30 - 13:00", title: "Revisión Documentos Vitales & Tesis", aura: "vida", badge: "👑 Vida" },
-          { time: "16:00 - 17:30", title: "Trompeta, Práctica Jazz & Escalas", aura: "exploracion", badge: "🧭 Exploración" },
-          { time: "18:00 - 19:00", title: "Yoga Somático & Fascia Release", aura: "salud", badge: "🌿 Salud" }
+          { time: "07:30 - 07:40", title: "🧘 Meditación Somática (5 min Vipassana / Box Breathing)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" },
+          { time: "07:40 - 07:50", title: "🛡️ Templanza: Blindaje Antiporno (0 Porno & Control)", aura: "salud", badge: "🌿 Salud" },
+          { time: "07:50 - 08:15", title: "🥊 Ejercicio: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mín 2 min)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 11:00", title: "🧭 Proyectos Piratas & Agrotech Huerta", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "11:30 - 13:00", title: "👑 Revisión Documentos Vitales & Tesis", aura: "vida", badge: "👑 Vida" },
+          { time: "13:30 - 13:45", title: "🇩🇪 Alemán Diario: 10 min Vocabulario & Práctica oral", aura: "mente", badge: "🧠 Mente" },
+          { time: "16:00 - 17:30", title: "🧭 Trompeta, Práctica Jazz & Escalas", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "18:00 - 19:00", title: "🌿 Yoga Somático & Fascia Release", aura: "salud", badge: "🌿 Salud" },
+          { time: "21:30 - 21:45", title: "📖 Lectura Estoica: 10 min Séneca / Códices", aura: "mente", badge: "🧠 Mente" }
         ]
       },
       jueves: {
         focus: "Combate Marcial & Complicidad",
         blocks: [
-          { time: "09:30 - 11:00", title: "Entrevistas & Postulaciones Hannover", aura: "vida", badge: "👑 Vida" },
-          { time: "11:30 - 13:00", title: "Maule Red & Museo Digital", aura: "exploracion", badge: "🧭 Exploración" },
-          { time: "17:30 - 19:00", title: "Muay Thai & Sparring de Combate", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "20:30 - 22:00", title: "Aftercare, Masajes & Diálogo Profundo", aura: "amor", badge: "💖 Amor" }
+          { time: "07:30 - 07:40", title: "🧘 Meditación Somática (5 min Vipassana / Box Breathing)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" },
+          { time: "07:40 - 07:50", title: "🛡️ Templanza: Blindaje Antiporno (0 Porno & Control)", aura: "salud", badge: "🌿 Salud" },
+          { time: "07:50 - 08:15", title: "🥊 Ejercicio: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mín 2 min)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 11:00", title: "👑 Entrevistas & Postulaciones Hannover", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "🧭 Maule Red & Museo Digital", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "13:30 - 13:45", title: "🇩🇪 Alemán Diario: 10 min Vocabulario & Gramática", aura: "mente", badge: "🧠 Mente" },
+          { time: "17:30 - 19:00", title: "🥊 Muay Thai & Sparring de Combate", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "20:30 - 22:00", title: "💖 Aftercare, Masajes & Diálogo Profundo", aura: "amor", badge: "💖 Amor" },
+          { time: "22:15 - 22:30", title: "📖 Lectura Estoica: 10 min Epicteto / Enquiridión", aura: "mente", badge: "🧠 Mente" }
         ]
       },
       viernes: {
         focus: "Cierre de Frente & Naturaleza",
         blocks: [
-          { time: "09:30 - 11:00", title: "Cierre Semanal de Postulaciones", aura: "vida", badge: "👑 Vida" },
-          { time: "15:00 - 17:00", title: "Caminata Bosque & Respiración Libre", aura: "naturaleza", badge: "🌲 Naturaleza" },
-          { time: "20:00 - 23:00", title: "Cita Romántica & Cena en Pareja", aura: "amor", badge: "💖 Amor" }
+          { time: "07:30 - 07:40", title: "🧘 Meditación Somática (5 min Vipassana / Box Breathing)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" },
+          { time: "07:40 - 07:50", title: "🛡️ Templanza: Blindaje Antiporno (0 Porno & Control)", aura: "salud", badge: "🌿 Salud" },
+          { time: "07:50 - 08:15", title: "🥊 Ejercicio: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mín 2 min)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 11:00", title: "👑 Cierre Semanal de Postulaciones Hannover", aura: "vida", badge: "👑 Vida" },
+          { time: "13:30 - 13:45", title: "🇩🇪 Alemán Diario: 10 min Vocabulario & Repaso semanal", aura: "mente", badge: "🧠 Mente" },
+          { time: "15:00 - 17:00", title: "🌲 Caminata Bosque & Respiración Libre", aura: "naturaleza", badge: "🌲 Naturaleza" },
+          { time: "20:00 - 23:00", title: "💖 Cita Romántica & Cena en Pareja", aura: "amor", badge: "💖 Amor" },
+          { time: "23:15 - 23:30", title: "📖 Lectura Estoica: 10 min Calma & Reflexión", aura: "mente", badge: "🧠 Mente" }
         ]
       },
       sabado: {
         focus: "ReWild, Arte & Tantra",
         blocks: [
-          { time: "10:00 - 13:00", title: "Expedición ReWild Bosque o Mar", aura: "naturaleza", badge: "🌲 Naturaleza" },
-          { time: "16:00 - 17:30", title: "Pintura al Óleo, Bocetos o Fotografía", aura: "exploracion", badge: "🧭 Exploración" },
-          { time: "18:00 - 19:15", title: "Calistenia o Bouldering al Aire Libre", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "21:00 - 23:00", title: "Tantra & Polaridad Somática", aura: "amor", badge: "💖 Amor" }
+          { time: "08:30 - 08:40", title: "🧘 Meditación Somática (5 min Vipassana / Box Breathing)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" },
+          { time: "08:40 - 08:50", title: "🛡️ Templanza: Blindaje Antiporno (0 Porno & Pureza Mental)", aura: "salud", badge: "🌿 Salud" },
+          { time: "08:50 - 09:15", title: "🥊 Ejercicio: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mín 2 min)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 09:45", title: "🇩🇪 Alemán Diario: 10 min Lectura & Modismos", aura: "mente", badge: "🧠 Mente" },
+          { time: "10:00 - 13:00", title: "🌲 Expedición ReWild Bosque o Mar", aura: "naturaleza", badge: "🌲 Naturaleza" },
+          { time: "16:00 - 17:30", title: "🧭 Pintura al Óleo, Bocetos o Fotografía", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "18:00 - 19:15", title: "🥊 Calistenia o Bouldering al Aire Libre", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "21:00 - 23:00", title: "💖 Tantra & Polaridad Somática", aura: "amor", badge: "💖 Amor" },
+          { time: "23:15 - 23:30", title: "📖 Lectura Estoica: 10 min Clásicos / Códices", aura: "mente", badge: "🧠 Mente" }
         ]
       },
       domingo: {
         focus: "Soberanía, Ritos & Alineación",
         blocks: [
-          { time: "10:00 - 11:30", title: "Auditoría Dominical Cuentas Sparkasse/Chile", aura: "soberania", badge: "🪙 Soberanía" },
-          { time: "12:00 - 14:00", title: "Meal Prep Semanal Nutrición Limpia", aura: "salud", badge: "🌿 Salud" },
-          { time: "17:00 - 18:30", title: "Lectura Estoica & Plan de la Semana", aura: "mente", badge: "🧠 Mente" },
-          { time: "21:00 - 22:00", title: "Ritos Sagrados, Altar & Vipassana", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "08:30 - 08:40", title: "🧘 Meditación Somática (5 min Vipassana / Silencio & Foco)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" },
+          { time: "08:40 - 08:50", title: "🛡️ Templanza: Blindaje Antiporno (0 Porno & Disciplina)", aura: "salud", badge: "🌿 Salud" },
+          { time: "08:50 - 09:15", title: "🥊 Ejercicio: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mín 2 min)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 09:45", title: "🇩🇪 Alemán Diario: 10 min Práctica de Escucha", aura: "mente", badge: "🧠 Mente" },
+          { time: "10:00 - 11:30", title: "🪙 Auditoría Dominical Cuentas Sparkasse/Chile", aura: "soberania", badge: "🪙 Soberanía" },
+          { time: "12:00 - 14:00", title: "🌿 Meal Prep Semanal Nutrición Limpia", aura: "salud", badge: "🌿 Salud" },
+          { time: "17:00 - 18:30", title: "🧠 Estrategia de la Semana & Alineación", aura: "mente", badge: "🧠 Mente" },
+          { time: "21:00 - 21:15", title: "📖 Lectura Estoica: 10 min Marco Aurelio / Séneca", aura: "mente", badge: "🧠 Mente" },
+          { time: "21:30 - 22:00", title: "🕯️ Ritos Sagrados, Altar & Vipassana", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
         ]
       }
     }
@@ -314,78 +347,110 @@ const WEEKLY_STRATEGY_SCHEDULE = {
       { id: "vida", name: "Vida", icon: "👑", when: "Lunes a Viernes • 2 BLOQUES DIARIOS (09:00-10:30 y 11:30-13:00: 10 bloques de empleo)", status: "✓ ACTIVO (MÁXIMO FOCO)" },
       { id: "exploracion", name: "Exploración", icon: "🧭", when: "Martes (Check Paper 45m) y Sábado (Despeje Creativo / Trompeta 1h)", status: "✓ ACTIVO" },
       { id: "amor", name: "Amor & Pareja", icon: "💖", when: "Martes a Sábado (Presencia íntima, Aftercare, Cita viernes y Tantra sábado)", status: "✓ ACTIVO" },
-      { id: "mente", name: "Mente & Foco", icon: "🧠", when: "Lunes (Alemán para entrevistas), Miércoles (Estoicismo contra ansiedad), Domingo (Planificación)", status: "✓ ACTIVO" },
-      { id: "salud", name: "Salud Somática", icon: "🌿", when: "Diario (Nutrición limpia 2,950 kcal, Hidratación 3.2L, Sueño reparador, Meal Prep dom)", status: "✓ ACTIVO" },
-      { id: "deporte", name: "Deporte & Combate", icon: "🥊", when: "Lunes (Fuerza gym), Martes (Running cortisol), Jueves (Muay Thai), Sábado (Cardio)", status: "✓ ACTIVO" },
+      { id: "mente", name: "Mente & Foco", icon: "🧠", when: "Diario • Lectura 10 min + Alemán 10 min (Entrevistas y preparación)", status: "✓ ACTIVO" },
+      { id: "salud", name: "Salud Somática", icon: "🌿", when: "Diario • Blindaje Antiporno (0 Porno) + Nutrición 2,950 kcal", status: "✓ ACTIVO" },
+      { id: "deporte", name: "Deporte & Combate", icon: "🥊", when: "Diario • 100 abs, 100 sentadillas, 100 flexiones o correr (mín 2 min) + Descarga de estrés", status: "✓ ACTIVO" },
       { id: "soberania", name: "Soberanía Financiera", icon: "🪙", when: "Domingo • 10:00 (Blindaje estricto de caja y presupuesto durante búsqueda de empleo)", status: "✓ ACTIVO" },
       { id: "naturaleza", name: "Naturaleza & Ecosistemas", icon: "🌲", when: "Viernes tarde (Caminata bosque) y Sábado mañana (Oxigenación profunda ReWild)", status: "✓ ACTIVO" },
-      { id: "espiritualidad", name: "Espiritualidad & Ritos", icon: "🕯️", when: "Lunes noche (Vipassana descompresión) y Domingo noche (Altar & Templanza)", status: "✓ ACTIVO" }
+      { id: "espiritualidad", name: "Espiritualidad & Ritos", icon: "🕯️", when: "Diario • Meditación 5 min (Disolver ansiedad) + Altar y Templanza", status: "✓ ACTIVO" }
     ],
     days: {
       lunes: {
         focus: "Asalto 1: Oleada Masiva de Postulaciones",
         blocks: [
-          { time: "09:00 - 10:30", title: "Punta de Lanza 1: 10 CVs en StepStone/LinkedIn/Indeed", aura: "vida", badge: "👑 Vida" },
-          { time: "11:30 - 13:00", title: "Punta de Lanza 2: Anschreiben personalizadas & Follow-up", aura: "vida", badge: "👑 Vida" },
-          { time: "16:30 - 17:30", title: "Alemán Técnico para Entrevistas Laborales", aura: "mente", badge: "🧠 Mente" },
-          { time: "18:00 - 19:15", title: "Campus Martius (Fuerza Rápida Antiestrés)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "21:30 - 22:00", title: "Vipassana 15m (Disolver Ansiedad de Futuro)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "07:30 - 07:40", title: "🧘 Meditación Somática (5 min Vipassana / Disolver Ansiedad)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" },
+          { time: "07:40 - 07:50", title: "🛡️ Templanza: Blindaje Antiporno (0 Porno & Enfoque de Acero)", aura: "salud", badge: "🌿 Salud" },
+          { time: "07:50 - 08:15", title: "🥊 Ejercicio: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mín 2 min)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:00 - 10:30", title: "👑 Punta de Lanza 1: 10 CVs en StepStone/LinkedIn/Indeed", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "👑 Punta de Lanza 2: Anschreiben personalizadas & Follow-up", aura: "vida", badge: "👑 Vida" },
+          { time: "13:30 - 13:45", title: "🇩🇪 Alemán Diario: 10 min Técnico para Entrevistas Laborales", aura: "mente", badge: "🧠 Mente" },
+          { time: "18:00 - 19:15", title: "🥊 Campus Martius (Fuerza Rápida Antiestrés)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "21:30 - 21:45", title: "📖 Lectura Estoica: 10 min Séneca (Calma ante el azar)", aura: "mente", badge: "🧠 Mente" }
         ]
       },
       martes: {
         focus: "Asalto 2: Compañías Clave & Pareja",
         blocks: [
-          { time: "09:00 - 10:30", title: "Punta de Lanza 1: Postulaciones directas en Hannover", aura: "vida", badge: "👑 Vida" },
-          { time: "11:30 - 13:00", title: "Punta de Lanza 2: Mock Interview & Guiones técnicos", aura: "vida", badge: "👑 Vida" },
-          { time: "16:00 - 17:00", title: "Mantenimiento Paper Lauwersmeer (Check rápido)", aura: "exploracion", badge: "🧭 Exploración" },
-          { time: "17:30 - 18:30", title: "Running 6km (Descarga de Cortisol)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "20:00 - 22:00", title: "Presencia Íntima & Apoyo Mutuo en Pareja", aura: "amor", badge: "💖 Amor" }
+          { time: "07:30 - 07:40", title: "🧘 Meditación Somática (5 min Vipassana / Calma Mental)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" },
+          { time: "07:40 - 07:50", title: "🛡️ Templanza: Blindaje Antiporno (0 Porno & Templanza Absoluta)", aura: "salud", badge: "🌿 Salud" },
+          { time: "07:50 - 08:15", title: "🥊 Ejercicio: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mín 2 min)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:00 - 10:30", title: "👑 Punta de Lanza 1: Postulaciones directas en Hannover", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "👑 Punta de Lanza 2: Mock Interview & Guiones técnicos", aura: "vida", badge: "👑 Vida" },
+          { time: "13:30 - 13:45", title: "🇩🇪 Alemán Diario: 10 min Pitch & Respuestas Clave", aura: "mente", badge: "🧠 Mente" },
+          { time: "16:00 - 17:00", title: "🧭 Mantenimiento Paper Lauwersmeer (Check rápido)", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "17:30 - 18:30", title: "🥊 Running 6km (Descarga de Cortisol)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "20:00 - 22:00", title: "💖 Presencia Íntima & Apoyo Mutuo en Pareja", aura: "amor", badge: "💖 Amor" },
+          { time: "22:15 - 22:30", title: "📖 Lectura Estoica: 10 min Códices & Temple", aura: "mente", badge: "🧠 Mente" }
         ]
       },
       miercoles: {
         focus: "Asalto 3: Trámites, Visa & Templanza",
         blocks: [
-          { time: "09:00 - 10:30", title: "Punta de Lanza 1: Llamadas, recruiters & respuestas", aura: "vida", badge: "👑 Vida" },
-          { time: "11:30 - 13:00", title: "Punta de Lanza 2: Trámites Visa, Título & Cartas", aura: "vida", badge: "👑 Vida" },
-          { time: "16:00 - 17:00", title: "Lectura Estoica (Séneca: Calma ante el azar)", aura: "mente", badge: "🧠 Mente" },
-          { time: "17:30 - 18:30", title: "Estiramientos Somáticos & Respiración Diafragma", aura: "salud", badge: "🌿 Salud" },
-          { time: "20:30 - 22:00", title: "Cena Afectiva sin Pantallas & Diálogo Calmo", aura: "amor", badge: "💖 Amor" }
+          { time: "07:30 - 07:40", title: "🧘 Meditación Somática (5 min Vipassana / Serenidad Interior)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" },
+          { time: "07:40 - 07:50", title: "🛡️ Templanza: Blindaje Antiporno (0 Porno & Control)", aura: "salud", badge: "🌿 Salud" },
+          { time: "07:50 - 08:15", title: "🥊 Ejercicio: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mín 2 min)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:00 - 10:30", title: "👑 Punta de Lanza 1: Llamadas, recruiters & respuestas", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "👑 Punta de Lanza 2: Trámites Visa, Título & Cartas", aura: "vida", badge: "👑 Vida" },
+          { time: "13:30 - 13:45", title: "🇩🇪 Alemán Diario: 10 min Vocabulario Técnico", aura: "mente", badge: "🧠 Mente" },
+          { time: "17:30 - 18:30", title: "🌿 Estiramientos Somáticos & Respiración Diafragma", aura: "salud", badge: "🌿 Salud" },
+          { time: "20:30 - 22:00", title: "💖 Cena Afectiva sin Pantallas & Diálogo Calmo", aura: "amor", badge: "💖 Amor" },
+          { time: "22:15 - 22:30", title: "📖 Lectura Estoica: 10 min Séneca (Calma ante el azar)", aura: "mente", badge: "🧠 Mente" }
         ]
       },
       jueves: {
         focus: "Asalto 4: Segunda Oleada & Combate",
         blocks: [
-          { time: "09:00 - 10:30", title: "Punta de Lanza 1: 8 Postulaciones adicionales", aura: "vida", badge: "👑 Vida" },
-          { time: "11:30 - 13:00", title: "Punta de Lanza 2: Contacto con Hiring Managers", aura: "vida", badge: "👑 Vida" },
-          { time: "17:30 - 19:00", title: "Muay Thai & Sparring (Energía del Guerrero)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "20:30 - 22:00", title: "Aftercare, Masajes & Apoyo con Marie", aura: "amor", badge: "💖 Amor" }
+          { time: "07:30 - 07:40", title: "🧘 Meditación Somática (5 min Vipassana / Box Breathing)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" },
+          { time: "07:40 - 07:50", title: "🛡️ Templanza: Blindaje Antiporno (0 Porno & Pureza de Foco)", aura: "salud", badge: "🌿 Salud" },
+          { time: "07:50 - 08:15", title: "🥊 Ejercicio: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mín 2 min)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:00 - 10:30", title: "👑 Punta de Lanza 1: 8 Postulaciones adicionales", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "👑 Punta de Lanza 2: Contacto con Hiring Managers", aura: "vida", badge: "👑 Vida" },
+          { time: "13:30 - 13:45", title: "🇩🇪 Alemán Diario: 10 min Simulación Conversación", aura: "mente", badge: "🧠 Mente" },
+          { time: "17:30 - 19:00", title: "🥊 Muay Thai & Sparring (Energía del Guerrero)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "20:30 - 22:00", title: "💖 Aftercare, Masajes & Apoyo con Marie", aura: "amor", badge: "💖 Amor" },
+          { time: "22:15 - 22:30", title: "📖 Lectura Estoica: 10 min Marco Aurelio / Fortaleza", aura: "mente", badge: "🧠 Mente" }
         ]
       },
       viernes: {
         focus: "Asalto 5: Cierre & Reseteo en Bosque",
         blocks: [
-          { time: "09:00 - 10:30", title: "Punta de Lanza 1: Seguimiento semanal exhaustivo", aura: "vida", badge: "👑 Vida" },
-          { time: "11:30 - 13:00", title: "Punta de Lanza 2: Agenda de entrevistas semana próx.", aura: "vida", badge: "👑 Vida" },
-          { time: "15:30 - 17:00", title: "Reseteo en Bosque / ReWild (Cero móvil)", aura: "naturaleza", badge: "🌲 Naturaleza" },
-          { time: "20:00 - 23:00", title: "Cita Romántica: Desconexión Laboral Total", aura: "amor", badge: "💖 Amor" }
+          { time: "07:30 - 07:40", title: "🧘 Meditación Somática (5 min Vipassana / Paz Mental)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" },
+          { time: "07:40 - 07:50", title: "🛡️ Templanza: Blindaje Antiporno (0 Porno & Blindaje de Dopamina)", aura: "salud", badge: "🌿 Salud" },
+          { time: "07:50 - 08:15", title: "🥊 Ejercicio: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mín 2 min)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:00 - 10:30", title: "👑 Punta de Lanza 1: Seguimiento semanal exhaustivo", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "👑 Punta de Lanza 2: Agenda de entrevistas semana próx.", aura: "vida", badge: "👑 Vida" },
+          { time: "13:30 - 13:45", title: "🇩🇪 Alemán Diario: 10 min Repaso de la Semana", aura: "mente", badge: "🧠 Mente" },
+          { time: "15:30 - 17:00", title: "🌲 Reseteo en Bosque / ReWild (Cero móvil)", aura: "naturaleza", badge: "🌲 Naturaleza" },
+          { time: "20:00 - 23:00", title: "💖 Cita Romántica: Desconexión Laboral Total", aura: "amor", badge: "💖 Amor" },
+          { time: "23:15 - 23:30", title: "📖 Lectura Estoica: 10 min Gratitud y Cierre de Semana", aura: "mente", badge: "🧠 Mente" }
         ]
       },
       sabado: {
         focus: "Desconexión, ReWild & Goce",
         blocks: [
-          { time: "10:00 - 13:00", title: "ReWild & Senderismo (Oxigenación profunda)", aura: "naturaleza", badge: "🌲 Naturaleza" },
-          { time: "16:00 - 17:00", title: "Despeje Creativo (Música o Escritura)", aura: "exploracion", badge: "🧭 Exploración" },
-          { time: "17:30 - 18:30", title: "Cardio al aire libre o Calistenia", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "21:00 - 23:00", title: "Tantra & Polaridad Somática", aura: "amor", badge: "💖 Amor" }
+          { time: "08:30 - 08:40", title: "🧘 Meditación Somática (5 min Vipassana / Presencia Plena)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" },
+          { time: "08:40 - 08:50", title: "🛡️ Templanza: Blindaje Antiporno (0 Porno & Dominio Propio)", aura: "salud", badge: "🌿 Salud" },
+          { time: "08:50 - 09:15", title: "🥊 Ejercicio: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mín 2 min)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 09:45", title: "🇩🇪 Alemán Diario: 10 min Podcasts / Medios en Alemán", aura: "mente", badge: "🧠 Mente" },
+          { time: "10:00 - 13:00", title: "🌲 ReWild & Senderismo (Oxigenación profunda)", aura: "naturaleza", badge: "🌲 Naturaleza" },
+          { time: "16:00 - 17:00", title: "🧭 Despeje Creativo (Música o Escritura)", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "17:30 - 18:30", title: "🥊 Cardio al aire libre o Calistenia", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "21:00 - 23:00", title: "💖 Tantra & Polaridad Somática", aura: "amor", badge: "💖 Amor" },
+          { time: "23:15 - 23:30", title: "📖 Lectura Estoica: 10 min Códices & Filosofía", aura: "mente", badge: "🧠 Mente" }
         ]
       },
       domingo: {
         focus: "Blindaje Financiero, Meal Prep & Ritos",
         blocks: [
-          { time: "10:00 - 11:30", title: "Auditoría de Gastos & Blindaje de Caja", aura: "soberania", badge: "🪙 Soberanía" },
-          { time: "12:00 - 14:00", title: "Meal Prep: Comidas listas para toda la semana", aura: "salud", badge: "🌿 Salud" },
-          { time: "17:00 - 18:30", title: "Estrategia de la Lanza: Semana entrante", aura: "mente", badge: "🧠 Mente" },
-          { time: "21:00 - 22:00", title: "Altar Ancestral & Meditación de Templanza", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "08:30 - 08:40", title: "🧘 Meditación Somática (5 min Vipassana / Silencio & Foco)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" },
+          { time: "08:40 - 08:50", title: "🛡️ Templanza: Blindaje Antiporno (0 Porno & Renovación de Votos)", aura: "salud", badge: "🌿 Salud" },
+          { time: "08:50 - 09:15", title: "🥊 Ejercicio: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mín 2 min)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 09:45", title: "🇩🇪 Alemán Diario: 10 min Revisión de Metas de Idioma", aura: "mente", badge: "🧠 Mente" },
+          { time: "10:00 - 11:30", title: "🪙 Auditoría de Gastos & Blindaje de Caja", aura: "soberania", badge: "🪙 Soberanía" },
+          { time: "12:00 - 14:00", title: "🌿 Meal Prep: Comidas listas para toda la semana", aura: "salud", badge: "🌿 Salud" },
+          { time: "17:00 - 18:30", title: "🧠 Estrategia de la Lanza: Semana entrante", aura: "mente", badge: "🧠 Mente" },
+          { time: "21:00 - 21:15", title: "📖 Lectura Estoica: 10 min Marco Aurelio / Sabiduría", aura: "mente", badge: "🧠 Mente" },
+          { time: "21:30 - 22:00", title: "🕯️ Altar Ancestral & Meditación de Templanza", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
         ]
       }
     }
@@ -2455,6 +2520,33 @@ const imperivmEngine = {
           <p style="${small}">
             El Caballero Jaguar no compite contra otros, sino contra la entropía, la dispersión dopaminérgica y la procrastinación. Cada hábito diario está diseñado para forjar soberanía real, disciplina física y presencia consciente.
           </p>
+        </div>
+
+        <!-- 5 DEBERES INQUEBRANTABLES DE CADA DÍA -->
+        <div style="${box}; border-color: rgba(212,175,55,0.45); background: rgba(212,175,55,0.06);">
+          <h5 style="${h5}; color: var(--imperivm-text-gold); margin-bottom: 8px;">⚔️ Los 5 Deberes Inquebrantables de Cada Día (Fresh & Urgente)</h5>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px;">
+            <div style="background: rgba(0,0,0,0.35); padding: 8px 10px; border-radius: 6px; font-size: 0.78rem; border-left: 3px solid #6EE7B7;">
+              <strong style="color: #6EE7B7;">🧘 1. Meditación 5 min</strong><br>
+              <span style="color: var(--imperivm-text-muted);">Vipassana / Respiración consciente</span>
+            </div>
+            <div style="background: rgba(0,0,0,0.35); padding: 8px 10px; border-radius: 6px; font-size: 0.78rem; border-left: 3px solid #60A5FA;">
+              <strong style="color: #60A5FA;">📖 2. Lectura 10 min</strong><br>
+              <span style="color: var(--imperivm-text-muted);">Filosofía Estoica & Códices</span>
+            </div>
+            <div style="background: rgba(0,0,0,0.35); padding: 8px 10px; border-radius: 6px; font-size: 0.78rem; border-left: 3px solid #F87171;">
+              <strong style="color: #F87171;">🥊 3. Ejercicio Físico</strong><br>
+              <span style="color: var(--imperivm-text-muted);">100 abs, 100 sentadillas, 100 flexiones o correr (mín 2m)</span>
+            </div>
+            <div style="background: rgba(0,0,0,0.35); padding: 8px 10px; border-radius: 6px; font-size: 0.78rem; border-left: 3px solid #FBBF24;">
+              <strong style="color: #FBBF24;">🇩🇪 4. Alemán 10 min</strong><br>
+              <span style="color: var(--imperivm-text-muted);">Vocabulario diario & Gramática</span>
+            </div>
+            <div style="background: rgba(0,0,0,0.35); padding: 8px 10px; border-radius: 6px; font-size: 0.78rem; border-left: 3px solid #A78BFA;">
+              <strong style="color: #A78BFA;">🛡️ 5. Antiporno (0 Porno)</strong><br>
+              <span style="color: var(--imperivm-text-muted);">Templanza & Blindaje dopaminérgico</span>
+            </div>
+          </div>
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px;">

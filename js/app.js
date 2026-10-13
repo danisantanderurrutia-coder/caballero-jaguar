@@ -22,13 +22,14 @@ let appState = {
     }
   ],
   tasks: [
-    { id: "t1", title: "Escala 1 (Días 1-7): 0 Porno + 5 min Ejercicio (Caballero)", timeScope: "daily", category: "ejercicios", completed: true },
-    { id: "t2", title: "Desintoxicación Dopaminérgica & Control de Impulsos", timeScope: "daily", category: "ejercicios", completed: true },
-    { id: "t3", title: "Lectura 15 min (Meditaciones - Marco Aurelio)", timeScope: "daily", category: "lectura", completed: false },
-    { id: "t4", title: "Meditación y respiración 5 min", timeScope: "daily", category: "meditacion", completed: false },
-    { id: "t5", title: "Renovar trámite vehicular o bancario", timeScope: "weekly", category: "tramites", completed: false },
-    { id: "t6", title: "Redactar borrador de paper o propuesta", timeScope: "weekly", category: "proyectos", completed: true },
-    { id: "t7", title: "Cita especial de fin de semana con mi novia", timeScope: "weekly", category: "pareja", completed: false }
+    { id: "t1", title: "🛡️ 0 Porno & Control Dopaminérgico Inquebrantable", timeScope: "daily", category: "ejercicios", completed: true },
+    { id: "t2", title: "🧘 Meditación Somática 5 min (Vipassana / Respiración)", timeScope: "daily", category: "meditacion", completed: false },
+    { id: "t3", title: "📖 Lectura Estoica 10 min (Marco Aurelio / Códices)", timeScope: "daily", category: "lectura", completed: false },
+    { id: "t4", title: "🥊 100 Abdominales, 100 Sentadillas, 100 Flexiones o Correr (mín 2 min)", timeScope: "daily", category: "ejercicios", completed: false },
+    { id: "t5", title: "🇩🇪 Alemán Diario 10 min (Vocabulario & Gramática)", timeScope: "daily", category: "proyectos", completed: false },
+    { id: "t6", title: "Renovar trámite vehicular o bancario", timeScope: "weekly", category: "tramites", completed: false },
+    { id: "t7", title: "Redactar borrador de paper o propuesta", timeScope: "weekly", category: "proyectos", completed: true },
+    { id: "t8", title: "Cita especial de fin de semana con mi novia", timeScope: "weekly", category: "pareja", completed: false }
   ],
   activityLogs: [
     { id: "a1", activity: "Estudio y lectura estoica", duration: 45, category: "Lectura", date: cjToday() },
