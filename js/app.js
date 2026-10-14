@@ -23,13 +23,15 @@ let appState = {
   ],
   tasks: [
     { id: "t1", title: "🛡️ 0 Porno & Control Dopaminérgico Inquebrantable (Siempre activo)", timeScope: "daily", category: "ejercicios", completed: true },
-    { id: "t2", title: "🥊 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (Mañana o 18:00)", timeScope: "daily", category: "ejercicios", completed: false },
-    { id: "t3", title: "🇩🇪 Alemán 10 min al mediodía (Vocabulario & Gramática)", timeScope: "daily", category: "proyectos", completed: false },
-    { id: "t4", title: "📖 Lectura Estoica 10 min antes de dormir (Marco Aurelio / Códices)", timeScope: "daily", category: "lectura", completed: false },
-    { id: "t5", title: "🧘 Meditación Somática 5 min antes de dormir (Vipassana / Calma)", timeScope: "daily", category: "meditacion", completed: false },
-    { id: "t6", title: "Renovar trámite vehicular o bancario", timeScope: "weekly", category: "tramites", completed: false },
-    { id: "t7", title: "Redactar borrador de paper o propuesta", timeScope: "weekly", category: "proyectos", completed: true },
-    { id: "t8", title: "Cita especial de fin de semana con mi novia", timeScope: "weekly", category: "pareja", completed: false }
+    { id: "t2", title: "🥊 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (09:00 AM o 18:00)", timeScope: "daily", category: "ejercicios", completed: false },
+    { id: "t3", title: "👑 Búsqueda Empleo: Trabajos de mi Profesión (Ciencias / Clima / Carrera)", timeScope: "daily", category: "proyectos", completed: false },
+    { id: "t4", title: "👑 Búsqueda Empleo: Trabajos Locales Hannover (Minijobs / Servicios / Inmediatez)", timeScope: "daily", category: "proyectos", completed: false },
+    { id: "t5", title: "🇩🇪 Alemán 10 min al mediodía (Vocabulario & Gramática)", timeScope: "daily", category: "proyectos", completed: false },
+    { id: "t6", title: "📖 Lectura Estoica 10 min antes de dormir (Marco Aurelio / Códices)", timeScope: "daily", category: "lectura", completed: false },
+    { id: "t7", title: "🧘 Meditación Somática 5 min antes de dormir (Vipassana / Calma)", timeScope: "daily", category: "meditacion", completed: false },
+    { id: "t8", title: "Renovar trámite vehicular o bancario", timeScope: "weekly", category: "tramites", completed: false },
+    { id: "t9", title: "Redactar borrador de paper o propuesta", timeScope: "weekly", category: "proyectos", completed: true },
+    { id: "t10", title: "Cita especial de fin de semana con mi novia", timeScope: "weekly", category: "pareja", completed: false }
   ],
   activityLogs: [
     { id: "a1", activity: "Estudio y lectura estoica", duration: 45, category: "Lectura", date: cjToday() },

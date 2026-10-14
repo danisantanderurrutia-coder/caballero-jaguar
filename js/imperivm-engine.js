@@ -224,105 +224,112 @@ const WEEKLY_STRATEGY_SCHEDULE = {
     icon: "🌿",
     color: "#2DD4BF",
     badge: "BALANCEADO",
-    slogan: "Punta de lanza matutina (90 min) + Exploración & Ecología + Tardes de Somática & Arte",
-    desc: "Diseñado para sostener el avance de la tesis y empleo sin sobrecarga, dejando espacio regular a la investigación científica, música, entrenamiento y vida en pareja.",
+    slogan: "Inicio 09:00 AM + Asalto Dual Empleo (Profesión + Local) + Peak Nocturno",
+    desc: "Diseñado para sostener el avance de la tesis y empleo (tanto de carrera como local para liquidez rápida) iniciando a las 09:00 AM, aprovechando el peak de concentración nocturno y resguardando la vida somática y de pareja.",
     pennants: [
-      { id: "vida", name: "Vida", icon: "👑", when: "Lunes a Viernes • 09:30-11:00 (Foco Tesis / Empleo)", status: "✓ ACTIVO" },
+      { id: "vida", name: "Vida", icon: "👑", when: "Lunes a Viernes • 09:30-12:45 (Foco Carrera/Tesis + Empleos Locales Hannover)", status: "✓ ACTIVO" },
       { id: "exploracion", name: "Exploración", icon: "🧭", when: "Lunes (Paper Lauwersmeer), Miércoles (Agrotech / Música), Sábado (Arte)", status: "✓ ACTIVO" },
       { id: "amor", name: "Amor & Pareja", icon: "💖", when: "Martes (Presencia), Jueves (Aftercare), Viernes (Cita), Sábado (Tantra)", status: "✓ ACTIVO" },
-      { id: "mente", name: "Mente & Foco", icon: "🧠", when: "Diario • Alemán al mediodía (10 min) + Lectura estoica antes de dormir (10 min)", status: "✓ ACTIVO" },
+      { id: "mente", name: "Mente & Foco", icon: "🧠", when: "Diario • Alemán al mediodía (10 min) + Peak nocturno + Lectura antes de dormir", status: "✓ ACTIVO" },
       { id: "salud", name: "Salud Somática", icon: "🌿", when: "Siempre activo • 0 Porno (Templanza) + Nutrición limpia & Sueño reparador", status: "✓ ACTIVO" },
-      { id: "deporte", name: "Deporte & Combate", icon: "🥊", when: "Diario • 100 abs, 100 sentadillas, 100 flexiones o correr (mañana o 18:00)", status: "✓ ACTIVO" },
+      { id: "deporte", name: "Deporte & Combate", icon: "🥊", when: "Diario • 100 abs, 100 sentadillas, 100 flexiones o correr (09:00 o 18:00)", status: "✓ ACTIVO" },
       { id: "soberania", name: "Soberanía Financiera", icon: "🪙", when: "Domingo • 10:00 (Auditoría semanal cuentas Sparkasse / Banco de Chile)", status: "✓ ACTIVO" },
       { id: "naturaleza", name: "Naturaleza & Ecosistemas", icon: "🌲", when: "Viernes tarde (Caminata bosque) y Sábado (ReWild / Conexión tierra)", status: "✓ ACTIVO" },
       { id: "espiritualidad", name: "Espiritualidad & Ritos", icon: "🕯️", when: "Diario • Meditación 5 min antes de dormir + Altar ancestral", status: "✓ ACTIVO" }
     ],
     days: {
       lunes: {
-        focus: "Fuerza Base & Inicio Armónico",
+        focus: "Fuerza Base & Inicio Armónico (09:00 AM)",
         blocks: [
-          { time: "07:30 - 08:00", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mañana o 18:00)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "09:30 - 11:00", title: "👑 Bloque Foco: Empleo Hannover & Tesis", aura: "vida", badge: "👑 Vida" },
-          { time: "11:30 - 13:00", title: "🧭 Paper Lauwersmeer (Análisis & Redacción)", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "09:00 - 09:30", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (o a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 11:00", title: "👑 Bloque Foco: Empleo de mi Profesión & Tesis", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 12:45", title: "👑 Bloque Foco: Trabajos Locales Hannover (Minijobs / Servicios)", aura: "vida", badge: "👑 Vida" },
           { time: "13:00 - 13:15", title: "🇩🇪 Alemán al Mediodía: 10 min Vocabulario, Gramática & Habla", aura: "mente", badge: "🧠 Mente" },
-          { time: "17:00 - 18:30", title: "🥊 Campus Martius (Gym Hipertrofia & Fuerza)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "22:00 - 22:15", title: "📖 Lectura Estoica: 10 min antes de dormir (Marco Aurelio / Códices)", aura: "mente", badge: "🧠 Mente" },
-          { time: "22:30 - 22:40", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Calma & Sueño)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "15:00 - 16:30", title: "🧭 Paper Lauwersmeer (Análisis & Redacción)", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "17:30 - 19:00", title: "🥊 Campus Martius (Gym Hipertrofia & Fuerza a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "20:30 - 23:00", title: "🧠 Peak Nocturno de Concentración: Deep Work & Escritura", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:30 - 23:45", title: "📖 Lectura Estoica: 10 min antes de dormir (Marco Aurelio / Códices)", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:45 - 23:55", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Calma & Sueño)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
         ]
       },
       martes: {
-        focus: "Idiomas, Resistencia & Pareja",
+        focus: "Idiomas, Resistencia & Pareja (09:00 AM)",
         blocks: [
-          { time: "07:30 - 08:00", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mañana o 18:00)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "09:30 - 11:00", title: "👑 Networking & Postulaciones Hannover", aura: "vida", badge: "👑 Vida" },
+          { time: "09:00 - 09:30", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (o a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 11:00", title: "👑 Postulaciones Profesión: Consultoras & Clima Hannover", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 12:45", title: "👑 Búsqueda Activa: Trabajos Locales & Minijobs Hannover", aura: "vida", badge: "👑 Vida" },
           { time: "13:00 - 13:15", title: "🇩🇪 Alemán al Mediodía: 10 min Gramática & Habla (B2/C1)", aura: "mente", badge: "🧠 Mente" },
-          { time: "17:30 - 18:30", title: "🥊 Running & Resistencia Aeróbica (a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "20:00 - 22:00", title: "💖 Presencia Íntima & Cena en Pareja", aura: "amor", badge: "💖 Amor" },
-          { time: "22:15 - 22:30", title: "📖 Lectura Estoica: 10 min antes de dormir (Filosofía & Sabiduría)", aura: "mente", badge: "🧠 Mente" },
-          { time: "22:35 - 22:45", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Relajación)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "18:00 - 19:00", title: "🥊 Running & Resistencia Aeróbica (a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "20:30 - 22:30", title: "💖 Presencia Íntima & Cena en Pareja", aura: "amor", badge: "💖 Amor" },
+          { time: "23:30 - 23:45", title: "📖 Lectura Estoica: 10 min antes de dormir (Filosofía & Sabiduría)", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:45 - 23:55", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Relajación)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
         ]
       },
       miercoles: {
-        focus: "Proyectos Piratas & Música Jazz",
+        focus: "Proyectos Piratas & Música Jazz (09:00 AM)",
         blocks: [
-          { time: "07:30 - 08:00", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mañana o 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:00 - 09:30", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (o a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
           { time: "09:30 - 11:00", title: "🧭 Proyectos Piratas & Agrotech Huerta", aura: "exploracion", badge: "🧭 Exploración" },
-          { time: "11:30 - 13:00", title: "👑 Revisión Documentos Vitales & Tesis", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 12:45", title: "👑 Gestión Dual: Empleo de Carrera + Opciones Locales", aura: "vida", badge: "👑 Vida" },
           { time: "13:00 - 13:15", title: "🇩🇪 Alemán al Mediodía: 10 min Vocabulario & Práctica oral", aura: "mente", badge: "🧠 Mente" },
           { time: "16:00 - 17:30", title: "🧭 Trompeta, Práctica Jazz & Escalas", aura: "exploracion", badge: "🧭 Exploración" },
           { time: "18:00 - 19:00", title: "🌿 Yoga Somático & Fascia Release (a las 18:00)", aura: "salud", badge: "🌿 Salud" },
-          { time: "22:00 - 22:15", title: "📖 Lectura Estoica: 10 min antes de dormir (Séneca / Códices)", aura: "mente", badge: "🧠 Mente" },
-          { time: "22:30 - 22:40", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Calma)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "20:30 - 23:00", title: "🧠 Peak Nocturno de Concentración: Desarrollo de Proyectos", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:30 - 23:45", title: "📖 Lectura Estoica: 10 min antes de dormir (Séneca / Códices)", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:45 - 23:55", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Calma)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
         ]
       },
       jueves: {
-        focus: "Combate Marcial & Complicidad",
+        focus: "Combate Marcial & Complicidad (09:00 AM)",
         blocks: [
-          { time: "07:30 - 08:00", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mañana o 18:00)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "09:30 - 11:00", title: "👑 Entrevistas & Postulaciones Hannover", aura: "vida", badge: "👑 Vida" },
-          { time: "11:30 - 13:00", title: "🧭 Maule Red & Museo Digital", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "09:00 - 09:30", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (o a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 11:00", title: "👑 Entrevistas & Postulaciones: Carrera / Profesión", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 12:45", title: "👑 Seguimiento: Trabajos Locales Hannover (Minijobs/Turnos)", aura: "vida", badge: "👑 Vida" },
           { time: "13:00 - 13:15", title: "🇩🇪 Alemán al Mediodía: 10 min Vocabulario & Gramática", aura: "mente", badge: "🧠 Mente" },
-          { time: "17:30 - 19:00", title: "🥊 Muay Thai & Sparring de Combate (a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "20:30 - 22:00", title: "💖 Aftercare, Masajes & Diálogo Profundo", aura: "amor", badge: "💖 Amor" },
-          { time: "22:15 - 22:30", title: "📖 Lectura Estoica: 10 min antes de dormir (Epicteto / Enquiridión)", aura: "mente", badge: "🧠 Mente" },
-          { time: "22:35 - 22:45", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Paz Somática)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "15:00 - 16:30", title: "🧭 Maule Red & Museo Digital", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "18:00 - 19:15", title: "🥊 Muay Thai & Sparring de Combate (a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "20:30 - 22:30", title: "💖 Aftercare, Masajes & Diálogo Profundo", aura: "amor", badge: "💖 Amor" },
+          { time: "23:30 - 23:45", title: "📖 Lectura Estoica: 10 min antes de dormir (Epicteto / Enquiridión)", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:45 - 23:55", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Paz Somática)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
         ]
       },
       viernes: {
-        focus: "Cierre de Frente & Naturaleza",
+        focus: "Cierre de Frente & Naturaleza (09:00 AM)",
         blocks: [
-          { time: "07:30 - 08:00", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mañana o 18:00)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "09:30 - 11:00", title: "👑 Cierre Semanal de Postulaciones Hannover", aura: "vida", badge: "👑 Vida" },
+          { time: "09:00 - 09:30", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (o a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 11:00", title: "👑 Cierre Semanal: Postulaciones de mi Profesión", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 12:45", title: "👑 Cierre Semanal: Vacantes de Empleo Local Hannover", aura: "vida", badge: "👑 Vida" },
           { time: "13:00 - 13:15", title: "🇩🇪 Alemán al Mediodía: 10 min Repaso de la Semana", aura: "mente", badge: "🧠 Mente" },
-          { time: "15:00 - 17:00", title: "🌲 Caminata Bosque & Respiración Libre", aura: "naturaleza", badge: "🌲 Naturaleza" },
-          { time: "20:00 - 23:00", title: "💖 Cita Romántica & Cena en Pareja", aura: "amor", badge: "💖 Amor" },
-          { time: "23:15 - 23:30", title: "📖 Lectura Estoica: 10 min antes de dormir (Calma & Reflexión)", aura: "mente", badge: "🧠 Mente" },
-          { time: "23:35 - 23:45", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Cierre Semanal)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "15:30 - 17:30", title: "🌲 Caminata Bosque & Respiración Libre", aura: "naturaleza", badge: "🌲 Naturaleza" },
+          { time: "20:30 - 23:30", title: "💖 Cita Romántica & Cena en Pareja", aura: "amor", badge: "💖 Amor" },
+          { time: "23:45 - 23:55", title: "📖 Lectura Estoica: 10 min antes de dormir (Calma & Reflexión)", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:55 - 00:05", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Cierre Semanal)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
         ]
       },
       sabado: {
-        focus: "ReWild, Arte & Tantra",
+        focus: "ReWild, Arte & Tantra (09:00 AM)",
         blocks: [
-          { time: "08:30 - 09:00", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mañana o 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:00 - 09:30", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (o a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
           { time: "10:00 - 13:00", title: "🌲 Expedición ReWild Bosque o Mar", aura: "naturaleza", badge: "🌲 Naturaleza" },
           { time: "13:00 - 13:15", title: "🇩🇪 Alemán al Mediodía: 10 min Lectura & Modismos", aura: "mente", badge: "🧠 Mente" },
           { time: "16:00 - 17:30", title: "🧭 Pintura al Óleo, Bocetos o Fotografía", aura: "exploracion", badge: "🧭 Exploración" },
           { time: "18:00 - 19:15", title: "🥊 Calistenia o Bouldering al Aire Libre (18:00)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "21:00 - 23:00", title: "💖 Tantra & Polaridad Somática", aura: "amor", badge: "💖 Amor" },
-          { time: "23:15 - 23:30", title: "📖 Lectura Estoica: 10 min antes de dormir (Clásicos / Códices)", aura: "mente", badge: "🧠 Mente" },
-          { time: "23:35 - 23:45", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Serenidad)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "21:00 - 23:30", title: "💖 Tantra & Polaridad Somática", aura: "amor", badge: "💖 Amor" },
+          { time: "23:45 - 23:55", title: "📖 Lectura Estoica: 10 min antes de dormir (Clásicos / Códices)", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:55 - 00:05", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Serenidad)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
         ]
       },
       domingo: {
-        focus: "Soberanía, Ritos & Alineación",
+        focus: "Soberanía, Ritos & Alineación (09:00 AM)",
         blocks: [
-          { time: "08:30 - 09:00", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mañana o 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:00 - 09:30", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (o a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
           { time: "10:00 - 11:30", title: "🪙 Auditoría Dominical Cuentas Sparkasse/Chile", aura: "soberania", badge: "🪙 Soberanía" },
           { time: "12:00 - 14:00", title: "🌿 Meal Prep Semanal Nutrición Limpia", aura: "salud", badge: "🌿 Salud" },
           { time: "14:00 - 14:15", title: "🇩🇪 Alemán al Mediodía: 10 min Práctica de Escucha", aura: "mente", badge: "🧠 Mente" },
-          { time: "17:00 - 18:30", title: "🧠 Estrategia de la Semana & Alineación", aura: "mente", badge: "🧠 Mente" },
-          { time: "21:30 - 21:45", title: "📖 Lectura Estoica: 10 min antes de dormir (Marco Aurelio / Séneca)", aura: "mente", badge: "🧠 Mente" },
-          { time: "21:45 - 22:00", title: "🧘 Meditación: 5 min antes de dormir + Altar Ancestral", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "17:00 - 18:30", title: "🧠 Estrategia Semanal Dual (Profesión + Empleo Local)", aura: "mente", badge: "🧠 Mente" },
+          { time: "20:00 - 22:30", title: "🧠 Peak Nocturno de Concentración: Planificación & Códices", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:30 - 23:45", title: "📖 Lectura Estoica: 10 min antes de dormir (Marco Aurelio / Séneca)", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:45 - 23:55", title: "🧘 Meditación: 5 min antes de dormir + Altar Ancestral", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
         ]
       }
     }
@@ -333,108 +340,110 @@ const WEEKLY_STRATEGY_SCHEDULE = {
     icon: "🚨",
     color: "#E11D48",
     badge: "2X EMPLEO",
-    slogan: "Doble Bloque Diario (3h) Empleo Hannover + Astil Somático de Máxima Resistencia",
-    desc: "Prioridad número uno: firmar contrato laboral en Alemania. 2 bloques diarios de asalto frontal al mercado (10 bloques semanales), blindando la energía con deporte, presencia de pareja y auditoría dominical.",
+    slogan: "Inicio 09:00 AM + Doble Asalto (Profesión + Local) + Peak Nocturno",
+    desc: "Prioridad número uno: generar ingresos inmediatos y firmar contrato laboral. 2 frentes diarios de asalto frontal: empleos en mi carrera y trabajos locales en Hannover (lo que salga primero para asegurar caja), iniciando a las 09:00 AM y canalizando el peak de concentración nocturno.",
     pennants: [
-      { id: "vida", name: "Vida", icon: "👑", when: "Lunes a Viernes • 2 BLOQUES DIARIOS (09:00-10:30 y 11:30-13:00: 10 bloques de empleo)", status: "✓ ACTIVO (MÁXIMO FOCO)" },
+      { id: "vida", name: "Vida", icon: "👑", when: "Lunes a Viernes • 2 BLOQUES (Punta 1: Profesión + Punta 2: Empleo Local Hannover)", status: "✓ ACTIVO (MÁXIMO FOCO)" },
       { id: "exploracion", name: "Exploración", icon: "🧭", when: "Martes (Check Paper 45m) y Sábado (Despeje Creativo / Trompeta 1h)", status: "✓ ACTIVO" },
       { id: "amor", name: "Amor & Pareja", icon: "💖", when: "Martes a Sábado (Presencia íntima, Aftercare, Cita viernes y Tantra sábado)", status: "✓ ACTIVO" },
-      { id: "mente", name: "Mente & Foco", icon: "🧠", when: "Diario • Alemán al mediodía (10 min) + Lectura estoica antes de dormir (10 min)", status: "✓ ACTIVO" },
+      { id: "mente", name: "Mente & Foco", icon: "🧠", when: "Diario • Alemán al mediodía (10 min) + Peak nocturno + Lectura antes de dormir", status: "✓ ACTIVO" },
       { id: "salud", name: "Salud Somática", icon: "🌿", when: "Siempre activo • 0 Porno (Templanza) + Nutrición 2,950 kcal", status: "✓ ACTIVO" },
-      { id: "deporte", name: "Deporte & Combate", icon: "🥊", when: "Diario • 100 abs, 100 sentadillas, 100 flexiones o correr (mañana o 18:00)", status: "✓ ACTIVO" },
+      { id: "deporte", name: "Deporte & Combate", icon: "🥊", when: "Diario • 100 abs, 100 sentadillas, 100 flexiones o correr (09:00 o 18:00)", status: "✓ ACTIVO" },
       { id: "soberania", name: "Soberanía Financiera", icon: "🪙", when: "Domingo • 10:00 (Blindaje estricto de caja y presupuesto durante búsqueda de empleo)", status: "✓ ACTIVO" },
       { id: "naturaleza", name: "Naturaleza & Ecosistemas", icon: "🌲", when: "Viernes tarde (Caminata bosque) y Sábado mañana (Oxigenación profunda ReWild)", status: "✓ ACTIVO" },
       { id: "espiritualidad", name: "Espiritualidad & Ritos", icon: "🕯️", when: "Diario • Meditación 5 min antes de dormir + Serenidad", status: "✓ ACTIVO" }
     ],
     days: {
       lunes: {
-        focus: "Asalto 1: Oleada Masiva de Postulaciones",
+        focus: "Asalto 1: Doble Frente (Profesión + Empleo Local)",
         blocks: [
-          { time: "07:30 - 08:00", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mañana o 18:00)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "09:00 - 10:30", title: "👑 Punta de Lanza 1: 10 CVs en StepStone/LinkedIn/Indeed", aura: "vida", badge: "👑 Vida" },
-          { time: "11:30 - 13:00", title: "👑 Punta de Lanza 2: Anschreiben personalizadas & Follow-up", aura: "vida", badge: "👑 Vida" },
+          { time: "09:00 - 09:30", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (o a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 11:00", title: "👑 Punta de Lanza 1 • Profesión: Búsqueda Empleo en mi Carrera (StepStone/LinkedIn)", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "👑 Punta de Lanza 2 • Trabajos Locales: Empleo Local Hannover (Minijobs/Logística/Servicios)", aura: "vida", badge: "👑 Vida" },
           { time: "13:00 - 13:15", title: "🇩🇪 Alemán al Mediodía: 10 min Técnico para Entrevistas Laborales", aura: "mente", badge: "🧠 Mente" },
           { time: "18:00 - 19:15", title: "🥊 Campus Martius (Fuerza Rápida Antiestrés a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "22:00 - 22:15", title: "📖 Lectura Estoica: 10 min antes de dormir (Séneca: Calma ante el azar)", aura: "mente", badge: "🧠 Mente" },
-          { time: "22:30 - 22:40", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Disolver Ansiedad)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "20:30 - 23:00", title: "🧠 Peak Nocturno de Concentración: Deep Work & Análisis Estratégico", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:30 - 23:45", title: "📖 Lectura Estoica: 10 min antes de dormir (Séneca: Calma ante el azar)", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:45 - 23:55", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Disolver Ansiedad)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
         ]
       },
       martes: {
-        focus: "Asalto 2: Compañías Clave & Pareja",
+        focus: "Asalto 2: Compañías Clave & Opciones Locales",
         blocks: [
-          { time: "07:30 - 08:00", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mañana o 18:00)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "09:00 - 10:30", title: "👑 Punta de Lanza 1: Postulaciones directas en Hannover", aura: "vida", badge: "👑 Vida" },
-          { time: "11:30 - 13:00", title: "👑 Punta de Lanza 2: Mock Interview & Guiones técnicos", aura: "vida", badge: "👑 Vida" },
+          { time: "09:00 - 09:30", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (o a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 11:00", title: "👑 Punta de Lanza 1 • Profesión: Postulaciones Directas & CVs Especializados", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "👑 Punta de Lanza 2 • Trabajos Locales: Opciones Inmediatas en Hannover", aura: "vida", badge: "👑 Vida" },
           { time: "13:00 - 13:15", title: "🇩🇪 Alemán al Mediodía: 10 min Pitch & Respuestas Clave", aura: "mente", badge: "🧠 Mente" },
-          { time: "16:00 - 17:00", title: "🧭 Mantenimiento Paper Lauwersmeer (Check rápido)", aura: "exploracion", badge: "🧭 Exploración" },
-          { time: "17:30 - 18:30", title: "🥊 Running 6km (Descarga de Cortisol a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "20:00 - 22:00", title: "💖 Presencia Íntima & Apoyo Mutuo en Pareja", aura: "amor", badge: "💖 Amor" },
-          { time: "22:15 - 22:30", title: "📖 Lectura Estoica: 10 min antes de dormir (Códices & Temple)", aura: "mente", badge: "🧠 Mente" },
-          { time: "22:35 - 22:45", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Calma Mental)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "16:30 - 17:30", title: "🧭 Mantenimiento Paper Lauwersmeer (Check rápido)", aura: "exploracion", badge: "🧭 Exploración" },
+          { time: "18:00 - 19:00", title: "🥊 Running 6km (Descarga de Cortisol a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "20:30 - 22:30", title: "💖 Presencia Íntima & Apoyo Mutuo en Pareja", aura: "amor", badge: "💖 Amor" },
+          { time: "23:30 - 23:45", title: "📖 Lectura Estoica: 10 min antes de dormir (Códices & Temple)", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:45 - 23:55", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Calma Mental)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
         ]
       },
       miercoles: {
-        focus: "Asalto 3: Trámites, Visa & Templanza",
+        focus: "Asalto 3: Trámites, Contactos & Empleo Rápido",
         blocks: [
-          { time: "07:30 - 08:00", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mañana o 18:00)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "09:00 - 10:30", title: "👑 Punta de Lanza 1: Llamadas, recruiters & respuestas", aura: "vida", badge: "👑 Vida" },
-          { time: "11:30 - 13:00", title: "👑 Punta de Lanza 2: Trámites Visa, Título & Cartas", aura: "vida", badge: "👑 Vida" },
-          { time: "13:00 - 13:15", title: "🇩🇪 Alemán al Mediodía: 10 min Vocabulario Técnico", aura: "mente", badge: "🧠 Mente" },
-          { time: "17:30 - 18:30", title: "🌿 Estiramientos Somáticos & Respiración Diafragma (18:00)", aura: "salud", badge: "🌿 Salud" },
-          { time: "20:30 - 22:00", title: "💖 Cena Afectiva sin Pantallas & Diálogo Calmo", aura: "amor", badge: "💖 Amor" },
-          { time: "22:15 - 22:30", title: "📖 Lectura Estoica: 10 min antes de dormir (Séneca: Calma ante el azar)", aura: "mente", badge: "🧠 Mente" },
-          { time: "22:35 - 22:45", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Serenidad Interior)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "09:00 - 09:30", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (o a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 11:00", title: "👑 Punta de Lanza 1 • Profesión: Portales Científicos, Consultoras & Clima", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "👑 Punta de Lanza 2 • Trabajos Locales: Restauración, Logística & Minijobs", aura: "vida", badge: "👑 Vida" },
+          { time: "13:00 - 13:15", title: "🇩🇪 Alemán al Mediodía: 10 min Vocabulario Técnico & Cotidiano", aura: "mente", badge: "🧠 Mente" },
+          { time: "18:00 - 19:00", title: "🌿 Estiramientos Somáticos & Respiración Diafragma (18:00)", aura: "salud", badge: "🌿 Salud" },
+          { time: "20:30 - 22:30", title: "💖 Cena Afectiva sin Pantallas & Diálogo Calmo", aura: "amor", badge: "💖 Amor" },
+          { time: "23:30 - 23:45", title: "📖 Lectura Estoica: 10 min antes de dormir (Séneca: Calma ante el azar)", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:45 - 23:55", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Serenidad Interior)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
         ]
       },
       jueves: {
-        focus: "Asalto 4: Segunda Oleada & Combate",
+        focus: "Asalto 4: Segunda Oleada Dual & Combate",
         blocks: [
-          { time: "07:30 - 08:00", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mañana o 18:00)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "09:00 - 10:30", title: "👑 Punta de Lanza 1: 8 Postulaciones adicionales", aura: "vida", badge: "👑 Vida" },
-          { time: "11:30 - 13:00", title: "👑 Punta de Lanza 2: Contacto con Hiring Managers", aura: "vida", badge: "👑 Vida" },
+          { time: "09:00 - 09:30", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (o a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 11:00", title: "👑 Punta de Lanza 1 • Profesión: Contacto con Hiring Managers de mi Área", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "👑 Punta de Lanza 2 • Trabajos Locales: Opciones Inmediatas Hannover", aura: "vida", badge: "👑 Vida" },
           { time: "13:00 - 13:15", title: "🇩🇪 Alemán al Mediodía: 10 min Simulación Conversación", aura: "mente", badge: "🧠 Mente" },
-          { time: "17:30 - 19:00", title: "🥊 Muay Thai & Sparring (Energía del Guerrero a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "20:30 - 22:00", title: "💖 Aftercare, Masajes & Apoyo con Marie", aura: "amor", badge: "💖 Amor" },
-          { time: "22:15 - 22:30", title: "📖 Lectura Estoica: 10 min antes de dormir (Marco Aurelio / Fortaleza)", aura: "mente", badge: "🧠 Mente" },
-          { time: "22:35 - 22:45", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Box Breathing)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "18:00 - 19:15", title: "🥊 Muay Thai & Sparring (Energía del Guerrero a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "20:30 - 22:30", title: "💖 Aftercare, Masajes & Apoyo con Marie", aura: "amor", badge: "💖 Amor" },
+          { time: "23:30 - 23:45", title: "📖 Lectura Estoica: 10 min antes de dormir (Marco Aurelio / Fortaleza)", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:45 - 23:55", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Box Breathing)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
         ]
       },
       viernes: {
-        focus: "Asalto 5: Cierre & Reseteo en Bosque",
+        focus: "Asalto 5: Cierre Semanal & Reseteo en Bosque",
         blocks: [
-          { time: "07:30 - 08:00", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mañana o 18:00)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "09:00 - 10:30", title: "👑 Punta de Lanza 1: Seguimiento semanal exhaustivo", aura: "vida", badge: "👑 Vida" },
-          { time: "11:30 - 13:00", title: "👑 Punta de Lanza 2: Agenda de entrevistas semana próx.", aura: "vida", badge: "👑 Vida" },
+          { time: "09:00 - 09:30", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (o a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:30 - 11:00", title: "👑 Punta de Lanza 1 • Profesión: Seguimiento Postulaciones Carrera", aura: "vida", badge: "👑 Vida" },
+          { time: "11:30 - 13:00", title: "👑 Punta de Lanza 2 • Trabajos Locales: Agenda de Turnos/Entrevistas Hannover", aura: "vida", badge: "👑 Vida" },
           { time: "13:00 - 13:15", title: "🇩🇪 Alemán al Mediodía: 10 min Repaso de la Semana", aura: "mente", badge: "🧠 Mente" },
-          { time: "15:30 - 17:00", title: "🌲 Reseteo en Bosque / ReWild (Cero móvil)", aura: "naturaleza", badge: "🌲 Naturaleza" },
-          { time: "20:00 - 23:00", title: "💖 Cita Romántica: Desconexión Laboral Total", aura: "amor", badge: "💖 Amor" },
-          { time: "23:15 - 23:30", title: "📖 Lectura Estoica: 10 min antes de dormir (Gratitud & Cierre)", aura: "mente", badge: "🧠 Mente" },
-          { time: "23:35 - 23:45", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Paz Mental)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "15:30 - 17:30", title: "🌲 Reseteo en Bosque / ReWild (Cero móvil)", aura: "naturaleza", badge: "🌲 Naturaleza" },
+          { time: "20:30 - 23:30", title: "💖 Cita Romántica: Desconexión Laboral Total", aura: "amor", badge: "💖 Amor" },
+          { time: "23:45 - 23:55", title: "📖 Lectura Estoica: 10 min antes de dormir (Gratitud & Cierre)", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:55 - 00:05", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Paz Mental)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
         ]
       },
       sabado: {
-        focus: "Desconexión, ReWild & Goce",
+        focus: "Desconexión, ReWild & Goce (09:00 AM)",
         blocks: [
-          { time: "08:30 - 09:00", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mañana o 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:00 - 09:30", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (o a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
           { time: "10:00 - 13:00", title: "🌲 ReWild & Senderismo (Oxigenación profunda)", aura: "naturaleza", badge: "🌲 Naturaleza" },
           { time: "13:00 - 13:15", title: "🇩🇪 Alemán al Mediodía: 10 min Podcasts / Medios en Alemán", aura: "mente", badge: "🧠 Mente" },
           { time: "16:00 - 17:00", title: "🧭 Despeje Creativo (Música o Escritura)", aura: "exploracion", badge: "🧭 Exploración" },
-          { time: "17:30 - 18:30", title: "🥊 Cardio al aire libre o Calistenia (18:00)", aura: "deporte", badge: "🥊 Deporte" },
-          { time: "21:00 - 23:00", title: "💖 Tantra & Polaridad Somática", aura: "amor", badge: "💖 Amor" },
-          { time: "23:15 - 23:30", title: "📖 Lectura Estoica: 10 min antes de dormir (Códices & Filosofía)", aura: "mente", badge: "🧠 Mente" },
-          { time: "23:35 - 23:45", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Presencia Plena)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "18:00 - 19:15", title: "🥊 Cardio al aire libre o Calistenia (18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "21:00 - 23:30", title: "💖 Tantra & Polaridad Somática", aura: "amor", badge: "💖 Amor" },
+          { time: "23:45 - 23:55", title: "📖 Lectura Estoica: 10 min antes de dormir (Códices & Filosofía)", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:55 - 00:05", title: "🧘 Meditación: 5 min antes de dormir (Vipassana / Presencia Plena)", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
         ]
       },
       domingo: {
-        focus: "Blindaje Financiero, Meal Prep & Ritos",
+        focus: "Blindaje Financiero, Meal Prep & Ritos (09:00 AM)",
         blocks: [
-          { time: "08:30 - 09:00", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (mañana o 18:00)", aura: "deporte", badge: "🥊 Deporte" },
+          { time: "09:00 - 09:30", title: "🥊 Ejercicio Físico: 100 Abs, 100 Sentadillas, 100 Flexiones o Correr (o a las 18:00)", aura: "deporte", badge: "🥊 Deporte" },
           { time: "10:00 - 11:30", title: "🪙 Auditoría de Gastos & Blindaje de Caja", aura: "soberania", badge: "🪙 Soberanía" },
           { time: "12:00 - 14:00", title: "🌿 Meal Prep: Comidas listas para toda la semana", aura: "salud", badge: "🌿 Salud" },
           { time: "14:00 - 14:15", title: "🇩🇪 Alemán al Mediodía: 10 min Revisión de Metas de Idioma", aura: "mente", badge: "🧠 Mente" },
-          { time: "17:00 - 18:30", title: "🧠 Estrategia de la Lanza: Semana entrante", aura: "mente", badge: "🧠 Mente" },
-          { time: "21:30 - 21:45", title: "📖 Lectura Estoica: 10 min antes de dormir (Marco Aurelio / Sabiduría)", aura: "mente", badge: "🧠 Mente" },
-          { time: "21:45 - 22:00", title: "🧘 Meditación: 5 min antes de dormir + Altar Ancestral", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
+          { time: "17:00 - 18:30", title: "🧠 Estrategia de la Lanza: Agenda Dual (Carrera + Empleos Locales)", aura: "mente", badge: "🧠 Mente" },
+          { time: "20:00 - 22:30", title: "🧠 Peak Nocturno de Concentración: Planificación & Foco", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:30 - 23:45", title: "📖 Lectura Estoica: 10 min antes de dormir (Marco Aurelio / Sabiduría)", aura: "mente", badge: "🧠 Mente" },
+          { time: "23:45 - 23:55", title: "🧘 Meditación: 5 min antes de dormir + Altar Ancestral", aura: "espiritualidad", badge: "🕯️ Espiritualidad" }
         ]
       }
     }
@@ -2520,7 +2529,7 @@ const imperivmEngine = {
             </div>
             <div style="background: rgba(0,0,0,0.35); padding: 8px 10px; border-radius: 6px; font-size: 0.78rem; border-left: 3px solid #F87171;">
               <strong style="color: #F87171;">🥊 3. Ejercicio Físico</strong><br>
-              <span style="color: var(--imperivm-text-muted);">Mañana o 18:00 (100 abs, 100 sentadillas, 100 flexiones o correr, mín 2m)</span>
+              <span style="color: var(--imperivm-text-muted);">09:00 AM o 18:00 (100 abs, 100 sentadillas, 100 flexiones o correr, mín 2m)</span>
             </div>
             <div style="background: rgba(0,0,0,0.35); padding: 8px 10px; border-radius: 6px; font-size: 0.78rem; border-left: 3px solid #FBBF24;">
               <strong style="color: #FBBF24;">🇩🇪 4. Alemán 10 min</strong><br>
