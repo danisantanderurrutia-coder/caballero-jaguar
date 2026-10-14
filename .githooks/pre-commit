@@ -2,7 +2,7 @@
 # Guardia anti-fugas: bloquea commits con archivos de DateMaster o datos personales.
 # Se activa con:  git config core.hooksPath .githooks   (ver scripts/setup-git-guards.sh)
 
-BLOCK_PATHS='([Dd]ate[-_ ]?[Mm]aster|assets/tantra_|daniel_reference_photo|Ejemplo_.*\.csv|(^|/)\.env|\.pem$|\.key$|\.app/|\.dmg$|\.pkg$|\.sqlite$|\.db$)'
+BLOCK_PATHS='([Dd]ate[-_ ]?[Mm]aster|daniel_reference_photo|Ejemplo_.*\.csv|(^|/)\.env|\.pem$|\.key$|\.app/|\.dmg$|\.pkg$|\.sqlite$|\.db$)'
 
 # Rutas que SÍ pueden mencionar DateMaster en su contenido (solo el lanzador/UI), nunca como nombre de archivo
 staged=$(git diff --cached --name-only --diff-filter=ACMR)

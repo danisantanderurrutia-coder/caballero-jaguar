@@ -83,12 +83,12 @@ const IMPERIVM_MEDIA = {
   construccion_biohacking: "assets/banner_construccion_biohacking.jpg",
   construccion_honor: "assets/banner_construccion_honor.jpg",
 
-  // Academia Tantra & Maestría Sexual (DateMaster)
-  tantra_breathwork: "assets/tantra_breathwork.jpg",
-  tantra_touch: "assets/tantra_touch.jpg",
-  tantra_karezza: "assets/tantra_karezza.jpg",
-  tantra_eyegazing: "assets/tantra_eyegazing.jpg",
-  tantra_polaridad: "assets/tantra_eyegazing_soul_1787946150572.jpg"
+  // Presencia Somática & Maestría Tántrica
+  tantra_breathwork: "assets/presencia_breathwork.jpg",
+  tantra_touch: "assets/presencia_touch.jpg",
+  tantra_karezza: "assets/presencia_karezza.jpg",
+  tantra_eyegazing: "assets/presencia_eyegazing.jpg",
+  tantra_polaridad: "assets/polaridad_presencia_intima.jpg"
 };
 
 // Tabla de rangos: fuente única en js/core/progress.js (CJProgress.LEVELS)

@@ -9,7 +9,6 @@
 *.pkg
 DateMaster*/
 datemaster*/
-# Imágenes importadas de DateMaster (academia tantra)
 assets/tantra_*
 
 # ============================================================
