@@ -245,12 +245,15 @@
     const snap = snapshot();
     try {
       const st = window.reyJaguarState;
-      if (st) {
+      let effectiveStreak = snap.streak.days;
+      if (st && st.character) {
         if (!st.character) st.character = {};
         st.character.xp = snap.xp;
         st.character.level = snap.level.rank;
         st.character.currentRankIndex = snap.level.rank - 1;
-        st.character.streakDays = snap.streak.days;
+        effectiveStreak = Math.max(effectiveStreak, Number(st.character.streakDays) || 1, Number(st.character.noPornDays) || 1);
+        st.character.streakDays = effectiveStreak;
+        st.character.noPornDays = Math.max(Number(st.character.noPornDays) || 1, effectiveStreak);
         if (typeof window.saveReyJaguarState === "function") window.saveReyJaguarState();
       }
       if (typeof appState !== "undefined" && appState.profiles && appState.profiles[0]) {
@@ -258,8 +261,11 @@
         p.xp = snap.xp;
         p.currentLevel = snap.level.rank;
         p.currentSublevel = snap.level.grade;
-        p.streak = snap.streak.days;
-        p.completedDays = Array.from({ length: Math.min(21, snap.streak.days) }, (_, i) => i + 1);
+        effectiveStreak = Math.max(effectiveStreak, Number(p.streak) || 1, (Array.isArray(p.completedDays) ? p.completedDays.length : 1));
+        p.streak = effectiveStreak;
+        if (!Array.isArray(p.completedDays) || p.completedDays.length < effectiveStreak) {
+          p.completedDays = Array.from({ length: Math.min(21, effectiveStreak) }, (_, i) => i + 1);
+        }
         if (typeof saveAppState === "function") saveAppState();
       }
     } catch (e) { console.error("[CJProgress] sync:", e); }
@@ -273,6 +279,51 @@
       }
     } catch (e) {}
     try { window.dispatchEvent(new CustomEvent("cj:progress", { detail: snap })); } catch (e) {}
+  }
+
+  function reconcileVirtueDay(targetDay) {
+    targetDay = Math.min(21, Math.max(1, Number(targetDay) || 1));
+    const date = todayLocal();
+    const yesterday = addDays(date, -1);
+    // Si targetDay >= 2 y ayer tenía < 100 XP, asegurar entrada de reconciliación para ayer
+    if (targetDay >= 2 && dayXP(yesterday) < CONFIG.activeDayXP) {
+      if (!state.ledger.some(e => e.date === yesterday && e.source === "virtud")) {
+        state.ledger.push({
+          id: "vrec-" + Date.now().toString(36),
+          ts: Date.now() - 86400000,
+          date: yesterday,
+          aura: "espiritualidad",
+          raw: 100,
+          xp: 100,
+          source: "virtud",
+          desc: "Día de Templanza & Virtud (Reconciliado con honores)",
+          key: "virtud-reconciled-" + yesterday
+        });
+        save();
+      }
+    }
+    // Registrar día de virtud de hoy
+    award({
+      xp: 75,
+      aura: "espiritualidad",
+      desc: `Día ${targetDay} de Virtud Conquistado (0 Porno)`,
+      source: "virtud",
+      key: `virtud-day-${targetDay}-${date}`
+    });
+    // Actualizar estados locales inmediatamente
+    if (window.reyJaguarState && window.reyJaguarState.character) {
+      window.reyJaguarState.character.noPornDays = Math.max(targetDay, Number(window.reyJaguarState.character.noPornDays) || 1);
+      window.reyJaguarState.character.streakDays = Math.max(targetDay, Number(window.reyJaguarState.character.streakDays) || 1);
+      if (typeof window.saveReyJaguarState === 'function') window.saveReyJaguarState();
+    }
+    if (typeof appState !== "undefined" && appState.profiles && appState.profiles[0]) {
+      const p = appState.profiles[0];
+      p.streak = Math.max(targetDay, Number(p.streak) || 1);
+      const curLen = Array.isArray(p.completedDays) ? p.completedDays.length : 0;
+      p.completedDays = Array.from({ length: Math.min(21, Math.max(targetDay, curLen)) }, (_, i) => i + 1);
+      if (typeof saveAppState === 'function') saveAppState();
+    }
+    sync();
   }
 
   function notify(msg) { if (typeof window.showNotification === "function") window.showNotification(msg); }
@@ -310,7 +361,7 @@
   window.CJProgress = {
     CONFIG, LEVELS, AURAS, normAura,
     todayLocal, dateKey, addDays,
-    award, revoke, revokeById,
+    award, revoke, revokeById, reconcileVirtueDay,
     totalXP, dayXP, levelInfo, streakInfo, snapshot,
     xpByAura, lastDays, recent, sync, init
   };

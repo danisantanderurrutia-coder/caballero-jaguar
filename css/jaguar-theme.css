@@ -3544,37 +3544,39 @@ select.input-jaguar option {
    MATRIZ RENACENTISTA DE 21 DÍAS & DESAFÍOS DE CABALLERÍA (ALTO CONTRASTE)
    ========================================================================== */
 .challenge-parchment-matrix-wrap {
-  background: #FFFDF8;
-  border: 1.5px solid rgba(197, 154, 40, 0.4);
+  background: linear-gradient(165deg, rgba(20, 25, 40, 0.96) 0%, rgba(10, 13, 22, 0.98) 100%);
+  border: 1.5px solid rgba(212, 175, 55, 0.4);
   border-radius: var(--radius-md);
-  padding: 16px 18px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+  padding: 18px 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.65);
+  color: #FFFFFF;
 }
 
 .matrix-scales-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 14px;
   margin-top: 14px;
 }
 
 .matrix-scale-box {
-  background: #FFFFFF;
-  border: 1.5px solid rgba(197, 154, 40, 0.35);
+  background: linear-gradient(170deg, rgba(22, 27, 44, 0.92) 0%, rgba(12, 15, 25, 0.96) 100%);
+  border: 1.5px solid rgba(212, 175, 55, 0.3);
   border-radius: var(--radius-sm);
   padding: 14px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   min-height: 220px;
   transition: all 0.2s ease;
+  color: #FFFFFF;
 }
 
 .matrix-scale-box.active-scale {
-  border: 2px solid #C59A28;
-  background: linear-gradient(180deg, #FFFFFF 0%, #FFFDF5 100%);
-  box-shadow: 0 4px 14px rgba(197, 154, 40, 0.15);
+  border: 2px solid #D4AF37;
+  background: linear-gradient(170deg, rgba(30, 36, 56, 0.95) 0%, rgba(14, 18, 30, 0.98) 100%);
+  box-shadow: 0 0 24px rgba(212, 175, 55, 0.25);
 }
 
 .matrix-days-row {
@@ -3585,10 +3587,10 @@ select.input-jaguar option {
 }
 
 .matrix-day-btn {
-  background: #FAF6EE;
-  border: 1.5px solid rgba(197, 154, 40, 0.35);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 6px;
-  padding: 6px 2px;
+  padding: 6px 3px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3597,56 +3599,60 @@ select.input-jaguar option {
   cursor: pointer;
   transition: all 0.2s ease;
   user-select: none;
+  color: #CBD5E1;
 }
 
 .matrix-day-btn:hover {
   transform: translateY(-2px);
-  border-color: #C59A28;
-  box-shadow: 0 3px 8px rgba(197, 154, 40, 0.25);
-  background: #FFFDF9;
+  border-color: #D4AF37;
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .matrix-day-btn.active-today {
-  background: linear-gradient(135deg, #FFF6D8 0%, #FFE69C 100%);
-  border: 2px solid #C59A28;
-  box-shadow: 0 0 12px rgba(212, 175, 55, 0.45);
+  background: linear-gradient(135deg, rgba(161, 98, 7, 0.95) 0%, rgba(245, 158, 11, 0.6) 100%);
+  border: 2px solid #F59E0B;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.45);
+  color: #FFFFFF;
   animation: gentlePulse 2.5s infinite ease-in-out;
 }
 
 .matrix-day-btn.done {
-  background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
-  border: 2px solid #2E7D32;
-  color: #1B5E20;
+  background: linear-gradient(135deg, rgba(6, 78, 59, 0.95) 0%, rgba(16, 185, 129, 0.6) 100%);
+  border: 2px solid #10B981;
+  box-shadow: 0 0 12px rgba(16, 185, 129, 0.35);
+  color: #FFFFFF;
 }
 
 .matrix-day-btn.locked {
-  background: #F7F3EB;
-  border: 1px dashed rgba(160, 140, 115, 0.4);
-  color: #8C7B6B;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px dashed rgba(255, 255, 255, 0.15);
+  color: #94A3B8;
 }
 
 /* Tarjetas de Desafíos de Caballería con Experiencia Extra */
 .challenge-action-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 12px;
   margin-top: 12px;
 }
 
 .challenge-action-card {
-  background: #FFFFFF;
-  border: 1.5px solid rgba(197, 154, 40, 0.35);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-sm);
   padding: 12px 14px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
   transition: all 0.2s ease;
+  color: #FFFFFF;
 }
 
 .challenge-action-card:hover {
-  border-color: #C59A28;
+  border-color: #D4AF37;
   transform: translateY(-2px);
   box-shadow: 0 5px 12px rgba(197, 154, 40, 0.16);
 }

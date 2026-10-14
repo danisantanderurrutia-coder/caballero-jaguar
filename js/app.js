@@ -225,19 +225,46 @@ function updateLevelProgress() {
 }
 
 function toggleDayCompleted(dayNum) {
-  if (window.CJProgress) {
-    showNotification("🦅 Los días del Vexillum se cuentan solos: cada día con 100+ XP suma a tu racha.");
-    return;
-  }
-  const profile = getActiveProfile();
-  if (profile.completedDays.includes(dayNum)) {
+  dayNum = Number(dayNum) || 1;
+  const profile = typeof getActiveProfile === 'function' ? getActiveProfile() : (appState.profiles && appState.profiles[0]);
+  if (!profile) return;
+  if (!Array.isArray(profile.completedDays)) profile.completedDays = [];
+
+  const isAlreadyDone = profile.completedDays.includes(dayNum);
+  if (isAlreadyDone) {
+    // Si desmarca, quitarlo (manteniendo al menos el día 1 si todo queda vacío)
     profile.completedDays = profile.completedDays.filter(d => d !== dayNum);
+    if (profile.completedDays.length === 0) profile.completedDays = [1];
   } else {
-    profile.completedDays.push(dayNum);
-    profile.xp += 20;
-    playSoundEffect("success");
+    // Si marca el día (e.g. Día 2), asegurar que todos los días hasta ese número queden registrados
+    for (let i = 1; i <= dayNum; i++) {
+      if (!profile.completedDays.includes(i)) {
+        profile.completedDays.push(i);
+      }
+    }
+    profile.completedDays.sort((a, b) => a - b);
+    if (window.CJProgress && typeof window.CJProgress.reconcileVirtueDay === 'function') {
+      window.CJProgress.reconcileVirtueDay(dayNum);
+    } else {
+      profile.xp = (profile.xp || 0) + 50;
+    }
+    if (typeof playSoundEffect === 'function') playSoundEffect("success");
+    if (typeof showNotification === 'function') {
+      showNotification(`🦅 ¡Día ${dayNum} en Virtud Conquistado! Matriz actualizada con honores.`);
+    }
   }
+
+  const effectiveDays = Math.max(1, profile.completedDays.length);
+  profile.streak = effectiveDays;
+  if (window.reyJaguarState && window.reyJaguarState.character) {
+    window.reyJaguarState.character.streakDays = Math.max(effectiveDays, Number(window.reyJaguarState.character.streakDays) || 1);
+    window.reyJaguarState.character.noPornDays = Math.max(effectiveDays, Number(window.reyJaguarState.character.noPornDays) || 1);
+    if (typeof window.saveReyJaguarState === 'function') window.saveReyJaguarState();
+  }
+
   updateLevelProgress();
+  if (typeof renderLevelsGrid === 'function') renderLevelsGrid();
+  if (typeof renderHeaderStatus === 'function') renderHeaderStatus();
 }
 
 function renderHeaderStatus() {

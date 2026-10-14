@@ -567,11 +567,78 @@ function syncBankSummaryWithFinanceState() {
 window.renderSaiyanKiAuraRaysHTML = function() { return ""; };
 
 // --- CONSTANTE: ACCIONES Y DESAFÍOS DE CABALLERÍA CON EXPERIENCIA EXTRA ---
+// --- CONSTANTE: LOS 5 PILARES SAGRADOS DE VIRTUD DIARIA ---
+// El 0 Porno es el Pilar Rey que decide la conquista del Día en Virtud; los otros 4 hábitos se registran allí.
+const VIRTUE_FIVE_PILLARS = [
+  {
+    id: "pillar_nopor",
+    name: "0 Porno & Templanza Sagrada",
+    role: "👑 PILAR REY • DECISOR DEL DÍA",
+    badge: "👑 Decisor de Virtud",
+    isMaster: true,
+    icon: "🛡️",
+    aura: "espiritualidad",
+    xp: 75,
+    desc: "El pilar maestro: define si el Día de Virtud se conquista formalmente. Preservación absoluta de energía vital, recableado dopaminérgico y mirada limpia.",
+    detail: "Al marcar este pilar, conquistas formalmente tu Día en Virtud y avanzas en la Matriz de 21 Días."
+  },
+  {
+    id: "pillar_ejercicio",
+    name: "Calistenia & Fuerza Física",
+    role: "Hábito Somático Diario",
+    badge: "🥊 Registro Diario",
+    isMaster: false,
+    icon: "🥊",
+    aura: "deporte",
+    xp: 50,
+    desc: "100 abdominales, 100 sentadillas, 100 flexiones o correr (o mínimo 2 minutos de ejercicio físico intenso). Mañana o a las 18:00.",
+    detail: "Se registra aquí. Estimula síntesis proteica, descarga cortisol y fortalece el templo corporal."
+  },
+  {
+    id: "pillar_aleman",
+    name: "Alemán al Mediodía (10 min)",
+    role: "Hábito Lingüístico & Mente",
+    badge: "🇩🇪 Registro Diario",
+    isMaster: false,
+    icon: "🇩🇪",
+    aura: "mente",
+    xp: 35,
+    desc: "10 minutos diarios de inmersión en alemán al mediodía (vocabulario técnico, gramática, oratoria o preparación laboral).",
+    detail: "Se registra aquí. Construye soberanía lingüística en Alemania paso a paso cada día."
+  },
+  {
+    id: "pillar_lectura",
+    name: "Lectura Estoica (10 min)",
+    role: "Hábito Filosófico de Cierre",
+    badge: "📖 Registro Diario",
+    isMaster: false,
+    icon: "📖",
+    aura: "mente",
+    xp: 35,
+    desc: "10 minutos de lectura reflexiva antes de dormir (Marco Aurelio, Séneca, Epicteto o Códices de Caballería).",
+    detail: "Se registra aquí. Calibra el juicio, diluye la ansiedad del mundo y prepara el descanso sereno."
+  },
+  {
+    id: "pillar_meditacion",
+    name: "Meditación Somática (5 min)",
+    role: "Hábito de Calma & Conexión",
+    badge: "🧘 Registro Diario",
+    isMaster: false,
+    icon: "🧘",
+    aura: "espiritualidad",
+    xp: 35,
+    desc: "5 minutos de vaciado mental, respiración diafragmática y conexión antes de dormir en el altar ancestral.",
+    detail: "Se registra aquí. Regula el sistema nervioso parasimpático y sella la noche en paz."
+  }
+];
+window.VIRTUE_FIVE_PILLARS = VIRTUE_FIVE_PILLARS;
+
+// --- ACCIONES Y DESAFÍOS DE CABALLERÍA ADICIONALES CON EXPERIENCIA EXTRA ---
 const CABALLERO_BONUS_CHALLENGES = [
   {
     id: "detox",
     title: "0 Porno & Detox Dopaminérgico Total",
-    icon: "🕊️",
+    icon: "🛡️",
     auraKey: "espiritualidad",
     difficulty: "dificil",
     xp: 75,
@@ -632,12 +699,13 @@ const CABALLERO_BONUS_CHALLENGES = [
     desc: "Dominio de impulsos de compra, revisión de balances Sparkasse / Banco de Chile y ahorro soberano."
   }
 ];
+window.CABALLERO_BONUS_CHALLENGES = CABALLERO_BONUS_CHALLENGES;
 
-// --- MATRIZ DE NEURO-HABITUACIÓN DE 21 DÍAS (ALTO CONTRASTE & ESTÉTICA RENACENTISTA) ---
+// --- MATRIZ DE NEURO-HABITUACIÓN DE 21 DÍAS (ALTO CONTRASTE & ESTÉTICA OBSIDIANA IMPERIAL) ---
 function render21DayDashboardRoadmapHTML() {
-  const profile = typeof getActiveProfile === 'function' ? getActiveProfile() : { currentLevel: 1, currentSublevel: 1, completedDays: [], xp: 0 };
+  const profile = typeof getActiveProfile === 'function' ? getActiveProfile() : { currentLevel: 1, currentSublevel: 1, completedDays: [1], xp: 0 };
   const currentRank = (typeof RANKS_STRUCTURE !== 'undefined' ? RANKS_STRUCTURE.find(r => r.level === profile.currentLevel) : null) || { name: 'Caballero Jaguar', level: 1, icon: '🐆' };
-  const completedDays = Array.isArray(profile.completedDays) ? profile.completedDays : [];
+  const completedDays = Array.isArray(profile.completedDays) ? profile.completedDays : [1];
   const completedCount = completedDays.length;
   const progressPct = Math.min(100, Math.round((completedCount / 21) * 100));
 
@@ -669,22 +737,27 @@ function render21DayDashboardRoadmapHTML() {
   ];
 
   let scalesHTML = scales.map(scale => {
-    const isScaleActive = (scale.num === profile.currentSublevel);
+    const isScaleActive = (scale.num === (profile.currentSublevel || 1));
     let daysBtnsHTML = "";
     for (let d = scale.range[0]; d <= scale.range[1]; d++) {
       const isDone = completedDays.includes(d);
       const isToday = !isDone && (completedCount + 1 === d);
-      const isLocked = !isDone && !isToday;
 
       let stateClass = isDone ? 'done' : (isToday ? 'active-today' : 'locked');
       let statusIcon = isDone ? '✓' : (isToday ? '🔥' : '⚡');
       let statusLabel = isDone ? 'Conquistado' : (isToday ? '¡Hoy!' : `Día ${d}`);
+      let btnBg = isDone
+        ? 'linear-gradient(135deg, rgba(6, 78, 59, 0.95) 0%, rgba(16, 185, 129, 0.6) 100%)'
+        : (isToday ? 'linear-gradient(135deg, rgba(161, 98, 7, 0.95) 0%, rgba(245, 158, 11, 0.6) 100%)' : 'rgba(255, 255, 255, 0.05)');
+      let btnBorder = isDone ? '2px solid #10B981' : (isToday ? '2px solid #F59E0B' : '1px solid rgba(255, 255, 255, 0.15)');
+      let numColor = isDone ? '#FFFFFF' : (isToday ? '#FFFFFF' : '#CBD5E1');
+      let lblColor = isDone ? '#A7F3D0' : (isToday ? '#FEF08A' : '#94A3B8');
 
       daysBtnsHTML += `
-        <button class="matrix-day-btn ${stateClass}" onclick="toggleDayFromHub(${d})" title="Día ${d}: ${isDone ? 'Conquistado con honores' : (isToday ? 'Día de hoy por conquistar (Clic para marcar)' : 'Bloqueado')}">
-          <span style="font-weight: 800; font-family: 'Cinzel', serif; font-size: 0.76rem; color: ${isDone ? '#1B5E20' : (isToday ? '#977318' : '#614B24')};">Día ${d}</span>
+        <button class="matrix-day-btn ${stateClass}" onclick="toggleDayFromHub(${d})" style="background: ${btnBg}; border: ${btnBorder}; border-radius: 6px; padding: 6px 3px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" title="Día ${d}: ${isDone ? 'Conquistado con honores (Clic para desmarcar)' : 'Clic para conquistar Día ' + d}">
+          <span style="font-weight: 800; font-family: 'Cinzel', serif; font-size: 0.76rem; color: ${numColor};">Día ${d}</span>
           <span style="font-size: 1.05rem;">${statusIcon}</span>
-          <span style="font-size: 0.62rem; font-weight: 700; color: ${isDone ? '#2E7D32' : (isToday ? '#8C6808' : '#8C7B6B')};">${statusLabel}</span>
+          <span style="font-size: 0.62rem; font-weight: 700; color: ${lblColor};">${statusLabel}</span>
         </button>
       `;
     }
@@ -692,23 +765,23 @@ function render21DayDashboardRoadmapHTML() {
     const scaleCompletedCount = scale.range.filter(d => completedDays.includes(d)).length;
 
     return `
-      <div class="matrix-scale-box ${isScaleActive ? 'active-scale' : ''}">
+      <div class="matrix-scale-box ${isScaleActive ? 'active-scale' : ''}" style="background: linear-gradient(170deg, rgba(22, 27, 44, 0.92) 0%, rgba(12, 15, 25, 0.96) 100%); border: ${isScaleActive ? '2px solid #D4AF37' : '1.5px solid rgba(212, 175, 55, 0.3)'}; border-radius: var(--radius-sm); padding: 14px; box-shadow: ${isScaleActive ? '0 0 20px rgba(212, 175, 55, 0.2)' : '0 4px 12px rgba(0,0,0,0.4)'}; display: flex; flex-direction: column; justify-content: space-between;">
         <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(197,154,40,0.3); padding-bottom: 6px; margin-bottom: 8px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(212, 175, 55, 0.25); padding-bottom: 6px; margin-bottom: 8px;">
             <div style="display: flex; align-items: center; gap: 6px;">
               <span class="badge-tag ${isScaleActive ? 'badge-gold' : 'badge-cyan'}" style="font-size: 0.68rem; padding: 2px 7px;">${scale.sub}</span>
-              <h4 style="font-size: 0.94rem; color: #0E0E13; font-family: 'Cinzel', serif; margin: 0; font-weight: 800;">${scale.name}</h4>
+              <h4 style="font-size: 0.94rem; color: #FFFFFF; font-family: 'Cinzel', serif; margin: 0; font-weight: 800;">${scale.name}</h4>
             </div>
-            <span style="font-size: 0.85rem; font-weight: 900; color: #9B2335; font-family: 'Cinzel', serif;">${scaleCompletedCount}/7</span>
+            <span style="font-size: 0.85rem; font-weight: 900; color: #F5D77F; font-family: 'Cinzel', serif;">${scaleCompletedCount}/7</span>
           </div>
-          <p style="font-size: 0.78rem; color: rgba(255,255,255,0.4); line-height: 1.35; margin: 0 0 8px 0;">${scale.desc}</p>
+          <p style="font-size: 0.78rem; color: #CBD5E1; line-height: 1.35; margin: 0 0 10px 0;">${scale.desc}</p>
           
-          <div class="matrix-days-row">
+          <div class="matrix-days-row" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin: 10px 0;">
             ${daysBtnsHTML}
           </div>
         </div>
 
-        <div style="font-size: 0.74rem; color: #614B24; background: #FAF3E3; padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid rgba(197,154,40,0.35); margin-top: 10px; font-weight: 600;">
+        <div style="font-size: 0.74rem; color: #F5D77F; background: rgba(212, 175, 55, 0.12); padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid rgba(212, 175, 55, 0.3); margin-top: 10px; font-weight: 600;">
           ${scale.milestone}
         </div>
       </div>
@@ -716,40 +789,40 @@ function render21DayDashboardRoadmapHTML() {
   }).join("");
 
   return `
-    <div class="challenge-parchment-matrix-wrap" id="neuro-matrix-21days">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 2px solid #9B2335; padding-bottom: 10px;">
+    <div class="challenge-parchment-matrix-wrap" id="neuro-matrix-21days" style="background: linear-gradient(165deg, rgba(20, 25, 40, 0.96) 0%, rgba(10, 13, 22, 0.98) 100%); border: 1.5px solid rgba(212, 175, 55, 0.4); border-radius: var(--radius-md); padding: 18px 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.65);">
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 2px solid #9B2335; padding-bottom: 12px;">
         <div>
           <div style="display: flex; align-items: center; gap: 8px;">
             <span class="badge-tag badge-gold" style="font-size: 0.68rem;">⚔️ CÓDICE DE CABALLERÍA</span>
-            <span class="badge-tag badge-emerald" style="font-size: 0.68rem;">ALTO CONTRASTE & LEGIBILIDAD</span>
+            <span class="badge-tag badge-emerald" style="font-size: 0.68rem;">CLIC DIRECTO EN CUALQUIER DÍA</span>
           </div>
-          <h3 style="font-family: 'Cinzel', serif; font-size: 1.3rem; color: #0E0E13; margin: 4px 0 0 0; font-weight: 900;">
-            Matriz de Niveles & Hábitos (Ciclo de 21 Días)
+          <h3 style="font-family: 'Cinzel', serif; font-size: 1.3rem; color: #FFFFFF; margin: 4px 0 0 0; font-weight: 900;">
+            Matriz de Templanza & Virtud (Ciclo de 21 Días)
           </h3>
         </div>
         <div style="text-align: right;">
-          <div style="font-size: 1.15rem; font-weight: 900; color: #9B2335; font-family: 'Cinzel', serif;">
+          <div style="font-size: 1.18rem; font-weight: 900; color: #F5D77F; font-family: 'Cinzel', serif;">
             🔥 Racha: ${completedCount} / 21 Días
           </div>
-          <div style="font-size: 0.78rem; color: rgba(255,255,255,0.4);">
-            Nivel ${profile.currentLevel}: <strong>${currentRank.name}</strong> [Escala ${profile.currentSublevel}/3]
+          <div style="font-size: 0.78rem; color: #94A3B8;">
+            Nivel ${profile.currentLevel || 1}: <strong style="color: #FFF;">${currentRank.name}</strong> [Escala ${profile.currentSublevel || 1}/3]
           </div>
         </div>
       </div>
 
       <!-- BARRA DE PROGRESO DE ALTO CONTRASTE -->
-      <div style="margin-top: 12px; background: #FFFFFF; border: 1.5px solid rgba(197,154,40,0.4); border-radius: var(--radius-sm); padding: 10px 14px;">
-        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: rgba(255,255,255,0.4); margin-bottom: 6px; font-weight: 700;">
+      <div style="margin-top: 14px; background: rgba(0, 0, 0, 0.4); border: 1.5px solid rgba(212, 175, 55, 0.35); border-radius: var(--radius-sm); padding: 10px 14px;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #E2E8F0; margin-bottom: 6px; font-weight: 700;">
           <span>Progreso de Reconfiguración Dopaminérgica & Hábitos</span>
-          <span style="font-weight: 900; color: #1B5E20;">${progressPct}% Conquistado</span>
+          <span style="font-weight: 900; color: #34D399;">${progressPct}% Conquistado</span>
         </div>
-        <div style="background: #EDE4D4; height: 12px; border-radius: 6px; overflow: hidden; border: 1px solid rgba(197,154,40,0.3); position: relative;">
-          <div style="width: ${Math.max(4, progressPct)}%; height: 100%; background: linear-gradient(90deg, #9B2335 0%, #2E7D32 100%); transition: width 0.4s ease; border-radius: 6px;"></div>
+        <div style="background: rgba(255,255,255,0.08); height: 12px; border-radius: 6px; overflow: hidden; border: 1px solid rgba(212,175,55,0.3); position: relative;">
+          <div style="width: ${Math.max(4, progressPct)}%; height: 100%; background: linear-gradient(90deg, #9B2335 0%, #D4AF37 50%, #10B981 100%); transition: width 0.4s ease; border-radius: 6px;"></div>
         </div>
       </div>
 
       <!-- LAS 3 ESCALAS -->
-      <div class="matrix-scales-grid">
+      <div class="matrix-scales-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 14px;">
         ${scalesHTML}
       </div>
     </div>
@@ -762,19 +835,19 @@ function toggleDayFromHub(dayNum) {
     toggleDayCompleted(dayNum);
   }
   const profile = typeof getActiveProfile === 'function' ? getActiveProfile() : null;
-  if (profile && reyJaguarState.character) {
-    reyJaguarState.character.streakDays = Math.max(1, profile.completedDays.length || 1);
-    reyJaguarState.character.noPornDays = Math.max(1, profile.completedDays.length || 1);
+  const count = profile && Array.isArray(profile.completedDays) ? profile.completedDays.length : dayNum;
+  if (reyJaguarState.character) {
+    reyJaguarState.character.streakDays = Math.max(count, Number(reyJaguarState.character.streakDays) || 1);
+    reyJaguarState.character.noPornDays = Math.max(count, Number(reyJaguarState.character.noPornDays) || 1);
     saveReyJaguarState();
   }
   const challengeHeaderDays = document.getElementById("header-challenge-days-text");
   if (challengeHeaderDays && reyJaguarState.character) {
-    challengeHeaderDays.textContent = `DÍA ${reyJaguarState.character.noPornDays} LIMPIO`;
+    challengeHeaderDays.textContent = `DÍA ${reyJaguarState.character.noPornDays} EN VIRTUD`;
   }
   if (typeof renderRPGLandingHub === 'function') {
     renderRPGLandingHub();
   }
-  // Refrescar el modal si está abierto
   const modal = document.getElementById("caballero-challenge-modal");
   if (modal && modal.classList.contains("active")) {
     openCaballeroChallengeModal();
@@ -782,18 +855,101 @@ function toggleDayFromHub(dayNum) {
 }
 window.toggleDayFromHub = toggleDayFromHub;
 
+// --- ACCIÓN DIRECTA: RECONCILIAR DÍA PREVIO O AVANZAR A DÍA OBJETIVO ---
+function reconcileAndAdvanceVirtueDay(targetDay) {
+  targetDay = Number(targetDay) || 2;
+  if (window.CJProgress && typeof window.CJProgress.reconcileVirtueDay === 'function') {
+    window.CJProgress.reconcileVirtueDay(targetDay);
+  } else if (typeof toggleDayCompleted === 'function') {
+    toggleDayCompleted(targetDay);
+  }
+  const profile = typeof getActiveProfile === 'function' ? getActiveProfile() : null;
+  if (profile) {
+    if (!Array.isArray(profile.completedDays)) profile.completedDays = [];
+    for (let i = 1; i <= targetDay; i++) {
+      if (!profile.completedDays.includes(i)) profile.completedDays.push(i);
+    }
+    profile.completedDays.sort((a, b) => a - b);
+    profile.streak = profile.completedDays.length;
+  }
+  if (reyJaguarState.character) {
+    reyJaguarState.character.noPornDays = Math.max(targetDay, Number(reyJaguarState.character.noPornDays) || 1);
+    reyJaguarState.character.streakDays = Math.max(targetDay, Number(reyJaguarState.character.streakDays) || 1);
+    saveReyJaguarState();
+  }
+  const challengeHeaderDays = document.getElementById("header-challenge-days-text");
+  if (challengeHeaderDays && reyJaguarState.character) {
+    challengeHeaderDays.textContent = `DÍA ${reyJaguarState.character.noPornDays} EN VIRTUD`;
+  }
+  if (typeof playSoundEffect === 'function') playSoundEffect("levelup");
+  if (typeof showNotification === 'function') {
+    showNotification(`⚜️ ¡Día ${targetDay} en Virtud reconciliado y conquistado con honores!`);
+  }
+  if (typeof renderRPGLandingHub === 'function') renderRPGLandingHub();
+  openCaballeroChallengeModal();
+}
+window.reconcileAndAdvanceVirtueDay = reconcileAndAdvanceVirtueDay;
+
+// --- REGISTRO DE LOS 5 PILARES DE VIRTUD DIARIA ---
+function toggleVirtuePillarAction(pillarId) {
+  const pillar = VIRTUE_FIVE_PILLARS.find(p => p.id === pillarId);
+  if (!pillar) return;
+
+  const todayStr = cjToday();
+  if (!reyJaguarState.dailyChallengeActions) reyJaguarState.dailyChallengeActions = {};
+  if (!reyJaguarState.dailyChallengeActions[todayStr]) reyJaguarState.dailyChallengeActions[todayStr] = {};
+
+  const isAlreadyDone = !!reyJaguarState.dailyChallengeActions[todayStr][pillarId];
+  if (isAlreadyDone) {
+    if (typeof showNotification === 'function') {
+      showNotification(`⚜️ "${pillar.name}" ya fue registrado con honores hoy.`);
+    }
+    return;
+  }
+
+  reyJaguarState.dailyChallengeActions[todayStr][pillarId] = true;
+
+  if (pillar.isMaster) {
+    // 0 Porno es el Pilar Rey: avanza formalmente el Día de Virtud
+    const curDays = (reyJaguarState.character && reyJaguarState.character.noPornDays) || 1;
+    const nextDay = curDays + 1;
+    reconcileAndAdvanceVirtueDay(nextDay);
+  } else {
+    // Los otros 4 hábitos se registran allí y otorgan su XP correspondiente
+    if (window.CJProgress && typeof window.CJProgress.award === 'function') {
+      window.CJProgress.award({
+        xp: pillar.xp,
+        aura: pillar.aura,
+        desc: `Pilar de Virtud: ${pillar.name}`,
+        key: `pillar-${pillarId}-${todayStr}`
+      });
+    } else if (typeof awardXP === 'function') {
+      awardXP(pillar.xp, `Pilar de Virtud: ${pillar.name}`, pillar.aura);
+    }
+    saveReyJaguarState();
+    if (typeof playSoundEffect === 'function') playSoundEffect("success");
+    if (typeof showNotification === 'function') {
+      showNotification(`✓ ${pillar.name} registrado (+${pillar.xp} XP en ${pillar.aura}).`);
+    }
+    if (typeof renderRPGLandingHub === 'function') renderRPGLandingHub();
+    openCaballeroChallengeModal();
+  }
+}
+window.toggleVirtuePillarAction = toggleVirtuePillarAction;
+
 // --- REGISTRO DE DESAFÍOS DE CABALLERÍA CON EXPERIENCIA EXTRA ---
 function logChallengeBonusAction(challengeId) {
+  if (challengeId === "detox" || challengeId === "pillar_nopor") {
+    toggleVirtuePillarAction("pillar_nopor");
+    return;
+  }
+
   const challenge = CABALLERO_BONUS_CHALLENGES.find(c => c.id === challengeId);
   if (!challenge) return;
 
   const todayStr = cjToday();
-  if (!reyJaguarState.dailyChallengeActions) {
-    reyJaguarState.dailyChallengeActions = {};
-  }
-  if (!reyJaguarState.dailyChallengeActions[todayStr]) {
-    reyJaguarState.dailyChallengeActions[todayStr] = {};
-  }
+  if (!reyJaguarState.dailyChallengeActions) reyJaguarState.dailyChallengeActions = {};
+  if (!reyJaguarState.dailyChallengeActions[todayStr]) reyJaguarState.dailyChallengeActions[todayStr] = {};
 
   const isAlreadyDone = !!reyJaguarState.dailyChallengeActions[todayStr][challengeId];
   if (isAlreadyDone) {
@@ -803,34 +959,19 @@ function logChallengeBonusAction(challengeId) {
     return;
   }
 
-  // Marcar como completado hoy
   reyJaguarState.dailyChallengeActions[todayStr][challengeId] = true;
 
-  // Otorgar XP y Aura
   if (typeof CaballeroScoringEngine !== 'undefined' && typeof CaballeroScoringEngine.awardAction === 'function') {
     CaballeroScoringEngine.awardAction(challenge.auraKey, challenge.difficulty, `Desafío Extra: ${challenge.title}`);
+  } else if (window.CJProgress && typeof window.CJProgress.award === 'function') {
+    window.CJProgress.award({
+      xp: challenge.xp,
+      aura: challenge.auraKey,
+      desc: `Desafío Extra: ${challenge.title}`,
+      key: `challenge-${challengeId}-${todayStr}`
+    });
   } else {
     window.awardXP(challenge.xp, `Desafío Extra: ${challenge.title}`, challenge.auraKey);
-  }
-
-  // Si es el desafío detox (0 porno), avanzar racha y el contador
-  if (challengeId === "detox") {
-    if (!reyJaguarState.character) reyJaguarState.character = {};
-    reyJaguarState.character.noPornDays = Math.max(1, (reyJaguarState.character.noPornDays || 0) + 1);
-    reyJaguarState.character.streakDays = Math.max(1, (reyJaguarState.character.streakDays || 0) + 1);
-
-    const profile = typeof getActiveProfile === 'function' ? getActiveProfile() : null;
-    if (profile) {
-      const nextDayToMark = profile.completedDays ? profile.completedDays.length + 1 : 1;
-      if (nextDayToMark <= 21 && !profile.completedDays.includes(nextDayToMark)) {
-        profile.completedDays.push(nextDayToMark);
-        if (typeof updateLevelProgress === 'function') updateLevelProgress();
-      }
-    }
-    const challengeHeaderDays = document.getElementById("header-challenge-days-text");
-    if (challengeHeaderDays) {
-      challengeHeaderDays.textContent = `DÍA ${reyJaguarState.character.noPornDays} LIMPIO`;
-    }
   }
 
   saveReyJaguarState();
@@ -845,92 +986,162 @@ function logChallengeBonusAction(challengeId) {
 window.logChallengeBonusAction = logChallengeBonusAction;
 
 function logCleanDayFromChallenge() {
-  logChallengeBonusAction("detox");
+  toggleVirtuePillarAction("pillar_nopor");
 }
 window.logCleanDayFromChallenge = logCleanDayFromChallenge;
 
-// --- MODAL MAESTRO DEL CABALLERO JAGUAR CHALLENGE ---
+// --- MODAL MAESTRO DEL CABALLERO JAGUAR CHALLENGE (ALTO CONTRASTE OBSIDIANA & 5 PILARES) ---
 function openCaballeroChallengeModal() {
   let modal = document.getElementById("caballero-challenge-modal");
   let content = document.getElementById("caballero-challenge-content");
   if (!modal || !content) return;
 
-  const noPornDays = (reyJaguarState.character && typeof reyJaguarState.character.noPornDays === 'number') ? reyJaguarState.character.noPornDays : 1;
-  const streakDays = (reyJaguarState.character && typeof reyJaguarState.character.streakDays === 'number') ? reyJaguarState.character.streakDays : 1;
+  const profile = typeof getActiveProfile === 'function' ? getActiveProfile() : null;
+  const completedLen = profile && Array.isArray(profile.completedDays) ? profile.completedDays.length : 1;
+  const noPornDays = Math.max(completedLen, (reyJaguarState.character && typeof reyJaguarState.character.noPornDays === 'number') ? reyJaguarState.character.noPornDays : 1);
   const todayStr = cjToday();
   const todayActions = (reyJaguarState.dailyChallengeActions && reyJaguarState.dailyChallengeActions[todayStr]) || {};
 
   content.innerHTML = `
-    <!-- CABECERA DEL MODAL -->
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #9B2335; padding-bottom: 12px; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+    <!-- CABECERA DEL MODAL CON ESTILO OBSIDIANA & ALTO CONTRASTE -->
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #9B2335; padding-bottom: 14px; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
       <div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span class="badge-tag badge-gold">⚜️ CABALLERO JAGUAR CHALLENGE</span>
-          <span class="badge-tag badge-emerald">Autodominio Dopaminérgico & Templanza</span>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+          <span class="badge-tag badge-gold" style="font-size: 0.72rem; padding: 3px 8px;">⚜️ CABALLERO JAGUAR CHALLENGE</span>
+          <span class="badge-tag badge-emerald" style="font-size: 0.72rem; padding: 3px 8px;">Autodominio Dopaminérgico & Templanza</span>
         </div>
-        <h2 style="font-family: 'Cinzel', serif; font-size: 1.6rem; color: #0E0E13; margin: 6px 0 2px 0; font-weight: 900;">
-          Desafío de Templanza & Matriz de 21 Días
+        <h2 style="font-family: 'Cinzel', serif; font-size: 1.65rem; color: #FFFFFF; margin: 4px 0 2px 0; font-weight: 900; letter-spacing: 0.04em;">
+          Días en Virtud & Matriz de 21 Días
         </h2>
-        <div style="font-size: 0.8rem; color: rgba(255,255,255,0.4);">
+        <div style="font-size: 0.82rem; color: #94A3B8;">
           Orden Imperial del Caballero Jaguar • Programa de Hábitos Diurnos & Reconfiguración Sináptica
         </div>
       </div>
-      <button onclick="closeCaballeroChallengeModal()" style="background: none; border: none; font-size: 1.6rem; cursor: pointer; color: rgba(255,255,255,0.4); padding: 4px 8px;" title="Cerrar modal">✕</button>
+      <button onclick="closeCaballeroChallengeModal()" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; color: #FFFFFF; transition: all 0.2s;" title="Cerrar modal">✕</button>
     </div>
 
-    <!-- TARJETA DESTACADA: CONTADOR DÍAS SIN PORNO & RACHA -->
-    <div style="background: linear-gradient(135deg, #FFFDF9 0%, #F5ECDC 100%); border: 2px solid #9B2335; border-radius: var(--radius-md); padding: 18px 22px; margin-bottom: 20px; box-shadow: 0 4px 14px rgba(197,154,40,0.18); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+    <!-- TARJETA DESTACADA: CONTADOR DÍAS EN VIRTUD & RECONCILIACIÓN -->
+    <div style="background: linear-gradient(135deg, rgba(26, 32, 50, 0.95) 0%, rgba(14, 18, 29, 0.98) 100%); border: 2px solid #D4AF37; border-radius: var(--radius-md); padding: 20px 24px; margin-bottom: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.65); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
       <div style="display: flex; align-items: center; gap: 18px;">
-        <div style="width: 78px; height: 78px; border-radius: 50%; background: #0E0E13; border: 3px solid #9B2335; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 16px rgba(197,154,40,0.35);">
-          <span style="font-size: 0.65rem; color: #C0392B; font-family: 'Cinzel', serif; font-weight: 700;">DÍA</span>
-          <strong style="font-size: 1.75rem; color: #FFF; font-family: 'Cinzel', serif; line-height: 1;">${noPornDays}</strong>
+        <div style="width: 82px; height: 82px; border-radius: 50%; background: #0A0D15; border: 3px solid #D4AF37; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);">
+          <span style="font-size: 0.65rem; color: #F5D77F; font-family: 'Cinzel', serif; font-weight: 800; letter-spacing: 1px;">DÍA</span>
+          <strong style="font-size: 1.9rem; color: #FFFFFF; font-family: 'Cinzel', serif; line-height: 1;">${noPornDays}</strong>
         </div>
         <div>
-          <span style="font-size: 0.72rem; color: #9B2335; font-family: 'Cinzel', serif; font-weight: 800; letter-spacing: 1.2px; text-transform: uppercase;">ESTADO DE CLARIDAD MENTAL</span>
-          <h3 style="font-family: 'Cinzel', serif; font-size: 1.35rem; color: #0E0E13; margin: 2px 0 4px 0; font-weight: 900;">
+          <span style="font-size: 0.72rem; color: #F5D77F; font-family: 'Cinzel', serif; font-weight: 800; letter-spacing: 1.4px; text-transform: uppercase;">ESTADO DE CLARIDAD MENTAL & TEMPLANZA</span>
+          <h3 style="font-family: 'Cinzel', serif; font-size: 1.4rem; color: #FFFFFF; margin: 2px 0 4px 0; font-weight: 900;">
             ${noPornDays} Días Sin Porno Consecutivos
           </h3>
-          <p style="font-size: 0.82rem; color: rgba(255,255,255,0.4); margin: 0; line-height: 1.35;">
+          <p style="font-size: 0.84rem; color: #CBD5E1; margin: 0; line-height: 1.4;">
             Recableado de receptores D2, mirada limpia, energía masculina preservada y presencia estoica inquebrantable.
           </p>
         </div>
       </div>
 
-      <div style="display: flex; flex-direction: column; gap: 6px;">
-        <button class="btn-jaguar btn-gold-chrome" style="color: #0E0905; font-weight: 900; font-size: 0.84rem; padding: 10px 22px; box-shadow: 0 4px 14px rgba(197,154,40,0.35);" onclick="logCleanDayFromChallenge()">
-          🕊️ Registrar Victoria Hoy (+75 XP)
+      <div style="display: flex; flex-direction: column; gap: 8px; align-items: flex-end;">
+        <button class="btn-jaguar btn-gold-chrome" style="color: #0E0905; font-weight: 900; font-size: 0.88rem; padding: 11px 24px; box-shadow: 0 4px 16px rgba(212,175,55,0.4); cursor: pointer;" onclick="logCleanDayFromChallenge()">
+          🕊️ Conquistar Día de Virtud Hoy (+75 XP)
         </button>
-        <span style="font-size: 0.7rem; color: #7A6347; text-align: center; font-weight: 600;">Suma +1 a Espiritualidad & +75 XP Extra</span>
+        <div style="display: flex; gap: 6px; align-items: center;">
+          <button onclick="reconcileAndAdvanceVirtueDay(${Math.min(21, noPornDays + 1)})" style="background: rgba(212,175,55,0.15); border: 1px solid rgba(212,175,55,0.45); color: #F5D77F; font-size: 0.72rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; cursor: pointer;" title="Avanzar manualmente si olvidaste marcar ayer">
+            ⚡ Marcar Día ${Math.min(21, noPornDays + 1)} Conquistado
+          </button>
+          <span style="font-size: 0.72rem; color: #94A3B8;">Suma racha & XP</span>
+        </div>
       </div>
     </div>
 
-    <!-- MATRIZ DE CABALLERÍA DE 21 DÍAS (REDISEÑADA & DE ALTO CONTRASTE) -->
+    <!-- SECCIÓN: LOS 5 PILARES SAGRADOS DE VIRTUD DIARIA -->
+    <div style="background: linear-gradient(165deg, rgba(20, 24, 38, 0.95) 0%, rgba(11, 14, 23, 0.98) 100%); border: 1.5px solid rgba(212,175,55,0.4); border-radius: var(--radius-md); padding: 18px 20px; margin-bottom: 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(212,175,55,0.3); padding-bottom: 10px; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.35rem;">🏛️</span>
+          <div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span class="badge-tag badge-gold" style="font-size: 0.68rem; padding: 2px 7px;">PILARES DE VIDA</span>
+              <span class="badge-tag badge-emerald" style="font-size: 0.68rem; padding: 2px 7px;">0 PORNO ES EL PILAR REY</span>
+            </div>
+            <h3 style="font-family: 'Cinzel', serif; font-size: 1.22rem; color: #FFFFFF; margin: 3px 0 0 0; font-weight: 800;">
+              Los 5 Pilares Diarios de Virtud
+            </h3>
+          </div>
+        </div>
+        <div style="font-size: 0.78rem; color: #94A3B8; max-width: 420px; text-align: right;">
+          El <strong>0 Porno</strong> es el pilar rey que define el avance del Día en Virtud. Los otros 4 hábitos se registran aquí diariamente.
+        </div>
+      </div>
+
+      <!-- GRID DE LOS 5 PILARES -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px;">
+        ${VIRTUE_FIVE_PILLARS.map(p => {
+          const isDone = p.isMaster ? (todayActions["detox"] || todayActions[p.id]) : !!todayActions[p.id];
+          return `
+            <div style="background: ${p.isMaster ? 'linear-gradient(145deg, rgba(155, 35, 53, 0.25) 0%, rgba(20, 24, 38, 0.95) 100%)' : 'rgba(255, 255, 255, 0.04)'}; border: ${p.isMaster ? '2px solid #D4AF37' : (isDone ? '1.5px solid #10B981' : '1px solid rgba(255, 255, 255, 0.12)')}; border-radius: 8px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; transition: all 0.2s;">
+              <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                  <span style="font-size: 1.35rem;">${p.icon}</span>
+                  <span class="badge-tag ${isDone ? 'badge-emerald' : (p.isMaster ? 'badge-gold' : 'badge-cyan')}" style="font-size: 0.68rem; padding: 2px 8px; font-weight: 800;">
+                    ${isDone ? '✓ CONQUISTADO' : `+${p.xp} XP`}
+                  </span>
+                </div>
+                <div style="font-size: 0.66rem; font-weight: 800; color: ${p.isMaster ? '#F5D77F' : '#94A3B8'}; letter-spacing: 0.05em; text-transform: uppercase;">
+                  ${p.role}
+                </div>
+                <h4 style="font-family: 'Cinzel', serif; font-size: 0.95rem; color: #FFFFFF; margin: 3px 0 4px 0; font-weight: 800;">
+                  ${p.name}
+                </h4>
+                <p style="font-size: 0.76rem; color: #CBD5E1; margin: 0; line-height: 1.35;">
+                  ${p.desc}
+                </p>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+                <span style="font-size: 0.68rem; color: #94A3B8; font-style: italic;">
+                  ${p.isMaster ? '⚡ Avanza el Reto 21 Días' : '✓ Registro diario'}
+                </span>
+                ${isDone ? `
+                  <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.74rem; font-weight: 800; color: #34D399; background: rgba(16, 185, 129, 0.15); padding: 4px 10px; border-radius: 4px; border: 1px solid rgba(16, 185, 129, 0.4);">
+                    ✓ Registrado Hoy
+                  </span>
+                ` : `
+                  <button class="btn-jaguar btn-sm ${p.isMaster ? 'btn-gold-chrome' : 'btn-secondary-dark'}" style="${p.isMaster ? 'color: #0E0905; font-weight: 900;' : 'color: #FFF;'} font-size: 0.74rem; padding: 5px 12px; cursor: pointer;" onclick="toggleVirtuePillarAction('${p.id}')">
+                    ${p.isMaster ? '🛡️ Sellar Día (+75 XP)' : '✓ Registrar (+'+p.xp+' XP)'}
+                  </button>
+                `}
+              </div>
+            </div>
+          `;
+        }).join("")}
+      </div>
+    </div>
+
+    <!-- MATRIZ DE CABALLERÍA DE 21 DÍAS (ALTO CONTRASTE OBSIDIANA) -->
     <div style="margin-bottom: 22px;">
       ${render21DayDashboardRoadmapHTML()}
     </div>
 
-    <!-- PANEL DE DESAFÍOS DE CABALLERÍA CON EXPERIENCIA EXTRA -->
-    <div style="background: #FFFDF8; border: 1.5px solid rgba(197,154,40,0.4); border-radius: var(--radius-md); padding: 16px 18px; margin-bottom: 18px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(197,154,40,0.3); padding-bottom: 8px; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+    <!-- PANEL DE DESAFÍOS DE CABALLERÍA ADICIONALES -->
+    <div style="background: linear-gradient(165deg, rgba(20, 24, 38, 0.95) 0%, rgba(11, 14, 23, 0.98) 100%); border: 1.5px solid rgba(212,175,55,0.35); border-radius: var(--radius-md); padding: 18px 20px; margin-bottom: 18px; box-shadow: 0 8px 32px rgba(0,0,0,0.5);">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1.5px solid rgba(212,175,55,0.25); padding-bottom: 8px; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
         <div style="display: flex; align-items: center; gap: 8px;">
           <span style="font-size: 1.3rem;">⚡</span>
           <div>
             <span class="badge-tag badge-gold" style="font-size: 0.68rem; padding: 2px 7px;">ACCIONES DE TEMPLANZA</span>
-            <h3 style="font-family: 'Cinzel', serif; font-size: 1.18rem; color: #0E0E13; margin: 2px 0 0 0; font-weight: 800;">
-              Desafíos de Caballería con Experiencia Extra
+            <h3 style="font-family: 'Cinzel', serif; font-size: 1.18rem; color: #FFFFFF; margin: 2px 0 0 0; font-weight: 800;">
+              Desafíos Adicionales con Experiencia Extra
             </h3>
           </div>
         </div>
-        <div style="font-size: 0.75rem; color: rgba(255,255,255,0.4);">
-          Completa estas acciones diarias para acelerar tu ascenso de rango en la Orden:
+        <div style="font-size: 0.76rem; color: #94A3B8;">
+          Acciones complementarias para acelerar tu ascenso de rango en la Orden:
         </div>
       </div>
 
-      <div class="challenge-action-grid">
-        ${CABALLERO_BONUS_CHALLENGES.map(c => {
+      <div class="challenge-action-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px;">
+        ${CABALLERO_BONUS_CHALLENGES.filter(c => c.id !== "detox").map(c => {
           const isDone = !!todayActions[c.id];
           return `
-            <div class="challenge-action-card ${isDone ? 'done' : ''}">
+            <div class="challenge-action-card ${isDone ? 'done' : ''}" style="background: rgba(255, 255, 255, 0.04); border: ${isDone ? '1.5px solid #10B981' : '1px solid rgba(255, 255, 255, 0.12)'}; border-radius: 8px; padding: 12px 14px; display: flex; flex-direction: column; justify-content: space-between;">
               <div>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
                   <span style="font-size: 1.25rem;">${c.icon}</span>
@@ -938,21 +1149,21 @@ function openCaballeroChallengeModal() {
                     +${c.xp} XP EXTRA
                   </span>
                 </div>
-                <h4 style="font-family: 'Cinzel', serif; font-size: 0.88rem; color: #0E0E13; margin: 0 0 4px 0; font-weight: 800;">
+                <h4 style="font-family: 'Cinzel', serif; font-size: 0.9rem; color: #FFFFFF; margin: 0 0 4px 0; font-weight: 800;">
                   ${c.title}
                 </h4>
-                <p style="font-size: 0.74rem; color: rgba(255,255,255,0.4); margin: 0; line-height: 1.35;">
+                <p style="font-size: 0.75rem; color: #CBD5E1; margin: 0; line-height: 1.35;">
                   ${c.desc}
                 </p>
               </div>
 
               <div style="margin-top: 10px; display: flex; justify-content: flex-end;">
                 ${isDone ? `
-                  <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.75rem; font-weight: 800; color: #1B5E20; background: #E8F5E9; padding: 5px 10px; border-radius: 4px; border: 1px solid #A5D6A7;">
+                  <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.74rem; font-weight: 800; color: #34D399; background: rgba(16, 185, 129, 0.15); padding: 5px 10px; border-radius: 4px; border: 1px solid rgba(16, 185, 129, 0.4);">
                     ✓ Conquistado Hoy (+${c.xp} XP)
                   </span>
                 ` : `
-                  <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #0E0905; font-size: 0.74rem; font-weight: 800; padding: 5px 12px;" onclick="logChallengeBonusAction('${c.id}')">
+                  <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #0E0905; font-size: 0.74rem; font-weight: 800; padding: 5px 12px; cursor: pointer;" onclick="logChallengeBonusAction('${c.id}')">
                     ⚔️ Conquistar (+${c.xp} XP)
                   </button>
                 `}
@@ -964,11 +1175,11 @@ function openCaballeroChallengeModal() {
     </div>
 
     <!-- PIE DEL MODAL -->
-    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1.5px solid rgba(197,154,40,0.3); padding-top: 12px; flex-wrap: wrap; gap: 10px;">
-      <span style="font-size: 0.78rem; color: #7A6347; font-style: italic;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1.5px solid rgba(212,175,55,0.3); padding-top: 14px; flex-wrap: wrap; gap: 10px;">
+      <span style="font-size: 0.78rem; color: #F5D77F; font-style: italic;">
         ⚜️ "La verdadera libertad no es hacer lo que apetece, sino dominar aquello que nos tienta." — Séneca
       </span>
-      <button class="btn-jaguar btn-secondary-dark" style="padding: 8px 18px;" onclick="closeCaballeroChallengeModal()">
+      <button class="btn-jaguar btn-secondary-dark" style="padding: 8px 20px; font-weight: 700; color: #FFF; cursor: pointer;" onclick="closeCaballeroChallengeModal()">
         Cerrar Desafío
       </button>
     </div>

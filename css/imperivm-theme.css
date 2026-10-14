@@ -3013,6 +3013,12 @@ a:hover {
   color: #94A3B8 !important;
 }
 
+#caballero-challenge-modal .btn-gold-chrome,
+#caballero-challenge-modal .btn-gold-chrome * {
+  color: #0E0905 !important;
+  font-weight: 900 !important;
+}
+
 /* Botones de cerrar en modales */
 .kcd-inspector-codex button[onclick*="close"],
 .jaguar-modal-card button[onclick*="close"],

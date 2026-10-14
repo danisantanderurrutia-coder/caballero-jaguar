@@ -30,4 +30,8 @@ assert.strictEqual(P.levelInfo(1000).gradeRoman, "I");
 assert.strictEqual(P.levelInfo(2800).gradeRoman, "III");
 assert.strictEqual(window.reyJaguarState.character.xp, P.totalXP(), "character.xp es derivado");
 assert.ok(/^\d{4}-\d{2}-\d{2}$/.test(window.cjToday()));
-console.log("✅ progress.js OK — XP total:", P.totalXP());
+
+P.reconcileVirtueDay(2);
+assert.ok(P.streakInfo().days >= 2, "racha reconciliada a al menos 2 días");
+assert.strictEqual(window.reyJaguarState.character.noPornDays, 2, "noPornDays avanza a 2");
+console.log("✅ progress.js OK — XP total:", P.totalXP(), "Racha:", P.streakInfo().days);
