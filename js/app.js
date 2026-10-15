@@ -866,8 +866,33 @@ function renderWorkouts() {
 }
 
 function completeWorkoutRoutine(routineId) {
-  playSoundEffect("success");
-  showNotification(`¡Sesión de ejercicio completada! Avance guardado.`);
+  const routine = (typeof JAGUAR_WORKOUTS_DB !== 'undefined') ? JAGUAR_WORKOUTS_DB.find(r => r.id === routineId) : null;
+  const routineTitle = routine ? routine.title : "Sesión de Ejercicio";
+  const xp = (routine && routine.duration && parseInt(routine.duration) >= 20) ? 50 : 25;
+
+  if (typeof CaballeroScoringEngine !== 'undefined' && typeof CaballeroScoringEngine.awardAction === 'function') {
+    CaballeroScoringEngine.awardAction('deporte', xp >= 50 ? 'medio' : 'facil', routineTitle, null, 'movilidad', null, 'movilidad');
+  } else if (typeof awardXP === 'function') {
+    awardXP(xp, routineTitle, 'deporte');
+  }
+
+  const todayStr = (typeof cjToday === 'function') ? cjToday() : new Date().toISOString().slice(0, 10);
+  if (window.reyJaguarState) {
+    if (!reyJaguarState.dailyChallengeActions) reyJaguarState.dailyChallengeActions = {};
+    if (!reyJaguarState.dailyChallengeActions[todayStr]) reyJaguarState.dailyChallengeActions[todayStr] = {};
+    reyJaguarState.dailyChallengeActions[todayStr]['pillar_ejercicio'] = true;
+    reyJaguarState.dailyChallengeActions[todayStr]['movilidad'] = true;
+    if (!reyJaguarState.stats) reyJaguarState.stats = {};
+    if (!reyJaguarState.stats['movilidad']) reyJaguarState.stats['movilidad'] = { name: "Movilidad Articular & Calistenia", value: 0, icon: "🤸" };
+    reyJaguarState.stats['movilidad'].value = (reyJaguarState.stats['movilidad'].value || 0) + 1;
+    if (typeof saveReyJaguarState === 'function') saveReyJaguarState();
+  }
+
+  if (typeof playSoundEffect === 'function') playSoundEffect("success");
+  if (typeof showNotification === 'function') {
+    showNotification(`¡${routineTitle} completada con honores! (+${xp} XP en Deporte & Movilidad).`);
+  }
+  if (typeof renderRPGLandingHub === 'function') renderRPGLandingHub();
 }
 
 // --- VIDA DE PAREJA ---

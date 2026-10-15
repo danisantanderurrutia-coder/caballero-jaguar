@@ -428,13 +428,23 @@
         });
       }
       if (window.reyJaguarState && window.reyJaguarState.character) {
-        const statKey = dominantSubKey || auraKey;
-        if (statKey && window.reyJaguarState.stats) {
-          if (!window.reyJaguarState.stats[statKey]) {
-            window.reyJaguarState.stats[statKey] = { name: description || statKey, value: 0, icon: "⚡" };
+        if (!window.reyJaguarState.stats) window.reyJaguarState.stats = {};
+        const statKeys = new Set([dominantSubKey, auraKey, arguments[5], arguments[6]].filter(Boolean));
+        statKeys.forEach(k => {
+          if (!window.reyJaguarState.stats[k]) {
+            window.reyJaguarState.stats[k] = { name: description || k, value: 0, icon: "⚡" };
           }
-          window.reyJaguarState.stats[statKey].value = (window.reyJaguarState.stats[statKey].value || 0) + 1;
+          window.reyJaguarState.stats[k].value = (window.reyJaguarState.stats[k].value || 0) + 1;
+        });
+
+        // Sincronizar pilar de movilidad y calistenia en el registro diario
+        if (statKeys.has('movilidad') || statKeys.has('gym') || statKeys.has('fuerza')) {
+          if (!window.reyJaguarState.dailyChallengeActions) window.reyJaguarState.dailyChallengeActions = {};
+          if (!window.reyJaguarState.dailyChallengeActions[todayStr]) window.reyJaguarState.dailyChallengeActions[todayStr] = {};
+          window.reyJaguarState.dailyChallengeActions[todayStr]['pillar_ejercicio'] = true;
+          window.reyJaguarState.dailyChallengeActions[todayStr]['movilidad'] = true;
         }
+
         if (typeof window.saveReyJaguarState === "function") window.saveReyJaguarState();
       }
 

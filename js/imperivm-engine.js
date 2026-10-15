@@ -2742,108 +2742,7 @@ const imperivmEngine = {
         imperivmState.selectedArmamentariumItemId = extraId;
       }
       const curId = imperivmState.selectedArmamentariumItemId || 1;
-      const selectedItem = items.find(i => i.id === curId) || items[0] || {};
-      const isSelEquipped = !!selectedItem.equipped;
-      const isSelUnlocked = !!selectedItem.unlocked;
-
-      let filteredItems = items;
-      if (filter === "equipped") {
-        filteredItems = items.filter(i => i.equipped);
-      } else if (filter === "unlocked") {
-        filteredItems = items.filter(i => i.unlocked && !i.equipped);
-      } else if (filter === "blocked") {
-        filteredItems = items.filter(i => !i.unlocked);
-      }
-
-      contentHTML = `
-        <!-- 1. PEDESTAL HEROICO ILUMINADO DEL OBJETO SELECCIONADO -->
-        <div class="armamentarium-hero-pedestal">
-          <div class="armamentarium-medallion ${!isSelUnlocked ? 'is-blocked' : ''}">
-            <span>${this.getItemIcon(selectedItem.name)}</span>
-          </div>
-          
-          <div style="flex: 1; min-width: 0; z-index: 2;">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
-              <span class="badge-tag badge-gold" style="font-size: 0.68rem; font-weight: 800;">#${String(selectedItem.id || 1).padStart(2, '0')}</span>
-              <span class="aura-tag-pill badge-${this.getAuraColorClass(selectedItem.auraKey)}">Aura ${selectedItem.auraKey || 'Somática'}</span>
-              <span class="badge-tag ${isSelEquipped ? 'badge-gold' : (isSelUnlocked ? 'badge-emerald' : 'badge-pink')}" style="font-size: 0.68rem;">
-                ${isSelEquipped ? '⚡ EN SERVICIO' : (isSelUnlocked ? '✓ DISPONIBLE' : '🔴 SELLADO IMPERIAL')}
-              </span>
-            </div>
-
-            <h4 style="font-family: var(--imperivm-font-title); font-size: 1.15rem; color: #FFF; margin: 0 0 6px 0; letter-spacing: 0.5px;">
-              ${selectedItem.name || 'Objeto de la Orden'}
-            </h4>
-
-            <p style="font-size: 0.78rem; color: var(--imperivm-text-muted); line-height: 1.45; margin: 0 0 10px 0;">
-              ${selectedItem.lore || 'Instrumento de alta precisión para el desarrollo del Cursus Honorum.'}
-            </p>
-
-            <div style="background: ${isSelUnlocked ? 'rgba(82, 196, 26, 0.08)' : 'rgba(255, 59, 48, 0.08)'}; border: 1px solid ${isSelUnlocked ? 'rgba(82, 196, 26, 0.3)' : 'rgba(255, 59, 48, 0.3)'}; border-radius: 6px; padding: 8px 10px; margin-bottom: 12px; font-size: 0.75rem;">
-              <strong style="color: ${isSelUnlocked ? '#52C41A' : '#FF6B6B'}; display: block; margin-bottom: 2px;">
-                ${isSelUnlocked ? '✓ Consagración Cumplida:' : '🎯 Requisito de Victoria:'}
-              </strong>
-              <span style="color: #ECEFF1;">${selectedItem.howToObtain || 'Misiones de campaña o hábitos.'}</span>
-            </div>
-
-            <div style="display: flex; gap: 8px;">
-              <button class="btn-imperivm-primary" style="padding: 7px 16px; font-size: 0.78rem;" onclick="imperivmEngine.toggleEquipItem(${selectedItem.id}); imperivmEngine.openCaballeriaCodexModal('armamentum', '${filter}', ${selectedItem.id});">
-                ${isSelEquipped ? '📦 Desactivar a Reserva' : (isSelUnlocked ? '⚡ Equipar en Servicio' : '🔓 Desbloquear (+50 XP)')}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. BARRA DE FILTROS METÁLICOS -->
-        <div class="armamentarium-filter-bar">
-          <button class="btn-armamentarium-filter ${filter === 'all' ? 'active' : ''}" onclick="imperivmEngine.openCaballeriaCodexModal('armamentum', 'all');">
-            Todos (${items.length})
-          </button>
-          <button class="btn-armamentarium-filter ${filter === 'equipped' ? 'active' : ''}" onclick="imperivmEngine.openCaballeriaCodexModal('armamentum', 'equipped');">
-            ⚡ Equipados (${items.filter(i => i.equipped).length})
-          </button>
-          <button class="btn-armamentarium-filter ${filter === 'unlocked' ? 'active' : ''}" onclick="imperivmEngine.openCaballeriaCodexModal('armamentum', 'unlocked');">
-            ✓ Disponibles (${items.filter(i => i.unlocked && !i.equipped).length})
-          </button>
-          <button class="btn-armamentarium-filter ${filter === 'blocked' ? 'active' : ''}" onclick="imperivmEngine.openCaballeriaCodexModal('armamentum', 'blocked');">
-            🔴 Sellados (${items.filter(i => !i.unlocked).length})
-          </button>
-        </div>
-
-        <!-- 3. CUADRÍCULA DE ARCOS IMPERIALES (48 OBJETOS) -->
-        <div class="armamentarium-grid">
-          ${filteredItems.map(item => {
-            const isEquipped = !!item.equipped;
-            const isUnlocked = !!item.unlocked;
-            const isSelected = item.id === curId;
-
-            return `
-              <div class="armamentarium-grid-card ${isEquipped ? 'is-equipped' : (isUnlocked ? '' : 'is-blocked')}" 
-                   style="${isSelected ? 'outline: 2px solid #FFF; outline-offset: 2px; transform: scale(1.03);' : ''}"
-                   onclick="imperivmEngine.openCaballeriaCodexModal('armamentum', '${filter}', ${item.id});" 
-                   title="${item.name}: Clic para inspeccionar en el Pedestal">
-                
-                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 2px;">
-                  <span style="font-size: 0.65rem; color: var(--imperivm-text-gold); font-weight: 800;">#${String(item.id).padStart(2, '0')}</span>
-                  ${isEquipped ? '<span style="font-size: 0.65rem;">⚡</span>' : (!isUnlocked ? '<span style="font-size: 0.65rem;">🔴</span>' : '')}
-                </div>
-
-                <div class="armamentarium-grid-icon">
-                  ${this.getItemIcon(item.name)}
-                </div>
-
-                <div class="armamentarium-grid-name" title="${item.name}">
-                  ${item.name}
-                </div>
-
-                <div style="font-size: 0.62rem; color: var(--imperivm-text-muted); text-transform: uppercase; margin-top: 2px;">
-                  ${item.auraKey || 'Somática'}
-                </div>
-              </div>
-            `;
-          }).join('')}
-        </div>
-      `;
+      contentHTML = this.renderArmamentariumContent(filter, curId, "openCaballeriaCodexModalArmamentum");
     }
 
     body.innerHTML = `
@@ -3081,9 +2980,63 @@ const imperivmEngine = {
 
     // Objeto activo en el Pedestal Heroico
     const curId = imperivmState.selectedArmamentariumItemId || 1;
-    const selectedItem = items.find(i => i.id === curId) || items[0] || {};
-    const isSelEquipped = !!selectedItem.equipped;
-    const isSelUnlocked = !!selectedItem.unlocked;
+
+    body.innerHTML = `
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        ${this.renderArmamentariumContent(filter, curId, "openArmamentariumModal")}
+        <div style="display: flex; justify-content: flex-end; margin-top: 6px;">
+          <button class="btn-imperivm-secondary" onclick="imperivmEngine.closeDrawer();">Cerrar Armería</button>
+        </div>
+      </div>
+    `;
+
+    this.openDrawer();
+  },
+
+  openCaballeriaCodexModalArmamentum(filter, id) {
+    this.openCaballeriaCodexModal('armamentum', filter, id);
+  },
+
+  getSpriteHelper(item) {
+    if (typeof getItemSpriteInfo === "function") {
+      return getItemSpriteInfo(item);
+    }
+    if (typeof window !== "undefined" && typeof window.getItemSpriteInfo === "function") {
+      return window.getItemSpriteInfo(item);
+    }
+    if (!item) return { sheet: 'assets/jaguar_king_items_sprite_grid.jpg', size: '400% 400%', posX: '0%', posY: '0%' };
+    if (item.id >= 1 && item.id <= 16) {
+      const idx = item.id - 1;
+      return {
+        sheet: 'assets/jaguar_king_items_sprite_grid.jpg',
+        size: '400% 400%',
+        posX: `${((idx % 4) * 100) / 3}%`,
+        posY: `${(Math.floor(idx / 4) * 100) / 3}%`
+      };
+    }
+    const grid40Map = {
+      17: { col: 3, row: 0 }, 18: { col: 3, row: 1 }, 19: { col: 4, row: 1 }, 20: { col: 5, row: 1 },
+      21: { col: 6, row: 1 }, 22: { col: 7, row: 1 }, 23: { col: 0, row: 2 }, 24: { col: 1, row: 2 },
+      25: { col: 2, row: 2 }, 26: { col: 3, row: 2 }, 27: { col: 4, row: 2 }, 28: { col: 5, row: 2 },
+      29: { col: 6, row: 2 }, 30: { col: 7, row: 2 }, 31: { col: 0, row: 3 }, 32: { col: 2, row: 3 },
+      33: { col: 3, row: 3 }, 34: { col: 4, row: 3 }, 35: { col: 5, row: 3 }, 36: { col: 6, row: 3 },
+      37: { col: 7, row: 3 }, 38: { col: 0, row: 4 }, 39: { col: 1, row: 4 }, 40: { col: 2, row: 4 },
+      41: { col: 3, row: 4 }, 42: { col: 4, row: 4 }, 43: { col: 5, row: 4 }, 44: { col: 7, row: 4 },
+      45: { col: 5, row: 3 }, 46: { col: 1, row: 3 }, 47: { col: 6, row: 4 }, 48: { col: 7, row: 4 }
+    };
+    const coords = grid40Map[item.id] || { col: (item.id - 1) % 8, row: Math.floor((item.id - 1) / 8) % 5 };
+    return {
+      sheet: 'assets/jaguar_40_items_sprite_grid.jpg',
+      size: '800% 500%',
+      posX: `${(coords.col * 100) / 7}%`,
+      posY: `${(coords.row * 100) / 4}%`
+    };
+  },
+
+  renderArmamentariumContent(filter = "all", curId = 1, callbackName = "openArmamentariumModal") {
+    const items = (typeof window.JAGUAR_DEFAULT_INVENTORY !== "undefined") ? window.JAGUAR_DEFAULT_INVENTORY : [];
+    imperivmState.activeArmamentariumFilter = filter;
+    imperivmState.selectedArmamentariumItemId = curId;
 
     let filteredItems = items;
     if (filter === "equipped") {
@@ -3093,101 +3046,166 @@ const imperivmEngine = {
     } else if (filter === "blocked") {
       filteredItems = items.filter(i => !i.unlocked);
     }
+    if (filteredItems.length === 0) filteredItems = items;
 
-    body.innerHTML = `
-      <div style="display: flex; flex-direction: column; gap: 18px;">
-        
-        <!-- 1. PEDESTAL HEROICO ILUMINADO DEL OBJETO SELECCIONADO -->
-        <div class="armamentarium-hero-pedestal">
-          <div class="armamentarium-medallion ${!isSelUnlocked ? 'is-blocked' : ''}">
-            <span>${this.getItemIcon(selectedItem.name)}</span>
+    let curIndex = filteredItems.findIndex(i => i.id === curId);
+    if (curIndex === -1) {
+      curIndex = 0;
+      curId = filteredItems[0] ? filteredItems[0].id : 1;
+    }
+    const selectedItem = filteredItems[curIndex] || items[0] || {};
+    const prevItem = filteredItems[(curIndex - 1 + filteredItems.length) % filteredItems.length] || selectedItem;
+    const nextItem = filteredItems[(curIndex + 1) % filteredItems.length] || selectedItem;
+
+    const isSelEquipped = !!selectedItem.equipped;
+    const isSelUnlocked = !!selectedItem.unlocked;
+    const selSprite = this.getSpriteHelper(selectedItem);
+
+    return `
+      <!-- 1. CARRUSEL ÉPICO DE SPRITES CON CONTROLES Y DETALLES COMPLETOS -->
+      <div class="armamentarium-carousel-card">
+        <!-- CABECERA DEL CARRUSEL: CONTROLES DE NAVEGACIÓN Y CONTADOR -->
+        <div class="armamentarium-carousel-nav-header">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="badge-tag badge-gold" style="font-size: 0.72rem; font-weight: 800;">
+              OBJETO #${String(selectedItem.id || 1).padStart(2, '0')}
+            </span>
+            <span class="armamentarium-carousel-counter">
+              ${curIndex + 1} de ${filteredItems.length}
+            </span>
           </div>
-          
-          <div style="flex: 1; min-width: 0; z-index: 2;">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
-              <span class="badge-tag badge-gold" style="font-size: 0.68rem; font-weight: 800;">#${String(selectedItem.id || 1).padStart(2, '0')}</span>
-              <span class="aura-tag-pill badge-${this.getAuraColorClass(selectedItem.auraKey)}">Aura ${selectedItem.auraKey || 'Somática'}</span>
-              <span class="badge-tag ${isSelEquipped ? 'badge-gold' : (isSelUnlocked ? 'badge-emerald' : 'badge-pink')}" style="font-size: 0.68rem;">
-                ${isSelEquipped ? '⚡ EN SERVICIO' : (isSelUnlocked ? '✓ DISPONIBLE' : '🔴 SELLADO IMPERIAL')}
+          <div class="armamentarium-carousel-arrows">
+            <button class="btn-carousel-arrow" onclick="imperivmEngine.${callbackName}('${filter}', ${prevItem.id});" title="Anterior objeto: ${prevItem.name}">
+              ◀ Anterior
+            </button>
+            <button class="btn-carousel-arrow" onclick="imperivmEngine.${callbackName}('${filter}', ${nextItem.id});" title="Siguiente objeto: ${nextItem.name}">
+              Siguiente ▶
+            </button>
+          </div>
+        </div>
+
+        <!-- VIEWPORT PRINCIPAL DEL CARRUSEL: SPRITE A LA IZQUIERDA + DETALLES A LA DERECHA -->
+        <div class="armamentarium-carousel-main">
+          <!-- PEDESTAL HEROICO DEL SPRITE -->
+          <div class="armamentarium-carousel-sprite-col">
+            <div class="armamentarium-carousel-pedestal ${!isSelUnlocked ? 'is-blocked' : (isSelEquipped ? 'is-equipped' : '')}">
+              <div class="armamentarium-sprite-frame-lg" style="background-image: url('${selSprite.sheet}'); background-size: ${selSprite.size}; background-position: ${selSprite.posX} ${selSprite.posY};"></div>
+              ${!isSelUnlocked ? '<div class="armamentarium-lock-badge">🔒</div>' : (isSelEquipped ? '<div class="armamentarium-equipped-badge">⚡</div>' : '')}
+            </div>
+            <span class="aura-tag-pill badge-${this.getAuraColorClass(selectedItem.auraKey)}" style="margin-top: 8px;">
+              Aura ${selectedItem.auraKey || 'Somática'}
+            </span>
+          </div>
+
+          <!-- DETALLES INTEGRADOS EN EL MISMO CARRUSEL -->
+          <div class="armamentarium-carousel-details-col">
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
+              <span class="badge-tag ${isSelEquipped ? 'badge-gold' : (isSelUnlocked ? 'badge-emerald' : 'badge-pink')}" style="font-size: 0.68rem; font-weight: 800;">
+                ${isSelEquipped ? '⚡ EN SERVICIO (EQUIPADO)' : (isSelUnlocked ? '✓ DISPONIBLE EN ARSENAL' : '🔴 SELLADO IMPERIAL')}
               </span>
             </div>
 
-            <h4 style="font-family: var(--imperivm-font-title); font-size: 1.15rem; color: #FFF; margin: 0 0 6px 0; letter-spacing: 0.5px;">
-              ${selectedItem.name || 'Objeto de la Orden'}
-            </h4>
+            <h3 class="armamentarium-carousel-title">
+              ${selectedItem.name || 'Objeto Imperial'}
+            </h3>
 
-            <p style="font-size: 0.78rem; color: var(--imperivm-text-muted); line-height: 1.45; margin: 0 0 10px 0;">
+            <p class="armamentarium-carousel-lore">
               ${selectedItem.lore || 'Instrumento de alta precisión para el desarrollo del Cursus Honorum.'}
             </p>
 
-            <div style="background: ${isSelUnlocked ? 'rgba(82, 196, 26, 0.08)' : 'rgba(255, 59, 48, 0.08)'}; border: 1px solid ${isSelUnlocked ? 'rgba(82, 196, 26, 0.3)' : 'rgba(255, 59, 48, 0.3)'}; border-radius: 6px; padding: 8px 10px; margin-bottom: 12px; font-size: 0.75rem;">
-              <strong style="color: ${isSelUnlocked ? '#52C41A' : '#FF6B6B'}; display: block; margin-bottom: 2px;">
+            <div class="armamentarium-carousel-objective ${isSelUnlocked ? 'is-conquered' : 'is-pending'}">
+              <strong style="color: ${isSelUnlocked ? '#10B981' : '#F59E0B'}; display: flex; align-items: center; gap: 6px; margin-bottom: 2px; font-size: 0.74rem;">
                 ${isSelUnlocked ? '✓ Consagración Cumplida:' : '🎯 Requisito de Victoria:'}
               </strong>
-              <span style="color: #ECEFF1;">${selectedItem.howToObtain || 'Misiones de campaña o hábitos.'}</span>
+              <span style="color: #E2E8F0; font-size: 0.78rem; line-height: 1.35;">
+                ${selectedItem.howToObtain || 'Completar misiones de campaña o consolidar hábitos en el diario.'}
+              </span>
             </div>
 
-            <div style="display: flex; gap: 8px;">
-              <button class="btn-imperivm-primary" style="padding: 7px 16px; font-size: 0.78rem;" onclick="imperivmEngine.toggleEquipItem(${selectedItem.id}); imperivmEngine.openArmamentariumModal('${filter}', ${selectedItem.id});">
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 8px;">
+              <button class="btn-imperivm-primary" style="padding: 7px 16px; font-size: 0.78rem; font-weight: 800;" onclick="imperivmEngine.toggleEquipItem(${selectedItem.id}); imperivmEngine.${callbackName}('${filter}', ${selectedItem.id});">
                 ${isSelEquipped ? '📦 Desactivar a Reserva' : (isSelUnlocked ? '⚡ Equipar en Servicio' : '🔓 Desbloquear (+50 XP)')}
               </button>
+              ${selectedItem.questLinkId ? `
+                <button class="btn-imperivm-secondary" style="padding: 6px 12px; font-size: 0.72rem;" onclick="imperivmEngine.closeDrawer(); selectMainTab('${selectedItem.questLinkId}');">
+                  🎯 Ver Misión Vinculada
+                </button>
+              ` : ''}
             </div>
           </div>
         </div>
 
-        <!-- 2. BARRA DE FILTROS METÁLICOS -->
-        <div class="armamentarium-filter-bar">
-          <button class="btn-armamentarium-filter ${filter === 'all' ? 'active' : ''}" onclick="imperivmEngine.openArmamentariumModal('all');">
-            Todos (${items.length})
-          </button>
-          <button class="btn-armamentarium-filter ${filter === 'equipped' ? 'active' : ''}" onclick="imperivmEngine.openArmamentariumModal('equipped');">
-            ⚡ Equipados (${items.filter(i => i.equipped).length})
-          </button>
-          <button class="btn-armamentarium-filter ${filter === 'unlocked' ? 'active' : ''}" onclick="imperivmEngine.openArmamentariumModal('unlocked');">
-            ✓ Disponibles (${items.filter(i => i.unlocked && !i.equipped).length})
-          </button>
-          <button class="btn-armamentarium-filter ${filter === 'blocked' ? 'active' : ''}" onclick="imperivmEngine.openArmamentariumModal('blocked');">
-            🔴 Sellados (${items.filter(i => !i.unlocked).length})
-          </button>
-        </div>
-
-        <!-- 3. CUADRÍCULA DE ARCOS IMPERIALES (48 OBJETOS) -->
-        <div class="armamentarium-48-grid">
+        <!-- PISTA DE THUMBNAILS HORIZONTAL PARA DESLIZAR RÁPIDO ENTRE SPRITES -->
+        <div class="armamentarium-thumbnail-track custom-scrollbar">
           ${filteredItems.map(item => {
-            const isEquipped = !!item.equipped;
-            const isUnlocked = !!item.unlocked;
-            const isSelected = item.id === curId;
-
+            const isEq = !!item.equipped;
+            const isUn = !!item.unlocked;
+            const isCur = item.id === curId;
+            const itSprite = this.getSpriteHelper(item);
             return `
-              <div class="armamentarium-grid-card ${isEquipped ? 'is-equipped' : (isUnlocked ? '' : 'is-blocked')}" 
-                   style="${isSelected ? 'outline: 2px solid #FFF; outline-offset: 2px; transform: scale(1.03);' : ''}"
-                   onclick="imperivmEngine.openArmamentariumModal('${filter}', ${item.id});" 
-                   title="${item.name}: Clic para inspeccionar en el Pedestal">
-                
-                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 2px;">
-                  <span style="font-size: 0.65rem; color: var(--imperivm-text-gold); font-weight: 800;">#${String(item.id).padStart(2, '0')}</span>
-                  ${isEquipped ? '<span style="font-size: 0.65rem;">⚡</span>' : (!isUnlocked ? '<span style="font-size: 0.65rem;">🔴</span>' : '')}
-                </div>
-
-                <div style="font-size: 1.8rem; margin: 4px 0;">
-                  ${this.getItemIcon(item.name)}
-                </div>
-
-                <strong style="font-size: 0.74rem; color: #FFF; margin-bottom: 2px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; line-height: 1.15; text-align: center;">
-                  ${item.name}
-                </strong>
-
-                <span style="font-size: 0.62rem; color: ${isEquipped ? 'var(--imperivm-text-gold)' : (isUnlocked ? '#52C41A' : '#FF6B6B')}; font-weight: 800; text-transform: uppercase;">
-                  ${isEquipped ? 'EN SERVICIO' : (isUnlocked ? 'DISPONIBLE' : 'SELLADO')}
-                </span>
+              <div class="armamentarium-thumb-card ${isCur ? 'active' : ''} ${isEq ? 'is-equipped' : (!isUn ? 'is-blocked' : '')}"
+                   onclick="imperivmEngine.${callbackName}('${filter}', ${item.id});"
+                   title="${item.name}">
+                <div class="armamentarium-thumb-sprite" style="background-image: url('${itSprite.sheet}'); background-size: ${itSprite.size}; background-position: ${itSprite.posX} ${itSprite.posY};"></div>
+                <span class="armamentarium-thumb-num">#${String(item.id).padStart(2, '0')}</span>
+                ${isEq ? '<span class="thumb-mini-status">⚡</span>' : (!isUn ? '<span class="thumb-mini-status">🔒</span>' : '')}
               </div>
             `;
           }).join('')}
         </div>
+      </div>
 
-        <button class="btn-imperivm-secondary" onclick="imperivmEngine.closeDrawer();">Cerrar Armería</button>
+      <!-- 2. BARRA DE FILTROS METÁLICOS -->
+      <div class="armamentarium-filter-bar">
+        <button class="btn-armamentarium-filter ${filter === 'all' ? 'active' : ''}" onclick="imperivmEngine.${callbackName}('all', ${curId});">
+          Todos (${items.length})
+        </button>
+        <button class="btn-armamentarium-filter ${filter === 'equipped' ? 'active' : ''}" onclick="imperivmEngine.${callbackName}('equipped', ${curId});">
+          ⚡ Equipados (${items.filter(i => i.equipped).length})
+        </button>
+        <button class="btn-armamentarium-filter ${filter === 'unlocked' ? 'active' : ''}" onclick="imperivmEngine.${callbackName}('unlocked', ${curId});">
+          ✓ Disponibles (${items.filter(i => i.unlocked && !i.equipped).length})
+        </button>
+        <button class="btn-armamentarium-filter ${filter === 'blocked' ? 'active' : ''}" onclick="imperivmEngine.${callbackName}('blocked', ${curId});">
+          🔴 Sellados (${items.filter(i => !i.unlocked).length})
+        </button>
+      </div>
+
+      <!-- 3. CUADRÍCULA DE ARCOS IMPERIALES (48 OBJETOS) CON SPRITES REALES -->
+      <div class="armamentarium-grid">
+        ${filteredItems.map(item => {
+          const isEquipped = !!item.equipped;
+          const isUnlocked = !!item.unlocked;
+          const isSelected = item.id === curId;
+          const itSprite = this.getSpriteHelper(item);
+
+          return `
+            <div class="armamentarium-grid-card ${isEquipped ? 'is-equipped' : (isUnlocked ? '' : 'is-blocked')}" 
+                 style="${isSelected ? 'outline: 2px solid #FFF; outline-offset: 2px; transform: scale(1.03);' : ''}"
+                 onclick="imperivmEngine.${callbackName}('${filter}', ${item.id});" 
+                 title="${item.name}: Clic para ver en el Carrusel">
+              
+              <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 2px;">
+                <span style="font-size: 0.65rem; color: var(--imperivm-text-gold); font-weight: 800;">#${String(item.id).padStart(2, '0')}</span>
+                ${isEquipped ? '<span style="font-size: 0.65rem;">⚡</span>' : (!isUnlocked ? '<span style="font-size: 0.65rem;">🔴</span>' : '')}
+              </div>
+
+              <div class="armamentarium-grid-sprite-frame" style="background-image: url('${itSprite.sheet}'); background-size: ${itSprite.size}; background-position: ${itSprite.posX} ${itSprite.posY};">
+              </div>
+
+              <div class="armamentarium-grid-name" title="${item.name}">
+                ${item.name}
+              </div>
+
+              <div style="font-size: 0.62rem; color: var(--imperivm-text-muted); text-transform: uppercase; margin-top: 2px;">
+                ${item.auraKey || 'Somática'}
+              </div>
+            </div>
+          `;
+        }).join('')}
       </div>
     `;
+  },
 
     this.openDrawer();
   },

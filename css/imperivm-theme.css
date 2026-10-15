@@ -3778,4 +3778,269 @@ body.dev-labels-visible .dev-labels-corner-trigger {
   font-size: 0.78rem;
 }
 
+/* ==========================================================================
+   ARMAMENTUM CAROUSEL & SPRITE SHOWCASE
+   ========================================================================== */
+.armamentarium-carousel-card {
+  background: radial-gradient(circle at 30% 20%, #1A2338 0%, #0B0F19 100%) !important;
+  border: 2px solid var(--imperivm-border-gold) !important;
+  border-radius: 12px !important;
+  padding: 18px !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.75), inset 0 0 24px rgba(197, 154, 40, 0.15) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.armamentarium-carousel-nav-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.25) !important;
+  padding-bottom: 10px !important;
+  flex-wrap: wrap !important;
+  gap: 8px !important;
+}
+
+.armamentarium-carousel-counter {
+  font-size: 0.75rem !important;
+  color: var(--imperivm-text-gold) !important;
+  font-family: var(--imperivm-font-mono, monospace) !important;
+  font-weight: 700 !important;
+}
+
+.armamentarium-carousel-arrows {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
+.btn-carousel-arrow {
+  background: rgba(212, 175, 55, 0.12) !important;
+  border: 1.5px solid rgba(212, 175, 55, 0.45) !important;
+  color: #FFF !important;
+  border-radius: 6px !important;
+  padding: 5px 12px !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+.btn-carousel-arrow:hover {
+  background: rgba(212, 175, 55, 0.28) !important;
+  border-color: #FFF !important;
+  transform: translateY(-1px) !important;
+}
+
+.armamentarium-carousel-main {
+  display: flex !important;
+  gap: 20px !important;
+  align-items: center !important;
+}
+
+@media (max-width: 640px) {
+  .armamentarium-carousel-main {
+    flex-direction: column !important;
+    text-align: center !important;
+  }
+}
+
+.armamentarium-carousel-sprite-col {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+}
+
+.armamentarium-carousel-pedestal {
+  width: 110px !important;
+  height: 110px !important;
+  min-width: 110px !important;
+  border-radius: 14px !important;
+  background: radial-gradient(circle, #1E293B 0%, #080D1A 100%) !important;
+  border: 2.5px solid var(--imperivm-gold) !important;
+  box-shadow: 0 0 24px rgba(197, 154, 40, 0.4), inset 0 0 16px rgba(0, 0, 0, 0.8) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.armamentarium-carousel-pedestal.is-equipped {
+  border-color: #10B981 !important;
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.45) !important;
+}
+
+.armamentarium-carousel-pedestal.is-blocked {
+  border-color: #EF4444 !important;
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4) !important;
+}
+
+.armamentarium-sprite-frame-lg {
+  width: 90px !important;
+  height: 90px !important;
+  background-repeat: no-repeat !important;
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: crisp-edges !important;
+}
+
+.armamentarium-lock-badge,
+.armamentarium-equipped-badge {
+  position: absolute !important;
+  top: 6px !important;
+  right: 6px !important;
+  background: rgba(0, 0, 0, 0.7) !important;
+  border-radius: 50% !important;
+  width: 22px !important;
+  height: 22px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 0.75rem !important;
+}
+
+.armamentarium-carousel-details-col {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+
+.armamentarium-carousel-title {
+  font-family: var(--imperivm-font-title, serif) !important;
+  font-size: 1.25rem !important;
+  color: #FFF !important;
+  margin: 0 !important;
+  letter-spacing: 0.5px !important;
+}
+
+.armamentarium-carousel-lore {
+  font-size: 0.82rem !important;
+  color: var(--imperivm-text-muted) !important;
+  line-height: 1.45 !important;
+  margin: 0 !important;
+}
+
+.armamentarium-carousel-objective {
+  border-radius: 6px !important;
+  padding: 8px 12px !important;
+  font-size: 0.76rem !important;
+}
+
+.armamentarium-carousel-objective.is-conquered {
+  background: rgba(16, 185, 129, 0.1) !important;
+  border: 1px solid rgba(16, 185, 129, 0.35) !important;
+}
+
+.armamentarium-carousel-objective.is-pending {
+  background: rgba(245, 158, 11, 0.08) !important;
+  border: 1px solid rgba(245, 158, 11, 0.35) !important;
+}
+
+.armamentarium-thumbnail-track {
+  display: flex !important;
+  gap: 8px !important;
+  overflow-x: auto !important;
+  padding: 8px 4px !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+  scroll-behavior: smooth !important;
+}
+
+.armamentarium-thumb-card {
+  width: 58px !important;
+  min-width: 58px !important;
+  background: rgba(15, 20, 32, 0.9) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 8px !important;
+  padding: 5px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 3px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  position: relative !important;
+}
+
+.armamentarium-thumb-card:hover {
+  border-color: rgba(212, 175, 55, 0.6) !important;
+  transform: translateY(-2px) !important;
+}
+
+.armamentarium-thumb-card.active {
+  border-color: #FFF !important;
+  outline: 2px solid var(--imperivm-gold) !important;
+  background: rgba(212, 175, 55, 0.18) !important;
+  transform: scale(1.05) !important;
+}
+
+.armamentarium-thumb-card.is-equipped {
+  border-color: #10B981 !important;
+}
+
+.armamentarium-thumb-card.is-blocked {
+  opacity: 0.65 !important;
+}
+
+.armamentarium-thumb-sprite {
+  width: 44px !important;
+  height: 44px !important;
+  background-repeat: no-repeat !important;
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: crisp-edges !important;
+}
+
+.armamentarium-thumb-num {
+  font-size: 0.6rem !important;
+  color: var(--imperivm-text-gold) !important;
+  font-family: monospace !important;
+  font-weight: 700 !important;
+}
+
+.thumb-mini-status {
+  position: absolute !important;
+  top: 2px !important;
+  right: 2px !important;
+  font-size: 0.6rem !important;
+}
+
+.armamentarium-grid-sprite-frame {
+  width: 52px !important;
+  height: 52px !important;
+  margin: 4px auto !important;
+  background-repeat: no-repeat !important;
+  image-rendering: pixelated !important;
+  image-rendering: -moz-crisp-edges !important;
+  image-rendering: crisp-edges !important;
+}
+
+/* ==========================================================================
+   AVISOS MODAL & RECORDATORIO TECHNIKER KRANKENKASSE (TK)
+   ========================================================================== */
+.stoic-avisos-btn {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.18) 0%, rgba(30, 24, 38, 0.9) 100%) !important;
+  border: 1.5px solid rgba(239, 68, 68, 0.5) !important;
+  color: #FFF !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.stoic-avisos-btn:hover {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.35) 0%, rgba(45, 30, 55, 0.95) 100%) !important;
+  border-color: #F87171 !important;
+  box-shadow: 0 0 14px rgba(239, 68, 68, 0.4) !important;
+}
+
+
 

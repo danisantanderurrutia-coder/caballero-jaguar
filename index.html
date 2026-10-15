@@ -123,6 +123,12 @@
           <span>⏱️ Foco</span>
           <span id="header-pomo-badge" style="display: none; font-size: 0.72rem; color: #FFF; font-family: 'Cinzel', serif; font-weight: 900; background: rgba(255,255,255,0.15); padding: 1px 6px; border-radius: 4px;">50:00</span>
         </button>
+
+        <!-- BOTÓN DE AVISOS & RECORDATORIOS OFICIALES (TECHNIKER KRANKENKASSE) -->
+        <button class="btn-jaguar btn-micro-pill stoic-avisos-btn" id="header-avisos-btn" onclick="openAvisosModal();" title="Avisos Oficiales (Techniker Krankenkasse y Pagos)">
+          <span>🔔 Avisos</span>
+          <span id="header-avisos-badge" class="badge-tag badge-pink" style="font-size: 0.65rem; padding: 1px 6px; font-weight: 800;">1</span>
+        </button>
       </div>
 
     </header>
@@ -174,8 +180,9 @@
             <button class="btn-command-pill" onclick="openCelestialHoroscopesModal();" title="Ciclo Solar y Calendario">☀️ Ciclo Solar</button>
             <a href="https://calendar.google.com/calendar" target="_blank" class="btn-command-pill" style="text-decoration: none;" title="Abrir Google Calendar">📅 Google Calendar</a>
           </div>
-          <!-- Fila 3: 1 botón (Vértice inferior) -->
+          <!-- Fila 3: 2 botones (Vértice inferior) -->
           <div class="pyramid-row">
+            <button class="btn-command-pill" onclick="openAvisosModal();" title="Avisos Oficiales (Techniker Krankenkasse y Pagos)">🔔 Avisos &amp; TK</button>
             <button class="btn-command-pill" onclick="openSistemaMaestroModal();" title="Guía y Hábitos de Vida">ℹ️ Guía de Hábitos</button>
           </div>
         </div>
@@ -2084,6 +2091,13 @@
   <div id="celestial-horoscopes-modal" class="kcd-inspector-backdrop" onclick="if(event.target === this) closeCelestialHoroscopesModal();">
     <div class="kcd-inspector-codex custom-scrollbar" id="celestial-horoscopes-content" style="max-width: 960px; max-height: 90vh; overflow-y: auto;">
       <!-- Llenado dinámico por openCelestialHoroscopesModal() -->
+    </div>
+  </div>
+
+  <!-- MODAL: AVISOS OFICIALES & TECHNIKER KRANKENKASSE (TK) -->
+  <div id="avisos-official-modal" class="kcd-inspector-backdrop" onclick="if(event.target === this) closeAvisosModal();">
+    <div class="kcd-inspector-codex custom-scrollbar" id="avisos-official-content" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
+      <!-- Llenado dinámico por openAvisosModal() -->
     </div>
   </div>
 

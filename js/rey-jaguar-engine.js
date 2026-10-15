@@ -84,8 +84,10 @@ let reyJaguarState = {
   reminders: [
     { id: "rem-1", text: "Revisar entregable de tesis antes de las 18:00", category: "Tesis", completed: false },
     { id: "rem-2", text: "Registrar extracto mensual de Sparkasse en Finanzas", category: "Finanzas", completed: false },
-    { id: "rem-3", text: "Día limpio sin porno: Caballero Jaguar Challenge", category: "Espiritualidad", completed: false }
+    { id: "rem-3", text: "Día limpio sin porno: Caballero Jaguar Challenge", category: "Espiritualidad", completed: false },
+    { id: "rem-tk", text: "Pagar seguro médico los 15 de cada mes: Techniker Krankenkasse (TK)", category: "Salud", completed: false }
   ],
+  tkPayments: {},
   mainQuests: [
     {
       id: "q1",
@@ -301,11 +303,11 @@ const KCD_AURAS_CONFIG = {
     color: "#C62828",
     subtitle: "Muay Thai, Gym Hipertrofia, Running & Bouldering",
     activities: [
-      { key: "combate", name: "Muay Thai Sparring", fullName: "Muay Thai & Kickboxing (Sparring)", icon: "🥊", defaultVal: 0, xpWeight: "75 XP (Difícil)", difficulty: "dificil", xp: 75, subKey: "combate", desc: "Artes marciales, paos, clinch y combates de 8 armas.", tab: "ejercicios" },
-      { key: "fuerza", name: "Fuerza Gym", fullName: "Fuerza Gym & Hipertrofia", icon: "💪", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, subKey: "gym", desc: "Sobrecarga progresiva, pesas y desarrollo muscular.", tab: "ejercicios" },
-      { key: "resistencia", name: "Running", fullName: "Resistencia Cardiovascular Running", icon: "🏃", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, subKey: "running", desc: "Carrera aeróbica sostenida y capacidad pulmonar.", tab: "ejercicios" },
-      { key: "escalada", name: "Escalada / Bouldering", fullName: "Escalada Muro & Bouldering Outdoor", icon: "🧗", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, subKey: "bouldering", desc: "Fuerza de agarre, equilibrio dinámico y resolución de rutas.", tab: "ejercicios" },
-      { key: "movilidad", name: "Movilidad & Calistenia", fullName: "Movilidad Articular & Calistenia", icon: "🤸", defaultVal: 0, xpWeight: "25 XP (Fácil)", difficulty: "facil", xp: 25, subKey: "gym", desc: "Salud articular, control corporal y estiramientos activos.", tab: "ejercicios" }
+      { key: "combate", name: "Muay Thai Sparring", fullName: "Muay Thai & Kickboxing (Sparring)", icon: "🥊", defaultVal: 0, xpWeight: "75 XP (Difícil)", difficulty: "dificil", xp: 75, subKey: "combate", desc: "Artes marciales, paos, clinch y combates de 8 armas.", tab: "ejercicio" },
+      { key: "fuerza", name: "Fuerza Gym", fullName: "Fuerza Gym & Hipertrofia", icon: "💪", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, subKey: "gym", desc: "Sobrecarga progresiva, pesas y desarrollo muscular.", tab: "ejercicio" },
+      { key: "resistencia", name: "Running", fullName: "Resistencia Cardiovascular Running", icon: "🏃", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, subKey: "running", desc: "Carrera aeróbica sostenida y capacidad pulmonar.", tab: "ejercicio" },
+      { key: "escalada", name: "Escalada / Bouldering", fullName: "Escalada Muro & Bouldering Outdoor", icon: "🧗", defaultVal: 0, xpWeight: "50 XP (Medio)", difficulty: "medio", xp: 50, subKey: "bouldering", desc: "Fuerza de agarre, equilibrio dinámico y resolución de rutas.", tab: "ejercicio" },
+      { key: "movilidad", name: "Movilidad & Calistenia", fullName: "Movilidad Articular & Calistenia", icon: "🤸", defaultVal: 0, xpWeight: "25 XP (Fácil)", difficulty: "facil", xp: 25, subKey: "movilidad", desc: "Salud articular, control corporal y estiramientos activos.", tab: "ejercicio" }
     ]
   },
   mente: {
@@ -344,6 +346,7 @@ function loadReyJaguarState() {
         if (Array.isArray(parsed.reminders) && parsed.reminders.length > 0) reyJaguarState.reminders = parsed.reminders;
         if (Array.isArray(parsed.mainQuests) && parsed.mainQuests.length > 0) reyJaguarState.mainQuests = parsed.mainQuests;
         if (Array.isArray(parsed.completedLifeQuests)) reyJaguarState.completedLifeQuests = parsed.completedLifeQuests;
+        if (parsed.tkPayments && typeof parsed.tkPayments === "object") reyJaguarState.tkPayments = Object.assign({}, reyJaguarState.tkPayments, parsed.tkPayments);
         if (Array.isArray(parsed.inventory) && parsed.inventory.length > 0) {
           // Merge o actualización de ítems
           parsed.inventory.forEach(savedItem => {
@@ -584,15 +587,15 @@ const VIRTUE_FIVE_PILLARS = [
   },
   {
     id: "pillar_ejercicio",
-    name: "Calistenia & Fuerza Física",
-    role: "Hábito Somático Diario",
-    badge: "🥊 Registro Diario",
+    name: "Movilidad Articular & Calistenia",
+    role: "Hábito Somático & Fuerza Diaria",
+    badge: "🤸 Registro Diario",
     isMaster: false,
-    icon: "🥊",
+    icon: "🤸",
     aura: "deporte",
     xp: 50,
-    desc: "100 abdominales, 100 sentadillas, 100 flexiones o correr (o mínimo 2 minutos de ejercicio físico intenso). Mañana o a las 18:00.",
-    detail: "Se registra aquí. Estimula síntesis proteica, descarga cortisol y fortalece el templo corporal."
+    desc: "Movilidad articular profunda, estiramientos activos, 100 flexiones/sentadillas/abs o calistenia de peso corporal. Mañana o a las 18:00.",
+    detail: "Se registra aquí. Despierta la agilidad, preserva la salud articular y fortalece el templo corporal."
   },
   {
     id: "pillar_aleman",
@@ -916,6 +919,24 @@ function toggleVirtuePillarAction(pillarId) {
     reconcileAndAdvanceVirtueDay(nextDay);
   } else {
     // Los otros 4 hábitos se registran allí y otorgan su XP correspondiente
+    if (!reyJaguarState.stats) reyJaguarState.stats = {};
+    if (pillarId === 'pillar_ejercicio') {
+      if (!reyJaguarState.stats['movilidad']) reyJaguarState.stats['movilidad'] = { name: "Movilidad Articular & Calistenia", value: 0, icon: "🤸" };
+      reyJaguarState.stats['movilidad'].value = (reyJaguarState.stats['movilidad'].value || 0) + 1;
+      if (!reyJaguarState.stats['fuerza']) reyJaguarState.stats['fuerza'] = { name: "Fuerza Gym", value: 0, icon: "💪" };
+      reyJaguarState.stats['fuerza'].value = (reyJaguarState.stats['fuerza'].value || 0) + 1;
+      reyJaguarState.dailyChallengeActions[todayStr]['movilidad'] = true;
+    } else if (pillarId === 'pillar_aleman') {
+      if (!reyJaguarState.stats['aleman']) reyJaguarState.stats['aleman'] = { name: "Alemán al Mediodía", value: 0, icon: "🇩🇪" };
+      reyJaguarState.stats['aleman'].value = (reyJaguarState.stats['aleman'].value || 0) + 1;
+    } else if (pillarId === 'pillar_lectura') {
+      if (!reyJaguarState.stats['lectura']) reyJaguarState.stats['lectura'] = { name: "Lectura Estoica", value: 0, icon: "📖" };
+      reyJaguarState.stats['lectura'].value = (reyJaguarState.stats['lectura'].value || 0) + 1;
+    } else if (pillarId === 'pillar_meditacion') {
+      if (!reyJaguarState.stats['meditacion']) reyJaguarState.stats['meditacion'] = { name: "Meditación Somática", value: 0, icon: "🧘" };
+      reyJaguarState.stats['meditacion'].value = (reyJaguarState.stats['meditacion'].value || 0) + 1;
+    }
+
     if (window.CJProgress && typeof window.CJProgress.award === 'function') {
       window.CJProgress.award({
         xp: pillar.xp,
@@ -1837,7 +1858,7 @@ function openKCDInspector(params) {
                       `}
                     </div>
                   ` : `
-                    <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #0E0905; font-weight: 900; font-size: 0.72rem; padding: 6px 14px;" onclick="CaballeroScoringEngine.awardAction('${catKey}', '${diff}', '${act.fullName || act.name}', null, '${act.subKey || act.key}'); openKCDInspector({ type: 'category', categoryKey: '${catKey}' });" title="Registrar acción (+1 Punto & +${xp} XP)">
+                    <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #0E0905; font-weight: 900; font-size: 0.72rem; padding: 6px 14px;" onclick="CaballeroScoringEngine.awardAction('${catKey}', '${diff}', '${act.fullName || act.name}', null, '${act.subKey || act.key}', null, '${act.key}'); openKCDInspector({ type: 'category', categoryKey: '${catKey}' });" title="Registrar acción (+1 Punto & +${xp} XP)">
                       ⚡ +1 Punto (+${xp} XP)
                     </button>
                   `}
@@ -3407,7 +3428,11 @@ function getItemSpriteInfo(item) {
     41: { col: 3, row: 4 }, // 🗡️ Daga de Obsidiana (Obsidian Dagger)
     42: { col: 4, row: 4 }, // 🪕 Ukelele Barítono (Acoustic Ukulele)
     43: { col: 5, row: 4 }, // 🧥 Gabardina Táctica (Tactical Wool Trenchcoat)
-    44: { col: 7, row: 4 }  // 🏆 Cáliz de Oro Jaguar (Royal Gold Chalice)
+    44: { col: 7, row: 4 }, // 🏆 Cáliz de Oro Jaguar (Royal Gold Chalice)
+    45: { col: 5, row: 3 }, // 🛡️ Escudo Pretoriano (Praetorian Shield)
+    46: { col: 1, row: 3 }, // 📜 Rollo de la Orden (Order Scroll)
+    47: { col: 6, row: 4 }, // 🦅 Águila Vexillaris (Roman Eagle Vexillum)
+    48: { col: 7, row: 4 }  // 👑 Corona Cívica de Laurel (Civic Crown of Laurel)
   };
 
   const coords = grid40Map[item.id] || { col: (item.id - 1) % 8, row: Math.floor((item.id - 1) / 8) % 5 };
@@ -3953,10 +3978,324 @@ function advanceSubQuest(questId, subQuestId) {
   }
 }
 
+// --- SISTEMA DE AVISOS OFICIALES & TECHNIKER KRANKENKASSE (TK) ---
+function getTKPaymentInfo() {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth(); // 0-indexed
+  const curDay = now.getDate();
+  const monthNames = [
+    "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+    "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  ];
+  const curMonthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
+  const curMonthName = monthNames[month];
+
+  if (!reyJaguarState.tkPayments) reyJaguarState.tkPayments = {};
+  const isPaidThisMonth = !!reyJaguarState.tkPayments[curMonthKey];
+
+  // Cálculo de estado y días restantes
+  let statusBadge = "";
+  let statusDetail = "";
+  let isAlert = false;
+
+  if (isPaidThisMonth) {
+    statusBadge = `<span class="badge-tag badge-emerald" style="font-weight: 800; font-size: 0.75rem; padding: 4px 12px;">✓ CUOTA CUBIERTA (${curMonthName.toUpperCase()} ${year})</span>`;
+    statusDetail = `El pago del seguro médico para <strong>${curMonthName} ${year}</strong> ha sido confirmado y respaldado con honores en tus finanzas.`;
+  } else if (curDay === 15) {
+    statusBadge = `<span class="badge-tag badge-pink" style="font-weight: 900; font-size: 0.75rem; padding: 4px 12px; animation: pulse 1.5s infinite;">🚨 VENCE HOY (15 DE ${curMonthName.toUpperCase()})</span>`;
+    statusDetail = `¡Hoy es día 15! Procede con la transferencia bancaria o verifica el débito automático SEPA en Sparkasse.`;
+    isAlert = true;
+  } else if (curDay < 15) {
+    const daysLeft = 15 - curDay;
+    statusBadge = `<span class="badge-tag badge-gold" style="font-weight: 800; font-size: 0.75rem; padding: 4px 12px;">⏳ PRÓXIMO PAGO EN ${daysLeft} DÍA${daysLeft > 1 ? 'S' : ''} (15 DE ${curMonthName.toUpperCase()})</span>`;
+    statusDetail = `Faltan <strong>${daysLeft} día${daysLeft > 1 ? 's' : ''}</strong> para el vencimiento de la cuota mensual el 15 de ${curMonthName}. Asegura saldo suficiente en tu cuenta bancaria.`;
+    if (daysLeft <= 3) isAlert = true;
+  } else {
+    const daysOverdue = curDay - 15;
+    statusBadge = `<span class="badge-tag badge-pink" style="font-weight: 900; font-size: 0.75rem; padding: 4px 12px;">⚠️ PENDIENTE DE CONFIRMACIÓN (${daysOverdue} DÍA${daysOverdue > 1 ? 'S' : ''} POS-15)</span>`;
+    statusDetail = `La fecha de débito fue el pasado 15 de ${curMonthName}. Si ya se debitó o transferiste, márcalo como pagado abajo para actualizar tu balance.`;
+    isAlert = true;
+  }
+
+  // Historial de los últimos 4 meses
+  const recentMonths = [];
+  for (let i = 0; i < 4; i++) {
+    const d = new Date(year, month - i, 1);
+    const y = d.getFullYear();
+    const m = d.getMonth();
+    const key = `${y}-${String(m + 1).padStart(2, '0')}`;
+    recentMonths.push({
+      key,
+      name: `${monthNames[m]} ${y}`,
+      paid: !!reyJaguarState.tkPayments[key]
+    });
+  }
+
+  return {
+    year,
+    month,
+    curDay,
+    curMonthKey,
+    curMonthName,
+    isPaidThisMonth,
+    statusBadge,
+    statusDetail,
+    isAlert,
+    recentMonths
+  };
+}
+window.getTKPaymentInfo = getTKPaymentInfo;
+
+function updateAvisosBadge() {
+  const badge = document.getElementById("header-avisos-badge");
+  if (!badge) return;
+  const tkInfo = getTKPaymentInfo();
+  if (!tkInfo.isPaidThisMonth) {
+    badge.style.display = "inline-block";
+    badge.textContent = "1";
+    badge.className = "badge-tag badge-pink";
+  } else {
+    badge.style.display = "inline-block";
+    badge.textContent = "✓";
+    badge.className = "badge-tag badge-emerald";
+  }
+}
+window.updateAvisosBadge = updateAvisosBadge;
+
+function toggleTKPayment(monthKey) {
+  if (!reyJaguarState.tkPayments) reyJaguarState.tkPayments = {};
+  const isNowPaid = !reyJaguarState.tkPayments[monthKey];
+  reyJaguarState.tkPayments[monthKey] = isNowPaid;
+
+  if (isNowPaid) {
+    if (typeof CaballeroScoringEngine !== 'undefined') {
+      CaballeroScoringEngine.awardAction('soberania', 'medio', `Pago Seguro Médico Techniker Krankenkasse (${monthKey})`, null, 'finanzas');
+    } else if (typeof awardXP === 'function') {
+      awardXP(50, `Pago Seguro Médico Techniker Krankenkasse (${monthKey})`, 'soberania');
+    }
+    if (typeof playSoundEffect === 'function') playSoundEffect("success");
+    if (typeof showNotification === 'function') {
+      showNotification(`✓ Cuota de Techniker Krankenkasse (${monthKey}) confirmada (+50 XP Soberanía & Finanzas).`);
+    }
+  } else {
+    if (typeof showNotification === 'function') {
+      showNotification(`Cuota de Techniker Krankenkasse (${monthKey}) marcada como pendiente.`);
+    }
+  }
+
+  saveReyJaguarState();
+  updateAvisosBadge();
+  openAvisosModal();
+}
+window.toggleTKPayment = toggleTKPayment;
+
+function openAvisosModal() {
+  const modal = document.getElementById("avisos-official-modal");
+  const content = document.getElementById("avisos-official-content");
+  if (!modal || !content) return;
+
+  const tk = getTKPaymentInfo();
+
+  content.innerHTML = `
+    <!-- HEADER HEROICO DE AVISOS OFICIALES -->
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #D4AF37; padding-bottom: 12px; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 2.2rem; filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));">🔔</span>
+        <div>
+          <span style="font-size: 0.72rem; color: #D4AF37; font-family: 'Cinzel', serif; letter-spacing: 1.5px; text-transform: uppercase;">
+            CURSUS HONORUM • AVISOS & RECORDATORIOS OFICIALES
+          </span>
+          <h2 style="font-family: 'Cinzel', serif; font-size: 1.45rem; color: #FFF; margin: 2px 0 0 0; font-weight: 800;">
+            Obligaciones, Salud & Vencimientos
+          </h2>
+        </div>
+      </div>
+      <button onclick="closeAvisosModal()" style="background: none; border: none; font-size: 1.6rem; cursor: pointer; color: rgba(255,255,255,0.6); padding: 4px 8px; border-radius: 6px; transition: color 0.2s;" onmouseover="this.style.color='#FFF'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">✕</button>
+    </div>
+
+    <!-- TARJETA DESTACADA: TECHNIKER KRANKENKASSE (TK) -->
+    <div style="background: radial-gradient(circle at top left, #1B283E 0%, #0D1525 100%); border: 2px solid ${tk.isPaidThisMonth ? '#10B981' : (tk.isAlert ? '#EF4444' : '#F59E0B')}; border-radius: 12px; padding: 18px; margin-bottom: 18px; box-shadow: 0 8px 24px rgba(0,0,0,0.6);">
+      
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 50px; height: 50px; border-radius: 10px; background: rgba(0, 115, 207, 0.2); border: 1.5px solid #0073CF; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
+            🏥
+          </div>
+          <div>
+            <div style="font-size: 0.68rem; color: #60A5FA; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase;">
+              SEGURO MÉDICO OBLIGATORIO • ALEMANIA (GKV)
+            </div>
+            <h3 style="font-family: 'Cinzel', serif; font-size: 1.25rem; color: #FFF; margin: 2px 0 0 0; font-weight: 800;">
+              Techniker Krankenkasse (TK)
+            </h3>
+          </div>
+        </div>
+        ${tk.statusBadge}
+      </div>
+
+      <!-- DETALLE DEL VENCIMIENTO DEL DÍA 15 -->
+      <div style="background: rgba(0, 0, 0, 0.35); border-left: 4px solid #D4AF37; padding: 12px 14px; border-radius: 0 8px 8px 0; margin-bottom: 14px;">
+        <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 4px;">
+          <span style="font-size: 0.9rem;">📅</span>
+          <strong style="color: #F5D77F; font-size: 0.88rem;">Regla Innegociable: Cuota fälligkeit los 15 de cada mes</strong>
+        </div>
+        <p style="font-size: 0.82rem; color: #E2E8F0; margin: 0; line-height: 1.4;">
+          ${tk.statusDetail}
+        </p>
+      </div>
+
+      <!-- ACCIONES & BOTÓN DE CONFIRMACIÓN -->
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 12px;">
+        <div style="font-size: 0.74rem; color: #94A3B8;">
+          🏛️ <strong>Canal:</strong> Débito automático SEPA / Transferencia Sparkasse Hannover.
+        </div>
+        <button class="btn-jaguar ${tk.isPaidThisMonth ? 'btn-secondary-dark' : 'btn-gold-chrome'}" 
+                style="${tk.isPaidThisMonth ? 'color: #34D399; border-color: #10B981;' : 'color: #0E0905; font-weight: 900;'} padding: 9px 20px; font-size: 0.82rem; cursor: pointer;"
+                onclick="toggleTKPayment('${tk.curMonthKey}')">
+          ${tk.isPaidThisMonth ? `✓ Pago de ${tk.curMonthName} Confirmado (Clic para desmarcar)` : `💳 Confirmar Pago de ${tk.curMonthName} (+50 XP)`}
+        </button>
+      </div>
+
+      <!-- HISTORIAL DE LOS ÚLTIMOS MESES -->
+      <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1);">
+        <div style="font-size: 0.7rem; color: #94A3B8; font-weight: 700; text-transform: uppercase; margin-bottom: 8px;">
+          Historial de Cuotas Recientes:
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          ${tk.recentMonths.map(m => `
+            <div style="background: ${m.paid ? 'rgba(16, 185, 129, 0.12)' : 'rgba(239, 68, 68, 0.12)'}; border: 1px solid ${m.paid ? 'rgba(16, 185, 129, 0.4)' : 'rgba(239, 68, 68, 0.4)'}; border-radius: 6px; padding: 4px 10px; font-size: 0.72rem; display: flex; align-items: center; gap: 6px; cursor: pointer;"
+                 onclick="toggleTKPayment('${m.key}')" title="Clic para alternar estado de pago">
+              <span style="color: ${m.paid ? '#34D399' : '#F87171'}; font-weight: 800;">${m.paid ? '✓' : '⚠️'}</span>
+              <span style="color: #FFF;">${m.name}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- CALENDARIO DE OBLIGACIONES & PAGOS MENSUALES DE VIDA -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-bottom: 18px;">
+      
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 14px;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+          <span style="font-size: 1.2rem;">🏥</span>
+          <div>
+            <span style="font-size: 0.65rem; color: #60A5FA; font-weight: 800;">DÍA 15 DE CADA MES</span>
+            <h4 style="font-family: 'Cinzel', serif; font-size: 0.95rem; color: #FFF; margin: 0;">Techniker Krankenkasse (TK)</h4>
+          </div>
+        </div>
+        <p style="font-size: 0.76rem; color: #CBD5E1; margin: 0; line-height: 1.35;">
+          Cobertura médica legal en Alemania. Verificación de saldo en cuenta y comprobante de seguro para trámites y visados.
+        </p>
+      </div>
+
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 14px;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+          <span style="font-size: 1.2rem;">🏠</span>
+          <div>
+            <span style="font-size: 0.65rem; color: #34D399; font-weight: 800;">DÍA 01 DE CADA MES</span>
+            <h4 style="font-family: 'Cinzel', serif; font-size: 0.95rem; color: #FFF; margin: 0;">Alquiler & Domicilio (Warmmiete)</h4>
+          </div>
+        </div>
+        <p style="font-size: 0.76rem; color: #CBD5E1; margin: 0; line-height: 1.35;">
+          Pago de vivienda/habitación en Hannover. Blindaje del santuario somático y estabilidad habitacional.
+        </p>
+      </div>
+
+      <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 14px;">
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+          <span style="font-size: 1.2rem;">🪙</span>
+          <div>
+            <span style="font-size: 0.65rem; color: #F5D77F; font-weight: 800;">DÍA 28 DE CADA MES</span>
+            <h4 style="font-family: 'Cinzel', serif; font-size: 0.95rem; color: #FFF; margin: 0;">Auditoría Sparkasse & Caja</h4>
+          </div>
+        </div>
+        <p style="font-size: 0.76rem; color: #CBD5E1; margin: 0; line-height: 1.35;">
+          Revisión de extracto bancario, registro de gastos fijos y balance de la tesorería soberana del Caballero Jaguar.
+        </p>
+      </div>
+    </div>
+
+    <!-- RECORDATORIOS ACTIVOS DEL DIARIO -->
+    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 14px; margin-bottom: 14px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <h4 style="font-family: 'Cinzel', serif; font-size: 0.98rem; color: #FFF; margin: 0;">
+          📋 Recordatorios Personales de la Orden
+        </h4>
+        <span style="font-size: 0.72rem; color: #94A3B8;">${(reyJaguarState.reminders || []).filter(r => !r.completed).length} pendientes</span>
+      </div>
+
+      <!-- LISTA DE RECORDATORIOS -->
+      <div style="display: flex; flex-direction: column; gap: 6px; max-height: 180px; overflow-y: auto; margin-bottom: 12px;" class="custom-scrollbar">
+        ${(reyJaguarState.reminders || []).map(r => `
+          <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); padding: 8px 12px; border-radius: 6px; border-left: 3px solid ${r.completed ? '#10B981' : '#D4AF37'};">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" ${r.completed ? 'checked' : ''} onchange="toggleReminderTask('${r.id}'); openAvisosModal();" style="cursor: pointer; width: 16px; height: 16px;">
+              <span style="font-size: 0.82rem; color: ${r.completed ? '#94A3B8' : '#FFF'}; text-decoration: ${r.completed ? 'line-through' : 'none'};">
+                ${r.text}
+              </span>
+            </div>
+            <span class="badge-tag badge-gold" style="font-size: 0.62rem;">${r.category || 'General'}</span>
+          </div>
+        `).join('')}
+      </div>
+
+      <!-- FORMULARIO RÁPIDO PARA AGREGAR NUEVO RECORDATORIO -->
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <input type="text" id="new-avisos-rem-text" placeholder="Nuevo aviso o recordatorio..." style="flex: 1; min-width: 180px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); color: #FFF; padding: 7px 12px; border-radius: 6px; font-size: 0.8rem;">
+        <button class="btn-jaguar btn-sm btn-gold-chrome" style="color: #0E0905; font-weight: 800; font-size: 0.76rem; padding: 7px 14px;" onclick="addQuickAvisosReminder()">
+          ➕ Añadir Aviso
+        </button>
+      </div>
+    </div>
+
+    <!-- BOTÓN DE CIERRE -->
+    <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+      <button class="btn-jaguar btn-secondary-dark" onclick="closeAvisosModal()" style="padding: 8px 20px;">
+        Cerrar Avisos
+      </button>
+    </div>
+  `;
+
+  modal.classList.add("active");
+  modal.style.display = "flex";
+}
+window.openAvisosModal = openAvisosModal;
+
+function closeAvisosModal() {
+  const modal = document.getElementById("avisos-official-modal");
+  if (modal) {
+    modal.classList.remove("active");
+    modal.style.display = "none";
+  }
+}
+window.closeAvisosModal = closeAvisosModal;
+
+function addQuickAvisosReminder() {
+  const input = document.getElementById("new-avisos-rem-text");
+  if (!input || !input.value.trim()) return;
+
+  const newRem = {
+    id: "rem-" + Date.now(),
+    text: input.value.trim(),
+    category: "Avisos",
+    completed: false
+  };
+
+  if (!reyJaguarState.reminders) reyJaguarState.reminders = [];
+  reyJaguarState.reminders.push(newRem);
+  saveReyJaguarState();
+  if (typeof showNotification === 'function') showNotification("¡Aviso añadido!");
+  openAvisosModal();
+}
+window.addQuickAvisosReminder = addQuickAvisosReminder;
+
 function initReyJaguarEngine() {
   loadReyJaguarState();
   renderCharacterHUD();
   renderRPGLandingHub();
+  updateAvisosBadge();
 }
 
 if (document.readyState === "loading") {
