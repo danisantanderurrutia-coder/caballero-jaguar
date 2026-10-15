@@ -517,7 +517,9 @@ function selectMainTab(tabKey) {
     astralObservatory.init();
   }
 
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (typeof window.scrollTo === "function") {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }
 window.selectMainTab = selectMainTab;
 

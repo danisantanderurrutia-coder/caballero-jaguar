@@ -3207,9 +3207,6 @@ const imperivmEngine = {
     `;
   },
 
-    this.openDrawer();
-  },
-
   // --- MODAL DETALLE DE OBJETO BLOQUEADO O DESBLOQUEADO ---
   openItemDetailsModal(itemId) {
     this.openArmamentariumModal("all", itemId);
