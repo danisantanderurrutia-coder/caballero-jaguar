@@ -1112,13 +1112,16 @@ const imperivmEngine = {
             <h3 class="imperivm-rail-title">🌅 Plan de Hoy • ${today.toUpperCase()} <span class="dev-section-label">#rail-today-flow</span></h3>
           </div>
           <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-            <!-- SELECTOR DE ESTRATEGIA: MOOD FRESH VS MOOD EMERGENCY -->
+            <!-- SELECTOR DE ESTRATEGIA: MOOD FRESH VS MOOD EMERGENCY VS TESTUDO -->
             <div style="display: flex; gap: 4px; background: rgba(0,0,0,0.5); padding: 3px 5px; border-radius: 8px; border: 1px solid rgba(212,175,55,0.25);">
               <button class="btn-mood-toggle ${currentMood === 'fresh' ? 'active-fresh' : ''}" onclick="imperivmEngine.switchWeeklyMood('fresh');" title="Activar Mood Fresh (Ritmo Balanceado & Polimatía)">
                 🌿 Fresh
               </button>
               <button class="btn-mood-toggle ${currentMood === 'emergency' ? 'active-emergency' : ''}" onclick="imperivmEngine.switchWeeklyMood('emergency');" title="Activar Mood Emergency (Asalto Frontal: 2x Bloques de Empleo)">
                 🚨 Emergency (2x Empleo)
+              </button>
+              <button class="btn-mood-toggle" style="border: 1px solid rgba(243,208,121,0.45); color: #F6E2A3;" onclick="if(window.hypomnemataJournal) hypomnemataJournal.toggleTodayTestudo();" title="Activar/Desactivar Guardia Testudo (Día de Quiebre Kintsugi)">
+                🛡️ Testudo / Kintsugi
               </button>
             </div>
 
@@ -1186,8 +1189,23 @@ const imperivmEngine = {
           </div>
         </div>
 
+        <!-- MOSAICO KINTSUGI DE SOBERANÍA & PROTOCOLO DE QUIEBRE (TESTUDO) -->
+        ${(typeof window.hypomnemataJournal !== "undefined" && typeof window.hypomnemataJournal.renderMosaicBannerHTML === "function")
+          ? window.hypomnemataJournal.renderMosaicBannerHTML(true)
+          : ""}
+
         <div class="imperivm-carousel-track" id="today-flow-track">
           
+          <!-- 0. DIARIO HYPOMNÉMATA & KINTSUGI -->
+          <div class="imperivm-card" style="cursor: pointer; border-color: rgba(243,208,121,0.5);" onclick="selectMainTab('diario');">
+            <div class="imperivm-card-media">
+              <img src="assets/banner_hypomnemata.jpg" alt="Diario Hypomnémata">
+            </div>
+            <div class="imperivm-card-body">
+              <h4 class="imperivm-card-title">📜 Diario Hypomnémata</h4>
+            </div>
+          </div>
+
           <!-- 1. MOMENTOS DEL DÍA -->
           <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openFlowBlockModal('aurora');">
             <div class="imperivm-card-media">

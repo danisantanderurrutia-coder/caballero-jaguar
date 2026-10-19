@@ -63,7 +63,7 @@
   }
 
   // --- ESTADO ---
-  let state = { v: 1, ledger: [], migrated: false };
+  let state = { v: 1, ledger: [], migrated: false, testudoDays: {} };
 
   function load() {
     try {
@@ -71,6 +71,7 @@
       if (raw) {
         const p = JSON.parse(raw);
         if (p && Array.isArray(p.ledger)) state = Object.assign(state, p);
+        if (!state.testudoDays || typeof state.testudoDays !== "object") state.testudoDays = {};
       }
     } catch (e) { console.error("[CJProgress] carga:", e); }
   }
@@ -104,6 +105,27 @@
     return state.ledger.reduce((s, e) => s + e.xp, 0);
   }
 
+  // --- GUARDIA TESTUDO / DÍAS KINTSUGI (DÍAS DE QUIEBRE Y CONTENCIÓN) ---
+  function isTestudoDay(date) {
+    date = date || todayLocal();
+    return Boolean(state.testudoDays && state.testudoDays[date] && state.testudoDays[date].active);
+  }
+
+  function getTestudoInfo(date) {
+    date = date || todayLocal();
+    const rec = (state.testudoDays && state.testudoDays[date]) || null;
+    const shields = (rec && rec.shields) || { dilacion: false, somatica: false, descarga: false };
+    const shieldsDone = (shields.dilacion ? 1 : 0) + (shields.somatica ? 1 : 0) + (shields.descarga ? 1 : 0);
+    return {
+      date,
+      active: Boolean(rec && rec.active),
+      reason: (rec && rec.reason) || "Momento de quiebre / Contención emocional",
+      ts: (rec && rec.ts) || null,
+      shields,
+      shieldsDone
+    };
+  }
+
   function levelInfo(xp) {
     xp = Math.max(0, Number(xp) || 0);
     let idx = 0;
@@ -128,12 +150,68 @@
 
   function streakInfo() {
     const today = todayLocal();
-    const active = (d) => dayXP(d) >= CONFIG.activeDayXP;
+    const active = (d) => dayXP(d) >= CONFIG.activeDayXP || isTestudoDay(d);
     let cursor = active(today) ? today : addDays(today, -1);
     let n = 0;
-    while (active(cursor) && n < 3650) { n++; cursor = addDays(cursor, -1); }
+    let testudoInStreak = 0;
+    while (active(cursor) && n < 3650) {
+      n++;
+      if (isTestudoDay(cursor)) testudoInStreak++;
+      cursor = addDays(cursor, -1);
+    }
     const start = n ? addDays(active(today) ? today : addDays(today, -1), -(n - 1)) : null;
-    return { days: n, start, todayActive: active(today) };
+
+    // Estadísticas de últimos 30 días y velocidad de recuperación Kintsugi
+    let testudoTotal30 = 0;
+    let recSum = 0, recCount = 0;
+    for (let i = 29; i >= 0; i--) {
+      const d = addDays(today, -i);
+      if (isTestudoDay(d)) {
+        testudoTotal30++;
+        for (let k = 1; k <= 7 && (i - k) >= 0; k++) {
+          const nextD = addDays(d, k);
+          if (dayXP(nextD) >= CONFIG.activeDayXP && !isTestudoDay(nextD)) {
+            recSum += k;
+            recCount++;
+            break;
+          }
+        }
+      }
+    }
+    const recoveryDaysAvg = recCount ? Number((recSum / recCount).toFixed(1)) : 1.0;
+
+    return {
+      days: n,
+      start,
+      todayActive: active(today),
+      todayTestudo: isTestudoDay(today),
+      testudoInStreak,
+      testudoTotal30,
+      recoveryDaysAvg
+    };
+  }
+
+  function mosaic(days) {
+    days = Math.max(7, Math.min(90, Number(days) || 21));
+    const t = todayLocal(), out = [];
+    for (let i = days - 1; i >= 0; i--) {
+      const d = addDays(t, -i);
+      const xp = dayXP(d);
+      const tInfo = getTestudoInfo(d);
+      let status = "empty";
+      if (tInfo.active) status = "kintsugi";
+      else if (xp >= CONFIG.activeDayXP) status = "conquest";
+      else if (xp > 0) status = "partial";
+      out.push({
+        date: d,
+        xp,
+        status,
+        isTestudo: tInfo.active,
+        shieldsDone: tInfo.shieldsDone,
+        reason: tInfo.reason
+      });
+    }
+    return out;
   }
 
   // --- API PÚBLICA ---
@@ -326,6 +404,76 @@
     sync();
   }
 
+  function toggleTestudoDay(date, reason) {
+    date = date || todayLocal();
+    if (!state.testudoDays || typeof state.testudoDays !== "object") state.testudoDays = {};
+    const cur = state.testudoDays[date] || {
+      active: false,
+      ts: Date.now(),
+      reason: "Momento de quiebre / Contención emocional",
+      shields: { dilacion: false, somatica: false, descarga: false }
+    };
+    cur.active = !cur.active;
+    cur.ts = Date.now();
+    if (reason) cur.reason = String(reason).slice(0, 140);
+    state.testudoDays[date] = cur;
+    save();
+
+    if (cur.active) {
+      award({
+        xp: 35,
+        aura: "espiritualidad",
+        desc: "🛡️ Formación Testudo Activada (Guardia Kintsugi de Contención)",
+        source: "testudo",
+        key: "testudo-activate-" + date
+      });
+      notify("🛡️ Guardia Testudo activada: Tu racha hoy está protegida con Sello Kintsugi (+35 XP)");
+    } else {
+      notify("🛡️ Guardia Testudo desactivada para " + date);
+    }
+    sync();
+    return getTestudoInfo(date);
+  }
+
+  function toggleTestudoShield(shieldKey, date) {
+    date = date || todayLocal();
+    if (!["dilacion", "somatica", "descarga"].includes(shieldKey)) return null;
+    if (!state.testudoDays || typeof state.testudoDays !== "object") state.testudoDays = {};
+    const cur = state.testudoDays[date] || {
+      active: true,
+      ts: Date.now(),
+      reason: "Momento de quiebre / Contención emocional",
+      shields: { dilacion: false, somatica: false, descarga: false }
+    };
+    cur.active = true;
+    if (!cur.shields) cur.shields = { dilacion: false, somatica: false, descarga: false };
+    cur.shields[shieldKey] = !cur.shields[shieldKey];
+    state.testudoDays[date] = cur;
+    save();
+
+    const shieldMeta = {
+      dilacion: { xp: 35, aura: "espiritualidad", desc: "🛡️ Escudo I (Dilación de Séneca): No escalar en caliente ni ceder al impulso" },
+      somatica: { xp: 35, aura: "salud", desc: "💧 Escudo II (Trinchera Somática): Hidratación, calma física y sueño" },
+      descarga: { xp: 35, aura: "mente", desc: "📜 Escudo III (Catarsis Estoica): Desahogo consciente en Diario o Terapia" }
+    }[shieldKey];
+
+    const key = "testudo-shield-" + shieldKey + "-" + date;
+    if (cur.shields[shieldKey] && shieldMeta) {
+      award({
+        xp: shieldMeta.xp,
+        aura: shieldMeta.aura,
+        desc: shieldMeta.desc,
+        source: "testudo",
+        key
+      });
+      notify("🛡️ " + shieldMeta.desc + " (+35 XP)");
+    } else {
+      revoke({ key });
+    }
+    sync();
+    return getTestudoInfo(date);
+  }
+
   function notify(msg) { if (typeof window.showNotification === "function") window.showNotification(msg); }
   function sound(k) { if (typeof window.playSoundEffect === "function") { try { window.playSoundEffect(k); } catch (e) {} } }
 
@@ -362,6 +510,7 @@
     CONFIG, LEVELS, AURAS, normAura,
     todayLocal, dateKey, addDays,
     award, revoke, revokeById, reconcileVirtueDay,
+    isTestudoDay, getTestudoInfo, toggleTestudoDay, toggleTestudoShield, mosaic,
     totalXP, dayXP, levelInfo, streakInfo, snapshot,
     xpByAura, lastDays, recent, sync, init
   };

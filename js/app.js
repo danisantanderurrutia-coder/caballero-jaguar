@@ -457,6 +457,9 @@ function selectMainTab(tabKey) {
     btnDataTab = "finanzas";
   } else if (tabKey === "legado") {
     btnDataTab = "legado";
+  } else if (tabKey === "diario" || tabKey === "hypomnemata") {
+    tabKey = "diario";
+    btnDataTab = "diario";
   } else if (tabKey === "bitacoras") {
     btnDataTab = "bitacoras";
   } else {
@@ -478,6 +481,10 @@ function selectMainTab(tabKey) {
 
   if (tabKey === "bitacoras") {
     openBitacorasModal();
+  } else if (tabKey === "diario") {
+    if (typeof hypomnemataJournal !== "undefined" && typeof hypomnemataJournal.init === "function") {
+      hypomnemataJournal.init();
+    }
   } else if (tabKey === "dashboard") {
     if (typeof imperivmEngine !== "undefined" && typeof imperivmEngine.render === "function") {
       imperivmEngine.render();
