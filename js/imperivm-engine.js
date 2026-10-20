@@ -698,7 +698,9 @@ const imperivmEngine = {
 
   getTodayKey() {
     const dayNames = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
-    return dayNames[new Date().getDay()];
+    // Corte circadiano a las 03:00 AM: antes de las 3 AM sigue contando como el día anterior
+    const circDate = new Date(Date.now() - 3 * 3600 * 1000);
+    return dayNames[circDate.getDay()];
   },
 
   getCharacterXP() {
@@ -1127,7 +1129,16 @@ const imperivmEngine = {
       { key: "domingo", label: "DOMINGO", tema: "Descanso, Lectura & Cierre", img: IMPERIVM_MEDIA.outfit_domingo }
     ];
 
-    const currentMood = localStorage.getItem("CABALLERO_WEEKLY_MOOD") || imperivmState.weeklyMood || "emergency";
+    let currentMood = localStorage.getItem("CABALLERO_WEEKLY_MOOD") || imperivmState.weeklyMood || "emergency";
+    // Auto-limpieza: si quedó "testudo" guardado de un día anterior (o migrado por corte de 3 AM) y hoy NO es día Testudo, volver a "emergency"
+    if (currentMood === "testudo" && window.CJProgress && typeof window.CJProgress.isTestudoDay === "function") {
+      const todayIso = window.cjToday ? window.cjToday() : new Date(Date.now() - 3 * 3600 * 1000).toISOString().slice(0, 10);
+      if (!window.CJProgress.isTestudoDay(todayIso)) {
+        currentMood = "emergency";
+        localStorage.setItem("CABALLERO_WEEKLY_MOOD", "emergency");
+        imperivmState.weeklyMood = "emergency";
+      }
+    }
     const scheduleData = (typeof WEEKLY_STRATEGY_SCHEDULE !== "undefined") ? WEEKLY_STRATEGY_SCHEDULE[currentMood] : null;
     const todayPlan = (scheduleData && scheduleData.days && scheduleData.days[today]) ? scheduleData.days[today] : { focus: "Estrategia Activa", blocks: [] };
 
@@ -4272,10 +4283,16 @@ const imperivmEngine = {
     imperivmState.weeklyMood = mood;
 
     if (!fromJournal && window.CJProgress && typeof window.CJProgress.isTestudoDay === "function") {
-      const todayDate = window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10);
+      const todayDate = window.cjToday ? window.cjToday() : new Date(Date.now() - 3 * 3600 * 1000).toISOString().slice(0, 10);
       const isCurrentlyTestudo = window.CJProgress.isTestudoDay(todayDate);
       if (mood === "testudo" && !isCurrentlyTestudo) {
         window.CJProgress.toggleTestudoDay(todayDate, "Modo Testudo activado desde Plan de Hoy");
+      } else if (mood !== "testudo" && isCurrentlyTestudo) {
+        if (typeof window.CJProgress.setTestudoDay === "function") {
+          window.CJProgress.setTestudoDay(todayDate, false);
+        } else {
+          window.CJProgress.toggleTestudoDay(todayDate);
+        }
       }
     }
 

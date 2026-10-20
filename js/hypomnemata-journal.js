@@ -171,6 +171,7 @@
     filterTag: "all",
     onlyKintsugi: false,
     searchQuery: "",
+    landingCollapsed: localStorage.getItem("CJ_KINTSUGI_BANNER_COLLAPSED") === "1",
     draft: null
   };
 
@@ -194,6 +195,27 @@
     };
   }
 
+  // Reconcilia entradas registradas de madrugada (< 03:00 AM) al día anterior
+  function reconcileCircadianEntries() {
+    if (!state || !Array.isArray(state.entries)) return;
+    if (!window.CJProgress || typeof window.CJProgress.circadianDateKey !== "function") return;
+    let dirty = false;
+    state.entries.forEach((e) => {
+      if (e && e.ts) {
+        const d = new Date(e.ts);
+        if (!isNaN(d.getTime()) && d.getHours() < 3) {
+          const calKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+          const circKey = window.CJProgress.circadianDateKey(e.ts);
+          if (e.date === calKey && circKey !== calKey) {
+            e.date = circKey;
+            dirty = true;
+          }
+        }
+      }
+    });
+    if (dirty) save();
+  }
+
   function load() {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
@@ -203,6 +225,7 @@
           state = Object.assign(state, parsed);
         }
       }
+      reconcileCircadianEntries();
     } catch (e) {
       console.error("[Hypomnemata] Error cargando estado:", e);
     }
@@ -447,6 +470,29 @@
     const tInfo = window.CJProgress.getTestudoInfo(today);
     const tiles = window.CJProgress.mosaic(21);
 
+    // Si está en el Landing (compact) y el usuario lo colapsó (y no hay quiebre activo hoy), mostramos versión ultra-compacta
+    if (compact && ui.landingCollapsed && !tInfo.active) {
+      return `
+        <div class="kintsugi-sovereignty-card" style="background: rgba(13, 18, 29, 0.85); border: 1px solid rgba(197, 154, 40, 0.28); border-radius: 10px; padding: 10px 16px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+            <span style="font-family: 'Cinzel', serif; font-size: 0.9rem; font-weight: 800; color: #F6E2A3;">🏛️ Mosaico Kintsugi (21d)</span>
+            <span class="badge-tag" style="background: rgba(197,154,40,0.18); border: 1px solid #E5BE53; color: #F6E2A3; font-size: 0.7rem; padding: 2px 9px;">
+              🔥 Racha: ${st.days}d ${st.testudoInStreak > 0 ? `• 🏺 ${st.testudoInStreak} Kintsugi` : ""}
+            </span>
+            <span style="font-size: 0.75rem; color: #94A3B8;">🌙 Cambio de día circadiano: 03:00 AM</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <button onclick="hypomnemataJournal.toggleTodayTestudo();" style="background: rgba(197, 154, 40, 0.16); color: #F6E2A3; border: 1px solid #E5BE53; padding: 5px 11px; border-radius: 6px; font-size: 0.74rem; font-weight: 700; cursor: pointer;">
+              🛡️ Activar Día de Quiebre
+            </button>
+            <button onclick="hypomnemataJournal.toggleLandingBanner(false);" style="background: rgba(255,255,255,0.06); color: #CBD5E1; border: 1px solid rgba(255,255,255,0.15); padding: 5px 11px; border-radius: 6px; font-size: 0.74rem; font-weight: 700; cursor: pointer;">
+              ▼ Mostrar Mosaico
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
     const shieldsList = [
       {
         key: "dilacion",
@@ -485,10 +531,13 @@
                 <span class="badge-tag" style="background: rgba(16,185,129,0.14); border: 1px solid rgba(16,185,129,0.4); color: #6EE7B7; font-size: 0.72rem; padding: 3px 10px;" title="Promedio de días para volver a >=100 XP tras un quiebre">
                   ⚡ Recuperación: ~${st.recoveryDaysAvg}d
                 </span>
+                <span class="badge-tag" style="background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.35); color: #7DD3FC; font-size: 0.7rem; padding: 3px 9px;" title="Todo registro hecho entre las 00:00 y las 02:59 AM se asigna automáticamente al día anterior">
+                  🌙 Corte Circadiano: 03:00 AM
+                </span>
               </div>
               <div style="font-size: 0.82rem; color: #94A3B8; margin-top: 4px;">
                 ${tInfo.active
-                  ? '🛡️ <strong style="color:#F6E2A3;">Formación Testudo Activa Hoy:</strong> Tu racha está protegida con oro Kintsugi. En días de quiebre, sostener la templanza es victoria.'
+                  ? '🛡️ <strong style="color:#F6E2A3;">Formación Testudo Activa Hoy:</strong> Tu racha está protegida con oro Kintsugi. Si este quiebre fue de anoche, puedes pasarlo a ayer o desactivarlo abajo.'
                   : 'Los días de avance brillan en <strong style="color:#34D399;">Esmeralda</strong>; los días de quiebre sostenidos con templanza se sellan en <strong style="color:#F3D079;">Obsidiana & Oro Kintsugi</strong> sin romper tu racha.'}
               </div>
             </div>
@@ -496,13 +545,27 @@
 
           <!-- BOTONES DE ACCIÓN RÁPIDA -->
           <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-            <button onclick="hypomnemataJournal.toggleTodayTestudo();" style="background: ${tInfo.active ? 'linear-gradient(135deg, #F3D079 0%, #C59A28 100%)' : 'rgba(197, 154, 40, 0.16)'}; color: ${tInfo.active ? '#0B0E16' : '#F6E2A3'}; border: 1.5px solid #E5BE53; padding: 8px 15px; border-radius: 8px; font-size: 0.78rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 7px; transition: all 0.2s;">
-              <span>${tInfo.active ? '🏺 Guardia Kintsugi Activa (Protegido)' : '🛡️ Activar Día de Quiebre / Testudo'}</span>
-            </button>
+            ${tInfo.active ? `
+              <button onclick="hypomnemataJournal.moveTodayTestudoToYesterday();" title="Mueve el quiebre y escudos de hoy al día de ayer y deja el día de hoy limpio" style="background: rgba(56, 189, 248, 0.16); color: #BAE6FD; border: 1px solid rgba(56, 189, 248, 0.55); padding: 8px 13px; border-radius: 8px; font-size: 0.76rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                ⏮️ Pasar Quiebre a Ayer
+              </button>
+              <button onclick="hypomnemataJournal.deactivateTodayTestudo();" title="Desactiva la Guardia Kintsugi de hoy y vuelve al modo normal" style="background: rgba(244, 63, 94, 0.18); color: #FECDD3; border: 1px solid rgba(244, 63, 94, 0.55); padding: 8px 13px; border-radius: 8px; font-size: 0.76rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                ✕ Salir de Modo Quiebre Hoy
+              </button>
+            ` : `
+              <button onclick="hypomnemataJournal.toggleTodayTestudo();" style="background: rgba(197, 154, 40, 0.16); color: #F6E2A3; border: 1.5px solid #E5BE53; padding: 8px 15px; border-radius: 8px; font-size: 0.78rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 7px; transition: all 0.2s;">
+                <span>🛡️ Activar Día de Quiebre / Testudo</span>
+              </button>
+            `}
             ${compact ? `
               <button onclick="if(window.imperivmEngine && imperivmEngine.openFlowBlockModal) imperivmEngine.openFlowBlockModal('diario'); else selectMainTab('diario');" style="background: rgba(255,255,255,0.06); color: #E2E8F0; border: 1px solid rgba(255,255,255,0.18); padding: 8px 14px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer;">
-                📜 Abrir Diario Hypomnémata
+                📜 Abrir Diario
               </button>
+              ${!tInfo.active ? `
+                <button onclick="hypomnemataJournal.toggleLandingBanner(true);" title="Ocultar mosaico en el inicio" style="background: rgba(255,255,255,0.04); color: #94A3B8; border: 1px solid rgba(255,255,255,0.12); padding: 8px 11px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">
+                  ▲ Ocultar
+                </button>
+              ` : ""}
             ` : ""}
           </div>
         </div>
@@ -1447,6 +1510,66 @@
     toggleOnlyKintsugi() {
       ui.onlyKintsugi = !ui.onlyKintsugi;
       render();
+    },
+    toggleLandingBanner(collapsed) {
+      ui.landingCollapsed = typeof collapsed === "boolean" ? collapsed : !ui.landingCollapsed;
+      localStorage.setItem("CJ_KINTSUGI_BANNER_COLLAPSED", ui.landingCollapsed ? "1" : "0");
+      render();
+      if (window.imperivmEngine && typeof window.imperivmEngine.render === "function") {
+        window.imperivmEngine.render();
+      }
+    },
+    deactivateTodayTestudo() {
+      const today = todayStr();
+      if (window.CJProgress && typeof window.CJProgress.setTestudoDay === "function") {
+        window.CJProgress.setTestudoDay(today, false);
+      }
+      if (ui.draft && ui.draft.date === today) {
+        ui.draft.isKintsugi = false;
+        if (ui.draft.mood === "quiebre") ui.draft.mood = "templanza";
+      }
+      if (window.imperivmEngine && typeof window.imperivmEngine.switchWeeklyMood === "function") {
+        window.imperivmEngine.switchWeeklyMood("emergency", true);
+      }
+      if (typeof window.showNotification === "function") {
+        window.showNotification("☀️ Día de hoy liberado del Modo Quiebre. ¡Listo para registrar tus actividades!");
+      }
+      render();
+      if (window.imperivmEngine && typeof window.imperivmEngine.render === "function") {
+        window.imperivmEngine.render();
+      }
+    },
+    moveTodayTestudoToYesterday() {
+      const today = todayStr();
+      let prevDate = null;
+      if (window.CJProgress && typeof window.CJProgress.moveTestudoToPreviousDay === "function") {
+        const res = window.CJProgress.moveTestudoToPreviousDay(today);
+        if (res) prevDate = res.movedTo;
+      }
+      if (prevDate && Array.isArray(state.entries)) {
+        let changed = false;
+        state.entries.forEach((e) => {
+          if (e && e.date === today && (e.isKintsugi || e.mood === "quiebre")) {
+            e.date = prevDate;
+            changed = true;
+          }
+        });
+        if (changed) save();
+      }
+      if (ui.draft && ui.draft.date === today) {
+        ui.draft.isKintsugi = false;
+        if (ui.draft.mood === "quiebre") ui.draft.mood = "templanza";
+      }
+      if (window.imperivmEngine && typeof window.imperivmEngine.switchWeeklyMood === "function") {
+        window.imperivmEngine.switchWeeklyMood("emergency", true);
+      }
+      if (typeof window.showNotification === "function") {
+        window.showNotification(`⏮️ Quiebre Kintsugi movido a ayer (${prevDate || "ayer"}). ¡Hoy está limpio para conquistar!`);
+      }
+      render();
+      if (window.imperivmEngine && typeof window.imperivmEngine.render === "function") {
+        window.imperivmEngine.render();
+      }
     },
     toggleTodayTestudo() {
       if (window.CJProgress && typeof window.CJProgress.toggleTestudoDay === "function") {

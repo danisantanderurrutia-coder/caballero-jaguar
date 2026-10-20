@@ -49,21 +49,76 @@
     tramites: "vida", empleo: "vida", tesis: "vida", general: "vida"
   };
 
-  // --- FECHAS LOCALES ---
+  // --- FECHAS LOCALES CON CORTE CIRCADIANO A LAS 03:00 AM ---
+  // Todo lo registrado entre las 00:00 y las 02:59 AM pertenece al día anterior.
+  const CIRCADIAN_CUTOFF_HOUR = 3;
+
   function dateKey(d) {
     d = d || new Date();
     const m = String(d.getMonth() + 1).padStart(2, "0");
     const day = String(d.getDate()).padStart(2, "0");
     return d.getFullYear() + "-" + m + "-" + day;
   }
-  function todayLocal() { return dateKey(new Date()); }
+
+  function circadianDate(dOrTs) {
+    const ms = dOrTs instanceof Date ? dOrTs.getTime() : (typeof dOrTs === "number" ? dOrTs : Date.now());
+    return new Date(ms - CIRCADIAN_CUTOFF_HOUR * 3600 * 1000);
+  }
+
+  function circadianDateKey(dOrTs) {
+    return dateKey(circadianDate(dOrTs));
+  }
+
+  function todayLocal() {
+    return circadianDateKey(new Date());
+  }
+
   function addDays(key, n) {
     const [y, m, d] = key.split("-").map(Number);
-    return dateKey(new Date(y, m - 1, d + n));
+    return dateKey(new Date(y, m - 1, d + n, 12, 0, 0));
   }
 
   // --- ESTADO ---
   let state = { v: 1, ledger: [], migrated: false, testudoDays: {} };
+
+  function reconcileCircadianHistory() {
+    let changed = false;
+    // 1. Reconciliar entradas del ledger registradas antes de las 03:00 AM
+    if (Array.isArray(state.ledger)) {
+      state.ledger.forEach((e) => {
+        if (!e || !e.ts || e.source === "migracion") return;
+        const dt = new Date(e.ts);
+        if (dt.getHours() < CIRCADIAN_CUTOFF_HOUR) {
+          const trueDate = circadianDateKey(e.ts);
+          if (e.date && e.date !== trueDate) {
+            const oldDate = e.date;
+            e.date = trueDate;
+            if (typeof e.key === "string" && e.key.endsWith(oldDate)) {
+              e.key = e.key.slice(0, -oldDate.length) + trueDate;
+            }
+            changed = true;
+          }
+        }
+      });
+    }
+    // 2. Reconciliar días Testudo / Kintsugi registrados antes de las 03:00 AM
+    if (state.testudoDays && typeof state.testudoDays === "object") {
+      Object.keys(state.testudoDays).forEach((dKey) => {
+        const rec = state.testudoDays[dKey];
+        if (!rec || !rec.ts) return;
+        const dt = new Date(rec.ts);
+        if (dt.getHours() < CIRCADIAN_CUTOFF_HOUR) {
+          const trueDate = circadianDateKey(rec.ts);
+          if (trueDate !== dKey) {
+            state.testudoDays[trueDate] = Object.assign({}, state.testudoDays[trueDate] || {}, rec);
+            delete state.testudoDays[dKey];
+            changed = true;
+          }
+        }
+      });
+    }
+    if (changed) save();
+  }
 
   function load() {
     try {
@@ -73,6 +128,7 @@
         if (p && Array.isArray(p.ledger)) state = Object.assign(state, p);
         if (!state.testudoDays || typeof state.testudoDays !== "object") state.testudoDays = {};
       }
+      reconcileCircadianHistory();
     } catch (e) { console.error("[CJProgress] carga:", e); }
   }
   function save() {
@@ -404,7 +460,7 @@
     sync();
   }
 
-  function toggleTestudoDay(date, reason) {
+  function setTestudoDay(date, active, reason) {
     date = date || todayLocal();
     if (!state.testudoDays || typeof state.testudoDays !== "object") state.testudoDays = {};
     const cur = state.testudoDays[date] || {
@@ -413,7 +469,7 @@
       reason: "Momento de quiebre / Contención emocional",
       shields: { dilacion: false, somatica: false, descarga: false }
     };
-    cur.active = !cur.active;
+    cur.active = Boolean(active);
     cur.ts = Date.now();
     if (reason) cur.reason = String(reason).slice(0, 140);
     state.testudoDays[date] = cur;
@@ -427,12 +483,48 @@
         source: "testudo",
         key: "testudo-activate-" + date
       });
-      notify("🛡️ Guardia Testudo activada: Tu racha hoy está protegida con Sello Kintsugi (+35 XP)");
+      notify("🛡️ Guardia Testudo activada para " + date + " (+35 XP)");
     } else {
       notify("🛡️ Guardia Testudo desactivada para " + date);
     }
     sync();
     return getTestudoInfo(date);
+  }
+
+  function toggleTestudoDay(date, reason) {
+    date = date || todayLocal();
+    const currentlyActive = isTestudoDay(date);
+    return setTestudoDay(date, !currentlyActive, reason);
+  }
+
+  function moveTestudoToPreviousDay(fromDate) {
+    fromDate = fromDate || todayLocal();
+    const prevDate = addDays(fromDate, -1);
+    if (!state.testudoDays || typeof state.testudoDays !== "object") state.testudoDays = {};
+    const rec = state.testudoDays[fromDate] || {
+      active: true,
+      ts: Date.now(),
+      reason: "Momento de quiebre / Contención emocional",
+      shields: { dilacion: false, somatica: false, descarga: false }
+    };
+    state.testudoDays[prevDate] = Object.assign({}, state.testudoDays[prevDate] || {}, rec, { active: true });
+    delete state.testudoDays[fromDate];
+
+    // Mover también entradas del ledger de fuente "testudo" de fromDate a prevDate
+    if (Array.isArray(state.ledger)) {
+      state.ledger.forEach((e) => {
+        if (e && e.date === fromDate && e.source === "testudo") {
+          e.date = prevDate;
+          if (typeof e.key === "string" && e.key.endsWith(fromDate)) {
+            e.key = e.key.slice(0, -fromDate.length) + prevDate;
+          }
+        }
+      });
+    }
+    save();
+    notify("🏺 Guardia Kintsugi trasladada al día anterior (" + prevDate + "). Hoy queda libre.");
+    sync();
+    return getTestudoInfo(prevDate);
   }
 
   function toggleTestudoShield(shieldKey, date) {
@@ -508,13 +600,14 @@
 
   window.CJProgress = {
     CONFIG, LEVELS, AURAS, normAura,
+    CIRCADIAN_CUTOFF_HOUR, circadianDate, circadianDateKey,
     todayLocal, dateKey, addDays,
     award, revoke, revokeById, reconcileVirtueDay,
-    isTestudoDay, getTestudoInfo, toggleTestudoDay, toggleTestudoShield, mosaic,
+    isTestudoDay, getTestudoInfo, setTestudoDay, toggleTestudoDay, moveTestudoToPreviousDay, toggleTestudoShield, mosaic,
     totalXP, dayXP, levelInfo, streakInfo, snapshot,
     xpByAura, lastDays, recent, sync, init
   };
-  window.CJDates = { todayLocal, dateKey, addDays };
+  window.CJDates = { todayLocal, dateKey, addDays, circadianDate, circadianDateKey };
 
   /** Compatibilidad: awardXP(cantidad, descripción, aura?, clave?) */
   window.awardXP = function (amount, description, aura, key) {
