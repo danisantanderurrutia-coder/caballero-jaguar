@@ -506,6 +506,32 @@ const WEEKLY_STRATEGY_SCHEDULE = {
         ]
       }
     }
+  },
+  testudo: {
+    id: "testudo",
+    name: "Modo Testudo (Guardia Kintsugi & Contención de Quiebre)",
+    icon: "🛡️",
+    color: "#F3D079",
+    badge: "KINTSUGI",
+    slogan: "Formación de Escudos: Dilación de Séneca, Cuidado Somático y Catarsis Escrita",
+    desc: "Protocolo de Trinchera para días de sobrecarga emocional, duelo o conflicto. Tu racha queda protegida en Obsidiana y Oro: hoy ganar el día es sostener la templanza, cuidar el cuerpo y no reaccionar en caliente.",
+    pennants: [
+      { id: "espiritualidad", name: "Espiritualidad & Templanza", icon: "🛡️", when: "Todo el día • Dilación de Séneca (no escalar en caliente ni ceder a impulsos)", status: "✓ ESCUDO I" },
+      { id: "salud", name: "Salud Somática", icon: "💧", when: "Todo el día • Hidratación 3L, nutrición limpia y sueño prioritario", status: "✓ ESCUDO II" },
+      { id: "mente", name: "Mente & Catarsis", icon: "📜", when: "Tarde/Noche • Descarga en el Diario Hypomnémata o Terapia Estoica", status: "✓ ESCUDO III" }
+    ],
+    days: ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"].reduce((acc, d) => {
+      acc[d] = {
+        focus: "Formación Testudo: Contención, Dilación Estoica & Reposo Somático",
+        blocks: [
+          { time: "ESCUDO I", title: "🛡️ Dilación de Séneca: No negociar ni responder en caliente; 0 válvulas destructivas", aura: "espiritualidad", badge: "🕯️ Templanza (+35 XP)" },
+          { time: "ESCUDO II", title: "💧 Trinchera Somática: Hidratación 3L, comida limpia y caminata de regulación", aura: "salud", badge: "🌿 Salud (+35 XP)" },
+          { time: "ESCUDO III", title: "📜 Catarsis en el Códice: Vaciar hechos y juicios en el Diario o Terapia Estoica", aura: "mente", badge: "🧠 Mente (+35 XP)" },
+          { time: "ESCUDO IV", title: "🌙 Reposo sin Culpa: Dormir 8h; mañana se retoma la línea con serenidad", aura: "salud", badge: "🏺 Kintsugi" }
+        ]
+      };
+      return acc;
+    }, {})
   }
 };
 window.WEEKLY_STRATEGY_SCHEDULE = WEEKLY_STRATEGY_SCHEDULE;
@@ -1120,8 +1146,8 @@ const imperivmEngine = {
               <button class="btn-mood-toggle ${currentMood === 'emergency' ? 'active-emergency' : ''}" onclick="imperivmEngine.switchWeeklyMood('emergency');" title="Activar Mood Emergency (Asalto Frontal: 2x Bloques de Empleo)">
                 🚨 Emergency (2x Empleo)
               </button>
-              <button class="btn-mood-toggle" style="border: 1px solid rgba(243,208,121,0.45); color: #F6E2A3;" onclick="if(window.hypomnemataJournal) hypomnemataJournal.toggleTodayTestudo();" title="Activar/Desactivar Guardia Testudo (Día de Quiebre Kintsugi)">
-                🛡️ Testudo / Kintsugi
+              <button class="btn-mood-toggle" style="${currentMood === 'testudo' ? 'background: linear-gradient(135deg, #F3D079 0%, #C59A28 100%); color: #090D16; font-weight: 900; border: 1px solid #FFF;' : 'border: 1px solid rgba(243,208,121,0.45); color: #F6E2A3;'}" onclick="imperivmEngine.switchWeeklyMood('testudo');" title="Activar Modo Testudo (Día de Quiebre / Guardia Kintsugi)">
+                🛡️ Testudo (Kintsugi)
               </button>
             </div>
 
@@ -1136,30 +1162,35 @@ const imperivmEngine = {
         </div>
 
         <!-- PANEL ESTRATÉGICO DE MOOD SEMANAL (ESPACIOSO Y ESTRUCTURADO) -->
-        <div class="imperivm-mood-strategic-card" style="margin-bottom: 16px; background: ${currentMood === 'emergency' ? 'linear-gradient(135deg, rgba(225,29,72,0.15) 0%, rgba(14,18,29,0.92) 100%)' : 'linear-gradient(135deg, rgba(16,185,129,0.15) 0%, rgba(14,18,29,0.92) 100%)'}; border: 1.5px solid ${currentMood === 'emergency' ? 'rgba(244,63,94,0.45)' : 'rgba(16,185,129,0.45)'}; border-radius: 12px; padding: 18px 22px; box-shadow: 0 6px 24px rgba(0,0,0,0.45);">
+        <div class="imperivm-mood-strategic-card" style="margin-bottom: 16px; background: ${currentMood === 'testudo' ? 'linear-gradient(135deg, rgba(197,154,40,0.22) 0%, rgba(14,18,29,0.95) 100%)' : (currentMood === 'emergency' ? 'linear-gradient(135deg, rgba(225,29,72,0.15) 0%, rgba(14,18,29,0.92) 100%)' : 'linear-gradient(135deg, rgba(16,185,129,0.15) 0%, rgba(14,18,29,0.92) 100%)')}; border: 1.5px solid ${currentMood === 'testudo' ? '#F3D079' : (currentMood === 'emergency' ? 'rgba(244,63,94,0.45)' : 'rgba(16,185,129,0.45)')}; border-radius: 12px; padding: 18px 22px; box-shadow: 0 6px 24px rgba(0,0,0,0.45);">
           <!-- FILA SUPERIOR: IDENTIDAD DEL MOOD Y ACCIONES -->
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.08);">
             <div style="display: flex; align-items: center; gap: 14px;">
-              <div style="font-size: 1.8rem; background: rgba(0,0,0,0.4); border-radius: 10px; padding: 8px 12px; border: 1px solid ${currentMood === 'emergency' ? 'rgba(244,63,94,0.4)' : 'rgba(16,185,129,0.4)'};">
-                ${currentMood === 'emergency' ? '🚨' : '🌿'}
+              <div style="font-size: 1.8rem; background: rgba(0,0,0,0.4); border-radius: 10px; padding: 8px 12px; border: 1px solid ${currentMood === 'testudo' ? '#F3D079' : (currentMood === 'emergency' ? 'rgba(244,63,94,0.4)' : 'rgba(16,185,129,0.4)')};">
+                ${currentMood === 'testudo' ? '🛡️' : (currentMood === 'emergency' ? '🚨' : '🌿')}
               </div>
               <div>
                 <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                   <span style="font-size: 1.05rem; font-weight: 800; color: #FFF; font-family: var(--imperivm-font-title); letter-spacing: 0.05em;">
                     ${scheduleData ? scheduleData.name.toUpperCase() : 'ESTRATEGIA SEMANAL'}
                   </span>
-                  <span class="badge-tag ${currentMood === 'emergency' ? 'badge-pink' : 'badge-emerald'}" style="font-size: 0.72rem; padding: 3px 10px;">
+                  <span class="badge-tag ${currentMood === 'testudo' ? 'badge-gold' : (currentMood === 'emergency' ? 'badge-pink' : 'badge-emerald')}" style="font-size: 0.72rem; padding: 3px 10px;">
                     🎯 ${today.toUpperCase()}: ${todayPlan.focus}
                   </span>
                 </div>
                 <div style="font-size: 0.8rem; color: var(--imperivm-text-muted); margin-top: 3px;">
-                  ${currentMood === 'emergency' ? 'Asalto Frontal: 2 bloques diarios de empleo en Hannover con máxima concentración.' : 'Ritmo Balanceado: Polimatía armónica entre desarrollo profesional, cuerpo y artes.'}
+                  ${currentMood === 'testudo'
+                    ? 'Formación Testudo (Kintsugi): Racha protegida en Obsidiana y Oro. Hoy ganar es sostener la templanza, cuidar el cuerpo y no reaccionar en caliente.'
+                    : (currentMood === 'emergency' ? 'Asalto Frontal: 2 bloques diarios de empleo en Hannover con máxima concentración.' : 'Ritmo Balanceado: Polimatía armónica entre desarrollo profesional, cuerpo y artes.')}
                 </div>
               </div>
             </div>
 
             <!-- BOTONES DE CONTROL DE MOOD -->
-            <div style="display: flex; align-items: center; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <button onclick="imperivmEngine.switchWeeklyMood('${currentMood === 'testudo' ? 'fresh' : 'testudo'}');" style="background: ${currentMood === 'testudo' ? 'linear-gradient(135deg, #F3D079 0%, #C59A28 100%)' : 'rgba(197,154,40,0.16)'}; border: 1px solid #F3D079; color: ${currentMood === 'testudo' ? '#090D16' : '#F6E2A3'}; padding: 8px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
+                <span>${currentMood === 'testudo' ? '🏺 Testudo Activo (Volver a Fresh)' : '🛡️ Activar Modo Testudo (Día de Quiebre)'}</span>
+              </button>
               <button onclick="imperivmEngine.switchWeeklyMood('${currentMood === 'emergency' ? 'fresh' : 'emergency'}');" style="background: rgba(0,0,0,0.35); border: 1px solid var(--imperivm-border-gold); color: var(--imperivm-text-gold); padding: 8px 14px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s;">
                 <span>${currentMood === 'emergency' ? '🌿 Alternar a Mood Fresh' : '🚨 Alternar a Mood Emergency'}</span>
               </button>
@@ -1170,15 +1201,15 @@ const imperivmEngine = {
           <div style="margin-top: 14px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
               <span style="font-size: 0.74rem; font-weight: 700; letter-spacing: 1.2px; color: var(--imperivm-text-gold); text-transform: uppercase;">
-                ⏱️ Cronograma Táctico de Hoy (${todayPlan.blocks.length} Bloques)
+                ⏱️ ${currentMood === 'testudo' ? 'Escudos de Contención en Trinchera Hoy' : `Cronograma Táctico de Hoy (${todayPlan.blocks.length} Bloques)`}
               </span>
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px;">
               ${todayPlan.blocks.map(b => `
-                <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); border-left: 3.5px solid ${currentMood === 'emergency' ? '#F43F5E' : '#10B981'}; border-radius: 8px; padding: 10px 14px; display: flex; flex-direction: column; gap: 4px;">
+                <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); border-left: 3.5px solid ${currentMood === 'testudo' ? '#F3D079' : (currentMood === 'emergency' ? '#F43F5E' : '#10B981')}; border-radius: 8px; padding: 10px 14px; display: flex; flex-direction: column; gap: 4px;">
                   <div style="display: flex; justify-content: space-between; align-items: center;">
                     <strong style="font-size: 0.85rem; color: #FFF; font-family: monospace; letter-spacing: 0.5px;">${b.time}</strong>
-                    <span class="badge-tag ${currentMood === 'emergency' ? 'badge-pink' : 'badge-emerald'}" style="font-size: 0.65rem; padding: 1px 7px;">${b.badge}</span>
+                    <span class="badge-tag ${currentMood === 'testudo' ? 'badge-gold' : (currentMood === 'emergency' ? 'badge-pink' : 'badge-emerald')}" style="font-size: 0.65rem; padding: 1px 7px;">${b.badge}</span>
                   </div>
                   <div style="font-size: 0.82rem; color: #E2E8F0; font-weight: 600;">
                     ${b.title}
@@ -1196,16 +1227,6 @@ const imperivmEngine = {
 
         <div class="imperivm-carousel-track" id="today-flow-track">
           
-          <!-- 0. DIARIO HYPOMNÉMATA & KINTSUGI -->
-          <div class="imperivm-card" style="cursor: pointer; border-color: rgba(243,208,121,0.5);" onclick="selectMainTab('diario');">
-            <div class="imperivm-card-media">
-              <img src="assets/banner_hypomnemata.jpg" alt="Diario Hypomnémata">
-            </div>
-            <div class="imperivm-card-body">
-              <h4 class="imperivm-card-title">📜 Diario Hypomnémata</h4>
-            </div>
-          </div>
-
           <!-- 1. MOMENTOS DEL DÍA -->
           <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openFlowBlockModal('aurora');">
             <div class="imperivm-card-media">
@@ -1236,7 +1257,17 @@ const imperivmEngine = {
             </div>
           </div>
 
-          <!-- 4. NUTRICIÓN -->
+          <!-- 4. DIARIO HYPOMNÉMATA (ENTRE TAREAS DE HOY Y NUTRICIÓN) -->
+          <div class="imperivm-card" style="cursor: pointer; border-color: rgba(243,208,121,0.55);" onclick="imperivmEngine.openFlowBlockModal('diario');">
+            <div class="imperivm-card-media">
+              <img src="assets/banner_hypomnemata.jpg" alt="Diario del Día">
+            </div>
+            <div class="imperivm-card-body">
+              <h4 class="imperivm-card-title">📜 Diario</h4>
+            </div>
+          </div>
+
+          <!-- 5. NUTRICIÓN -->
           <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openFlowBlockModal('nutricion');">
             <div class="imperivm-card-media">
               <img src="${IMPERIVM_MEDIA.nutricion}" alt="Nutrición y Comidas">
@@ -1246,7 +1277,7 @@ const imperivmEngine = {
             </div>
           </div>
 
-          <!-- 5. ENTRENAMIENTO -->
+          <!-- 6. ENTRENAMIENTO -->
           <div class="imperivm-card" style="cursor: pointer;" onclick="imperivmEngine.openFlowBlockModal('entrenamiento');">
             <div class="imperivm-card-media">
               <img src="${IMPERIVM_MEDIA.gym}" alt="Entrenamiento de Hoy" style="object-position: center top !important;">
@@ -1955,7 +1986,8 @@ const imperivmEngine = {
       entrenamiento: "entrenamiento",
       dieta: "nutricion",
       outfit: "outfit",
-      tareas: "tareas"
+      tareas: "tareas",
+      diario: "diario"
     };
     const targetSubTab = map[blockKey] || "momentos";
     this.openFullDayDrawer(today, targetSubTab);
@@ -1994,14 +2026,15 @@ const imperivmEngine = {
     const currentSchedule = (typeof WEEKLY_STRATEGY_SCHEDULE !== "undefined") ? WEEKLY_STRATEGY_SCHEDULE[currentMood] : null;
     const moodDayPlan = (currentSchedule && currentSchedule.days && currentSchedule.days[dayKey]) ? currentSchedule.days[dayKey] : null;
 
-    // Subpestañas contextuales limpias e integradas
+    // Subpestañas contextuales limpias e integradas (en el mismo orden que Plan de Hoy)
     const subtabsHTML = `
       <div class="day-contextual-subtabs">
         <button class="btn-day-subtab ${subTab === 'momentos' ? 'active' : ''}" onclick="imperivmEngine.switchDayDrawerTab('${dayKey}', 'momentos');">🌅 Momentos</button>
-        <button class="btn-day-subtab ${subTab === 'nutricion' || subTab === 'dieta' ? 'active' : ''}" onclick="imperivmEngine.switchDayDrawerTab('${dayKey}', 'nutricion');">🥑 Nutrición & Dieta</button>
-        <button class="btn-day-subtab ${subTab === 'entrenamiento' ? 'active' : ''}" onclick="imperivmEngine.switchDayDrawerTab('${dayKey}', 'entrenamiento');">🏋️‍♂️ Entrenamiento</button>
-        <button class="btn-day-subtab ${subTab === 'outfit' ? 'active' : ''}" onclick="imperivmEngine.switchDayDrawerTab('${dayKey}', 'outfit');">🧥 Indumentaria</button>
+        <button class="btn-day-subtab ${subTab === 'outfit' ? 'active' : ''}" onclick="imperivmEngine.switchDayDrawerTab('${dayKey}', 'outfit');">🧥 Ropa del Día</button>
         <button class="btn-day-subtab ${subTab === 'tareas' ? 'active' : ''}" onclick="imperivmEngine.switchDayDrawerTab('${dayKey}', 'tareas');">📋 Tareas</button>
+        <button class="btn-day-subtab ${subTab === 'diario' ? 'active' : ''}" onclick="imperivmEngine.switchDayDrawerTab('${dayKey}', 'diario');">📜 Diario</button>
+        <button class="btn-day-subtab ${subTab === 'nutricion' || subTab === 'dieta' ? 'active' : ''}" onclick="imperivmEngine.switchDayDrawerTab('${dayKey}', 'nutricion');">🥑 Nutrición</button>
+        <button class="btn-day-subtab ${subTab === 'entrenamiento' ? 'active' : ''}" onclick="imperivmEngine.switchDayDrawerTab('${dayKey}', 'entrenamiento');">🏋️‍♂️ Entrenamiento</button>
       </div>
     `;
 
@@ -2240,6 +2273,17 @@ const imperivmEngine = {
               </div>
             </div>
           </div>
+        </div>
+      `;
+    } else if (subTab === "diario") {
+      if (window.hypomnemataJournal && typeof window.hypomnemataJournal.init === "function") {
+        window.hypomnemataJournal.init();
+      }
+      contentHTML = `
+        <div id="hypomnemata-drawer-mount">
+          ${(window.hypomnemataJournal && typeof window.hypomnemataJournal.buildJournalHTML === "function")
+            ? window.hypomnemataJournal.buildJournalHTML(true)
+            : '<p style="color:#FFF;">Cargando Diario Hypomnémata...</p>'}
         </div>
       `;
     }
@@ -4222,14 +4266,25 @@ const imperivmEngine = {
   // ==========================================================================
   // ESTRATEGIA DE LA LANZA: CONMUTACIÓN DE MOODS & MATRIZ DE LOS 9 BANDERINES
   // ==========================================================================
-  switchWeeklyMood(mood) {
-    if (mood !== "fresh" && mood !== "emergency") mood = "emergency";
+  switchWeeklyMood(mood, fromJournal = false) {
+    if (!["fresh", "emergency", "testudo"].includes(mood)) mood = "emergency";
     localStorage.setItem("CABALLERO_WEEKLY_MOOD", mood);
     imperivmState.weeklyMood = mood;
-    if (typeof showNotification === "function") {
-      const label = mood === "emergency"
-        ? "🚨 Modo Emergency Activado: 2 bloques diarios de empleo en Hannover (Punta de Lanza)"
-        : "🌿 Modo Fresh Activado: Ritmo balanceado (1 bloque empleo + exploración y arte)";
+
+    if (!fromJournal && window.CJProgress && typeof window.CJProgress.isTestudoDay === "function") {
+      const todayDate = window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10);
+      const isCurrentlyTestudo = window.CJProgress.isTestudoDay(todayDate);
+      if (mood === "testudo" && !isCurrentlyTestudo) {
+        window.CJProgress.toggleTestudoDay(todayDate, "Modo Testudo activado desde Plan de Hoy");
+      }
+    }
+
+    if (typeof showNotification === "function" && !fromJournal) {
+      const label = mood === "testudo"
+        ? "🛡️ Modo Testudo (Kintsugi) Activado: Racha protegida en Obsidiana y Oro. Prioriza calma, cuerpo y descarga."
+        : (mood === "emergency"
+          ? "🚨 Modo Emergency Activado: 2 bloques diarios de empleo en Hannover (Punta de Lanza)"
+          : "🌿 Modo Fresh Activado: Ritmo balanceado (1 bloque empleo + exploración y arte)");
       showNotification(label);
     }
     this.render();

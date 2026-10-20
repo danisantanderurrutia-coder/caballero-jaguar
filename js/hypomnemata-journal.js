@@ -500,7 +500,7 @@
               <span>${tInfo.active ? '🏺 Guardia Kintsugi Activa (Protegido)' : '🛡️ Activar Día de Quiebre / Testudo'}</span>
             </button>
             ${compact ? `
-              <button onclick="selectMainTab('diario');" style="background: rgba(255,255,255,0.06); color: #E2E8F0; border: 1px solid rgba(255,255,255,0.18); padding: 8px 14px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer;">
+              <button onclick="if(window.imperivmEngine && imperivmEngine.openFlowBlockModal) imperivmEngine.openFlowBlockModal('diario'); else selectMainTab('diario');" style="background: rgba(255,255,255,0.06); color: #E2E8F0; border: 1px solid rgba(255,255,255,0.18); padding: 8px 14px; border-radius: 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer;">
                 📜 Abrir Diario Hypomnémata
               </button>
             ` : ""}
@@ -1191,24 +1191,30 @@
     `;
   }
 
-  function render() {
-    injectStyles();
-    const container = document.getElementById("hypomnemata-master-container");
-    if (!container) return;
-
-    container.innerHTML = `
+  function buildJournalHTML(inDrawer = false) {
+    return `
       <!-- BANNER CINEMATOGRÁFICO DEL DIARIO HYPOMNÉMATA -->
-      <div style="position: relative; border-radius: 16px; overflow: hidden; min-height: 165px; border: 1.5px solid var(--imperivm-border-gold); box-shadow: 0 12px 32px rgba(0,0,0,0.7); margin-bottom: 18px; background: #07090E;">
-        <img src="assets/banner_hypomnemata.jpg" alt="Hypomnémata Codex" style="width: 100%; height: 185px; object-fit: cover; object-position: center 45%; filter: brightness(0.68) contrast(1.08);">
-        <div style="position: absolute; inset: 0; padding: 22px 28px; background: linear-gradient(90deg, rgba(7,9,14,0.94) 0%, rgba(13,18,29,0.78) 55%, rgba(7,9,14,0.35) 100%); display: flex; flex-direction: column; justify-content: center;">
-          <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+      <div style="position: relative; border-radius: 16px; overflow: hidden; min-height: ${inDrawer ? '140px' : '165px'}; border: 1.5px solid var(--imperivm-border-gold); box-shadow: 0 12px 32px rgba(0,0,0,0.7); margin-bottom: 18px; background: #07090E;">
+        <img src="assets/banner_hypomnemata.jpg" alt="Hypomnémata Codex" style="width: 100%; height: ${inDrawer ? '155px' : '185px'}; object-fit: cover; object-position: center 45%; filter: brightness(0.68) contrast(1.08);">
+        <div style="position: absolute; inset: 0; padding: 18px 24px; background: linear-gradient(90deg, rgba(7,9,14,0.94) 0%, rgba(13,18,29,0.78) 55%, rgba(7,9,14,0.35) 100%); display: flex; flex-direction: column; justify-content: center;">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap;">
             <span class="badge-tag badge-gold" style="font-size: 0.72rem;">📜 HYPOMNÉMATA • CÓDICE PERSONAL & KINTSUGI</span>
-            <span style="font-size: 0.8rem; color: #EFE4CE;">Bitácora emocional, registro de quiebres con templanza y observatorio de correlaciones</span>
+            ${inDrawer ? `
+              <button type="button" onclick="if(window.imperivmEngine) imperivmEngine.closeDrawer(); selectMainTab('diario');"
+                      style="background: rgba(197,154,40,0.22); border: 1px solid #F3D079; color: #F6E2A3; border-radius: 6px; padding: 4px 10px; font-size: 0.72rem; font-weight: 800; cursor: pointer;">
+                ⛶ Expandir en Pantalla Completa
+              </button>
+            ` : `
+              <button type="button" onclick="selectMainTab('dashboard');"
+                      style="background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.25); color: #FFF; border-radius: 6px; padding: 5px 12px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">
+                ← Volver al Plan de Hoy
+              </button>
+            `}
           </div>
-          <h2 style="font-family: 'Cinzel', serif; font-size: 1.85rem; color: #FFF; margin: 6px 0 4px 0; text-shadow: 0 2px 12px rgba(0,0,0,0.9);">
+          <h2 style="font-family: 'Cinzel', serif; font-size: ${inDrawer ? '1.45rem' : '1.85rem'}; color: #FFF; margin: 6px 0 4px 0; text-shadow: 0 2px 12px rgba(0,0,0,0.9);">
             Hypomnémata — El Diario & Observatorio Interior
           </h2>
-          <p style="font-size: 0.88rem; color: #CBD5E1; max-width: 720px; margin: 0;">
+          <p style="font-size: 0.84rem; color: #CBD5E1; max-width: 720px; margin: 0;">
             «No nos perturban las cosas, sino los juicios que hacemos sobre ellas.» — Registra tus días de victoria y convierte tus días de quiebre en cicatrices de oro (Kintsugi) sin perder tu racha.
           </p>
         </div>
@@ -1240,6 +1246,18 @@
     `;
   }
 
+  function render() {
+    injectStyles();
+    const container = document.getElementById("hypomnemata-master-container");
+    if (container) {
+      container.innerHTML = buildJournalHTML(false);
+    }
+    const drawerMount = document.getElementById("hypomnemata-drawer-mount");
+    if (drawerMount) {
+      drawerMount.innerHTML = buildJournalHTML(true);
+    }
+  }
+
   // --- CONTROLADORES PÚBLICOS ---
   const api = {
     SEALS,
@@ -1250,6 +1268,7 @@
       render();
     },
     render,
+    buildJournalHTML,
     renderMosaicBannerHTML,
     renderSealHTML,
     setSubtab(tab) {
@@ -1305,9 +1324,13 @@
       render();
     },
     openKintsugiTemplate() {
-      if (typeof window.selectMainTab === "function") window.selectMainTab("diario");
       ui.subtab = "escribir";
       this.applyTemplate("kintsugi");
+      if (window.imperivmEngine && typeof window.imperivmEngine.openFlowBlockModal === "function") {
+        window.imperivmEngine.openFlowBlockModal("diario");
+      } else if (typeof window.selectMainTab === "function") {
+        window.selectMainTab("diario");
+      }
     },
     saveEntry() {
       if (!ui.draft) return;
@@ -1432,6 +1455,9 @@
           ui.draft.isKintsugi = info.active;
           if (info.active) ui.draft.mood = "quiebre";
         }
+        if (window.imperivmEngine && typeof window.imperivmEngine.switchWeeklyMood === "function") {
+          window.imperivmEngine.switchWeeklyMood(info.active ? "testudo" : "emergency", true);
+        }
       }
       render();
       if (window.imperivmEngine && typeof window.imperivmEngine.render === "function") {
@@ -1448,7 +1474,6 @@
       }
     },
     inspectDate(dateStr) {
-      if (typeof window.selectMainTab === "function") window.selectMainTab("diario");
       const existing = state.entries.find((e) => e.date === dateStr);
       if (existing) {
         ui.selectedEntryId = existing.id;
@@ -1462,6 +1487,11 @@
           ui.draft.mood = "quiebre";
         }
         ui.subtab = "escribir";
+      }
+      if (window.imperivmEngine && typeof window.imperivmEngine.openFlowBlockModal === "function") {
+        window.imperivmEngine.openFlowBlockModal("diario");
+      } else if (typeof window.selectMainTab === "function") {
+        window.selectMainTab("diario");
       }
       render();
     }
