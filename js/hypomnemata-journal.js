@@ -479,11 +479,14 @@
             <span class="badge-tag" style="background: rgba(197,154,40,0.18); border: 1px solid #E5BE53; color: #F6E2A3; font-size: 0.7rem; padding: 2px 9px;">
               🔥 Racha: ${st.days}d ${st.testudoInStreak > 0 ? `• 🏺 ${st.testudoInStreak} Kintsugi` : ""}
             </span>
-            <span style="font-size: 0.75rem; color: #94A3B8;">🌙 Cambio de día circadiano: 03:00 AM</span>
+            <span style="font-size: 0.75rem; color: #94A3B8;">🌙 Cambio de día: 03:00 AM</span>
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
+            <button onclick="hypomnemataJournal.openOfflineModal();" style="background: rgba(16, 185, 129, 0.16); color: #6EE7B7; border: 1px solid #10B981; padding: 5px 11px; border-radius: 6px; font-size: 0.74rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+              ⚡ Práctica Offline
+            </button>
             <button onclick="hypomnemataJournal.toggleTodayTestudo();" style="background: rgba(197, 154, 40, 0.16); color: #F6E2A3; border: 1px solid #E5BE53; padding: 5px 11px; border-radius: 6px; font-size: 0.74rem; font-weight: 700; cursor: pointer;">
-              🛡️ Activar Día de Quiebre
+              🛡️ Activar Quiebre
             </button>
             <button onclick="hypomnemataJournal.toggleLandingBanner(false);" style="background: rgba(255,255,255,0.06); color: #CBD5E1; border: 1px solid rgba(255,255,255,0.15); padding: 5px 11px; border-radius: 6px; font-size: 0.74rem; font-weight: 700; cursor: pointer;">
               ▼ Mostrar Mosaico
@@ -545,6 +548,9 @@
 
           <!-- BOTONES DE ACCIÓN RÁPIDA -->
           <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <button onclick="hypomnemataJournal.openOfflineModal();" title="Marcar días anteriores que practicaste fuera de la app para proteger tu racha" style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.45) 100%); color: #6EE7B7; border: 1.5px solid #10B981; padding: 8px 14px; border-radius: 8px; font-size: 0.78rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);">
+              <span>⚡ Marcar Días Previos</span>
+            </button>
             ${tInfo.active ? `
               <button onclick="hypomnemataJournal.moveTodayTestudoToYesterday();" title="Mueve el quiebre y escudos de hoy al día de ayer y deja el día de hoy limpio" style="background: rgba(56, 189, 248, 0.16); color: #BAE6FD; border: 1px solid rgba(56, 189, 248, 0.55); padding: 8px 13px; border-radius: 8px; font-size: 0.76rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px;">
                 ⏮️ Pasar Quiebre a Ayer
@@ -586,7 +592,7 @@
               <div class="mosaic-tessera ${t.status}"
                    style="${isToday ? 'outline: 2px solid #FFF; outline-offset: 2px;' : ''}"
                    onclick="hypomnemataJournal.inspectDate('${t.date}');"
-                   title="${t.date} • ${labelStatus}">
+                   title="${t.date} • ${labelStatus} • Clic para ver o marcar práctica offline">
                 <span style="font-size: 0.72rem; line-height: 1;">${icon}</span>
                 <span style="font-size: 0.58rem; opacity: 0.85; margin-top: 2px;">${dShort}</span>
               </div>
@@ -638,7 +644,278 @@
     `;
   }
 
-  // --- CÁLCULO DE CORRELACIONES & PATRONES PARA EL OBSERVATORIO ---
+  // --- MODAL DE PRÁCTICA OFFLINE & AVANCE DE DÍAS ANTERIORES ---
+  function renderOfflineModalContent(selectedDate) {
+    if (!window.CJProgress) return "";
+    selectedDate = selectedDate || (ui.offlineSelectedDate || todayStr());
+    ui.offlineSelectedDate = selectedDate;
+    const snap = window.CJProgress.snapshot();
+    const st = snap.streak;
+    const dayXP = window.CJProgress.dayXP(selectedDate);
+    const isTestudo = window.CJProgress.isTestudoDay(selectedDate);
+    const isConquest = dayXP >= window.CJProgress.CONFIG.activeDayXP;
+    const isToday = selectedDate === todayStr();
+    const isYesterday = selectedDate === window.CJProgress.addDays(todayStr(), -1);
+    const [y, m, d] = selectedDate.split("-").map(Number);
+    const dt = new Date(y, m - 1, d, 12, 0, 0);
+    const dayNames = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+    const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+    const dateFormatted = `${dayNames[dt.getDay()]}, ${d} de ${monthNames[m - 1]} de ${y}`;
+
+    const recentDays = window.CJProgress.getRecentDaysStatus(7);
+    const pendingCount = recentDays.filter((rd) => !rd.isActive).length;
+
+    return `
+      <!-- CABECERA DEL MODAL -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #C59A28; padding-bottom: 14px; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+            <span class="badge-tag" style="background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #6EE7B7; font-size: 0.72rem; padding: 3px 8px;">
+              ⚡ SOBERANÍA OFFLINE
+            </span>
+            <span class="badge-tag" style="background: rgba(197,154,40,0.2); border: 1px solid #E5BE53; color: #F6E2A3; font-size: 0.72rem; padding: 3px 8px;">
+              🔥 Racha: ${st.days} día(s) consecutivos
+            </span>
+          </div>
+          <h2 style="font-family: 'Cinzel', serif; font-size: 1.55rem; color: #FFFFFF; margin: 4px 0 2px 0; font-weight: 900; letter-spacing: 0.04em;">
+            Práctica Offline & Días Anteriores
+          </h2>
+          <div style="font-size: 0.82rem; color: #94A3B8;">
+            Si entrenaste o practicaste fuera de la app, sella tus días como conquistados para proteger tu racha y ganar tu XP real.
+          </div>
+        </div>
+        <button onclick="hypomnemataJournal.closeOfflineModal();" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; cursor: pointer; color: #FFFFFF; transition: all 0.2s;" title="Cerrar modal">✕</button>
+      </div>
+
+      <!-- TARJETA DEL DÍA SELECCIONADO -->
+      <div style="background: linear-gradient(145deg, rgba(20, 27, 44, 0.95) 0%, rgba(11, 15, 26, 0.98) 100%); border: 2px solid ${isConquest ? '#10B981' : (isTestudo ? '#F3D079' : 'rgba(197, 154, 40, 0.4)')}; border-radius: 12px; padding: 18px 22px; margin-bottom: 22px; box-shadow: 0 8px 30px rgba(0,0,0,0.5);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px; margin-bottom: 14px;">
+          <div>
+            <div style="font-size: 0.75rem; color: #F5D77F; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
+              ${isToday ? 'DÍA DE HOY' : (isYesterday ? 'DÍA DE AYER' : 'DÍA ANTERIOR')}
+            </div>
+            <div style="font-family: 'Cinzel', serif; font-size: 1.25rem; color: #FFF; font-weight: 800; margin-top: 2px;">
+              ${dateFormatted}
+            </div>
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="badge-tag" style="background: ${isConquest ? 'rgba(16,185,129,0.2)' : (isTestudo ? 'rgba(197,154,40,0.2)' : 'rgba(255,255,255,0.06)')}; border: 1.5px solid ${isConquest ? '#10B981' : (isTestudo ? '#F3D079' : 'rgba(255,255,255,0.15)')}; color: ${isConquest ? '#6EE7B7' : (isTestudo ? '#F6E2A3' : '#CBD5E1')}; font-size: 0.82rem; font-weight: 800; padding: 4px 12px;">
+              ${isConquest ? `✓ Conquistado (${dayXP} XP)` : (isTestudo ? '🏺 Guardia Kintsugi' : (dayXP > 0 ? `▫ Parcial (${dayXP} XP)` : '⬛ Sin actividad (0 XP)'))}
+            </span>
+          </div>
+        </div>
+
+        <!-- ACCIÓN DE SELLAR OFFLINE -->
+        ${!isConquest ? `
+          <div>
+            <div style="font-size: 0.86rem; color: #E2E8F0; font-weight: 700; margin-bottom: 10px;">
+              ¿Qué practicaste este día fuera de la app? Haz clic para sellar el día (+100 XP):
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; margin-bottom: 14px;">
+              <button onclick="hypomnemataJournal.quickMarkOffline('${selectedDate}', 'deporte', 'Práctica de Gym, Artes Marciales o Calistenia');" style="background: linear-gradient(135deg, rgba(16,185,129,0.2) 0%, rgba(5,150,105,0.3) 100%); border: 1.5px solid #10B981; color: #ECFDF5; border-radius: 8px; padding: 12px 14px; text-align: left; cursor: pointer; transition: all 0.2s;">
+                <div style="font-size: 0.95rem; font-weight: 800;">⚔️ Deporte & Combate</div>
+                <div style="font-size: 0.73rem; color: #A7F3D0; margin-top: 3px;">Gym, sparring, calistenia, running (+100 XP)</div>
+              </button>
+
+              <button onclick="hypomnemataJournal.quickMarkOffline('${selectedDate}', 'mente', 'Bloque de Estudio, Foco o Lectura');" style="background: linear-gradient(135deg, rgba(56,189,248,0.2) 0%, rgba(14,116,144,0.3) 100%); border: 1.5px solid #38BDF8; color: #F0F9FF; border-radius: 8px; padding: 12px 14px; text-align: left; cursor: pointer; transition: all 0.2s;">
+                <div style="font-size: 0.95rem; font-weight: 800;">🧘 Foco & Estudio</div>
+                <div style="font-size: 0.73rem; color: #BAE6FD; margin-top: 3px;">Tesis, investigación, lectura estoica (+100 XP)</div>
+              </button>
+
+              <button onclick="hypomnemataJournal.quickMarkOffline('${selectedDate}', 'espiritualidad', 'Día en Virtud, Templanza & Autodominio');" style="background: linear-gradient(135deg, rgba(197,154,40,0.22) 0%, rgba(138,100,36,0.3) 100%); border: 1.5px solid #E5BE53; color: #FFFBEB; border-radius: 8px; padding: 12px 14px; text-align: left; cursor: pointer; transition: all 0.2s;">
+                <div style="font-size: 0.95rem; font-weight: 800;">🕊️ Virtud & Autodominio</div>
+                <div style="font-size: 0.73rem; color: #FDE68A; margin-top: 3px;">0 Porno, templanza, presencia y calma (+100 XP)</div>
+              </button>
+
+              <button onclick="hypomnemataJournal.quickMarkOffline('${selectedDate}', 'vida', 'Práctica Integral y Disciplina de Vida');" style="background: linear-gradient(135deg, rgba(168,85,247,0.2) 0%, rgba(109,40,217,0.3) 100%); border: 1.5px solid #A855F7; color: #FAF5FF; border-radius: 8px; padding: 12px 14px; text-align: left; cursor: pointer; transition: all 0.2s;">
+                <div style="font-size: 0.95rem; font-weight: 800;">⚡ Práctica Integral</div>
+                <div style="font-size: 0.73rem; color: #E9D5FF; margin-top: 3px;">Avance balanceado de hábitos y vida (+100 XP)</div>
+              </button>
+            </div>
+          </div>
+        ` : `
+          <div style="background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.35); border-radius: 8px; padding: 12px 16px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div style="font-size: 0.85rem; color: #ECFDF5;">
+              ✨ <strong>¡Día Conquistado con Honores!</strong> Tu racha está protegida y activa en el mosaico.
+            </div>
+            <button onclick="hypomnemataJournal.quickUnmarkOffline('${selectedDate}');" style="background: rgba(244,63,94,0.18); border: 1px solid rgba(244,63,94,0.45); color: #FECDD3; border-radius: 6px; padding: 6px 12px; font-size: 0.75rem; font-weight: 700; cursor: pointer;">
+              ↩️ Deshacer registro offline
+            </button>
+          </div>
+        `}
+
+        <!-- OPCIONES SECUNDARIAS -->
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.06);">
+          <button onclick="hypomnemataJournal.openJournalFromOfflineModal('${selectedDate}');" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.18); color: #E2E8F0; border-radius: 6px; padding: 7px 13px; font-size: 0.76rem; font-weight: 700; cursor: pointer;">
+            📜 Escribir o Ver Crónica en el Diario
+          </button>
+          <button onclick="window.CJProgress.toggleTestudoDay('${selectedDate}', 'Día de Quiebre / Contención'); hypomnemataJournal.openOfflineModal('${selectedDate}');" style="background: rgba(197,154,40,0.15); border: 1px solid #C59A28; color: #F6E2A3; border-radius: 6px; padding: 7px 13px; font-size: 0.76rem; font-weight: 700; cursor: pointer;">
+            ${isTestudo ? '✕ Quitar Modo Quiebre' : '🏺 Marcar como Quiebre Kintsugi'}
+          </button>
+        </div>
+      </div>
+
+      <!-- LISTA DE LOS ÚLTIMOS 7 DÍAS -->
+      <div style="background: rgba(15, 20, 32, 0.75); border: 1.5px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 18px 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">
+          <div>
+            <div style="font-family: 'Cinzel', serif; font-size: 1.05rem; font-weight: 800; color: #FFF;">
+              📅 Vista de los Últimos 7 Días
+            </div>
+            <div style="font-size: 0.76rem; color: #94A3B8;">
+              Haz clic en cualquier día para seleccionarlo arriba o sella los días pendientes directamente:
+            </div>
+          </div>
+          ${pendingCount > 0 ? `
+            <button onclick="hypomnemataJournal.markAllPendingOffline();" style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: #FFF; border: 1px solid #34D399; font-weight: 800; font-size: 0.78rem; padding: 8px 14px; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 14px rgba(16,185,129,0.35);">
+              ⚡ Sellar Todos los Días Pendientes (${pendingCount})
+            </button>
+          ` : `
+            <span class="badge-tag" style="background: rgba(16,185,129,0.18); border: 1px solid #10B981; color: #6EE7B7; font-size: 0.75rem; padding: 5px 12px;">
+              ✓ Todos los últimos 7 días están conquistados
+            </span>
+          `}
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          ${recentDays.map((rd) => {
+            const isSel = rd.date === selectedDate;
+            const statusLabel = rd.isConquest
+              ? `<span style="color:#34D399; font-weight:800;">✓ Conquistado (${rd.xp} XP)</span>`
+              : (rd.isTestudo
+                ? `<span style="color:#F3D079; font-weight:800;">🏺 Kintsugi</span>`
+                : (rd.xp > 0 ? `<span style="color:#CBD5E1;">▫ Parcial (${rd.xp} XP)</span>` : `<span style="color:#94A3B8;">⬛ Pendiente</span>`));
+
+            return `
+              <div style="background: ${isSel ? 'rgba(197,154,40,0.14)' : 'rgba(255,255,255,0.03)'}; border: 1px solid ${isSel ? '#E5BE53' : 'rgba(255,255,255,0.08)'}; border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 12px; cursor: pointer;" onclick="hypomnemataJournal.openOfflineModal('${rd.date}');">
+                  <div style="width: 28px; height: 28px; border-radius: 6px; background: ${rd.isConquest ? 'rgba(16,185,129,0.25)' : (rd.isTestudo ? 'rgba(197,154,40,0.25)' : 'rgba(255,255,255,0.05)')}; border: 1px solid ${rd.isConquest ? '#10B981' : (rd.isTestudo ? '#F3D079' : 'rgba(255,255,255,0.15)')}; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; color: #FFF;">
+                    ${rd.isConquest ? '✓' : (rd.isTestudo ? '🏺' : '•')}
+                  </div>
+                  <div>
+                    <div style="font-weight: 800; font-size: 0.88rem; color: #FFF;">
+                      ${rd.label} <span style="font-size:0.75rem; color:#94A3B8; font-weight:400;">(${rd.date})</span>
+                    </div>
+                    <div style="font-size: 0.74rem;">${statusLabel}</div>
+                  </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  ${!rd.isActive ? `
+                    <button onclick="hypomnemataJournal.quickMarkOffline('${rd.date}', 'deporte');" style="background: rgba(16,185,129,0.2); border: 1px solid #10B981; color: #6EE7B7; border-radius: 6px; padding: 5px 11px; font-size: 0.74rem; font-weight: 800; cursor: pointer;">
+                      + Sellar (+100 XP)
+                    </button>
+                  ` : `
+                    <span style="font-size: 0.75rem; color: #6EE7B7; font-weight: 700;">✓ Al día</span>
+                  `}
+                  <button onclick="hypomnemataJournal.openOfflineModal('${rd.date}');" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: #CBD5E1; border-radius: 6px; padding: 5px 10px; font-size: 0.74rem; cursor: pointer;">
+                    🔍 Detalle
+                  </button>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      </div>
+    `;
+  }
+
+  function openOfflineModal(targetDate) {
+    ui.offlineSelectedDate = targetDate || todayStr();
+    const modal = document.getElementById("offline-practice-modal");
+    const content = document.getElementById("offline-practice-content");
+    if (modal && content) {
+      content.innerHTML = renderOfflineModalContent(ui.offlineSelectedDate);
+      modal.classList.add("active");
+      modal.style.display = "flex";
+      document.body.style.overflow = "hidden";
+    }
+  }
+
+  function closeOfflineModal() {
+    const modal = document.getElementById("offline-practice-modal");
+    if (modal) {
+      modal.classList.remove("active");
+      modal.style.display = "none";
+      document.body.style.overflow = "";
+    }
+    render();
+    if (window.imperivmEngine && typeof window.imperivmEngine.render === "function") {
+      window.imperivmEngine.render();
+    }
+  }
+
+  function quickMarkOffline(date, aura, desc) {
+    if (window.CJProgress && typeof window.CJProgress.markDayConquest === "function") {
+      window.CJProgress.markDayConquest(date, { aura, desc });
+    }
+    const content = document.getElementById("offline-practice-content");
+    if (content) {
+      content.innerHTML = renderOfflineModalContent(date);
+    }
+    render();
+    if (window.imperivmEngine && typeof window.imperivmEngine.render === "function") {
+      window.imperivmEngine.render();
+    }
+  }
+
+  function quickUnmarkOffline(date) {
+    if (window.CJProgress && typeof window.CJProgress.unmarkDayConquest === "function") {
+      window.CJProgress.unmarkDayConquest(date);
+    }
+    const content = document.getElementById("offline-practice-content");
+    if (content) {
+      content.innerHTML = renderOfflineModalContent(date);
+    }
+    render();
+    if (window.imperivmEngine && typeof window.imperivmEngine.render === "function") {
+      window.imperivmEngine.render();
+    }
+  }
+
+  function markAllPendingOffline() {
+    if (!window.CJProgress) return;
+    const recents = window.CJProgress.getRecentDaysStatus(7);
+    const pendings = recents.filter((r) => !r.isActive).map((r) => r.date);
+    if (pendings.length && typeof window.CJProgress.markMultipleDaysConquest === "function") {
+      window.CJProgress.markMultipleDaysConquest(pendings, {
+        aura: "deporte",
+        desc: "Práctica offline y disciplina de vida cumplida"
+      });
+    }
+    const content = document.getElementById("offline-practice-content");
+    if (content) {
+      content.innerHTML = renderOfflineModalContent(ui.offlineSelectedDate);
+    }
+    render();
+    if (window.imperivmEngine && typeof window.imperivmEngine.render === "function") {
+      window.imperivmEngine.render();
+    }
+  }
+
+  function openJournalFromOfflineModal(dateStr) {
+    closeOfflineModal();
+    const existing = state.entries.find((e) => e.date === dateStr);
+    if (existing) {
+      ui.selectedEntryId = existing.id;
+      ui.subtab = "archivo";
+    } else {
+      ui.editingId = null;
+      ui.draft = defaultDraft();
+      ui.draft.date = dateStr;
+      if (window.CJProgress && window.CJProgress.isTestudoDay(dateStr)) {
+        ui.draft.isKintsugi = true;
+        ui.draft.mood = "quiebre";
+      }
+      ui.subtab = "escribir";
+    }
+    if (window.imperivmEngine && typeof window.imperivmEngine.openFlowBlockModal === "function") {
+      window.imperivmEngine.openFlowBlockModal("diario");
+    } else if (typeof window.selectMainTab === "function") {
+      window.selectMainTab("diario");
+    }
+    render();
+  }
   function computeInsights() {
     const entries = state.entries || [];
     const tagStats = {};
@@ -708,6 +985,14 @@
             </div>
 
             <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+              <span class="badge-tag" style="background: ${radio.xp >= 100 ? 'rgba(16,185,129,0.2)' : 'rgba(255,255,255,0.06)'}; color: ${radio.xp >= 100 ? '#6EE7B7' : '#94A3B8'}; border: 1px solid ${radio.xp >= 100 ? '#10B981' : 'rgba(255,255,255,0.15)'}; font-size: 0.72rem; padding: 4px 8px;">
+                ${radio.xp >= 100 ? '✓ Conquistado (' + radio.xp + ' XP)' : radio.xp + ' XP'}
+              </span>
+              ${radio.xp < 100 ? `
+                <button type="button" onclick="hypomnemataJournal.quickMarkOffline('${d.date}', 'deporte');" style="background: rgba(16,185,129,0.18); border: 1px solid #10B981; color: #6EE7B7; border-radius: 8px; padding: 5px 10px; font-size: 0.72rem; font-weight: 800; cursor: pointer;">
+                  ⚔️ Sellar Conquista (+100 XP)
+                </button>
+              ` : ""}
               <input type="date" value="${esc(d.date)}" onchange="hypomnemataJournal.updateDraft('date', this.value);"
                      style="background: rgba(0,0,0,0.45); color: #F6E2A3; border: 1px solid #C59A28; border-radius: 8px; padding: 6px 10px; font-weight: 700; font-size: 0.82rem;">
               <button onclick="hypomnemataJournal.togglePaperMode();"
@@ -1596,27 +1881,26 @@
         window.imperivmEngine.render();
       }
     },
+    openOfflineModal(targetDate) {
+      openOfflineModal(targetDate);
+    },
+    closeOfflineModal() {
+      closeOfflineModal();
+    },
+    quickMarkOffline(date, aura, desc) {
+      quickMarkOffline(date, aura, desc);
+    },
+    quickUnmarkOffline(date) {
+      quickUnmarkOffline(date);
+    },
+    markAllPendingOffline() {
+      markAllPendingOffline();
+    },
+    openJournalFromOfflineModal(dateStr) {
+      openJournalFromOfflineModal(dateStr);
+    },
     inspectDate(dateStr) {
-      const existing = state.entries.find((e) => e.date === dateStr);
-      if (existing) {
-        ui.selectedEntryId = existing.id;
-        ui.subtab = "archivo";
-      } else {
-        ui.editingId = null;
-        ui.draft = defaultDraft();
-        ui.draft.date = dateStr;
-        if (window.CJProgress && window.CJProgress.isTestudoDay(dateStr)) {
-          ui.draft.isKintsugi = true;
-          ui.draft.mood = "quiebre";
-        }
-        ui.subtab = "escribir";
-      }
-      if (window.imperivmEngine && typeof window.imperivmEngine.openFlowBlockModal === "function") {
-        window.imperivmEngine.openFlowBlockModal("diario");
-      } else if (typeof window.selectMainTab === "function") {
-        window.selectMainTab("diario");
-      }
-      render();
+      openOfflineModal(dateStr);
     }
   };
 

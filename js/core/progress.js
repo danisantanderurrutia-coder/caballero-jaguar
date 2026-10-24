@@ -271,11 +271,16 @@
   }
 
   // --- API PÚBLICA ---
+  function isDayActive(d) {
+    d = d || todayLocal();
+    return dayXP(d) >= CONFIG.activeDayXP || isTestudoDay(d);
+  }
+
   function award(opts) {
     opts = opts || {};
     const raw = Math.round(Number(opts.xp) || 0);
     if (raw <= 0) return null;
-    const date = todayLocal();
+    const date = opts.date || todayLocal();
     if (opts.key && state.ledger.some((e) => e.key === opts.key && e.date === date)) return null;
 
     const sys = opts.source === "bonus" || opts.source === "migracion";
@@ -287,9 +292,10 @@
     }
 
     const before = levelInfo(totalXP());
+    const ts = opts.ts || (opts.date ? new Date(opts.date + "T12:00:00").getTime() : Date.now());
     const entry = {
       id: "x" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-      ts: Date.now(), date,
+      ts, date,
       aura: normAura(opts.aura),
       raw, xp: eff,
       source: opts.source || "accion",
@@ -320,6 +326,117 @@
       notify("⬆️ Grado " + after.gradeRoman + " de " + after.title);
     }
     return entry;
+  }
+
+  // --- REGISTRO DE PRÁCTICA OFFLINE & AVANCE DE DÍAS ANTERIORES ---
+  function markDayConquest(date, opts) {
+    date = date || todayLocal();
+    opts = opts || {};
+    const currentXP = dayXP(date);
+    const aura = normAura(opts.aura || "deporte");
+    const desc = opts.desc || "Práctica offline & disciplina fuera de la app";
+    const amount = Number(opts.xp) || (currentXP >= CONFIG.activeDayXP ? 50 : Math.max(100 - currentXP, 100));
+
+    const entry = {
+      id: "off-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+      ts: opts.ts || new Date(date + "T12:00:00").getTime(),
+      date,
+      aura,
+      raw: amount,
+      xp: amount,
+      source: "offline",
+      desc: String(desc).slice(0, 140),
+      key: "offline-" + date + "-" + Date.now().toString(36)
+    };
+    state.ledger.push(entry);
+    save();
+    sync();
+
+    sound("success");
+    notify(`⚔️ ${date}: Marcado como Conquistado (+${amount} XP • ${aura.toUpperCase()})`);
+    return { success: true, date, xp: dayXP(date), streak: streakInfo() };
+  }
+
+  function unmarkDayConquest(date) {
+    date = date || todayLocal();
+    let count = 0;
+    for (let i = state.ledger.length - 1; i >= 0; i--) {
+      const e = state.ledger[i];
+      if (e.date === date && (e.source === "offline" || e.source === "virtud-offline")) {
+        state.ledger.splice(i, 1);
+        count++;
+      }
+    }
+    if (count > 0) {
+      save();
+      sync();
+      notify(`↩️ Removido registro offline de ${date}`);
+    }
+    return { removed: count, xp: dayXP(date), streak: streakInfo() };
+  }
+
+  function markMultipleDaysConquest(dates, opts) {
+    if (!Array.isArray(dates) || !dates.length) return { markedCount: 0, streak: streakInfo() };
+    opts = opts || {};
+    let markedCount = 0;
+    dates.forEach((d) => {
+      if (!isDayActive(d)) {
+        const aura = normAura(opts.aura || "deporte");
+        state.ledger.push({
+          id: "off-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+          ts: new Date(d + "T12:00:00").getTime(),
+          date: d,
+          aura,
+          raw: 100,
+          xp: 100,
+          source: "offline",
+          desc: opts.desc || "Práctica offline & disciplina fuera de la app",
+          key: "offline-" + d + "-" + Date.now().toString(36)
+        });
+        markedCount++;
+      }
+    });
+    if (markedCount > 0) {
+      save();
+      sync();
+      sound("levelup");
+      notify(`⚡ ¡${markedCount} día(s) sellados como Conquistados (+${markedCount * 100} XP)! Racha restaurada.`);
+    }
+    return { markedCount, streak: streakInfo() };
+  }
+
+  function getRecentDaysStatus(count = 7) {
+    count = Math.max(3, Math.min(21, Number(count) || 7));
+    const today = todayLocal();
+    const dayNames = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+    const out = [];
+    for (let i = 0; i < count; i++) {
+      const d = addDays(today, -i);
+      const [y, m, dayNum] = d.split("-").map(Number);
+      const dt = new Date(y, m - 1, dayNum, 12, 0, 0);
+      const dayName = dayNames[dt.getDay()];
+      const dShort = `${String(dayNum).padStart(2, "0")}/${String(m).padStart(2, "0")}`;
+      const xp = dayXP(d);
+      const isTestudo = isTestudoDay(d);
+      const isConquest = xp >= CONFIG.activeDayXP;
+      const isToday = d === today;
+      const isYesterday = d === addDays(today, -1);
+      const offlineEntries = state.ledger.filter((e) => e.date === d && (e.source === "offline" || e.source === "virtud-offline"));
+      out.push({
+        date: d,
+        dayName,
+        dShort,
+        isToday,
+        isYesterday,
+        label: isToday ? "Hoy" : (isYesterday ? "Ayer" : `${dayName} ${dShort}`),
+        xp,
+        isTestudo,
+        isConquest,
+        isActive: isConquest || isTestudo,
+        offlineCount: offlineEntries.length
+      });
+    }
+    return out;
   }
 
   /** Revierte la última entrada que coincida (por key, o por aura+xp bruto+desc). */
@@ -603,6 +720,7 @@
     CIRCADIAN_CUTOFF_HOUR, circadianDate, circadianDateKey,
     todayLocal, dateKey, addDays,
     award, revoke, revokeById, reconcileVirtueDay,
+    isDayActive, markDayConquest, unmarkDayConquest, markMultipleDaysConquest, getRecentDaysStatus,
     isTestudoDay, getTestudoInfo, setTestudoDay, toggleTestudoDay, moveTestudoToPreviousDay, toggleTestudoShield, mosaic,
     totalXP, dayXP, levelInfo, streakInfo, snapshot,
     xpByAura, lastDays, recent, sync, init

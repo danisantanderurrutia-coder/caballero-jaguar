@@ -1063,11 +1063,13 @@ function openCaballeroChallengeModal() {
         <button class="btn-jaguar btn-gold-chrome" style="color: #0E0905; font-weight: 900; font-size: 0.88rem; padding: 11px 24px; box-shadow: 0 4px 16px rgba(212,175,55,0.4); cursor: pointer;" onclick="logCleanDayFromChallenge()">
           🕊️ Conquistar Día de Virtud Hoy (+75 XP)
         </button>
-        <div style="display: flex; gap: 6px; align-items: center;">
+        <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
           <button onclick="reconcileAndAdvanceVirtueDay(${Math.min(21, noPornDays + 1)})" style="background: rgba(212,175,55,0.15); border: 1px solid rgba(212,175,55,0.45); color: #F5D77F; font-size: 0.72rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; cursor: pointer;" title="Avanzar manualmente si olvidaste marcar ayer">
             ⚡ Marcar Día ${Math.min(21, noPornDays + 1)} Conquistado
           </button>
-          <span style="font-size: 0.72rem; color: #94A3B8;">Suma racha & XP</span>
+          <button onclick="if(window.hypomnemataJournal) hypomnemataJournal.openOfflineModal();" style="background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.45); color: #6EE7B7; font-size: 0.72rem; font-weight: 700; padding: 4px 10px; border-radius: 4px; cursor: pointer;" title="Abrir bitácora de práctica offline y días anteriores">
+            📅 Práctica Offline
+          </button>
         </div>
       </div>
     </div>

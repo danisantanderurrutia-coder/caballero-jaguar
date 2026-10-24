@@ -1769,26 +1769,26 @@
 
   </div>
 
-  <script src="js/core/progress.js?v=20261021_v39"></script>
-  <script src="js/data-books.js?v=20261021_v39"></script>
-  <script src="js/data-workouts.js?v=20261021_v39"></script>
-  <script src="js/agents-scifi.js?v=20261021_v39"></script>
-  <script src="js/financial-engine.js?v=20261021_v39"></script>
-  <script src="js/projects-hub.js?v=20261021_v39"></script>
-  <script src="js/music-player.js?v=20261021_v39"></script>
-  <script src="js/music-learning.js?v=20261021_v39"></script>
-  <script src="js/jaguar-adventure-map.js?v=20261021_v39"></script>
-  <script src="js/combat-fitness-hub.js?v=20261021_v39"></script>
-  <script src="js/lifestyle-architect.js?v=20261021_v39"></script>
-  <script src="js/art-academy.js?v=20261021_v39"></script>
-  <script src="js/data/armamentum-items.js?v=20261021_v39"></script>
-  <script src="js/therapy-stoic.js?v=20261021_v39"></script>
-  <script src="js/hypomnemata-journal.js?v=20261021_v39"></script>
-  <script src="js/scoring-engine.js?v=20261021_v39"></script>
-  <script src="js/imperivm-engine.js?v=20261021_v39"></script>
-  <script src="js/rey-jaguar-engine.js?v=20261021_v39"></script>
-  <script src="js/astral-observatory.js?v=20261021_v39"></script>
-  <script src="js/app.js?v=20261021_v39"></script>
+  <script src="js/core/progress.js?v=20261024_v40"></script>
+  <script src="js/data-books.js?v=20261024_v40"></script>
+  <script src="js/data-workouts.js?v=20261024_v40"></script>
+  <script src="js/agents-scifi.js?v=20261024_v40"></script>
+  <script src="js/financial-engine.js?v=20261024_v40"></script>
+  <script src="js/projects-hub.js?v=20261024_v40"></script>
+  <script src="js/music-player.js?v=20261024_v40"></script>
+  <script src="js/music-learning.js?v=20261024_v40"></script>
+  <script src="js/jaguar-adventure-map.js?v=20261024_v40"></script>
+  <script src="js/combat-fitness-hub.js?v=20261024_v40"></script>
+  <script src="js/lifestyle-architect.js?v=20261024_v40"></script>
+  <script src="js/art-academy.js?v=20261024_v40"></script>
+  <script src="js/data/armamentum-items.js?v=20261024_v40"></script>
+  <script src="js/therapy-stoic.js?v=20261024_v40"></script>
+  <script src="js/hypomnemata-journal.js?v=20261024_v40"></script>
+  <script src="js/scoring-engine.js?v=20261024_v40"></script>
+  <script src="js/imperivm-engine.js?v=20261024_v40"></script>
+  <script src="js/rey-jaguar-engine.js?v=20261024_v40"></script>
+  <script src="js/astral-observatory.js?v=20261024_v40"></script>
+  <script src="js/app.js?v=20261024_v40"></script>
 
   <!-- MODAL DE MODO FOCO • POMODORO CYBERPUNK -->
   <div id="pomodoro-modal" class="jaguar-modal-overlay" onclick="if(event.target === this) closePomodoroModal();">
@@ -2055,6 +2055,13 @@
   <div id="caballero-challenge-modal" class="kcd-inspector-backdrop" onclick="if(event.target === this) closeCaballeroChallengeModal();">
     <div class="kcd-inspector-codex custom-scrollbar" id="caballero-challenge-content" style="max-width: 920px; max-height: 90vh; overflow-y: auto;">
       <!-- Llenado dinámico por openCaballeroChallengeModal() -->
+    </div>
+  </div>
+
+  <!-- MODAL: REGISTRO DE PRÁCTICA OFFLINE & RECONCILIACIÓN DE DÍAS ANTERIORES -->
+  <div id="offline-practice-modal" class="kcd-inspector-backdrop" onclick="if(event.target === this) { if(window.hypomnemataJournal) window.hypomnemataJournal.closeOfflineModal(); }">
+    <div class="kcd-inspector-codex custom-scrollbar" id="offline-practice-content" style="max-width: 860px; max-height: 90vh; overflow-y: auto; background: linear-gradient(160deg, #0D121D 0%, #090D16 100%); border: 2px solid #C59A28; box-shadow: 0 16px 50px rgba(0,0,0,0.85); color: #F4F6F9; border-radius: 14px; padding: 22px 26px;">
+      <!-- Llenado dinámico por hypomnemataJournal.openOfflineModal() -->
     </div>
   </div>
 
