@@ -704,130 +704,410 @@ const CABALLERO_BONUS_CHALLENGES = [
 ];
 window.CABALLERO_BONUS_CHALLENGES = CABALLERO_BONUS_CHALLENGES;
 
-// --- MATRIZ DE NEURO-HABITUACIÓN DE 21 DÍAS (ALTO CONTRASTE & ESTÉTICA OBSIDIANA IMPERIAL) ---
+// ==========================================================================
+// MATRIZ DE CABALLERÍA: CALENDARIO MENSUAL DE SOBERANÍA (INTEGRACIÓN KINTSUGI)
+// ==========================================================================
+let matrixCalendarState = {
+  year: null,
+  month: null, // 0-indexed (0 = Enero, 9 = Octubre)
+  selectedDate: null
+};
+
+function getChallengeStartDate() {
+  return localStorage.getItem("CJ_CHALLENGE_START_DATE") || "2026-10-12";
+}
+window.getChallengeStartDate = getChallengeStartDate;
+
+function setChallengeStartDate(dateStr) {
+  if (!dateStr) return;
+  localStorage.setItem("CJ_CHALLENGE_START_DATE", dateStr);
+  if (typeof showNotification === "function") {
+    showNotification(`👑 Día de Inicio fijado en: ${dateStr}. ¡Desde aquí se cuenta tu orden!`);
+  }
+  refreshMatrixCalendar();
+}
+window.setChallengeStartDate = setChallengeStartDate;
+
+function changeMatrixMonth(offset) {
+  if (matrixCalendarState.year == null) {
+    const today = window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10);
+    const [y, m] = today.split("-").map(Number);
+    matrixCalendarState.year = y;
+    matrixCalendarState.month = m - 1;
+  }
+  matrixCalendarState.month += offset;
+  if (matrixCalendarState.month < 0) {
+    matrixCalendarState.month = 11;
+    matrixCalendarState.year--;
+  } else if (matrixCalendarState.month > 11) {
+    matrixCalendarState.month = 0;
+    matrixCalendarState.year++;
+  }
+  refreshMatrixCalendar();
+}
+window.changeMatrixMonth = changeMatrixMonth;
+
+function goToCurrentMatrixMonth() {
+  const today = window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10);
+  const [y, m] = today.split("-").map(Number);
+  matrixCalendarState.year = y;
+  matrixCalendarState.month = m - 1;
+  matrixCalendarState.selectedDate = today;
+  refreshMatrixCalendar();
+}
+window.goToCurrentMatrixMonth = goToCurrentMatrixMonth;
+
+function selectMatrixCalendarDate(dateStr) {
+  matrixCalendarState.selectedDate = dateStr;
+  refreshMatrixCalendar();
+}
+window.selectMatrixCalendarDate = selectMatrixCalendarDate;
+
+function refreshMatrixCalendar() {
+  const el = document.getElementById("neuro-matrix-21days");
+  if (el && el.parentElement) {
+    el.outerHTML = render21DayDashboardRoadmapHTML();
+  }
+  const modal = document.getElementById("caballero-challenge-modal");
+  if (modal && modal.classList.contains("active")) {
+    openCaballeroChallengeModal();
+  }
+}
+window.refreshMatrixCalendar = refreshMatrixCalendar;
+
+function quickMarkMatrixDay(dateStr, aura, desc) {
+  if (window.CJProgress && typeof window.CJProgress.markDayConquest === "function") {
+    window.CJProgress.markDayConquest(dateStr, { aura, desc });
+  }
+  refreshMatrixCalendar();
+}
+window.quickMarkMatrixDay = quickMarkMatrixDay;
+
+function quickUnmarkMatrixDay(dateStr) {
+  if (window.CJProgress && typeof window.CJProgress.unmarkDayConquest === "function") {
+    window.CJProgress.unmarkDayConquest(dateStr);
+  }
+  refreshMatrixCalendar();
+}
+window.quickUnmarkMatrixDay = quickUnmarkMatrixDay;
+
+function toggleMatrixDayKintsugi(dateStr) {
+  if (window.CJProgress && typeof window.CJProgress.toggleTestudoDay === "function") {
+    window.CJProgress.toggleTestudoDay(dateStr, "Guardia Kintsugi desde Matriz");
+  }
+  refreshMatrixCalendar();
+}
+window.toggleMatrixDayKintsugi = toggleMatrixDayKintsugi;
+
 function render21DayDashboardRoadmapHTML() {
-  const profile = typeof getActiveProfile === 'function' ? getActiveProfile() : { currentLevel: 1, currentSublevel: 1, completedDays: [1], xp: 0 };
-  const currentRank = (typeof RANKS_STRUCTURE !== 'undefined' ? RANKS_STRUCTURE.find(r => r.level === profile.currentLevel) : null) || { name: 'Caballero Jaguar', level: 1, icon: '🐆' };
-  const completedDays = Array.isArray(profile.completedDays) ? profile.completedDays : [1];
-  const completedCount = completedDays.length;
-  const progressPct = Math.min(100, Math.round((completedCount / 21) * 100));
+  const today = window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10);
+  const [todayY, todayM, todayD] = today.split("-").map(Number);
 
-  const scales = [
-    { 
-      num: 1, 
-      name: "Escala I: Ruptura Dopaminérgica", 
-      sub: "Días 1 al 7", 
-      range: [1, 7], 
-      desc: "Desactivación de impulsos reactivos, 0 porno, ayuno de dopamina barata y foco absoluto.", 
-      milestone: "🎁 Hito 7 Días: +100 XP & Desbloqueo Sprite Oficial" 
-    },
-    { 
-      num: 2, 
-      name: "Escala II: Forja Neuronal Estoica", 
-      sub: "Días 8 al 14", 
-      range: [8, 14], 
-      desc: "Construcción de la nueva vía sináptica. Entrenamientos inquebrantables, templanza y lectura.", 
-      milestone: "🛡️ Hito 14 Días: +200 XP & Insignia de Acero Templado" 
-    },
-    { 
-      num: 3, 
-      name: "Escala III: Consagración del Caballero Jaguar", 
-      sub: "Días 15 al 21", 
-      range: [15, 21], 
-      desc: "Consolidación en la identidad de caballería. El hábito se vuelve tu segunda naturaleza sagrada.", 
-      milestone: "👑 Hito 21 Días: ¡Ascenso al Rango Siguiente de la Orden!" 
-    }
+  if (matrixCalendarState.year == null) {
+    matrixCalendarState.year = todayY;
+    matrixCalendarState.month = todayM - 1;
+    matrixCalendarState.selectedDate = today;
+  }
+  if (!matrixCalendarState.selectedDate) {
+    matrixCalendarState.selectedDate = today;
+  }
+
+  const curYear = matrixCalendarState.year;
+  const curMonth = matrixCalendarState.month;
+  const monthNames = [
+    "ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO",
+    "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"
   ];
+  const curMonthName = monthNames[curMonth];
 
-  let scalesHTML = scales.map(scale => {
-    const isScaleActive = (scale.num === (profile.currentSublevel || 1));
-    let daysBtnsHTML = "";
-    for (let d = scale.range[0]; d <= scale.range[1]; d++) {
-      const isDone = completedDays.includes(d);
-      const isToday = !isDone && (completedCount + 1 === d);
+  // Día de Inicio de la Orden / Reto
+  const startDate = getChallengeStartDate();
+  const [sY, sM, sD] = startDate.split("-").map(Number);
+  const startDt = new Date(sY, sM - 1, sD, 12, 0, 0);
+  const todayDt = new Date(todayY, todayM - 1, todayD, 12, 0, 0);
+  const diffMs = todayDt.getTime() - startDt.getTime();
+  const daysSinceStart = Math.max(1, Math.floor(diffMs / 86400000) + 1);
+  const isTrialComplete = daysSinceStart > 21;
+  const trialDays = Math.min(21, daysSinceStart);
+  const trialPct = Math.min(100, Math.round((trialDays / 21) * 100));
 
-      let stateClass = isDone ? 'done' : (isToday ? 'active-today' : 'locked');
-      let statusIcon = isDone ? '✓' : (isToday ? '🔥' : '⚡');
-      let statusLabel = isDone ? 'Conquistado' : (isToday ? '¡Hoy!' : `Día ${d}`);
-      let btnBg = isDone
-        ? 'linear-gradient(135deg, rgba(6, 78, 59, 0.95) 0%, rgba(16, 185, 129, 0.6) 100%)'
-        : (isToday ? 'linear-gradient(135deg, rgba(161, 98, 7, 0.95) 0%, rgba(245, 158, 11, 0.6) 100%)' : 'rgba(255, 255, 255, 0.05)');
-      let btnBorder = isDone ? '2px solid #10B981' : (isToday ? '2px solid #F59E0B' : '1px solid rgba(255, 255, 255, 0.15)');
-      let numColor = isDone ? '#FFFFFF' : (isToday ? '#FFFFFF' : '#CBD5E1');
-      let lblColor = isDone ? '#A7F3D0' : (isToday ? '#FEF08A' : '#94A3B8');
+  const streakInfo = window.CJProgress ? window.CJProgress.streakInfo() : { days: 1, testudoInStreak: 0 };
+  const totalXp = window.CJProgress ? window.CJProgress.totalXP() : 0;
 
-      daysBtnsHTML += `
-        <button class="matrix-day-btn ${stateClass}" onclick="toggleDayFromHub(${d})" style="background: ${btnBg}; border: ${btnBorder}; border-radius: 6px; padding: 6px 3px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" title="Día ${d}: ${isDone ? 'Conquistado con honores (Clic para desmarcar)' : 'Clic para conquistar Día ' + d}">
-          <span style="font-weight: 800; font-family: 'Cinzel', serif; font-size: 0.76rem; color: ${numColor};">Día ${d}</span>
-          <span style="font-size: 1.05rem;">${statusIcon}</span>
-          <span style="font-size: 0.62rem; font-weight: 700; color: ${lblColor};">${statusLabel}</span>
-        </button>
-      `;
+  // Días de la semana para el calendario (Lunes a Domingo)
+  const firstDayOfMonth = new Date(curYear, curMonth, 1, 12, 0, 0);
+  let startWeekday = firstDayOfMonth.getDay() - 1; // Lunes = 0
+  if (startWeekday < 0) startWeekday = 6; // Domingo = 6
+  const daysInMonth = new Date(curYear, curMonth + 1, 0, 12, 0, 0).getDate();
+
+  // Celdas vacías previas
+  let daysHTML = "";
+  for (let p = 0; p < startWeekday; p++) {
+    daysHTML += `
+      <div style="background: rgba(255,255,255,0.015); border: 1px dashed rgba(255,255,255,0.04); border-radius: 8px; min-height: 62px;"></div>
+    `;
+  }
+
+  // Celdas de los días del mes
+  for (let dayNum = 1; dayNum <= daysInMonth; dayNum++) {
+    const dayStr = String(dayNum).padStart(2, "0");
+    const monthStr = String(curMonth + 1).padStart(2, "0");
+    const dateKey = `${curYear}-${monthStr}-${dayStr}`;
+
+    const isStart = (dateKey === startDate);
+    const isToday = (dateKey === today);
+    const isSelected = (dateKey === matrixCalendarState.selectedDate);
+
+    const xp = window.CJProgress ? window.CJProgress.dayXP(dateKey) : 0;
+    const isTestudo = window.CJProgress && window.CJProgress.isTestudoDay ? window.CJProgress.isTestudoDay(dateKey) : false;
+    const isConquest = xp >= (window.CJProgress ? window.CJProgress.CONFIG.activeDayXP : 100);
+
+    let bg = "rgba(15, 23, 42, 0.65)";
+    let border = "1px solid rgba(255, 255, 255, 0.08)";
+    let numColor = "#CBD5E1";
+    let icon = "—";
+    let badgeText = "";
+    let badgeStyle = "";
+
+    if (isTestudo) {
+      bg = "radial-gradient(circle at 50% 50%, #1E1B2E 0%, #090B10 100%)";
+      border = "1.5px solid #F3D079";
+      numColor = "#FFFBEB";
+      icon = "🏺";
+      badgeText = "KINTSUGI";
+      badgeStyle = "color: #FDE68A; background: rgba(197,154,40,0.25); border: 1px solid #E5BE53;";
+    } else if (isConquest) {
+      bg = "linear-gradient(135deg, rgba(6, 78, 59, 0.9) 0%, rgba(16, 185, 129, 0.65) 100%)";
+      border = "1.5px solid #34D399";
+      numColor = "#ECFDF5";
+      icon = "✓";
+      badgeText = `${xp} XP`;
+      badgeStyle = "color: #A7F3D0; background: rgba(16,185,129,0.2);";
+    } else if (xp > 0) {
+      bg = "rgba(197, 154, 40, 0.16)";
+      border = "1px dashed rgba(197, 154, 40, 0.45)";
+      numColor = "#FDE68A";
+      icon = "•";
+      badgeText = `${xp} XP`;
+      badgeStyle = "color: #E2E8F0;";
     }
 
-    const scaleCompletedCount = scale.range.filter(d => completedDays.includes(d)).length;
+    let extraOutline = "";
+    if (isStart) {
+      border = "2px solid #F5D77F !important";
+      extraOutline += "box-shadow: 0 0 16px rgba(212,175,55,0.55);";
+    }
+    if (isSelected) {
+      extraOutline += "outline: 2px solid #FFFFFF; outline-offset: 2px; z-index: 3;";
+    }
 
-    return `
-      <div class="matrix-scale-box ${isScaleActive ? 'active-scale' : ''}" style="background: linear-gradient(170deg, rgba(22, 27, 44, 0.92) 0%, rgba(12, 15, 25, 0.96) 100%); border: ${isScaleActive ? '2px solid #D4AF37' : '1.5px solid rgba(212, 175, 55, 0.3)'}; border-radius: var(--radius-sm); padding: 14px; box-shadow: ${isScaleActive ? '0 0 20px rgba(212, 175, 55, 0.2)' : '0 4px 12px rgba(0,0,0,0.4)'}; display: flex; flex-direction: column; justify-content: space-between;">
-        <div>
-          <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(212, 175, 55, 0.25); padding-bottom: 6px; margin-bottom: 8px;">
-            <div style="display: flex; align-items: center; gap: 6px;">
-              <span class="badge-tag ${isScaleActive ? 'badge-gold' : 'badge-cyan'}" style="font-size: 0.68rem; padding: 2px 7px;">${scale.sub}</span>
-              <h4 style="font-size: 0.94rem; color: #FFFFFF; font-family: 'Cinzel', serif; margin: 0; font-weight: 800;">${scale.name}</h4>
-            </div>
-            <span style="font-size: 0.85rem; font-weight: 900; color: #F5D77F; font-family: 'Cinzel', serif;">${scaleCompletedCount}/7</span>
-          </div>
-          <p style="font-size: 0.78rem; color: #CBD5E1; line-height: 1.35; margin: 0 0 10px 0;">${scale.desc}</p>
-          
-          <div class="matrix-days-row" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin: 10px 0;">
-            ${daysBtnsHTML}
-          </div>
+    daysHTML += `
+      <div onclick="selectMatrixCalendarDate('${dateKey}')"
+           style="background: ${bg}; border: ${border}; ${extraOutline} border-radius: 8px; min-height: 64px; padding: 6px 4px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.18s; user-select: none;"
+           title="${dateKey} • ${isTestudo ? 'Guardia Kintsugi' : (isConquest ? 'Conquistado (' + xp + ' XP)' : xp + ' XP')}${isStart ? ' • 👑 Día de Inicio' : ''}${isToday ? ' • 🔥 Hoy' : ''}">
+        <!-- FILA SUPERIOR: NÚMERO Y ESTADO -->
+        <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; padding: 0 4px;">
+          <span style="font-family: 'Cinzel', serif; font-size: 0.92rem; font-weight: 900; color: ${numColor}; line-height: 1;">${dayNum}</span>
+          <span style="font-size: 0.85rem; line-height: 1;">${icon}</span>
         </div>
 
-        <div style="font-size: 0.74rem; color: #F5D77F; background: rgba(212, 175, 55, 0.12); padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid rgba(212, 175, 55, 0.3); margin-top: 10px; font-weight: 600;">
-          ${scale.milestone}
+        <!-- FILA INFERIOR: BADGES (INICIO, HOY O XP) -->
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%;">
+          ${isStart ? `
+            <span style="font-size: 0.58rem; font-weight: 900; color: #0E0905; background: #F5D77F; border-radius: 3px; padding: 1px 4px; letter-spacing: 0.5px;">👑 INICIO</span>
+          ` : (isToday ? `
+            <span style="font-size: 0.58rem; font-weight: 800; color: #7DD3FC; background: rgba(56,189,248,0.25); border: 1px solid #38BDF8; border-radius: 3px; padding: 1px 4px;">🔥 HOY</span>
+          ` : (badgeText ? `
+            <span style="font-size: 0.58rem; font-weight: 700; border-radius: 3px; padding: 1px 4px; ${badgeStyle}">${badgeText}</span>
+          ` : `
+            <span style="font-size: 0.58rem; color: #64748B;">—</span>
+          `))}
         </div>
       </div>
     `;
-  }).join("");
+  }
+
+  // DATOS DEL DÍA SELECCIONADO
+  const selDate = matrixCalendarState.selectedDate || today;
+  const [selY, selM, selD] = selDate.split("-").map(Number);
+  const selDt = new Date(selY, selM - 1, selD, 12, 0, 0);
+  const dayNamesEs = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+  const selDayName = dayNamesEs[selDt.getDay()];
+  const selFormatted = `${selDayName}, ${selD} de ${monthNames[selM - 1]} de ${selY}`;
+
+  const selXP = window.CJProgress ? window.CJProgress.dayXP(selDate) : 0;
+  const selIsTestudo = window.CJProgress && window.CJProgress.isTestudoDay ? window.CJProgress.isTestudoDay(selDate) : false;
+  const selIsConquest = selXP >= (window.CJProgress ? window.CJProgress.CONFIG.activeDayXP : 100);
+  const selIsStart = (selDate === startDate);
+  const selIsToday = (selDate === today);
 
   return `
-    <div class="challenge-parchment-matrix-wrap" id="neuro-matrix-21days" style="background: linear-gradient(165deg, rgba(20, 25, 40, 0.96) 0%, rgba(10, 13, 22, 0.98) 100%); border: 1.5px solid rgba(212, 175, 55, 0.4); border-radius: var(--radius-md); padding: 18px 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.65);">
-      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 2px solid #9B2335; padding-bottom: 12px;">
+    <div class="challenge-parchment-matrix-wrap" id="neuro-matrix-21days" style="background: linear-gradient(165deg, rgba(20, 25, 40, 0.96) 0%, rgba(10, 13, 22, 0.98) 100%); border: 1.5px solid rgba(212, 175, 55, 0.4); border-radius: var(--radius-md); padding: 20px 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.65);">
+      
+      <!-- CABECERA DE LA MATRIZ: TÍTULO, RACHA & HITO CONTINUO -->
+      <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; border-bottom: 2px solid #9B2335; padding-bottom: 12px;">
         <div>
-          <div style="display: flex; align-items: center; gap: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px;">
             <span class="badge-tag badge-gold" style="font-size: 0.68rem;">⚔️ CÓDICE DE CABALLERÍA</span>
-            <span class="badge-tag badge-emerald" style="font-size: 0.68rem;">CLIC DIRECTO EN CUALQUIER DÍA</span>
+            <span class="badge-tag badge-emerald" style="font-size: 0.68rem;">CALENDARIO MENSUAL</span>
+            <span class="badge-tag" style="background: rgba(56,189,248,0.15); border: 1px solid rgba(56,189,248,0.4); color: #7DD3FC; font-size: 0.68rem;" title="Todo ingreso antes de las 4 AM pertenece al día anterior">
+              🌙 Corte: 04:00 AM
+            </span>
           </div>
-          <h3 style="font-family: 'Cinzel', serif; font-size: 1.3rem; color: #FFFFFF; margin: 4px 0 0 0; font-weight: 900;">
-            Matriz de Templanza & Virtud (Ciclo de 21 Días)
+          <h3 style="font-family: 'Cinzel', serif; font-size: 1.35rem; color: #FFFFFF; margin: 0; font-weight: 900;">
+            Matriz de Soberanía & Hábitos Diarios
           </h3>
-        </div>
-        <div style="text-align: right;">
-          <div style="font-size: 1.18rem; font-weight: 900; color: #F5D77F; font-family: 'Cinzel', serif;">
-            🔥 Racha: ${completedCount} / 21 Días
+          <div style="font-size: 0.8rem; color: #94A3B8; margin-top: 3px;">
+            ${isTrialComplete
+              ? `👑 <strong style="color: #F5D77F;">Primera Prueba Superada:</strong> Ciclo inicial de 21 días conquistado. Ahora cada día suma a tu consagración permanente.`
+              : `⚔️ <strong style="color: #34D399;">Primera Prueba en Curso:</strong> Conquista los primeros 21 días continuos para desbloquear el Rango Superior de la Orden.`}
           </div>
-          <div style="font-size: 0.78rem; color: #94A3B8;">
-            Nivel ${profile.currentLevel || 1}: <strong style="color: #FFF;">${currentRank.name}</strong> [Escala ${profile.currentSublevel || 1}/3]
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+          <div style="font-size: 1.25rem; font-weight: 900; color: #F5D77F; font-family: 'Cinzel', serif;">
+            🔥 Racha: ${streakInfo.days} Día(s) ${streakInfo.testudoInStreak > 0 ? `• 🏺 ${streakInfo.testudoInStreak} Kintsugi` : ''}
+          </div>
+          <div style="font-size: 0.78rem; color: #CBD5E1;">
+            ${isTrialComplete
+              ? `<span style="color: #F5D77F; font-weight: 800;">👑 Día ${daysSinceStart} de Caballería</span> (Iniciado el ${sD}/${sM}/${sY})`
+              : `<span style="color: #34D399; font-weight: 800;">Día ${daysSinceStart} de 21 (Iniciación)</span> • Iniciado el ${sD}/${sM}/${sY}`}
           </div>
         </div>
       </div>
 
-      <!-- BARRA DE PROGRESO DE ALTO CONTRASTE -->
+      <!-- BARRA DE LA PRIMERA PRUEBA (21 DÍAS) & CONTINUIDAD -->
       <div style="margin-top: 14px; background: rgba(0, 0, 0, 0.4); border: 1.5px solid rgba(212, 175, 55, 0.35); border-radius: var(--radius-sm); padding: 10px 14px;">
         <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: #E2E8F0; margin-bottom: 6px; font-weight: 700;">
-          <span>Progreso de Reconfiguración Dopaminérgica & Hábitos</span>
-          <span style="font-weight: 900; color: #34D399;">${progressPct}% Conquistado</span>
+          <span>🎯 Progreso de la Primera Prueba (21 Días de Forja)</span>
+          <span style="font-weight: 900; color: ${isTrialComplete ? '#F5D77F' : '#34D399'};">
+            ${isTrialComplete ? '👑 ¡21 Días Conquistados! Cada día cuenta' : `${trialPct}% Conquistado (${trialDays}/21d)`}
+          </span>
         </div>
-        <div style="background: rgba(255,255,255,0.08); height: 12px; border-radius: 6px; overflow: hidden; border: 1px solid rgba(212,175,55,0.3); position: relative;">
-          <div style="width: ${Math.max(4, progressPct)}%; height: 100%; background: linear-gradient(90deg, #9B2335 0%, #D4AF37 50%, #10B981 100%); transition: width 0.4s ease; border-radius: 6px;"></div>
+        <div style="background: rgba(255,255,255,0.08); height: 10px; border-radius: 6px; overflow: hidden; border: 1px solid rgba(212,175,55,0.3); position: relative;">
+          <div style="width: ${trialPct}%; height: 100%; background: ${isTrialComplete ? 'linear-gradient(90deg, #F3D079 0%, #D4AF37 50%, #10B981 100%)' : 'linear-gradient(90deg, #9B2335 0%, #D4AF37 50%, #10B981 100%)'}; transition: width 0.4s ease; border-radius: 6px;"></div>
         </div>
       </div>
 
-      <!-- LAS 3 ESCALAS -->
-      <div class="matrix-scales-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 14px;">
-        ${scalesHTML}
+      <!-- CONTROLES DE NAVEGACIÓN MENSUAL -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 16px; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button onclick="changeMatrixMonth(-1)" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #FFF; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 0.82rem;" title="Mes Anterior">◀</button>
+          <span style="font-family: 'Cinzel', serif; font-size: 1.15rem; font-weight: 900; color: #FFFFFF; letter-spacing: 1px;">
+            📅 ${curMonthName} ${curYear}
+          </span>
+          <button onclick="changeMatrixMonth(1)" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.2); color: #FFF; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 800; font-size: 0.82rem;" title="Mes Siguiente">▶</button>
+          <button onclick="goToCurrentMatrixMonth()" style="background: rgba(197,154,40,0.16); border: 1px solid #D4AF37; color: #F5D77F; padding: 5px 10px; border-radius: 6px; cursor: pointer; font-size: 0.74rem; font-weight: 800;">
+            📅 Ir a Hoy
+          </button>
+        </div>
+
+        <!-- LEYENDA COMPACTA -->
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 0.72rem; color: #CBD5E1;">
+          <span><strong style="color: #34D399;">■ Esmeralda:</strong> Conquista (≥100 XP)</span>
+          <span><strong style="color: #F3D079;">🏺 Kintsugi:</strong> Quiebre protegido</span>
+          <span><strong style="color: #F5D77F;">👑 Corona:</strong> Día de inicio</span>
+          <span><strong style="color: #7DD3FC;">🔥 Hoy:</strong> Día en curso</span>
+        </div>
       </div>
+
+      <!-- CABECERA DE DÍAS DE LA SEMANA (LUN - DOM) -->
+      <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 8px;">
+        <div style="text-align: center; font-family: 'Cinzel', serif; font-size: 0.74rem; font-weight: 800; color: #94A3B8;">LUN</div>
+        <div style="text-align: center; font-family: 'Cinzel', serif; font-size: 0.74rem; font-weight: 800; color: #94A3B8;">MAR</div>
+        <div style="text-align: center; font-family: 'Cinzel', serif; font-size: 0.74rem; font-weight: 800; color: #94A3B8;">MIÉ</div>
+        <div style="text-align: center; font-family: 'Cinzel', serif; font-size: 0.74rem; font-weight: 800; color: #94A3B8;">JUE</div>
+        <div style="text-align: center; font-family: 'Cinzel', serif; font-size: 0.74rem; font-weight: 800; color: #94A3B8;">VIE</div>
+        <div style="text-align: center; font-family: 'Cinzel', serif; font-size: 0.74rem; font-weight: 800; color: #94A3B8;">SÁB</div>
+        <div style="text-align: center; font-family: 'Cinzel', serif; font-size: 0.74rem; font-weight: 800; color: #94A3B8;">DOM</div>
+      </div>
+
+      <!-- GRILLA MENSUAL DE DÍAS -->
+      <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; margin-bottom: 18px;">
+        ${daysHTML}
+      </div>
+
+      <!-- TARJETA DE ACCIÓN INMEDIATA DEL DÍA SELECCIONADO -->
+      <div style="background: linear-gradient(145deg, rgba(26, 33, 52, 0.95) 0%, rgba(13, 17, 28, 0.98) 100%); border: 1.5px solid ${selIsConquest ? '#10B981' : (selIsTestudo ? '#F3D079' : 'rgba(212, 175, 55, 0.4)')}; border-radius: 10px; padding: 16px 18px; box-shadow: 0 6px 24px rgba(0,0,0,0.5);">
+        
+        <!-- ENCABEZADO DEL DÍA SELECCIONADO -->
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px; margin-bottom: 12px;">
+          <div>
+            <div style="font-size: 0.72rem; color: #F5D77F; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
+              ${selIsToday ? '🔥 DÍA DE HOY' : (selIsStart ? '👑 DÍA DE INICIO DE LA ORDEN' : '📅 DÍA SELECCIONADO')}
+            </div>
+            <div style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #FFF; font-weight: 800; margin-top: 2px;">
+              ${selFormatted}
+            </div>
+          </div>
+          
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span class="badge-tag" style="background: ${selIsConquest ? 'rgba(16,185,129,0.2)' : (selIsTestudo ? 'rgba(197,154,40,0.2)' : 'rgba(255,255,255,0.06)')}; border: 1.5px solid ${selIsConquest ? '#10B981' : (selIsTestudo ? '#F3D079' : 'rgba(255,255,255,0.15)')}; color: ${selIsConquest ? '#6EE7B7' : (selIsTestudo ? '#F6E2A3' : '#CBD5E1')}; font-size: 0.78rem; font-weight: 800; padding: 4px 10px;">
+              ${selIsConquest ? `✓ Conquistado (${selXP} XP)` : (selIsTestudo ? '🏺 Guardia Kintsugi' : (selXP > 0 ? `▫ Parcial (${selXP} XP)` : '⬛ Pendiente (0 XP)'))}
+            </span>
+          </div>
+        </div>
+
+        <!-- ACCIONES DE CONQUISTA OFFLINE & KINTSUGI -->
+        ${!selIsConquest ? `
+          <div>
+            <div style="font-size: 0.8rem; color: #E2E8F0; font-weight: 700; margin-bottom: 8px;">
+              ⚡ Sellar Conquista Offline (+100 XP en este día):
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-bottom: 12px;">
+              <button onclick="quickMarkMatrixDay('${selDate}', 'deporte', 'Entrenamiento físico / combate offline');" style="background: linear-gradient(135deg, rgba(16,185,129,0.2) 0%, rgba(5,150,105,0.3) 100%); border: 1.5px solid #10B981; color: #ECFDF5; border-radius: 6px; padding: 8px 10px; text-align: left; cursor: pointer; font-size: 0.78rem;">
+                <div style="font-weight: 800;">🥊 Deporte & Combate</div>
+                <div style="font-size: 0.68rem; color: #A7F3D0; margin-top: 2px;">Gym, calistenia, running (+100 XP)</div>
+              </button>
+
+              <button onclick="quickMarkMatrixDay('${selDate}', 'mente', 'Bloque de estudio / foco offline');" style="background: linear-gradient(135deg, rgba(56,189,248,0.2) 0%, rgba(14,116,144,0.3) 100%); border: 1.5px solid #38BDF8; color: #F0F9FF; border-radius: 6px; padding: 8px 10px; text-align: left; cursor: pointer; font-size: 0.78rem;">
+                <div style="font-weight: 800;">🧘 Foco & Estudio</div>
+                <div style="font-size: 0.68rem; color: #BAE6FD; margin-top: 2px;">Tesis, lectura, investigación (+100 XP)</div>
+              </button>
+
+              <button onclick="quickMarkMatrixDay('${selDate}', 'espiritualidad', 'Día en virtud y autodominio offline');" style="background: linear-gradient(135deg, rgba(197,154,40,0.22) 0%, rgba(138,100,36,0.3) 100%); border: 1.5px solid #E5BE53; color: #FFFBEB; border-radius: 6px; padding: 8px 10px; text-align: left; cursor: pointer; font-size: 0.78rem;">
+                <div style="font-weight: 800;">🕊️ Virtud & 0 Porno</div>
+                <div style="font-size: 0.68rem; color: #FDE68A; margin-top: 2px;">Templanza y presencia limpia (+100 XP)</div>
+              </button>
+
+              <button onclick="quickMarkMatrixDay('${selDate}', 'vida', 'Práctica integral offline');" style="background: linear-gradient(135deg, rgba(168,85,247,0.2) 0%, rgba(109,40,217,0.3) 100%); border: 1.5px solid #A855F7; color: #FAF5FF; border-radius: 6px; padding: 8px 10px; text-align: left; cursor: pointer; font-size: 0.78rem;">
+                <div style="font-weight: 800;">⚡ Práctica Integral</div>
+                <div style="font-size: 0.68rem; color: #E9D5FF; margin-top: 2px;">Avance balanceado del día (+100 XP)</div>
+              </button>
+            </div>
+          </div>
+        ` : `
+          <div style="background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.35); border-radius: 6px; padding: 8px 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <span style="font-size: 0.8rem; color: #ECFDF5;">✨ <strong>Día Conquistado:</strong> Registrado con honores en tu racha activa.</span>
+            <button onclick="quickUnmarkMatrixDay('${selDate}');" style="background: rgba(244,63,94,0.18); border: 1px solid rgba(244,63,94,0.4); color: #FECDD3; border-radius: 4px; padding: 4px 10px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">
+              ↩️ Deshacer registro offline
+            </button>
+          </div>
+        `}
+
+        <!-- OPCIONES AVANZADAS: KINTSUGI, INICIO & DIARIO -->
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.06);">
+          <button onclick="toggleMatrixDayKintsugi('${selDate}');" style="background: ${selIsTestudo ? 'linear-gradient(135deg, #F3D079 0%, #C59A28 100%)' : 'rgba(197,154,40,0.18)'}; border: 1px solid #D4AF37; color: ${selIsTestudo ? '#0B0E14' : '#F6E2A3'}; border-radius: 6px; padding: 6px 12px; font-size: 0.74rem; font-weight: 800; cursor: pointer;">
+            ${selIsTestudo ? '✕ Quitar Quiebre Kintsugi' : '🏺 Marcar como Quiebre Kintsugi (Testudo)'}
+          </button>
+
+          ${!selIsStart ? `
+            <button onclick="setChallengeStartDate('${selDate}');" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.2); color: #CBD5E1; border-radius: 6px; padding: 6px 12px; font-size: 0.74rem; font-weight: 700; cursor: pointer;" title="Establecer esta fecha como el Día 1 en que arrancó tu orden">
+              👑 Fijar como Día de Inicio
+            </button>
+          ` : `
+            <span style="font-size: 0.72rem; color: #F5D77F; font-weight: 800; padding: 4px 8px; background: rgba(212,175,55,0.15); border: 1px solid #F5D77F; border-radius: 4px;">
+              👑 Día de Inicio Oficial
+            </span>
+          `}
+
+          <button onclick="if(window.hypomnemataJournal) hypomnemataJournal.inspectDate('${selDate}');" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #E2E8F0; border-radius: 6px; padding: 6px 12px; font-size: 0.74rem; font-weight: 700; cursor: pointer;">
+            📜 Abrir en Diario Hypomnémata
+          </button>
+        </div>
+
+      </div>
+
     </div>
   `;
 }
@@ -847,6 +1127,9 @@ function toggleDayFromHub(dayNum) {
   const challengeHeaderDays = document.getElementById("header-challenge-days-text");
   if (challengeHeaderDays && reyJaguarState.character) {
     challengeHeaderDays.textContent = `DÍA ${reyJaguarState.character.noPornDays} EN VIRTUD`;
+  }
+  if (typeof renderRPGLandingHub === 'function') {
+    renderRPGLandingHub();
   }
   if (typeof renderRPGLandingHub === 'function') {
     renderRPGLandingHub();

@@ -698,8 +698,8 @@ const imperivmEngine = {
 
   getTodayKey() {
     const dayNames = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
-    // Corte circadiano a las 03:00 AM: antes de las 3 AM sigue contando como el día anterior
-    const circDate = new Date(Date.now() - 3 * 3600 * 1000);
+    // Corte circadiano a las 04:00 AM: antes de las 4 AM sigue contando como el día anterior
+    const circDate = new Date(Date.now() - 4 * 3600 * 1000);
     return dayNames[circDate.getDay()];
   },
 
@@ -1130,9 +1130,9 @@ const imperivmEngine = {
     ];
 
     let currentMood = localStorage.getItem("CABALLERO_WEEKLY_MOOD") || imperivmState.weeklyMood || "emergency";
-    // Auto-limpieza: si quedó "testudo" guardado de un día anterior (o migrado por corte de 3 AM) y hoy NO es día Testudo, volver a "emergency"
+    // Auto-limpieza: si quedó "testudo" guardado de un día anterior (o migrado por corte de 4 AM) y hoy NO es día Testudo, volver a "emergency"
     if (currentMood === "testudo" && window.CJProgress && typeof window.CJProgress.isTestudoDay === "function") {
-      const todayIso = window.cjToday ? window.cjToday() : new Date(Date.now() - 3 * 3600 * 1000).toISOString().slice(0, 10);
+      const todayIso = window.cjToday ? window.cjToday() : new Date(Date.now() - 4 * 3600 * 1000).toISOString().slice(0, 10);
       if (!window.CJProgress.isTestudoDay(todayIso)) {
         currentMood = "emergency";
         localStorage.setItem("CABALLERO_WEEKLY_MOOD", "emergency");
@@ -1230,11 +1230,6 @@ const imperivmEngine = {
             </div>
           </div>
         </div>
-
-        <!-- MOSAICO KINTSUGI DE SOBERANÍA & PROTOCOLO DE QUIEBRE (TESTUDO) -->
-        ${(typeof window.hypomnemataJournal !== "undefined" && typeof window.hypomnemataJournal.renderMosaicBannerHTML === "function")
-          ? window.hypomnemataJournal.renderMosaicBannerHTML(true)
-          : ""}
 
         <div class="imperivm-carousel-track" id="today-flow-track">
           
@@ -4283,7 +4278,7 @@ const imperivmEngine = {
     imperivmState.weeklyMood = mood;
 
     if (!fromJournal && window.CJProgress && typeof window.CJProgress.isTestudoDay === "function") {
-      const todayDate = window.cjToday ? window.cjToday() : new Date(Date.now() - 3 * 3600 * 1000).toISOString().slice(0, 10);
+      const todayDate = window.cjToday ? window.cjToday() : new Date(Date.now() - 4 * 3600 * 1000).toISOString().slice(0, 10);
       const isCurrentlyTestudo = window.CJProgress.isTestudoDay(todayDate);
       if (mood === "testudo" && !isCurrentlyTestudo) {
         window.CJProgress.toggleTestudoDay(todayDate, "Modo Testudo activado desde Plan de Hoy");

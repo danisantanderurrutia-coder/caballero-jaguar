@@ -49,9 +49,9 @@
     tramites: "vida", empleo: "vida", tesis: "vida", general: "vida"
   };
 
-  // --- FECHAS LOCALES CON CORTE CIRCADIANO A LAS 03:00 AM ---
-  // Todo lo registrado entre las 00:00 y las 02:59 AM pertenece al día anterior.
-  const CIRCADIAN_CUTOFF_HOUR = 3;
+  // --- FECHAS LOCALES CON CORTE CIRCADIANO A LAS 04:00 AM ---
+  // Todo lo registrado entre las 00:00 y las 03:59 AM pertenece al día anterior.
+  const CIRCADIAN_CUTOFF_HOUR = 4;
 
   function dateKey(d) {
     d = d || new Date();

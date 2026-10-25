@@ -195,7 +195,7 @@
     };
   }
 
-  // Reconcilia entradas registradas de madrugada (< 03:00 AM) al día anterior
+  // Reconcilia entradas registradas de madrugada (< 04:00 AM) al día anterior
   function reconcileCircadianEntries() {
     if (!state || !Array.isArray(state.entries)) return;
     if (!window.CJProgress || typeof window.CJProgress.circadianDateKey !== "function") return;
@@ -203,7 +203,7 @@
     state.entries.forEach((e) => {
       if (e && e.ts) {
         const d = new Date(e.ts);
-        if (!isNaN(d.getTime()) && d.getHours() < 3) {
+        if (!isNaN(d.getTime()) && d.getHours() < 4) {
           const calKey = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
           const circKey = window.CJProgress.circadianDateKey(e.ts);
           if (e.date === calKey && circKey !== calKey) {
@@ -479,7 +479,7 @@
             <span class="badge-tag" style="background: rgba(197,154,40,0.18); border: 1px solid #E5BE53; color: #F6E2A3; font-size: 0.7rem; padding: 2px 9px;">
               🔥 Racha: ${st.days}d ${st.testudoInStreak > 0 ? `• 🏺 ${st.testudoInStreak} Kintsugi` : ""}
             </span>
-            <span style="font-size: 0.75rem; color: #94A3B8;">🌙 Cambio de día: 03:00 AM</span>
+            <span style="font-size: 0.75rem; color: #94A3B8;">🌙 Cambio de día: 04:00 AM</span>
           </div>
           <div style="display: flex; align-items: center; gap: 8px;">
             <button onclick="hypomnemataJournal.openOfflineModal();" style="background: rgba(16, 185, 129, 0.16); color: #6EE7B7; border: 1px solid #10B981; padding: 5px 11px; border-radius: 6px; font-size: 0.74rem; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 5px;">
@@ -535,7 +535,7 @@
                   ⚡ Recuperación: ~${st.recoveryDaysAvg}d
                 </span>
                 <span class="badge-tag" style="background: rgba(56,189,248,0.12); border: 1px solid rgba(56,189,248,0.35); color: #7DD3FC; font-size: 0.7rem; padding: 3px 9px;" title="Todo registro hecho entre las 00:00 y las 02:59 AM se asigna automáticamente al día anterior">
-                  🌙 Corte Circadiano: 03:00 AM
+                  🌙 Corte Circadiano: 04:00 AM
                 </span>
               </div>
               <div style="font-size: 0.82rem; color: #94A3B8; margin-top: 4px;">
