@@ -496,15 +496,18 @@
     const snap = snapshot();
     try {
       const st = window.reyJaguarState;
-      let effectiveStreak = snap.streak.days;
       if (st && st.character) {
         if (!st.character) st.character = {};
         st.character.xp = snap.xp;
         st.character.level = snap.level.rank;
         st.character.currentRankIndex = snap.level.rank - 1;
-        effectiveStreak = Math.max(effectiveStreak, Number(st.character.streakDays) || 1, Number(st.character.noPornDays) || 1);
-        st.character.streakDays = effectiveStreak;
-        st.character.noPornDays = Math.max(Number(st.character.noPornDays) || 1, effectiveStreak);
+
+        // Días de Virtud (0 Porno) derivados canónicamente del inicio activo
+        let virtueDays = (typeof window.getVirtueStreakDays === "function")
+          ? window.getVirtueStreakDays()
+          : (Number(st.character.noPornDays) || 1);
+        st.character.noPornDays = virtueDays;
+        st.character.streakDays = virtueDays;
         if (typeof window.saveReyJaguarState === "function") window.saveReyJaguarState();
       }
       if (typeof appState !== "undefined" && appState.profiles && appState.profiles[0]) {
@@ -512,11 +515,9 @@
         p.xp = snap.xp;
         p.currentLevel = snap.level.rank;
         p.currentSublevel = snap.level.grade;
-        effectiveStreak = Math.max(effectiveStreak, Number(p.streak) || 1, (Array.isArray(p.completedDays) ? p.completedDays.length : 1));
-        p.streak = effectiveStreak;
-        if (!Array.isArray(p.completedDays) || p.completedDays.length < effectiveStreak) {
-          p.completedDays = Array.from({ length: Math.min(21, effectiveStreak) }, (_, i) => i + 1);
-        }
+        const virtueDays = (st && st.character && Number(st.character.noPornDays)) ? Number(st.character.noPornDays) : 1;
+        p.streak = virtueDays;
+        p.completedDays = Array.from({ length: Math.min(21, virtueDays) }, (_, i) => i + 1);
         if (typeof saveAppState === "function") saveAppState();
       }
     } catch (e) { console.error("[CJProgress] sync:", e); }
@@ -563,15 +564,14 @@
     });
     // Actualizar estados locales inmediatamente
     if (window.reyJaguarState && window.reyJaguarState.character) {
-      window.reyJaguarState.character.noPornDays = Math.max(targetDay, Number(window.reyJaguarState.character.noPornDays) || 1);
-      window.reyJaguarState.character.streakDays = Math.max(targetDay, Number(window.reyJaguarState.character.streakDays) || 1);
+      window.reyJaguarState.character.noPornDays = targetDay;
+      window.reyJaguarState.character.streakDays = targetDay;
       if (typeof window.saveReyJaguarState === 'function') window.saveReyJaguarState();
     }
     if (typeof appState !== "undefined" && appState.profiles && appState.profiles[0]) {
       const p = appState.profiles[0];
-      p.streak = Math.max(targetDay, Number(p.streak) || 1);
-      const curLen = Array.isArray(p.completedDays) ? p.completedDays.length : 0;
-      p.completedDays = Array.from({ length: Math.min(21, Math.max(targetDay, curLen)) }, (_, i) => i + 1);
+      p.streak = targetDay;
+      p.completedDays = Array.from({ length: Math.min(21, targetDay) }, (_, i) => i + 1);
       if (typeof saveAppState === 'function') saveAppState();
     }
     sync();

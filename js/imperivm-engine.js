@@ -772,9 +772,13 @@ const imperivmEngine = {
     if (!pennantEl) return;
 
     let days = 1;
-    const st = (typeof reyJaguarState !== "undefined") ? reyJaguarState : (window.reyJaguarState || null);
-    if (st && st.character) {
-      days = Math.max(1, Number(st.character.noPornDays || st.character.streakDays || 1));
+    if (typeof window.getVirtueStreakDays === "function") {
+      days = window.getVirtueStreakDays();
+    } else {
+      const st = (typeof reyJaguarState !== "undefined") ? reyJaguarState : (window.reyJaguarState || null);
+      if (st && st.character) {
+        days = Math.max(1, Number(st.character.noPornDays || 1));
+      }
     }
 
     if (daysTextEl) {

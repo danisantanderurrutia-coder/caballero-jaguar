@@ -382,6 +382,26 @@ function loadReyJaguarState() {
     }
   } catch(e) { console.error("Error al verificar reseteo Día 1:", e); }
 
+  // Sincronizar caída del sábado 24 de Octubre y reinicio canónico en Día 1
+  try {
+    if (localStorage.getItem("CABALLERO_JAGUAR_DAY1_START_RESET_OCT26") !== "2026_10_26_V1") {
+      if (!reyJaguarState.dailyChallengeActions) reyJaguarState.dailyChallengeActions = {};
+      if (!reyJaguarState.dailyChallengeActions["2026-10-24"]) reyJaguarState.dailyChallengeActions["2026-10-24"] = {};
+      reyJaguarState.dailyChallengeActions["2026-10-24"].pillar_nopor = false;
+      reyJaguarState.dailyChallengeActions["2026-10-24"].isFall = true;
+
+      localStorage.setItem("CJ_CHALLENGE_START_DATE", "2026-10-25");
+      reyJaguarState.character.noPornDays = 1;
+      reyJaguarState.character.streakDays = 1;
+      if (typeof appState !== "undefined" && appState.profiles && appState.profiles[0]) {
+        appState.profiles[0].streak = 1;
+        appState.profiles[0].completedDays = [1];
+      }
+      localStorage.setItem("CABALLERO_JAGUAR_DAY1_START_RESET_OCT26", "2026_10_26_V1");
+      saveReyJaguarState();
+    }
+  } catch(e) { console.error("Error al sincronizar Día 1 de Templanza:", e); }
+
   // Asegurar que por defecto solo el Sprite (id: 1) esté equipado
   if (Array.isArray(reyJaguarState.inventory)) {
     const equippedItems = reyJaguarState.inventory.filter(i => i.equipped);
@@ -714,15 +734,49 @@ let matrixCalendarState = {
 };
 
 function getChallengeStartDate() {
-  return localStorage.getItem("CJ_CHALLENGE_START_DATE") || "2026-10-12";
+  return localStorage.getItem("CJ_CHALLENGE_START_DATE") || "2026-10-25";
 }
 window.getChallengeStartDate = getChallengeStartDate;
+
+function getVirtueStreakDays() {
+  const startDate = getChallengeStartDate();
+  const today = window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10);
+
+  if (startDate >= today) return 1;
+
+  const [sY, sM, sD] = startDate.split("-").map(Number);
+  const [tY, tM, tD] = today.split("-").map(Number);
+  const startDt = new Date(sY, sM - 1, sD, 12, 0, 0);
+  const todayDt = new Date(tY, tM - 1, tD, 12, 0, 0);
+
+  let diff = Math.floor((todayDt.getTime() - startDt.getTime()) / 86400000) + 1;
+  return Math.max(1, diff);
+}
+window.getVirtueStreakDays = getVirtueStreakDays;
 
 function setChallengeStartDate(dateStr) {
   if (!dateStr) return;
   localStorage.setItem("CJ_CHALLENGE_START_DATE", dateStr);
+  const days = getVirtueStreakDays();
+  if (reyJaguarState && reyJaguarState.character) {
+    reyJaguarState.character.noPornDays = days;
+    reyJaguarState.character.streakDays = days;
+    saveReyJaguarState();
+  }
+  if (typeof appState !== "undefined" && appState.profiles && appState.profiles[0]) {
+    appState.profiles[0].streak = days;
+    appState.profiles[0].completedDays = Array.from({ length: Math.min(21, days) }, (_, i) => i + 1);
+    if (typeof saveAppState === "function") saveAppState();
+  }
+  if (window.imperivmEngine && typeof window.imperivmEngine.updateVexillumVisuals === "function") {
+    window.imperivmEngine.updateVexillumVisuals();
+  }
+  const challengeHeaderDays = document.getElementById("header-challenge-days-text");
+  if (challengeHeaderDays) {
+    challengeHeaderDays.textContent = `DÍA ${days} EN VIRTUD`;
+  }
   if (typeof showNotification === "function") {
-    showNotification(`👑 Día de Inicio fijado en: ${dateStr}. ¡Desde aquí se cuenta tu orden!`);
+    showNotification(`👑 Día de Inicio fijado en: ${dateStr}. Estás en el DÍA ${days} EN VIRTUD.`);
   }
   refreshMatrixCalendar();
 }
@@ -775,21 +829,166 @@ function refreshMatrixCalendar() {
 }
 window.refreshMatrixCalendar = refreshMatrixCalendar;
 
-function quickMarkMatrixDay(dateStr, aura, desc) {
-  if (window.CJProgress && typeof window.CJProgress.markDayConquest === "function") {
-    window.CJProgress.markDayConquest(dateStr, { aura, desc });
-  }
-  refreshMatrixCalendar();
-}
-window.quickMarkMatrixDay = quickMarkMatrixDay;
+// --- ACCIONES DE ENCUESTA DIARIA (5 PILARES & OTROS) ---
 
-function quickUnmarkMatrixDay(dateStr) {
-  if (window.CJProgress && typeof window.CJProgress.unmarkDayConquest === "function") {
-    window.CJProgress.unmarkDayConquest(dateStr);
+function setDayVirtueStatus(dateStr, isClean) {
+  if (!dateStr) return;
+  if (!reyJaguarState.dailyChallengeActions) reyJaguarState.dailyChallengeActions = {};
+  if (!reyJaguarState.dailyChallengeActions[dateStr]) reyJaguarState.dailyChallengeActions[dateStr] = {};
+
+  const today = window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10);
+
+  if (isClean) {
+    if (reyJaguarState.dailyChallengeActions[dateStr].pillar_nopor === true) {
+      delete reyJaguarState.dailyChallengeActions[dateStr].pillar_nopor;
+      if (window.CJProgress && typeof window.CJProgress.revoke === "function") {
+        window.CJProgress.revoke({ key: `virtud-clean-${dateStr}` });
+      }
+      if (typeof showNotification === "function") {
+        showNotification(`↩️ Día Limpio desmarcado para ${dateStr}`);
+      }
+    } else {
+      reyJaguarState.dailyChallengeActions[dateStr].pillar_nopor = true;
+      reyJaguarState.dailyChallengeActions[dateStr].isFall = false;
+
+      if (window.CJProgress && typeof window.CJProgress.award === "function") {
+        window.CJProgress.award({
+          xp: 75,
+          aura: "espiritualidad",
+          desc: `Día Limpio (0 Porno): ${dateStr}`,
+          key: `virtud-clean-${dateStr}`,
+          date: dateStr,
+          source: "virtud"
+        });
+      }
+      if (typeof playSoundEffect === "function") playSoundEffect("success");
+      if (typeof showNotification === "function") {
+        showNotification(`🟢 ${dateStr}: Sellado como DÍA LIMPIO (0 Porno). ¡Día Esmeralda conquistado!`);
+      }
+    }
+  } else {
+    // Marcado de CAÍDA / QUIEBRE
+    if (reyJaguarState.dailyChallengeActions[dateStr].pillar_nopor === false && reyJaguarState.dailyChallengeActions[dateStr].isFall === true) {
+      delete reyJaguarState.dailyChallengeActions[dateStr].pillar_nopor;
+      delete reyJaguarState.dailyChallengeActions[dateStr].isFall;
+      if (typeof showNotification === "function") {
+        showNotification(`↩️ Caída desmarcada para ${dateStr}`);
+      }
+    } else {
+      reyJaguarState.dailyChallengeActions[dateStr].pillar_nopor = false;
+      reyJaguarState.dailyChallengeActions[dateStr].isFall = true;
+
+      // La prueba recomienza desde hoy
+      localStorage.setItem("CJ_CHALLENGE_START_DATE", today);
+      if (reyJaguarState.character) {
+        reyJaguarState.character.noPornDays = 1;
+        reyJaguarState.character.streakDays = 1;
+      }
+      if (typeof appState !== "undefined" && appState.profiles && appState.profiles[0]) {
+        appState.profiles[0].streak = 1;
+        appState.profiles[0].completedDays = [1];
+        if (typeof saveAppState === "function") saveAppState();
+      }
+      if (typeof playSoundEffect === "function") playSoundEffect("failure");
+      if (typeof showNotification === "function") {
+        showNotification(`🛡️ ${dateStr}: Quiebre registrado. La prueba recomienza desde hoy (Día 1 en Virtud).`);
+      }
+    }
+  }
+
+  saveReyJaguarState();
+  if (window.imperivmEngine && typeof window.imperivmEngine.updateVexillumVisuals === "function") {
+    window.imperivmEngine.updateVexillumVisuals();
+  }
+  const challengeHeaderDays = document.getElementById("header-challenge-days-text");
+  if (challengeHeaderDays && reyJaguarState.character) {
+    challengeHeaderDays.textContent = `DÍA ${reyJaguarState.character.noPornDays} EN VIRTUD`;
   }
   refreshMatrixCalendar();
 }
-window.quickUnmarkMatrixDay = quickUnmarkMatrixDay;
+window.setDayVirtueStatus = setDayVirtueStatus;
+
+function togglePillarSecondaryAction(dateStr, pillarId) {
+  if (!dateStr || !pillarId) return;
+  const pillar = VIRTUE_FIVE_PILLARS.find(p => p.id === pillarId);
+  if (!pillar) return;
+
+  if (!reyJaguarState.dailyChallengeActions) reyJaguarState.dailyChallengeActions = {};
+  if (!reyJaguarState.dailyChallengeActions[dateStr]) reyJaguarState.dailyChallengeActions[dateStr] = {};
+
+  const isDone = !!reyJaguarState.dailyChallengeActions[dateStr][pillarId];
+  const pKey = `pillar-${pillarId}-${dateStr}`;
+
+  if (isDone) {
+    reyJaguarState.dailyChallengeActions[dateStr][pillarId] = false;
+    if (window.CJProgress && typeof window.CJProgress.revoke === "function") {
+      window.CJProgress.revoke({ key: pKey });
+    }
+    if (typeof CaballeroScoringEngine !== "undefined" && typeof CaballeroScoringEngine.revokeAction === "function") {
+      CaballeroScoringEngine.revokeAction(pillar.aura, "medio", pillar.name, null, pillarId);
+    }
+    if (typeof showNotification === "function") {
+      showNotification(`↩️ Desmarcado: ${pillar.name} para ${dateStr}`);
+    }
+  } else {
+    reyJaguarState.dailyChallengeActions[dateStr][pillarId] = true;
+    if (window.CJProgress && typeof window.CJProgress.award === "function") {
+      window.CJProgress.award({
+        xp: pillar.xp,
+        aura: pillar.aura,
+        desc: pillar.name,
+        date: dateStr,
+        key: pKey
+      });
+    }
+    if (typeof CaballeroScoringEngine !== "undefined" && typeof CaballeroScoringEngine.awardAction === "function") {
+      CaballeroScoringEngine.awardAction(pillar.aura, "medio", pillar.name, null, pillarId);
+    }
+    if (typeof playSoundEffect === "function") playSoundEffect("success");
+    if (typeof showNotification === "function") {
+      showNotification(`✓ ${pillar.name} registrado (+${pillar.xp} XP • ${pillar.aura.toUpperCase()}). ¡Banderín elongado!`);
+    }
+  }
+
+  saveReyJaguarState();
+  if (window.imperivmEngine && typeof window.imperivmEngine.renderHeaderCategoryPennants === "function") {
+    window.imperivmEngine.renderHeaderCategoryPennants();
+  }
+  refreshMatrixCalendar();
+}
+window.togglePillarSecondaryAction = togglePillarSecondaryAction;
+
+function quickAwardPillarToPennant(dateStr, auraKey, xpAmount, desc, subKey) {
+  dateStr = dateStr || (window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10));
+  xpAmount = Number(xpAmount) || 50;
+  auraKey = auraKey || "vida";
+  desc = desc || "Acción de disciplina";
+  subKey = subKey || auraKey;
+
+  const key = `pennant-${auraKey}-${dateStr}-${Date.now().toString(36)}`;
+  if (window.CJProgress && typeof window.CJProgress.award === "function") {
+    window.CJProgress.award({
+      xp: xpAmount,
+      aura: auraKey,
+      desc,
+      date: dateStr,
+      key
+    });
+  }
+  if (typeof CaballeroScoringEngine !== "undefined" && typeof CaballeroScoringEngine.awardAction === "function") {
+    CaballeroScoringEngine.awardAction(auraKey, "medio", desc, null, subKey);
+  }
+  if (typeof playSoundEffect === "function") playSoundEffect("success");
+  if (typeof showNotification === "function") {
+    showNotification(`⚡ Registrado en ${auraKey.toUpperCase()} (+${xpAmount} XP). ¡Banderín ${auraKey} elongado!`);
+  }
+  saveReyJaguarState();
+  if (window.imperivmEngine && typeof window.imperivmEngine.renderHeaderCategoryPennants === "function") {
+    window.imperivmEngine.renderHeaderCategoryPennants();
+  }
+  refreshMatrixCalendar();
+}
+window.quickAwardPillarToPennant = quickAwardPillarToPennant;
 
 function toggleMatrixDayKintsugi(dateStr) {
   if (window.CJProgress && typeof window.CJProgress.toggleTestudoDay === "function") {
@@ -827,12 +1026,10 @@ function render21DayDashboardRoadmapHTML() {
   const todayDt = new Date(todayY, todayM - 1, todayD, 12, 0, 0);
   const diffMs = todayDt.getTime() - startDt.getTime();
   const daysSinceStart = Math.max(1, Math.floor(diffMs / 86400000) + 1);
-  const isTrialComplete = daysSinceStart > 21;
-  const trialDays = Math.min(21, daysSinceStart);
+  const virtueDays = (typeof window.getVirtueStreakDays === "function") ? window.getVirtueStreakDays() : daysSinceStart;
+  const isTrialComplete = virtueDays > 21;
+  const trialDays = Math.min(21, virtueDays);
   const trialPct = Math.min(100, Math.round((trialDays / 21) * 100));
-
-  const streakInfo = window.CJProgress ? window.CJProgress.streakInfo() : { days: 1, testudoInStreak: 0 };
-  const totalXp = window.CJProgress ? window.CJProgress.totalXP() : 0;
 
   // Días de la semana para el calendario (Lunes a Domingo)
   const firstDayOfMonth = new Date(curYear, curMonth, 1, 12, 0, 0);
@@ -860,15 +1057,19 @@ function render21DayDashboardRoadmapHTML() {
 
     const xp = window.CJProgress ? window.CJProgress.dayXP(dateKey) : 0;
     const isTestudo = window.CJProgress && window.CJProgress.isTestudoDay ? window.CJProgress.isTestudoDay(dateKey) : false;
-    const isConquest = xp >= (window.CJProgress ? window.CJProgress.CONFIG.activeDayXP : 100);
+
+    const dayActions = (window.reyJaguarState && window.reyJaguarState.dailyChallengeActions && window.reyJaguarState.dailyChallengeActions[dateKey]) || {};
+    const isClean = dayActions.pillar_nopor === true;
+    const isFall = dayActions.pillar_nopor === false || dayActions.isFall === true;
 
     let bg = "rgba(15, 23, 42, 0.65)";
     let border = "1px solid rgba(255, 255, 255, 0.08)";
-    let numColor = "#CBD5E1";
+    let numColor = "#94A3B8";
     let icon = "—";
     let badgeText = "";
     let badgeStyle = "";
 
+    // 0 Porno es estrictamente el color verde (Esmeralda); las caídas se marcan en carmesí; Kintsugi en oro/obsidiana
     if (isTestudo) {
       bg = "radial-gradient(circle at 50% 50%, #1E1B2E 0%, #090B10 100%)";
       border = "1.5px solid #F3D079";
@@ -876,20 +1077,27 @@ function render21DayDashboardRoadmapHTML() {
       icon = "🏺";
       badgeText = "KINTSUGI";
       badgeStyle = "color: #FDE68A; background: rgba(197,154,40,0.25); border: 1px solid #E5BE53;";
-    } else if (isConquest) {
+    } else if (isFall) {
+      bg = "linear-gradient(135deg, rgba(88, 12, 28, 0.85) 0%, rgba(26, 10, 16, 0.95) 100%)";
+      border = "1.5px solid #F43F5E";
+      numColor = "#FECDD3";
+      icon = "✕";
+      badgeText = "CAÍDA";
+      badgeStyle = "color: #FDA4AF; background: rgba(244,63,94,0.25); border: 1px solid #F43F5E;";
+    } else if (isClean) {
       bg = "linear-gradient(135deg, rgba(6, 78, 59, 0.9) 0%, rgba(16, 185, 129, 0.65) 100%)";
       border = "1.5px solid #34D399";
       numColor = "#ECFDF5";
       icon = "✓";
-      badgeText = `${xp} XP`;
+      badgeText = "0 PORNO";
       badgeStyle = "color: #A7F3D0; background: rgba(16,185,129,0.2);";
     } else if (xp > 0) {
-      bg = "rgba(197, 154, 40, 0.16)";
-      border = "1px dashed rgba(197, 154, 40, 0.45)";
-      numColor = "#FDE68A";
+      bg = "rgba(30, 41, 59, 0.7)";
+      border = "1px dashed rgba(148, 163, 184, 0.4)";
+      numColor = "#E2E8F0";
       icon = "•";
       badgeText = `${xp} XP`;
-      badgeStyle = "color: #E2E8F0;";
+      badgeStyle = "color: #CBD5E1; background: rgba(255,255,255,0.06);";
     }
 
     let extraOutline = "";
@@ -904,7 +1112,7 @@ function render21DayDashboardRoadmapHTML() {
     daysHTML += `
       <div onclick="selectMatrixCalendarDate('${dateKey}')"
            style="background: ${bg}; border: ${border}; ${extraOutline} border-radius: 8px; min-height: 64px; padding: 6px 4px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.18s; user-select: none;"
-           title="${dateKey} • ${isTestudo ? 'Guardia Kintsugi' : (isConquest ? 'Conquistado (' + xp + ' XP)' : xp + ' XP')}${isStart ? ' • 👑 Día de Inicio' : ''}${isToday ? ' • 🔥 Hoy' : ''}">
+           title="${dateKey} • ${isTestudo ? 'Guardia Kintsugi' : (isClean ? '0 Porno (Limpio)' : (isFall ? 'Caída / Quiebre' : (xp > 0 ? xp + ' XP' : 'Pendiente')))}${isStart ? ' • 👑 Día de Inicio' : ''}${isToday ? ' • 🔥 Hoy' : ''}">
         <!-- FILA SUPERIOR: NÚMERO Y ESTADO -->
         <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; padding: 0 4px;">
           <span style="font-family: 'Cinzel', serif; font-size: 0.92rem; font-weight: 900; color: ${numColor}; line-height: 1;">${dayNum}</span>
@@ -937,9 +1145,17 @@ function render21DayDashboardRoadmapHTML() {
 
   const selXP = window.CJProgress ? window.CJProgress.dayXP(selDate) : 0;
   const selIsTestudo = window.CJProgress && window.CJProgress.isTestudoDay ? window.CJProgress.isTestudoDay(selDate) : false;
-  const selIsConquest = selXP >= (window.CJProgress ? window.CJProgress.CONFIG.activeDayXP : 100);
   const selIsStart = (selDate === startDate);
   const selIsToday = (selDate === today);
+
+  const selActions = (window.reyJaguarState && window.reyJaguarState.dailyChallengeActions && window.reyJaguarState.dailyChallengeActions[selDate]) || {};
+  const selIsClean = selActions.pillar_nopor === true;
+  const selIsFall = selActions.pillar_nopor === false || selActions.isFall === true;
+
+  const hasEjercicio = !!selActions.pillar_ejercicio;
+  const hasAleman = !!selActions.pillar_aleman;
+  const hasLectura = !!selActions.pillar_lectura;
+  const hasMeditacion = !!selActions.pillar_meditacion;
 
   return `
     <div class="challenge-parchment-matrix-wrap" id="neuro-matrix-21days" style="background: linear-gradient(165deg, rgba(20, 25, 40, 0.96) 0%, rgba(10, 13, 22, 0.98) 100%); border: 1.5px solid rgba(212, 175, 55, 0.4); border-radius: var(--radius-md); padding: 20px 22px; box-shadow: 0 8px 32px rgba(0,0,0,0.65);">
@@ -966,12 +1182,12 @@ function render21DayDashboardRoadmapHTML() {
 
         <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
           <div style="font-size: 1.25rem; font-weight: 900; color: #F5D77F; font-family: 'Cinzel', serif;">
-            🔥 Racha: ${streakInfo.days} Día(s) ${streakInfo.testudoInStreak > 0 ? `• 🏺 ${streakInfo.testudoInStreak} Kintsugi` : ''}
+            🔥 Racha: DÍA ${virtueDays} EN VIRTUD
           </div>
           <div style="font-size: 0.78rem; color: #CBD5E1;">
             ${isTrialComplete
-              ? `<span style="color: #F5D77F; font-weight: 800;">👑 Día ${daysSinceStart} de Caballería</span> (Iniciado el ${sD}/${sM}/${sY})`
-              : `<span style="color: #34D399; font-weight: 800;">Día ${daysSinceStart} de 21 (Iniciación)</span> • Iniciado el ${sD}/${sM}/${sY}`}
+              ? `<span style="color: #F5D77F; font-weight: 800;">👑 Día ${virtueDays} de Caballería</span> (Iniciado el ${sD}/${sM}/${sY})`
+              : `<span style="color: #34D399; font-weight: 800;">Día ${virtueDays} de 21 (Iniciación)</span> • Iniciado el ${sD}/${sM}/${sY}`}
           </div>
         </div>
       </div>
@@ -1002,12 +1218,14 @@ function render21DayDashboardRoadmapHTML() {
           </button>
         </div>
 
-        <!-- LEYENDA COMPACTA -->
+        <!-- LEYENDA CLARA DE COLORES -->
         <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 0.72rem; color: #CBD5E1;">
-          <span><strong style="color: #34D399;">■ Esmeralda:</strong> Conquista (≥100 XP)</span>
-          <span><strong style="color: #F3D079;">🏺 Kintsugi:</strong> Quiebre protegido</span>
-          <span><strong style="color: #F5D77F;">👑 Corona:</strong> Día de inicio</span>
-          <span><strong style="color: #7DD3FC;">🔥 Hoy:</strong> Día en curso</span>
+          <span><strong style="color: #34D399;">■ Verde:</strong> 0 Porno (Templanza)</span>
+          <span><strong style="color: #F43F5E;">✕ Rojo:</strong> Caída registrada</span>
+          <span><strong style="color: #F3D079;">🏺 Kintsugi:</strong> Quiebre blindado</span>
+          <span><strong style="color: #CBD5E1;">▫ Gris:</strong> Actividad complementaria</span>
+          <span><strong style="color: #F5D77F;">👑 Corona:</strong> Inicio</span>
+          <span><strong style="color: #7DD3FC;">🔥 Hoy:</strong> En curso</span>
         </div>
       </div>
 
@@ -1027,68 +1245,136 @@ function render21DayDashboardRoadmapHTML() {
         ${daysHTML}
       </div>
 
-      <!-- TARJETA DE ACCIÓN INMEDIATA DEL DÍA SELECCIONADO -->
-      <div style="background: linear-gradient(145deg, rgba(26, 33, 52, 0.95) 0%, rgba(13, 17, 28, 0.98) 100%); border: 1.5px solid ${selIsConquest ? '#10B981' : (selIsTestudo ? '#F3D079' : 'rgba(212, 175, 55, 0.4)')}; border-radius: 10px; padding: 16px 18px; box-shadow: 0 6px 24px rgba(0,0,0,0.5);">
+      <!-- TARJETA: ENCUESTA DE LOS 5 PILARES & OTROS DEL DÍA SELECCIONADO -->
+      <div style="background: linear-gradient(145deg, rgba(26, 33, 52, 0.95) 0%, rgba(13, 17, 28, 0.98) 100%); border: 1.5px solid ${selIsClean ? '#10B981' : (selIsFall ? '#F43F5E' : (selIsTestudo ? '#F3D079' : 'rgba(212, 175, 55, 0.4)'))}; border-radius: 10px; padding: 18px 20px; box-shadow: 0 6px 24px rgba(0,0,0,0.5);">
         
         <!-- ENCABEZADO DEL DÍA SELECCIONADO -->
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px; margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px; margin-bottom: 14px;">
           <div>
             <div style="font-size: 0.72rem; color: #F5D77F; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">
               ${selIsToday ? '🔥 DÍA DE HOY' : (selIsStart ? '👑 DÍA DE INICIO DE LA ORDEN' : '📅 DÍA SELECCIONADO')}
             </div>
-            <div style="font-family: 'Cinzel', serif; font-size: 1.15rem; color: #FFF; font-weight: 800; margin-top: 2px;">
+            <div style="font-family: 'Cinzel', serif; font-size: 1.18rem; color: #FFF; font-weight: 800; margin-top: 2px;">
               ${selFormatted}
             </div>
           </div>
           
           <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="badge-tag" style="background: ${selIsConquest ? 'rgba(16,185,129,0.2)' : (selIsTestudo ? 'rgba(197,154,40,0.2)' : 'rgba(255,255,255,0.06)')}; border: 1.5px solid ${selIsConquest ? '#10B981' : (selIsTestudo ? '#F3D079' : 'rgba(255,255,255,0.15)')}; color: ${selIsConquest ? '#6EE7B7' : (selIsTestudo ? '#F6E2A3' : '#CBD5E1')}; font-size: 0.78rem; font-weight: 800; padding: 4px 10px;">
-              ${selIsConquest ? `✓ Conquistado (${selXP} XP)` : (selIsTestudo ? '🏺 Guardia Kintsugi' : (selXP > 0 ? `▫ Parcial (${selXP} XP)` : '⬛ Pendiente (0 XP)'))}
+            <span class="badge-tag" style="background: ${selIsClean ? 'rgba(16,185,129,0.2)' : (selIsFall ? 'rgba(244,63,94,0.2)' : (selIsTestudo ? 'rgba(197,154,40,0.2)' : 'rgba(255,255,255,0.06)'))}; border: 1.5px solid ${selIsClean ? '#10B981' : (selIsFall ? '#F43F5E' : (selIsTestudo ? '#F3D079' : 'rgba(255,255,255,0.15)'))}; color: ${selIsClean ? '#6EE7B7' : (selIsFall ? '#FDA4AF' : (selIsTestudo ? '#F6E2A3' : '#CBD5E1'))}; font-size: 0.78rem; font-weight: 800; padding: 4px 10px;">
+              ${selIsTestudo ? '🏺 Guardia Kintsugi' : (selIsClean ? '🟢 0 Porno Limpio (Esmeralda)' : (selIsFall ? '🔴 Quiebre / Caída' : (selXP > 0 ? `▫ Actividad (${selXP} XP)` : '⬛ Sin Registro (0 XP)')))}
             </span>
           </div>
         </div>
 
-        <!-- ACCIONES DE CONQUISTA OFFLINE & KINTSUGI -->
-        ${!selIsConquest ? `
+        <!-- 1. PILAR REY: 0 PORNO & TEMPLANZA (DECIDE EL COLOR VERDE) -->
+        <div style="background: ${selIsClean ? 'rgba(16,185,129,0.12)' : (selIsFall ? 'rgba(244,63,94,0.12)' : 'rgba(255,255,255,0.03)')}; border: 1.5px solid ${selIsClean ? '#10B981' : (selIsFall ? '#F43F5E' : 'rgba(212,175,55,0.4)')}; border-radius: 8px; padding: 12px 14px; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
           <div>
-            <div style="font-size: 0.8rem; color: #E2E8F0; font-weight: 700; margin-bottom: 8px;">
-              ⚡ Sellar Conquista Offline (+100 XP en este día):
+            <div style="font-size: 0.68rem; font-weight: 900; color: #F5D77F; letter-spacing: 0.5px;">
+              👑 PILAR REY • BASE DE LA VIRTUD (DECISOR DEL COLOR VERDE)
             </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px; margin-bottom: 12px;">
-              <button onclick="quickMarkMatrixDay('${selDate}', 'deporte', 'Entrenamiento físico / combate offline');" style="background: linear-gradient(135deg, rgba(16,185,129,0.2) 0%, rgba(5,150,105,0.3) 100%); border: 1.5px solid #10B981; color: #ECFDF5; border-radius: 6px; padding: 8px 10px; text-align: left; cursor: pointer; font-size: 0.78rem;">
-                <div style="font-weight: 800;">🥊 Deporte & Combate</div>
-                <div style="font-size: 0.68rem; color: #A7F3D0; margin-top: 2px;">Gym, calistenia, running (+100 XP)</div>
-              </button>
-
-              <button onclick="quickMarkMatrixDay('${selDate}', 'mente', 'Bloque de estudio / foco offline');" style="background: linear-gradient(135deg, rgba(56,189,248,0.2) 0%, rgba(14,116,144,0.3) 100%); border: 1.5px solid #38BDF8; color: #F0F9FF; border-radius: 6px; padding: 8px 10px; text-align: left; cursor: pointer; font-size: 0.78rem;">
-                <div style="font-weight: 800;">🧘 Foco & Estudio</div>
-                <div style="font-size: 0.68rem; color: #BAE6FD; margin-top: 2px;">Tesis, lectura, investigación (+100 XP)</div>
-              </button>
-
-              <button onclick="quickMarkMatrixDay('${selDate}', 'espiritualidad', 'Día en virtud y autodominio offline');" style="background: linear-gradient(135deg, rgba(197,154,40,0.22) 0%, rgba(138,100,36,0.3) 100%); border: 1.5px solid #E5BE53; color: #FFFBEB; border-radius: 6px; padding: 8px 10px; text-align: left; cursor: pointer; font-size: 0.78rem;">
-                <div style="font-weight: 800;">🕊️ Virtud & 0 Porno</div>
-                <div style="font-size: 0.68rem; color: #FDE68A; margin-top: 2px;">Templanza y presencia limpia (+100 XP)</div>
-              </button>
-
-              <button onclick="quickMarkMatrixDay('${selDate}', 'vida', 'Práctica integral offline');" style="background: linear-gradient(135deg, rgba(168,85,247,0.2) 0%, rgba(109,40,217,0.3) 100%); border: 1.5px solid #A855F7; color: #FAF5FF; border-radius: 6px; padding: 8px 10px; text-align: left; cursor: pointer; font-size: 0.78rem;">
-                <div style="font-weight: 800;">⚡ Práctica Integral</div>
-                <div style="font-size: 0.68rem; color: #E9D5FF; margin-top: 2px;">Avance balanceado del día (+100 XP)</div>
-              </button>
+            <div style="font-size: 0.98rem; font-weight: 800; color: #FFFFFF; margin-top: 2px;">
+              0 Porno & Preservación de Energía Vital
+            </div>
+            <div style="font-size: 0.74rem; color: #CBD5E1; margin-top: 2px;">
+              ${selIsClean ? '✓ Día sellado limpio: la casilla brilla en Verde Esmeralda.' : (selIsFall ? '✕ Quiebre registrado en esta fecha.' : 'Sin registro aún. ¿Cómo concluyó la templanza en este día?')}
             </div>
           </div>
-        ` : `
-          <div style="background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.35); border-radius: 6px; padding: 8px 12px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-            <span style="font-size: 0.8rem; color: #ECFDF5;">✨ <strong>Día Conquistado:</strong> Registrado con honores en tu racha activa.</span>
-            <button onclick="quickUnmarkMatrixDay('${selDate}');" style="background: rgba(244,63,94,0.18); border: 1px solid rgba(244,63,94,0.4); color: #FECDD3; border-radius: 4px; padding: 4px 10px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">
-              ↩️ Deshacer registro offline
+
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <button onclick="setDayVirtueStatus('${selDate}', true)" style="background: ${selIsClean ? 'linear-gradient(135deg, #10B981 0%, #059669 100%)' : 'rgba(16,185,129,0.18)'}; border: 1.5px solid #10B981; color: #FFFFFF; font-weight: 800; font-size: 0.78rem; padding: 7px 14px; border-radius: 6px; cursor: pointer; transition: all 0.2s;" title="Marcar como Día Limpio (Verde Esmeralda)">
+              ${selIsClean ? '✓ DÍA LIMPIO (0 PORNO)' : '✓ Marcar Día Limpio'}
+            </button>
+            <button onclick="setDayVirtueStatus('${selDate}', false)" style="background: ${selIsFall ? 'linear-gradient(135deg, #E11D48 0%, #9F1239 100%)' : 'rgba(244,63,94,0.18)'}; border: 1.5px solid #F43F5E; color: #FFFFFF; font-weight: 800; font-size: 0.78rem; padding: 7px 14px; border-radius: 6px; cursor: pointer; transition: all 0.2s;" title="Marcar Quiebre / Caída (Recomienza la racha)">
+              ${selIsFall ? '✕ CAÍDA (REGISTRADA)' : '✕ Marcar Caída'}
             </button>
           </div>
-        `}
+        </div>
 
-        <!-- OPCIONES AVANZADAS: KINTSUGI, INICIO & DIARIO -->
-        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.06);">
+        <!-- 2. PILARES COMPLEMENTARIOS: ELONGAN LOS BANDERINES HERÁLDICOS & SUMAN XP -->
+        <div style="margin-bottom: 14px;">
+          <div style="font-size: 0.75rem; color: #E2E8F0; font-weight: 800; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+            <span>⚡ PILARES COMPLEMENTARIOS (Elongan Banderines del Header & Suman XP)</span>
+            <span style="font-size: 0.68rem; color: #94A3B8; font-weight: normal;">Haz clic para marcar o desmarcar</span>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px;">
+            <!-- PILAR EJERCICIO -->
+            <button onclick="togglePillarSecondaryAction('${selDate}', 'pillar_ejercicio')" style="background: ${hasEjercicio ? 'linear-gradient(135deg, rgba(16,185,129,0.25) 0%, rgba(5,150,105,0.35) 100%)' : 'rgba(255,255,255,0.03)'}; border: 1.5px solid ${hasEjercicio ? '#10B981' : 'rgba(255,255,255,0.12)'}; color: #FFF; border-radius: 6px; padding: 10px 12px; text-align: left; cursor: pointer; transition: all 0.2s;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 800; font-size: 0.82rem;">🥊 Movilidad & Deporte</span>
+                <span style="font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; ${hasEjercicio ? 'background: #10B981; color: #000;' : 'background: rgba(255,255,255,0.08); color: #A7F3D0;'}">
+                  ${hasEjercicio ? '✓ HECHO' : '+50 XP'}
+                </span>
+              </div>
+              <div style="font-size: 0.68rem; color: #94A3B8; margin-top: 3px;">Gym, calistenia, movilidad • Alarga banderín Deporte</div>
+            </button>
+
+            <!-- PILAR ALEMÁN -->
+            <button onclick="togglePillarSecondaryAction('${selDate}', 'pillar_aleman')" style="background: ${hasAleman ? 'linear-gradient(135deg, rgba(56,189,248,0.25) 0%, rgba(14,116,144,0.35) 100%)' : 'rgba(255,255,255,0.03)'}; border: 1.5px solid ${hasAleman ? '#38BDF8' : 'rgba(255,255,255,0.12)'}; color: #FFF; border-radius: 6px; padding: 10px 12px; text-align: left; cursor: pointer; transition: all 0.2s;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 800; font-size: 0.82rem;">🇩🇪 Alemán / Foco / Tesis</span>
+                <span style="font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; ${hasAleman ? 'background: #38BDF8; color: #000;' : 'background: rgba(255,255,255,0.08); color: #BAE6FD;'}">
+                  ${hasAleman ? '✓ HECHO' : '+35 XP'}
+                </span>
+              </div>
+              <div style="font-size: 0.68rem; color: #94A3B8; margin-top: 3px;">10 min alemán, foco profundo • Alarga banderín Mente</div>
+            </button>
+
+            <!-- PILAR LECTURA -->
+            <button onclick="togglePillarSecondaryAction('${selDate}', 'pillar_lectura')" style="background: ${hasLectura ? 'linear-gradient(135deg, rgba(168,85,247,0.25) 0%, rgba(109,40,217,0.35) 100%)' : 'rgba(255,255,255,0.03)'}; border: 1.5px solid ${hasLectura ? '#A855F7' : 'rgba(255,255,255,0.12)'}; color: #FFF; border-radius: 6px; padding: 10px 12px; text-align: left; cursor: pointer; transition: all 0.2s;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 800; font-size: 0.82rem;">📖 Lectura Estoica</span>
+                <span style="font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; ${hasLectura ? 'background: #A855F7; color: #000;' : 'background: rgba(255,255,255,0.08); color: #DDD6FE;'}">
+                  ${hasLectura ? '✓ HECHO' : '+35 XP'}
+                </span>
+              </div>
+              <div style="font-size: 0.68rem; color: #94A3B8; margin-top: 3px;">10 min filosofía / códice • Alarga banderín Mente</div>
+            </button>
+
+            <!-- PILAR SOMÁTICA / MEDITACIÓN -->
+            <button onclick="togglePillarSecondaryAction('${selDate}', 'pillar_meditacion')" style="background: ${hasMeditacion ? 'linear-gradient(135deg, rgba(251,146,60,0.25) 0%, rgba(194,65,12,0.35) 100%)' : 'rgba(255,255,255,0.03)'}; border: 1.5px solid ${hasMeditacion ? '#FB923C' : 'rgba(255,255,255,0.12)'}; color: #FFF; border-radius: 6px; padding: 10px 12px; text-align: left; cursor: pointer; transition: all 0.2s;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: 800; font-size: 0.82rem;">🧘 Somática & Sueño</span>
+                <span style="font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; ${hasMeditacion ? 'background: #FB923C; color: #000;' : 'background: rgba(255,255,255,0.08); color: #FED7AA;'}">
+                  ${hasMeditacion ? '✓ HECHO' : '+35 XP'}
+                </span>
+              </div>
+              <div style="font-size: 0.68rem; color: #94A3B8; margin-top: 3px;">Meditación, respiración • Alarga banderín Salud</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- 3. OTROS: ATAJOS RÁPIDOS A OTROS BANDERINES HERÁLDICOS -->
+        <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px 14px; margin-bottom: 14px;">
+          <div style="font-size: 0.72rem; color: #F5D77F; font-weight: 800; margin-bottom: 4px;">
+            ➕ OTROS ATAJOS A BANDERINES HERÁLDICOS
+          </div>
+          <div style="font-size: 0.68rem; color: #94A3B8; margin-bottom: 8px;">
+            Atajo para sumar puntos y alargar directamente los banderines de otras áreas en esta fecha:
+          </div>
+          <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+            <button onclick="quickAwardPillarToPennant('${selDate}', 'soberania', 50, 'Gasto tonto evitado / Finanzas', 'finanzas')" style="background: rgba(229,190,83,0.15); border: 1px solid #B8860B; color: #FDE68A; border-radius: 4px; padding: 5px 9px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">
+              🪙 Finanzas (+50 XP)
+            </button>
+            <button onclick="quickAwardPillarToPennant('${selDate}', 'naturaleza', 50, 'Contacto con la naturaleza / Huerto', 'naturaleza')" style="background: rgba(76,175,80,0.15); border: 1px solid #38734C; color: #A7F3D0; border-radius: 4px; padding: 5px 9px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">
+              🌲 Naturaleza (+50 XP)
+            </button>
+            <button onclick="quickAwardPillarToPennant('${selDate}', 'exploracion', 50, 'Exploración territorial / Caminata', 'exploracion')" style="background: rgba(92,137,212,0.15); border: 1px solid #4A6999; color: #BAE6FD; border-radius: 4px; padding: 5px 9px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">
+              🧭 Exploración (+50 XP)
+            </button>
+            <button onclick="quickAwardPillarToPennant('${selDate}', 'amor', 50, 'Vínculo significativo & Cuidado', 'amor')" style="background: rgba(216,75,148,0.15); border: 1px solid #8E2866; color: #FBCFE8; border-radius: 4px; padding: 5px 9px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">
+              ❤️ Amor (+50 XP)
+            </button>
+            <button onclick="quickAwardPillarToPennant('${selDate}', 'vida', 50, 'Práctica de vida / Deber', 'vida')" style="background: rgba(243,208,121,0.15); border: 1px solid #E5BE53; color: #FEF08A; border-radius: 4px; padding: 5px 9px; font-size: 0.72rem; font-weight: 700; cursor: pointer;">
+              👑 Deber Integral (+50 XP)
+            </button>
+          </div>
+        </div>
+
+        <!-- 4. CONTROLES AVANZADOS: KINTSUGI, INICIO & DIARIO -->
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06);">
           <button onclick="toggleMatrixDayKintsugi('${selDate}');" style="background: ${selIsTestudo ? 'linear-gradient(135deg, #F3D079 0%, #C59A28 100%)' : 'rgba(197,154,40,0.18)'}; border: 1px solid #D4AF37; color: ${selIsTestudo ? '#0B0E14' : '#F6E2A3'}; border-radius: 6px; padding: 6px 12px; font-size: 0.74rem; font-weight: 800; cursor: pointer;">
-            ${selIsTestudo ? '✕ Quitar Quiebre Kintsugi' : '🏺 Marcar como Quiebre Kintsugi (Testudo)'}
+            ${selIsTestudo ? '✕ Quitar Quiebre Kintsugi' : '🏺 Marcar Guardia Kintsugi (Testudo)'}
           </button>
 
           ${!selIsStart ? `
@@ -1120,16 +1406,13 @@ function toggleDayFromHub(dayNum) {
   const profile = typeof getActiveProfile === 'function' ? getActiveProfile() : null;
   const count = profile && Array.isArray(profile.completedDays) ? profile.completedDays.length : dayNum;
   if (reyJaguarState.character) {
-    reyJaguarState.character.streakDays = Math.max(count, Number(reyJaguarState.character.streakDays) || 1);
-    reyJaguarState.character.noPornDays = Math.max(count, Number(reyJaguarState.character.noPornDays) || 1);
+    reyJaguarState.character.streakDays = count;
+    reyJaguarState.character.noPornDays = count;
     saveReyJaguarState();
   }
   const challengeHeaderDays = document.getElementById("header-challenge-days-text");
   if (challengeHeaderDays && reyJaguarState.character) {
     challengeHeaderDays.textContent = `DÍA ${reyJaguarState.character.noPornDays} EN VIRTUD`;
-  }
-  if (typeof renderRPGLandingHub === 'function') {
-    renderRPGLandingHub();
   }
   if (typeof renderRPGLandingHub === 'function') {
     renderRPGLandingHub();
@@ -1143,7 +1426,7 @@ window.toggleDayFromHub = toggleDayFromHub;
 
 // --- ACCIÓN DIRECTA: RECONCILIAR DÍA PREVIO O AVANZAR A DÍA OBJETIVO ---
 function reconcileAndAdvanceVirtueDay(targetDay) {
-  targetDay = Number(targetDay) || 2;
+  targetDay = Number(targetDay) || 1;
   if (window.CJProgress && typeof window.CJProgress.reconcileVirtueDay === 'function') {
     window.CJProgress.reconcileVirtueDay(targetDay);
   } else if (typeof toggleDayCompleted === 'function') {
@@ -1151,16 +1434,13 @@ function reconcileAndAdvanceVirtueDay(targetDay) {
   }
   const profile = typeof getActiveProfile === 'function' ? getActiveProfile() : null;
   if (profile) {
-    if (!Array.isArray(profile.completedDays)) profile.completedDays = [];
-    for (let i = 1; i <= targetDay; i++) {
-      if (!profile.completedDays.includes(i)) profile.completedDays.push(i);
-    }
-    profile.completedDays.sort((a, b) => a - b);
-    profile.streak = profile.completedDays.length;
+    profile.completedDays = Array.from({ length: Math.min(21, targetDay) }, (_, i) => i + 1);
+    profile.streak = targetDay;
+    if (typeof saveAppState === 'function') saveAppState();
   }
   if (reyJaguarState.character) {
-    reyJaguarState.character.noPornDays = Math.max(targetDay, Number(reyJaguarState.character.noPornDays) || 1);
-    reyJaguarState.character.streakDays = Math.max(targetDay, Number(reyJaguarState.character.streakDays) || 1);
+    reyJaguarState.character.noPornDays = targetDay;
+    reyJaguarState.character.streakDays = targetDay;
     saveReyJaguarState();
   }
   const challengeHeaderDays = document.getElementById("header-challenge-days-text");
@@ -1301,8 +1581,9 @@ function openCaballeroChallengeModal() {
   if (!modal || !content) return;
 
   const profile = typeof getActiveProfile === 'function' ? getActiveProfile() : null;
-  const completedLen = profile && Array.isArray(profile.completedDays) ? profile.completedDays.length : 1;
-  const noPornDays = Math.max(completedLen, (reyJaguarState.character && typeof reyJaguarState.character.noPornDays === 'number') ? reyJaguarState.character.noPornDays : 1);
+  const noPornDays = (typeof window.getVirtueStreakDays === 'function')
+    ? window.getVirtueStreakDays()
+    : ((reyJaguarState.character && typeof reyJaguarState.character.noPornDays === 'number') ? reyJaguarState.character.noPornDays : 1);
   const todayStr = cjToday();
   const todayActions = (reyJaguarState.dailyChallengeActions && reyJaguarState.dailyChallengeActions[todayStr]) || {};
 
