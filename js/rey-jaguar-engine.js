@@ -4656,10 +4656,23 @@ function toggleTKPayment(monthKey) {
 }
 window.toggleTKPayment = toggleTKPayment;
 
-function openAvisosModal() {
+function openAvisosModal(subtab = "avisos") {
   const modal = document.getElementById("avisos-official-modal");
   const content = document.getElementById("avisos-official-content");
   if (!modal || !content) return;
+
+  if (subtab === "tk_perks" && window.tkHealthTracker) {
+    content.innerHTML = window.tkHealthTracker.renderModalContent("perks");
+    modal.classList.add("active");
+    modal.style.display = "flex";
+    return;
+  }
+  if (subtab === "faelligkeit" && window.tkHealthTracker) {
+    content.innerHTML = window.tkHealthTracker.renderModalContent("faelligkeit");
+    modal.classList.add("active");
+    modal.style.display = "flex";
+    return;
+  }
 
   const tk = getTKPaymentInfo();
 
@@ -4678,6 +4691,16 @@ function openAvisosModal() {
         </div>
       </div>
       <button onclick="closeAvisosModal()" style="background: none; border: none; font-size: 1.6rem; cursor: pointer; color: rgba(255,255,255,0.6); padding: 4px 8px; border-radius: 6px; transition: color 0.2s;" onmouseover="this.style.color='#FFF'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">✕</button>
+    </div>
+
+    <!-- SUB-BARRA DE NAVEGACIÓN DENTRO DEL MODAL -->
+    <div style="display: flex; gap: 8px; margin-bottom: 18px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; flex-wrap: wrap;">
+      <button class="btn-jaguar btn-gold-chrome" style="font-size: 0.82rem; padding: 7px 18px; color: #0E0905; font-weight: 900;" onclick="openAvisosModal('avisos')">
+        🔔 Obligaciones & Avisos
+      </button>
+      <button class="btn-jaguar btn-secondary-dark" style="font-size: 0.82rem; padding: 7px 18px;" onclick="openAvisosModal('tk_perks')">
+        🏥 TK Health Perks Tracker (Estudiante)
+      </button>
     </div>
 
     <!-- TARJETA DESTACADA: TECHNIKER KRANKENKASSE (TK) -->

@@ -274,8 +274,15 @@
             <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">Equilibrio Doshas Vata, Pitta, Kapha, Dinacharya y farmacia herbaria natural.</p>
           </div>
           <div class="jaguar-card" style="cursor: pointer; border-color: rgba(255, 255, 255, 0.08);" onclick="selectMainTab('meditacion');">
-            <h3 class="card-title" style="color: #FFF;">🧘 Meditación & Calma Somática</h3>
-            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">Box Breathing 4x4x4x4 animado, Vipassana, campana tibetana y registro de minutos (Banderín Rosa).</p>
+            <h3 class="card-title" style="color: #FFF;">🧘 Santuario Somático & Meditación</h3>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">Mapa corporal interactivo (BodyMap de Marie), Box Breathing 4x4, campana tibetana y regulación del tono vagal (Banderín Rosa).</p>
+          </div>
+          <div class="jaguar-card" style="cursor: pointer; border-color: rgba(0, 115, 207, 0.45); background: linear-gradient(135deg, rgba(0, 115, 207, 0.1) 0%, rgba(10, 16, 26, 0.96) 100%);" onclick="openAvisosModal('tk_perks');">
+            <div style="display: flex; align-items: center; justify-content: space-between;">
+              <h3 class="card-title" style="color: #60A5FA;">🏥 TK Health Perks Tracker</h3>
+              <span class="badge-tag badge-cyan">Seguro Estudiante</span>
+            </div>
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-top: 8px;">2 Cursos preventivos gratis/año (Yoga, Espalda, Estrés), Bonusprogramm con cashback en euros, TK-Doc y Teledermatología.</p>
           </div>
           <div class="jaguar-card" style="cursor: pointer; border-color: rgba(255, 255, 255, 0.08);" onclick="selectMainTab('masajes');">
             <h3 class="card-title">💆 Masajes (Pareja & Auto-Masaje)</h3>
@@ -1177,24 +1184,27 @@
       </div>
     </section>
 
-    <!-- PESTAÑA: MEDITACIÓN & CALMA SOMÁTICA (BANDERÍN ROSA) -->
+    <!-- PESTAÑA: SANTUARIO SOMÁTICO & MEDITACIÓN (BANDERÍN ROSA) -->
     <section class="tab-content" id="tab-meditacion">
       <div style="display: flex; flex-direction: column; gap: 22px;">
         
-        <!-- BANNER MOTIVACIONAL MEDITACIÓN -->
+        <!-- BANNER MOTIVACIONAL SANTUARIO SOMÁTICO -->
         <div style="position: relative; border-radius: var(--radius-lg); overflow: hidden; height: 320px; border: 2px solid #E91E63; box-shadow: 0 0 30px rgba(233, 30, 99, 0.35);">
-          <img src="assets/german_castle_snow_day.jpg" alt="Templo de Calma Somática" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.65) saturate(1.2) hue-rotate(310deg);" class="animated-jaguar-bg">
+          <img src="assets/german_castle_snow_day.jpg" alt="Santuario Somático & Meditación" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.65) saturate(1.2) hue-rotate(310deg);" class="animated-jaguar-bg">
           <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 28px; background: linear-gradient(to top, rgba(14,10,18,0.96) 0%, rgba(14,10,18,0.45) 65%, transparent 100%);">
             <div style="display: flex; gap: 10px; margin-bottom: 8px;">
-              <span class="badge-tag badge-pink" style="font-size: 0.85rem;">🧘 Banderín Rosa Heráldico • Calma Somática</span>
-              <span class="badge-tag badge-gold" style="font-size: 0.85rem;">Regulación del Nervio Vago • 1.4x XP</span>
+              <span class="badge-tag badge-pink" style="font-size: 0.85rem;">🧘 Banderín Rosa Heráldico • Calma Somática & Tono Vagal</span>
+              <span class="badge-tag badge-gold" style="font-size: 0.85rem;">Mapa Corporal • Marie Architecture • 1.4x XP</span>
             </div>
-            <h2 class="title-rose-neon" style="font-size: 2.2rem; text-shadow: 0 0 25px rgba(233, 30, 99, 0.6);">Templo de Meditación & Quietud Estoica</h2>
+            <h2 class="title-rose-neon" style="font-size: 2.2rem; text-shadow: 0 0 25px rgba(233, 30, 99, 0.6);">Santuario Somático & Meditación Estoica</h2>
             <p style="font-size: 1rem; color: #FFF; margin-top: 4px; text-shadow: 0 2px 10px rgba(0,0,0,0.9);">
-              El anclaje del guerrero en el momento presente. La mente serena es el escudo inquebrantable frente a las turbulencias del mundo exterior.
+              El anclaje del cuerpo en el momento presente: mapa corporal interactivo, bio-ritmos y regulación profunda del sistema nervioso parasimpático.
             </p>
           </div>
         </div>
+
+        <!-- MAPA CORPORAL SOMÁTICO INTERACTIVO (BODYMAP - DE MARIE) -->
+        <div id="santuario-somatico-bodymap-root"></div>
 
         <!-- CÍRCULO REACTIVO DE RESPIRACIÓN & TEMPORIZADOR -->
         <div class="jaguar-card card-highlight" style="border-color: #E91E63; background: linear-gradient(135deg, rgba(233, 30, 99, 0.08) 0%, rgba(14, 14, 19, 0.95) 100%); text-align: center;">
@@ -1299,6 +1309,9 @@
             </div>
           </div>
         </div>
+
+        <!-- SECCIÓN VISUAL: CÓDICE DE MENTORES DE SABIDURÍA & ARTÍCULOS FORMATIVOS -->
+        <div id="mentores-espiritualidad-root"></div>
 
       </div>
     </section>
@@ -1772,7 +1785,7 @@
   <script src="js/core/progress.js?v=20261026_v42"></script>
   <script src="js/data-books.js?v=20261026_v42"></script>
   <script src="js/data-workouts.js?v=20261026_v42"></script>
-  <script src="js/agents-scifi.js?v=20261026_v42"></script>
+  <script src="js/mentores-espiritualidad.js?v=20261026_v43"></script>
   <script src="js/financial-engine.js?v=20261026_v42"></script>
   <script src="js/projects-hub.js?v=20261026_v42"></script>
   <script src="js/music-player.js?v=20261026_v42"></script>
@@ -1788,6 +1801,8 @@
   <script src="js/imperivm-engine.js?v=20261026_v42"></script>
   <script src="js/rey-jaguar-engine.js?v=20261026_v42"></script>
   <script src="js/astral-observatory.js?v=20261026_v42"></script>
+  <script src="js/santuario-somatico.js?v=20261026_v43"></script>
+  <script src="js/tk-health-tracker.js?v=20261026_v43"></script>
   <script src="js/app.js?v=20261026_v42"></script>
 
   <!-- MODAL DE MODO FOCO • POMODORO CYBERPUNK -->

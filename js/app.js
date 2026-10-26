@@ -514,8 +514,11 @@ function selectMainTab(tabKey) {
     renderPinturaApp();
   } else if (tabKey === "musica" && typeof renderMusicLearningTab === "function") {
     renderMusicLearningTab();
-  } else if (tabKey === "meditacion" && typeof initMeditationStudio === "function") {
-    initMeditationStudio();
+  } else if (tabKey === "meditacion") {
+    if (typeof initMeditationStudio === "function") initMeditationStudio();
+    if (window.santuarioSomatico && typeof window.santuarioSomatico.render === "function") {
+      window.santuarioSomatico.render();
+    }
   } else if (tabKey === "masajes" && typeof initMassageStudio === "function") {
     initMassageStudio();
   } else if (tabKey === "progresion" && typeof renderSistemaMaestroPitch === "function") {
@@ -2495,6 +2498,10 @@ function initMeditationStudio() {
     if (phaseText) phaseText.textContent = "Listo para iniciar";
     if (timerText) timerText.textContent = "15:00";
   }
+
+  if (typeof window.renderMentoresEspiritualidad === "function") {
+    window.renderMentoresEspiritualidad();
+  }
 }
 window.initMeditationStudio = initMeditationStudio;
 
@@ -2543,7 +2550,15 @@ function startMeditationSession(minutes, technique) {
     runPhase();
     meditationBreathingInterval = setInterval(runPhase, 4000);
   } else {
-    if (phaseText) phaseText.textContent = "PRESENCIA & ATENCIÓN PLENA";
+    let techLabel = "PRESENCIA & ATENCIÓN PLENA";
+    if (currentMeditationTech === "shamatha") techLabel = "SHAMATHA • ANCLAJE RESPIRATORIO";
+    else if (currentMeditationTech === "conciencia") techLabel = "CONCIENCIA ABIERTA • OBSERVADOR";
+    else if (currentMeditationTech === "estoica") techLabel = "LA CIUDADELA INTERIOR • QUIETUD";
+    else if (currentMeditationTech === "presencia") techLabel = "PRESENCIA EN EL CUERPO INTERIOR";
+    else if (currentMeditationTech === "zazen") techLabel = "ZAZEN • SHIKANTAZA (SOLO SENTARSE)";
+    else if (currentMeditationTech === "vipassana") techLabel = "VIPASSANA • OBSERVACIÓN ECUÁNIME";
+
+    if (phaseText) phaseText.textContent = techLabel;
     if (ring) ring.className = "meditation-pulse-ring inhale";
   }
 
