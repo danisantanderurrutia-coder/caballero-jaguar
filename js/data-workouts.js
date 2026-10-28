@@ -105,5 +105,19 @@ const JAGUAR_WORKOUTS_DB = [
       { name: "Técnica de canteo y adherencia en micro-apoyos", time: "10 min", reps: "Confianza máxima en pies de gato" },
       { name: "Estiramiento de antebrazos y descarga escapular", time: "5 min", reps: "Compensación de flexores" }
     ]
+  },
+  {
+    id: "routine-descanso-activo",
+    title: "🛌 Descanso Activo & Regeneración Somática (Post-Gym)",
+    level: "Todos los Niveles: Recuperación Biológica",
+    duration: "20 min",
+    category: "Regeneración Muscular",
+    desc: "Protocolo sagrado de recuperación neuromuscular post-entrenamiento pesado. Descompresión fascial, recarga celular y supercompensación para permitir que las fibras musculares crezcan.",
+    exercises: [
+      { name: "Respiración Diafragmática Consciente & Calma", time: "5 min", reps: "Inhalar 4s, retener 4s, exhalar 6s" },
+      { name: "Paseo Regenerativo o Movilidad Muy Suave", time: "10 min", reps: "Flujo sanguíneo sin carga ni fatiga" },
+      { name: "Hidratación con Minerales / Magnesio", time: "2 min", reps: "Restauración del balance electrolítico" },
+      { name: "Descompresión Lumbar & Piernas Elevadas", time: "3 min", reps: "Alivio de retorno venoso y relajación simpática" }
+    ]
   }
 ];

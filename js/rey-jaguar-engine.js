@@ -607,15 +607,15 @@ const VIRTUE_FIVE_PILLARS = [
   },
   {
     id: "pillar_ejercicio",
-    name: "Movilidad Articular & Calistenia",
-    role: "Hábito Somático & Fuerza Diaria",
-    badge: "🤸 Registro Diario",
+    name: "Movilidad, Gym o Descanso Activo",
+    role: "Hábito Somático & Supercompensación",
+    badge: "🥊/🛌 Registro Diario",
     isMaster: false,
-    icon: "🤸",
+    icon: "🥊",
     aura: "deporte",
     xp: 50,
-    desc: "Movilidad articular profunda, estiramientos activos, 100 flexiones/sentadillas/abs o calistenia de peso corporal. Mañana o a las 18:00.",
-    detail: "Se registra aquí. Despierta la agilidad, preserva la salud articular y fortalece el templo corporal."
+    desc: "Entrenamiento de fuerza/gym, movilidad articular o día consciente de descanso y regeneración muscular post-esfuerzo.",
+    detail: "Se registra aquí. Reconoce tanto la forja física como el descanso biológico sagrado para permitir la supercompensación."
   },
   {
     id: "pillar_aleman",
@@ -908,8 +908,120 @@ function setDayVirtueStatus(dateStr, isClean) {
 }
 window.setDayVirtueStatus = setDayVirtueStatus;
 
+function toggleWorkoutOrRest(dateStr, mode) {
+  dateStr = dateStr || (window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10));
+  if (!reyJaguarState.dailyChallengeActions) reyJaguarState.dailyChallengeActions = {};
+  if (!reyJaguarState.dailyChallengeActions[dateStr]) reyJaguarState.dailyChallengeActions[dateStr] = {};
+
+  const currentWorkout = !!reyJaguarState.dailyChallengeActions[dateStr].pillar_ejercicio;
+  const currentRest = !!reyJaguarState.dailyChallengeActions[dateStr].pillar_descanso;
+
+  const wKey = `pillar-pillar_ejercicio-${dateStr}`;
+  const rKey = `pillar-descanso-${dateStr}`;
+
+  if (mode === 'workout') {
+    if (currentWorkout) {
+      reyJaguarState.dailyChallengeActions[dateStr].pillar_ejercicio = false;
+      delete reyJaguarState.dailyChallengeActions[dateStr].movilidad;
+      if (window.CJProgress && typeof window.CJProgress.revoke === "function") {
+        window.CJProgress.revoke({ key: wKey });
+      }
+      if (typeof CaballeroScoringEngine !== "undefined" && typeof CaballeroScoringEngine.revokeAction === "function") {
+        CaballeroScoringEngine.revokeAction("deporte", "medio", "Movilidad & Entrenamiento", null, "movilidad");
+      }
+      if (typeof showNotification === "function") {
+        showNotification(`↩️ Desmarcado: Entrenamiento para ${dateStr}`);
+      }
+    } else {
+      if (currentRest) {
+        reyJaguarState.dailyChallengeActions[dateStr].pillar_descanso = false;
+        if (window.CJProgress && typeof window.CJProgress.revoke === "function") {
+          window.CJProgress.revoke({ key: rKey });
+        }
+        if (typeof CaballeroScoringEngine !== "undefined" && typeof CaballeroScoringEngine.revokeAction === "function") {
+          CaballeroScoringEngine.revokeAction("deporte", "medio", "Descanso Activo & Regeneración", null, "movilidad");
+        }
+      }
+      reyJaguarState.dailyChallengeActions[dateStr].pillar_ejercicio = true;
+      reyJaguarState.dailyChallengeActions[dateStr].pillar_descanso = false;
+      reyJaguarState.dailyChallengeActions[dateStr].movilidad = true;
+
+      if (window.CJProgress && typeof window.CJProgress.award === "function") {
+        window.CJProgress.award({
+          xp: 50,
+          aura: "deporte",
+          desc: "Movilidad Articular & Entrenamiento de Fuerza",
+          date: dateStr,
+          key: wKey
+        });
+      }
+      if (typeof CaballeroScoringEngine !== "undefined" && typeof CaballeroScoringEngine.awardAction === "function") {
+        CaballeroScoringEngine.awardAction("deporte", "medio", "Movilidad Articular & Entrenamiento", null, "movilidad");
+      }
+      if (typeof playSoundEffect === "function") playSoundEffect("success");
+      if (typeof showNotification === "function") {
+        showNotification(`✓ Entrenamiento registrado (+50 XP en Deporte). ¡Templo de fuerza activo!`);
+      }
+    }
+  } else if (mode === 'rest') {
+    if (currentRest) {
+      reyJaguarState.dailyChallengeActions[dateStr].pillar_descanso = false;
+      if (window.CJProgress && typeof window.CJProgress.revoke === "function") {
+        window.CJProgress.revoke({ key: rKey });
+      }
+      if (typeof CaballeroScoringEngine !== "undefined" && typeof CaballeroScoringEngine.revokeAction === "function") {
+        CaballeroScoringEngine.revokeAction("deporte", "medio", "Descanso Activo & Regeneración", null, "movilidad");
+      }
+      if (typeof showNotification === "function") {
+        showNotification(`↩️ Desmarcado: Descanso Activo para ${dateStr}`);
+      }
+    } else {
+      if (currentWorkout) {
+        reyJaguarState.dailyChallengeActions[dateStr].pillar_ejercicio = false;
+        delete reyJaguarState.dailyChallengeActions[dateStr].movilidad;
+        if (window.CJProgress && typeof window.CJProgress.revoke === "function") {
+          window.CJProgress.revoke({ key: wKey });
+        }
+        if (typeof CaballeroScoringEngine !== "undefined" && typeof CaballeroScoringEngine.revokeAction === "function") {
+          CaballeroScoringEngine.revokeAction("deporte", "medio", "Movilidad & Entrenamiento", null, "movilidad");
+        }
+      }
+      reyJaguarState.dailyChallengeActions[dateStr].pillar_descanso = true;
+      reyJaguarState.dailyChallengeActions[dateStr].pillar_ejercicio = false;
+
+      if (window.CJProgress && typeof window.CJProgress.award === "function") {
+        window.CJProgress.award({
+          xp: 50,
+          aura: "deporte",
+          desc: "🛌 Descanso Activo & Recuperación Muscular (Supercompensación post-gym)",
+          date: dateStr,
+          key: rKey
+        });
+      }
+      if (typeof CaballeroScoringEngine !== "undefined" && typeof CaballeroScoringEngine.awardAction === "function") {
+        CaballeroScoringEngine.awardAction("deporte", "medio", "Descanso Activo & Regeneración", null, "movilidad");
+      }
+      if (typeof playSoundEffect === "function") playSoundEffect("success");
+      if (typeof showNotification === "function") {
+        showNotification(`🛌 ${dateStr}: Sellado como Descanso & Recuperación (+50 XP). ¡El músculo crece en la calma!`);
+      }
+    }
+  }
+
+  saveReyJaguarState();
+  if (window.imperivmEngine && typeof window.imperivmEngine.renderHeaderCategoryPennants === "function") {
+    window.imperivmEngine.renderHeaderCategoryPennants();
+  }
+  refreshMatrixCalendar();
+}
+window.toggleWorkoutOrRest = toggleWorkoutOrRest;
+
 function togglePillarSecondaryAction(dateStr, pillarId) {
   if (!dateStr || !pillarId) return;
+  if (pillarId === 'pillar_ejercicio') {
+    toggleWorkoutOrRest(dateStr, 'workout');
+    return;
+  }
   const pillar = VIRTUE_FIVE_PILLARS.find(p => p.id === pillarId);
   if (!pillar) return;
 
@@ -1153,6 +1265,7 @@ function render21DayDashboardRoadmapHTML() {
   const selIsFall = selActions.pillar_nopor === false || selActions.isFall === true;
 
   const hasEjercicio = !!selActions.pillar_ejercicio;
+  const hasDescanso = !!selActions.pillar_descanso;
   const hasAleman = !!selActions.pillar_aleman;
   const hasLectura = !!selActions.pillar_lectura;
   const hasMeditacion = !!selActions.pillar_meditacion;
@@ -1298,16 +1411,28 @@ function render21DayDashboardRoadmapHTML() {
           </div>
 
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px;">
-            <!-- PILAR EJERCICIO -->
-            <button onclick="togglePillarSecondaryAction('${selDate}', 'pillar_ejercicio')" style="background: ${hasEjercicio ? 'linear-gradient(135deg, rgba(16,185,129,0.25) 0%, rgba(5,150,105,0.35) 100%)' : 'rgba(255,255,255,0.03)'}; border: 1.5px solid ${hasEjercicio ? '#10B981' : 'rgba(255,255,255,0.12)'}; color: #FFF; border-radius: 6px; padding: 10px 12px; text-align: left; cursor: pointer; transition: all 0.2s;">
+            <!-- PILAR EJERCICIO / DESCANSO ACTIVO -->
+            <div style="background: ${hasEjercicio || hasDescanso ? (hasDescanso ? 'linear-gradient(135deg, rgba(2,132,199,0.2) 0%, rgba(3,105,161,0.3) 100%)' : 'linear-gradient(135deg, rgba(16,185,129,0.25) 0%, rgba(5,150,105,0.35) 100%)') : 'rgba(255,255,255,0.03)'}; border: 1.5px solid ${hasEjercicio ? '#10B981' : (hasDescanso ? '#38BDF8' : 'rgba(255,255,255,0.12)')}; border-radius: 6px; padding: 10px 12px; display: flex; flex-direction: column; justify-content: space-between; gap: 6px;">
               <div style="display: flex; justify-content: space-between; align-items: center;">
-                <span style="font-weight: 800; font-size: 0.82rem;">🥊 Movilidad & Deporte</span>
-                <span style="font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; ${hasEjercicio ? 'background: #10B981; color: #000;' : 'background: rgba(255,255,255,0.08); color: #A7F3D0;'}">
-                  ${hasEjercicio ? '✓ HECHO' : '+50 XP'}
+                <span style="font-weight: 800; font-size: 0.82rem; color: #FFF;">
+                  ${hasDescanso ? '🛌 Descanso & Recuperación' : '🥊 Movilidad & Deporte'}
+                </span>
+                <span style="font-size: 0.65rem; font-weight: 800; padding: 2px 6px; border-radius: 4px; ${hasEjercicio ? 'background: #10B981; color: #000;' : (hasDescanso ? 'background: #38BDF8; color: #000;' : 'background: rgba(255,255,255,0.08); color: #A7F3D0;')}">
+                  ${hasEjercicio ? '✓ ENTRENADO' : (hasDescanso ? '✓ RECUPERACIÓN' : '+50 XP')}
                 </span>
               </div>
-              <div style="font-size: 0.68rem; color: #94A3B8; margin-top: 3px;">Gym, calistenia, movilidad • Alarga banderín Deporte</div>
-            </button>
+              <div style="font-size: 0.68rem; color: #94A3B8;">
+                ${hasDescanso ? 'Regeneración neuromuscular & supercompensación post-gym' : 'Gym, calistenia, running o descanso consciente'}
+              </div>
+              <div style="display: flex; gap: 6px; margin-top: 4px;">
+                <button onclick="toggleWorkoutOrRest('${selDate}', 'workout')" style="flex: 1; background: ${hasEjercicio ? 'linear-gradient(135deg, #10B981 0%, #059669 100%)' : 'rgba(16,185,129,0.15)'}; border: 1px solid #10B981; color: #FFF; font-size: 0.72rem; font-weight: 800; padding: 5px 6px; border-radius: 4px; cursor: pointer;">
+                  ${hasEjercicio ? '✓ Entrené' : '🥊 Entrené'}
+                </button>
+                <button onclick="toggleWorkoutOrRest('${selDate}', 'rest')" style="flex: 1; background: ${hasDescanso ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' : 'rgba(56,189,248,0.15)'}; border: 1px solid #38BDF8; color: #FFF; font-size: 0.72rem; font-weight: 800; padding: 5px 6px; border-radius: 4px; cursor: pointer;">
+                  ${hasDescanso ? '✓ Descanso' : '🛌 Descanso'}
+                </button>
+              </div>
+            </div>
 
             <!-- PILAR ALEMÁN -->
             <button onclick="togglePillarSecondaryAction('${selDate}', 'pillar_aleman')" style="background: ${hasAleman ? 'linear-gradient(135deg, rgba(56,189,248,0.25) 0%, rgba(14,116,144,0.35) 100%)' : 'rgba(255,255,255,0.03)'}; border: 1.5px solid ${hasAleman ? '#38BDF8' : 'rgba(255,255,255,0.12)'}; color: #FFF; border-radius: 6px; padding: 10px 12px; text-align: left; cursor: pointer; transition: all 0.2s;">
@@ -1661,21 +1786,22 @@ function openCaballeroChallengeModal() {
       <!-- GRID DE LOS 5 PILARES -->
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px;">
         ${VIRTUE_FIVE_PILLARS.map(p => {
-          const isDone = p.isMaster ? (todayActions["detox"] || todayActions[p.id]) : !!todayActions[p.id];
+          const isDone = p.isMaster ? (todayActions["detox"] || todayActions[p.id]) : (!!todayActions[p.id] || (p.id === "pillar_ejercicio" && !!todayActions["pillar_descanso"]));
+          const isRest = p.id === "pillar_ejercicio" && !!todayActions["pillar_descanso"];
           return `
-            <div style="background: ${p.isMaster ? 'linear-gradient(145deg, rgba(155, 35, 53, 0.25) 0%, rgba(20, 24, 38, 0.95) 100%)' : 'rgba(255, 255, 255, 0.04)'}; border: ${p.isMaster ? '2px solid #D4AF37' : (isDone ? '1.5px solid #10B981' : '1px solid rgba(255, 255, 255, 0.12)')}; border-radius: 8px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; transition: all 0.2s;">
+            <div style="background: ${p.isMaster ? 'linear-gradient(145deg, rgba(155, 35, 53, 0.25) 0%, rgba(20, 24, 38, 0.95) 100%)' : 'rgba(255, 255, 255, 0.04)'}; border: ${p.isMaster ? '2px solid #D4AF37' : (isDone ? (isRest ? '1.5px solid #38BDF8' : '1.5px solid #10B981') : '1px solid rgba(255, 255, 255, 0.12)')}; border-radius: 8px; padding: 14px; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; transition: all 0.2s;">
               <div>
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
-                  <span style="font-size: 1.35rem;">${p.icon}</span>
-                  <span class="badge-tag ${isDone ? 'badge-emerald' : (p.isMaster ? 'badge-gold' : 'badge-cyan')}" style="font-size: 0.68rem; padding: 2px 8px; font-weight: 800;">
-                    ${isDone ? '✓ CONQUISTADO' : `+${p.xp} XP`}
+                  <span style="font-size: 1.35rem;">${isRest ? '🛌' : p.icon}</span>
+                  <span class="badge-tag ${isDone ? (isRest ? 'badge-cyan' : 'badge-emerald') : (p.isMaster ? 'badge-gold' : 'badge-cyan')}" style="font-size: 0.68rem; padding: 2px 8px; font-weight: 800;">
+                    ${isDone ? (isRest ? '✓ RECUPERACIÓN' : '✓ CONQUISTADO') : `+${p.xp} XP`}
                   </span>
                 </div>
                 <div style="font-size: 0.66rem; font-weight: 800; color: ${p.isMaster ? '#F5D77F' : '#94A3B8'}; letter-spacing: 0.05em; text-transform: uppercase;">
                   ${p.role}
                 </div>
                 <h4 style="font-family: 'Cinzel', serif; font-size: 0.95rem; color: #FFFFFF; margin: 3px 0 4px 0; font-weight: 800;">
-                  ${p.name}
+                  ${isRest ? 'Descanso Activo & Regeneración' : p.name}
                 </h4>
                 <p style="font-size: 0.76rem; color: #CBD5E1; margin: 0; line-height: 1.35;">
                   ${p.desc}
@@ -1687,14 +1813,23 @@ function openCaballeroChallengeModal() {
                   ${p.isMaster ? '⚡ Avanza el Reto 21 Días' : '✓ Registro diario'}
                 </span>
                 ${isDone ? `
-                  <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.74rem; font-weight: 800; color: #34D399; background: rgba(16, 185, 129, 0.15); padding: 4px 10px; border-radius: 4px; border: 1px solid rgba(16, 185, 129, 0.4);">
-                    ✓ Registrado Hoy
+                  <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 0.74rem; font-weight: 800; color: ${isRest ? '#38BDF8' : '#34D399'}; background: ${isRest ? 'rgba(56, 189, 248, 0.15)' : 'rgba(16, 185, 129, 0.15)'}; padding: 4px 10px; border-radius: 4px; border: 1px solid ${isRest ? 'rgba(56, 189, 248, 0.4)' : 'rgba(16, 185, 129, 0.4)'};">
+                    ✓ ${isRest ? 'Descanso Registrado (+50 XP)' : 'Registrado Hoy'}
                   </span>
+                ` : (p.id === 'pillar_ejercicio' ? `
+                  <div style="display: flex; gap: 6px;">
+                    <button class="btn-jaguar btn-sm btn-secondary-dark" style="color: #FFF; font-size: 0.72rem; padding: 5px 10px; cursor: pointer;" onclick="toggleWorkoutOrRest('${todayStr}', 'workout')">
+                      🥊 Entrenar (+50 XP)
+                    </button>
+                    <button class="btn-jaguar btn-sm btn-secondary-dark" style="color: #7DD3FC; border: 1px solid rgba(56,189,248,0.4); font-size: 0.72rem; padding: 5px 10px; cursor: pointer;" onclick="toggleWorkoutOrRest('${todayStr}', 'rest')">
+                      🛌 Descanso (+50 XP)
+                    </button>
+                  </div>
                 ` : `
                   <button class="btn-jaguar btn-sm ${p.isMaster ? 'btn-gold-chrome' : 'btn-secondary-dark'}" style="${p.isMaster ? 'color: #0E0905; font-weight: 900;' : 'color: #FFF;'} font-size: 0.74rem; padding: 5px 12px; cursor: pointer;" onclick="toggleVirtuePillarAction('${p.id}')">
                     ${p.isMaster ? '🛡️ Sellar Día (+75 XP)' : '✓ Registrar (+'+p.xp+' XP)'}
                   </button>
-                `}
+                `)}
               </div>
             </div>
           `;
