@@ -1462,6 +1462,17 @@ const imperivmEngine = {
   renderRitosAncestralesRail() {
     const ritos = [
       {
+        key: "meditacion",
+        title: "🧘 Mentores & Meditación",
+        pueblo: "Lama Rinchen • Mingyur Rinpoche • Marco Aurelio",
+        badge: "SABIDURÍA VIVA",
+        status: "ACTIVO",
+        tag: "☸️ SHAMATHA // MENTORES",
+        desc: "Códice de lecciones, artículos de estudio, canales de YouTube y práctica de meditación activa.",
+        img: IMPERIVM_MEDIA.bitacora_meditacion,
+        actionText: "Abrir Mentores & Meditación"
+      },
+      {
         key: "navaho",
         title: "Rito Navajo Diné: Hózhó",
         pueblo: "Navajo Diné • Gran Suroeste",
@@ -1532,7 +1543,7 @@ const imperivmEngine = {
 
         <div class="imperivm-carousel-track" id="ritos-track">
           ${ritos.map(r => `
-            <div class="imperivm-card" style="cursor: pointer;" onclick="${r.key === 'astral' ? `selectMainTab('astral');` : `imperivmEngine.openRitoModal('${r.key}');`}">
+            <div class="imperivm-card" style="cursor: pointer;" onclick="${r.key === 'astral' ? `selectMainTab('astral');` : (r.key === 'meditacion' ? `selectMainTab('meditacion');` : `imperivmEngine.openRitoModal('${r.key}');`)}">
               <div class="imperivm-card-media">
                 <img src="${r.img}" alt="${r.title}">
               </div>
