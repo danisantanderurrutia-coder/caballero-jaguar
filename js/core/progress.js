@@ -167,6 +167,20 @@
     return Boolean(state.testudoDays && state.testudoDays[date] && state.testudoDays[date].active);
   }
 
+  function isSpecialShieldedDay(date) {
+    date = date || todayLocal();
+    if (isTestudoDay(date)) return true;
+    try {
+      const st = window.reyJaguarState;
+      if (st && st.dailyChallengeActions && st.dailyChallengeActions[date]) {
+        if (st.dailyChallengeActions[date].isExpedition || st.dailyChallengeActions[date].isConvalescence) {
+          return true;
+        }
+      }
+    } catch (e) {}
+    return false;
+  }
+
   function getTestudoInfo(date) {
     date = date || todayLocal();
     const rec = (state.testudoDays && state.testudoDays[date]) || null;
@@ -206,27 +220,27 @@
 
   function streakInfo() {
     const today = todayLocal();
-    const active = (d) => dayXP(d) >= CONFIG.activeDayXP || isTestudoDay(d);
+    const active = (d) => dayXP(d) >= CONFIG.activeDayXP || isSpecialShieldedDay(d);
     let cursor = active(today) ? today : addDays(today, -1);
     let n = 0;
     let testudoInStreak = 0;
     while (active(cursor) && n < 3650) {
       n++;
-      if (isTestudoDay(cursor)) testudoInStreak++;
+      if (isSpecialShieldedDay(cursor)) testudoInStreak++;
       cursor = addDays(cursor, -1);
     }
     const start = n ? addDays(active(today) ? today : addDays(today, -1), -(n - 1)) : null;
 
-    // Estadísticas de últimos 30 días y velocidad de recuperación Kintsugi
+    // Estadísticas de últimos 30 días y velocidad de recuperación Kintsugi / Blindada
     let testudoTotal30 = 0;
     let recSum = 0, recCount = 0;
     for (let i = 29; i >= 0; i--) {
       const d = addDays(today, -i);
-      if (isTestudoDay(d)) {
+      if (isSpecialShieldedDay(d)) {
         testudoTotal30++;
         for (let k = 1; k <= 7 && (i - k) >= 0; k++) {
           const nextD = addDays(d, k);
-          if (dayXP(nextD) >= CONFIG.activeDayXP && !isTestudoDay(nextD)) {
+          if (dayXP(nextD) >= CONFIG.activeDayXP && !isSpecialShieldedDay(nextD)) {
             recSum += k;
             recCount++;
             break;
@@ -240,7 +254,7 @@
       days: n,
       start,
       todayActive: active(today),
-      todayTestudo: isTestudoDay(today),
+      todayTestudo: isSpecialShieldedDay(today),
       testudoInStreak,
       testudoTotal30,
       recoveryDaysAvg
@@ -256,6 +270,7 @@
       const tInfo = getTestudoInfo(d);
       let status = "empty";
       if (tInfo.active) status = "kintsugi";
+      else if (isSpecialShieldedDay(d)) status = "shielded";
       else if (xp >= CONFIG.activeDayXP) status = "conquest";
       else if (xp > 0) status = "partial";
       out.push({
@@ -273,7 +288,7 @@
   // --- API PÚBLICA ---
   function isDayActive(d) {
     d = d || todayLocal();
-    return dayXP(d) >= CONFIG.activeDayXP || isTestudoDay(d);
+    return dayXP(d) >= CONFIG.activeDayXP || isSpecialShieldedDay(d);
   }
 
   function award(opts) {
@@ -432,7 +447,7 @@
         xp,
         isTestudo,
         isConquest,
-        isActive: isConquest || isTestudo,
+        isActive: isConquest || isSpecialShieldedDay(d),
         offlineCount: offlineEntries.length
       });
     }
@@ -721,7 +736,7 @@
     todayLocal, dateKey, addDays,
     award, revoke, revokeById, reconcileVirtueDay,
     isDayActive, markDayConquest, unmarkDayConquest, markMultipleDaysConquest, getRecentDaysStatus,
-    isTestudoDay, getTestudoInfo, setTestudoDay, toggleTestudoDay, moveTestudoToPreviousDay, toggleTestudoShield, mosaic,
+    isTestudoDay, isSpecialShieldedDay, getTestudoInfo, setTestudoDay, toggleTestudoDay, moveTestudoToPreviousDay, toggleTestudoShield, mosaic,
     totalXP, dayXP, levelInfo, streakInfo, snapshot,
     xpByAura, lastDays, recent, sync, init
   };

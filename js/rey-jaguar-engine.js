@@ -1110,6 +1110,118 @@ function toggleMatrixDayKintsugi(dateStr) {
 }
 window.toggleMatrixDayKintsugi = toggleMatrixDayKintsugi;
 
+function toggleMatrixDayExpedition(dateStr) {
+  dateStr = dateStr || (window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10));
+  if (!reyJaguarState.dailyChallengeActions) reyJaguarState.dailyChallengeActions = {};
+  if (!reyJaguarState.dailyChallengeActions[dateStr]) reyJaguarState.dailyChallengeActions[dateStr] = {};
+
+  const current = !!reyJaguarState.dailyChallengeActions[dateStr].isExpedition;
+  const key = `expedicion-${dateStr}`;
+
+  if (current) {
+    reyJaguarState.dailyChallengeActions[dateStr].isExpedition = false;
+    if (window.CJProgress && typeof window.CJProgress.revoke === "function") {
+      window.CJProgress.revoke({ key });
+    }
+    if (typeof CaballeroScoringEngine !== "undefined" && typeof CaballeroScoringEngine.revokeAction === "function") {
+      CaballeroScoringEngine.revokeAction("exploracion", "medio", "Día de Expedición & Viaje", null, "exploracion");
+    }
+    if (typeof showNotification === "function") {
+      showNotification(`↩️ Modo Expedición desactivado para ${dateStr}`);
+    }
+  } else {
+    // Si estaba en convalecencia, desactivar para no solapar estados
+    if (reyJaguarState.dailyChallengeActions[dateStr].isConvalescence) {
+      reyJaguarState.dailyChallengeActions[dateStr].isConvalescence = false;
+      if (window.CJProgress && typeof window.CJProgress.revoke === "function") {
+        window.CJProgress.revoke({ key: `convalecencia-${dateStr}` });
+      }
+    }
+    reyJaguarState.dailyChallengeActions[dateStr].isExpedition = true;
+
+    if (window.CJProgress && typeof window.CJProgress.award === "function") {
+      window.CJProgress.award({
+        xp: 50,
+        aura: "exploracion",
+        desc: "🧭 Día de Expedición & Viaje Territorial (Adaptación de Caballería)",
+        date: dateStr,
+        source: "expedicion",
+        key
+      });
+    }
+    if (typeof CaballeroScoringEngine !== "undefined" && typeof CaballeroScoringEngine.awardAction === "function") {
+      CaballeroScoringEngine.awardAction("exploracion", "medio", "Día de Expedición & Viaje", null, "exploracion");
+    }
+    if (typeof playSoundEffect === "function") playSoundEffect("success");
+    if (typeof showNotification === "function") {
+      showNotification(`🧭 ${dateStr}: Declarado Día de Expedición & Viaje (+50 XP en Exploración). ¡El guerrero conquista cualquier terreno!`);
+    }
+  }
+
+  saveReyJaguarState();
+  if (window.imperivmEngine && typeof window.imperivmEngine.renderHeaderCategoryPennants === "function") {
+    window.imperivmEngine.renderHeaderCategoryPennants();
+  }
+  refreshMatrixCalendar();
+}
+window.toggleMatrixDayExpedition = toggleMatrixDayExpedition;
+
+function toggleMatrixDayConvalescence(dateStr) {
+  dateStr = dateStr || (window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10));
+  if (!reyJaguarState.dailyChallengeActions) reyJaguarState.dailyChallengeActions = {};
+  if (!reyJaguarState.dailyChallengeActions[dateStr]) reyJaguarState.dailyChallengeActions[dateStr] = {};
+
+  const current = !!reyJaguarState.dailyChallengeActions[dateStr].isConvalescence;
+  const key = `convalecencia-${dateStr}`;
+
+  if (current) {
+    reyJaguarState.dailyChallengeActions[dateStr].isConvalescence = false;
+    if (window.CJProgress && typeof window.CJProgress.revoke === "function") {
+      window.CJProgress.revoke({ key });
+    }
+    if (typeof CaballeroScoringEngine !== "undefined" && typeof CaballeroScoringEngine.revokeAction === "function") {
+      CaballeroScoringEngine.revokeAction("salud", "medio", "Convalecencia & Sanación Somática", null, "salud");
+    }
+    if (typeof showNotification === "function") {
+      showNotification(`↩️ Modo Convalecencia desactivado para ${dateStr}`);
+    }
+  } else {
+    // Si estaba en expedición, desactivar para no solapar estados
+    if (reyJaguarState.dailyChallengeActions[dateStr].isExpedition) {
+      reyJaguarState.dailyChallengeActions[dateStr].isExpedition = false;
+      if (window.CJProgress && typeof window.CJProgress.revoke === "function") {
+        window.CJProgress.revoke({ key: `expedicion-${dateStr}` });
+      }
+    }
+    reyJaguarState.dailyChallengeActions[dateStr].isConvalescence = true;
+
+    if (window.CJProgress && typeof window.CJProgress.award === "function") {
+      window.CJProgress.award({
+        xp: 50,
+        aura: "salud",
+        desc: "🌿 Convalecencia & Sanación Somática (Reposo Celular Inmune)",
+        date: dateStr,
+        source: "sanacion",
+        key
+      });
+    }
+    if (typeof CaballeroScoringEngine !== "undefined" && typeof CaballeroScoringEngine.awardAction === "function") {
+      CaballeroScoringEngine.awardAction("salud", "medio", "Convalecencia & Sanación Somática", null, "salud");
+    }
+    if (typeof playSoundEffect === "function") playSoundEffect("success");
+    if (typeof showNotification === "function") {
+      showNotification(`🌿 ${dateStr}: Declarado Día de Convalecencia & Sanación (+50 XP en Salud). ¡Sanar el templo celular es deber sagrado!`);
+    }
+  }
+
+  saveReyJaguarState();
+  if (window.imperivmEngine && typeof window.imperivmEngine.renderHeaderCategoryPennants === "function") {
+    window.imperivmEngine.renderHeaderCategoryPennants();
+  }
+  refreshMatrixCalendar();
+}
+window.toggleMatrixDayConvalescence = toggleMatrixDayConvalescence;
+
 function render21DayDashboardRoadmapHTML() {
   const today = window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10);
   const [todayY, todayM, todayD] = today.split("-").map(Number);
@@ -1173,6 +1285,8 @@ function render21DayDashboardRoadmapHTML() {
     const dayActions = (window.reyJaguarState && window.reyJaguarState.dailyChallengeActions && window.reyJaguarState.dailyChallengeActions[dateKey]) || {};
     const isClean = dayActions.pillar_nopor === true;
     const isFall = dayActions.pillar_nopor === false || dayActions.isFall === true;
+    const isExpedition = !!dayActions.isExpedition;
+    const isConvalescence = !!dayActions.isConvalescence;
 
     let bg = "rgba(15, 23, 42, 0.65)";
     let border = "1px solid rgba(255, 255, 255, 0.08)";
@@ -1181,7 +1295,7 @@ function render21DayDashboardRoadmapHTML() {
     let badgeText = "";
     let badgeStyle = "";
 
-    // 0 Porno es estrictamente el color verde (Esmeralda); las caídas se marcan en carmesí; Kintsugi en oro/obsidiana
+    // Prioridad visual: Kintsugi > Expedición > Convalecencia > Caída > 0 Porno Limpio > Actividad
     if (isTestudo) {
       bg = "radial-gradient(circle at 50% 50%, #1E1B2E 0%, #090B10 100%)";
       border = "1.5px solid #F3D079";
@@ -1189,6 +1303,20 @@ function render21DayDashboardRoadmapHTML() {
       icon = "🏺";
       badgeText = "KINTSUGI";
       badgeStyle = "color: #FDE68A; background: rgba(197,154,40,0.25); border: 1px solid #E5BE53;";
+    } else if (isExpedition) {
+      bg = "linear-gradient(135deg, rgba(12, 26, 52, 0.95) 0%, rgba(20, 48, 88, 0.85) 100%)";
+      border = "1.5px solid #38BDF8";
+      numColor = "#E0F2FE";
+      icon = "🧭";
+      badgeText = "EXPEDICIÓN";
+      badgeStyle = "color: #BAE6FD; background: rgba(56,189,248,0.25); border: 1px solid #38BDF8; font-weight: 800;";
+    } else if (isConvalescence) {
+      bg = "linear-gradient(135deg, rgba(9, 32, 28, 0.95) 0%, rgba(13, 58, 50, 0.85) 100%)";
+      border = "1.5px solid #2DD4BF";
+      numColor = "#CCFBF1";
+      icon = "🌿";
+      badgeText = "SANACIÓN";
+      badgeStyle = "color: #99F6E4; background: rgba(45,212,191,0.25); border: 1px solid #2DD4BF; font-weight: 800;";
     } else if (isFall) {
       bg = "linear-gradient(135deg, rgba(88, 12, 28, 0.85) 0%, rgba(26, 10, 16, 0.95) 100%)";
       border = "1.5px solid #F43F5E";
@@ -1224,7 +1352,7 @@ function render21DayDashboardRoadmapHTML() {
     daysHTML += `
       <div onclick="selectMatrixCalendarDate('${dateKey}')"
            style="background: ${bg}; border: ${border}; ${extraOutline} border-radius: 8px; min-height: 64px; padding: 6px 4px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.18s; user-select: none;"
-           title="${dateKey} • ${isTestudo ? 'Guardia Kintsugi' : (isClean ? '0 Porno (Limpio)' : (isFall ? 'Caída / Quiebre' : (xp > 0 ? xp + ' XP' : 'Pendiente')))}${isStart ? ' • 👑 Día de Inicio' : ''}${isToday ? ' • 🔥 Hoy' : ''}">
+           title="${dateKey} • ${isTestudo ? 'Guardia Kintsugi' : (isExpedition ? 'Día de Expedición / Viaje' : (isConvalescence ? 'Día de Convalecencia / Sanación' : (isClean ? '0 Porno (Limpio)' : (isFall ? 'Caída / Quiebre' : (xp > 0 ? xp + ' XP' : 'Pendiente')))))}${isStart ? ' • 👑 Día de Inicio' : ''}${isToday ? ' • 🔥 Hoy' : ''}">
         <!-- FILA SUPERIOR: NÚMERO Y ESTADO -->
         <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; padding: 0 4px;">
           <span style="font-family: 'Cinzel', serif; font-size: 0.92rem; font-weight: 900; color: ${numColor}; line-height: 1;">${dayNum}</span>
@@ -1263,6 +1391,8 @@ function render21DayDashboardRoadmapHTML() {
   const selActions = (window.reyJaguarState && window.reyJaguarState.dailyChallengeActions && window.reyJaguarState.dailyChallengeActions[selDate]) || {};
   const selIsClean = selActions.pillar_nopor === true;
   const selIsFall = selActions.pillar_nopor === false || selActions.isFall === true;
+  const selIsExpedition = !!selActions.isExpedition;
+  const selIsConvalescence = !!selActions.isConvalescence;
 
   const hasEjercicio = !!selActions.pillar_ejercicio;
   const hasDescanso = !!selActions.pillar_descanso;
@@ -1334,8 +1464,10 @@ function render21DayDashboardRoadmapHTML() {
         <!-- LEYENDA CLARA DE COLORES -->
         <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 0.72rem; color: #CBD5E1;">
           <span><strong style="color: #34D399;">■ Verde:</strong> 0 Porno (Templanza)</span>
-          <span><strong style="color: #F43F5E;">✕ Rojo:</strong> Caída registrada</span>
+          <span><strong style="color: #38BDF8;">🧭 Azul:</strong> Expedición / Viaje</span>
+          <span><strong style="color: #2DD4BF;">🌿 Jade:</strong> Convalecencia / Sanación</span>
           <span><strong style="color: #F3D079;">🏺 Kintsugi:</strong> Quiebre blindado</span>
+          <span><strong style="color: #F43F5E;">✕ Rojo:</strong> Caída registrada</span>
           <span><strong style="color: #CBD5E1;">▫ Gris:</strong> Actividad complementaria</span>
           <span><strong style="color: #F5D77F;">👑 Corona:</strong> Inicio</span>
           <span><strong style="color: #7DD3FC;">🔥 Hoy:</strong> En curso</span>
@@ -1359,7 +1491,7 @@ function render21DayDashboardRoadmapHTML() {
       </div>
 
       <!-- TARJETA: ENCUESTA DE LOS 5 PILARES & OTROS DEL DÍA SELECCIONADO -->
-      <div style="background: linear-gradient(145deg, rgba(26, 33, 52, 0.95) 0%, rgba(13, 17, 28, 0.98) 100%); border: 1.5px solid ${selIsClean ? '#10B981' : (selIsFall ? '#F43F5E' : (selIsTestudo ? '#F3D079' : 'rgba(212, 175, 55, 0.4)'))}; border-radius: 10px; padding: 18px 20px; box-shadow: 0 6px 24px rgba(0,0,0,0.5);">
+      <div style="background: linear-gradient(145deg, rgba(26, 33, 52, 0.95) 0%, rgba(13, 17, 28, 0.98) 100%); border: 1.5px solid ${selIsTestudo ? '#F3D079' : (selIsExpedition ? '#38BDF8' : (selIsConvalescence ? '#2DD4BF' : (selIsClean ? '#10B981' : (selIsFall ? '#F43F5E' : 'rgba(212, 175, 55, 0.4)'))))}; border-radius: 10px; padding: 18px 20px; box-shadow: 0 6px 24px rgba(0,0,0,0.5);">
         
         <!-- ENCABEZADO DEL DÍA SELECCIONADO -->
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px; margin-bottom: 14px;">
@@ -1373,8 +1505,8 @@ function render21DayDashboardRoadmapHTML() {
           </div>
           
           <div style="display: flex; align-items: center; gap: 8px;">
-            <span class="badge-tag" style="background: ${selIsClean ? 'rgba(16,185,129,0.2)' : (selIsFall ? 'rgba(244,63,94,0.2)' : (selIsTestudo ? 'rgba(197,154,40,0.2)' : 'rgba(255,255,255,0.06)'))}; border: 1.5px solid ${selIsClean ? '#10B981' : (selIsFall ? '#F43F5E' : (selIsTestudo ? '#F3D079' : 'rgba(255,255,255,0.15)'))}; color: ${selIsClean ? '#6EE7B7' : (selIsFall ? '#FDA4AF' : (selIsTestudo ? '#F6E2A3' : '#CBD5E1'))}; font-size: 0.78rem; font-weight: 800; padding: 4px 10px;">
-              ${selIsTestudo ? '🏺 Guardia Kintsugi' : (selIsClean ? '🟢 0 Porno Limpio (Esmeralda)' : (selIsFall ? '🔴 Quiebre / Caída' : (selXP > 0 ? `▫ Actividad (${selXP} XP)` : '⬛ Sin Registro (0 XP)')))}
+            <span class="badge-tag" style="background: ${selIsTestudo ? 'rgba(197,154,40,0.2)' : (selIsExpedition ? 'rgba(56,189,248,0.2)' : (selIsConvalescence ? 'rgba(45,212,191,0.2)' : (selIsClean ? 'rgba(16,185,129,0.2)' : (selIsFall ? 'rgba(244,63,94,0.2)' : 'rgba(255,255,255,0.06)'))))}; border: 1.5px solid ${selIsTestudo ? '#F3D079' : (selIsExpedition ? '#38BDF8' : (selIsConvalescence ? '#2DD4BF' : (selIsClean ? '#10B981' : (selIsFall ? '#F43F5E' : 'rgba(255,255,255,0.15)'))))}; color: ${selIsTestudo ? '#F6E2A3' : (selIsExpedition ? '#BAE6FD' : (selIsConvalescence ? '#99F6E4' : (selIsClean ? '#6EE7B7' : (selIsFall ? '#FDA4AF' : '#CBD5E1'))))}; font-size: 0.78rem; font-weight: 800; padding: 4px 10px;">
+              ${selIsTestudo ? '🏺 Guardia Kintsugi' : (selIsExpedition ? '🧭 Día de Expedición / Viaje' : (selIsConvalescence ? '🌿 Convalecencia & Sanación' : (selIsClean ? '🟢 0 Porno Limpio (Esmeralda)' : (selIsFall ? '🔴 Quiebre / Caída' : (selXP > 0 ? `▫ Actividad (${selXP} XP)` : '⬛ Sin Registro (0 XP)')))))}
             </span>
           </div>
         </div>
@@ -1496,12 +1628,36 @@ function render21DayDashboardRoadmapHTML() {
           </div>
         </div>
 
-        <!-- 4. CONTROLES AVANZADOS: KINTSUGI, INICIO & DIARIO -->
-        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.06);">
-          <button onclick="toggleMatrixDayKintsugi('${selDate}');" style="background: ${selIsTestudo ? 'linear-gradient(135deg, #F3D079 0%, #C59A28 100%)' : 'rgba(197,154,40,0.18)'}; border: 1px solid #D4AF37; color: ${selIsTestudo ? '#0B0E14' : '#F6E2A3'}; border-radius: 6px; padding: 6px 12px; font-size: 0.74rem; font-weight: 800; cursor: pointer;">
-            ${selIsTestudo ? '✕ Quitar Quiebre Kintsugi' : '🏺 Marcar Guardia Kintsugi (Testudo)'}
-          </button>
+        <!-- 4. ESCUDOS DE CABALLERÍA & ESTADOS ESPECIALES (KINTSUGI, VIAJE, SANACIÓN) -->
+        <div style="background: rgba(0,0,0,0.22); border: 1px dashed rgba(212,175,55,0.25); border-radius: 8px; padding: 12px 14px; margin-top: 10px; margin-bottom: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 6px;">
+            <span style="font-size: 0.72rem; color: #F5D77F; font-weight: 800; letter-spacing: 0.8px; text-transform: uppercase;">
+              🛡️ ESCUDOS DE CABALLERÍA & ESTADOS ESPECIALES (BLINDAJE DE RACHA)
+            </span>
+            <span style="font-size: 0.66rem; color: #94A3B8;">
+              Adaptan la regla del día con honores y protegen tu racha
+            </span>
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+            <!-- KINTSUGI -->
+            <button onclick="toggleMatrixDayKintsugi('${selDate}');" style="background: ${selIsTestudo ? 'linear-gradient(135deg, #F3D079 0%, #C59A28 100%)' : 'rgba(197,154,40,0.14)'}; border: 1.5px solid #D4AF37; color: ${selIsTestudo ? '#0B0E14' : '#F6E2A3'}; border-radius: 6px; padding: 7px 13px; font-size: 0.74rem; font-weight: 800; cursor: pointer; transition: all 0.2s;" title="Contención de quiebre o crisis: blinda la racha en obsidiana y oro (+35 XP)">
+              ${selIsTestudo ? '🏺 Kintsugi Activo (✕ Quitar)' : '🏺 Guardia Kintsugi'}
+            </button>
 
+            <!-- EXPEDICIÓN / VIAJE -->
+            <button onclick="toggleMatrixDayExpedition('${selDate}');" style="background: ${selIsExpedition ? 'linear-gradient(135deg, #0284C7 0%, #0369A1 100%)' : 'rgba(56,189,248,0.12)'}; border: 1.5px solid #38BDF8; color: ${selIsExpedition ? '#FFF' : '#BAE6FD'}; border-radius: 6px; padding: 7px 13px; font-size: 0.74rem; font-weight: 800; cursor: pointer; transition: all 0.2s;" title="Día de viaje, tránsito o territorio: suma +50 XP a Exploración y blinda la racha">
+              ${selIsExpedition ? '🧭 En Expedición (✕ Quitar)' : '🧭 Día de Expedición / Viaje'}
+            </button>
+
+            <!-- CONVALECENCIA / SANACIÓN -->
+            <button onclick="toggleMatrixDayConvalescence('${selDate}');" style="background: ${selIsConvalescence ? 'linear-gradient(135deg, #0D9488 0%, #0F766E 100%)' : 'rgba(45,212,191,0.12)'}; border: 1.5px solid #2DD4BF; color: ${selIsConvalescence ? '#FFF' : '#99F6E4'}; border-radius: 6px; padding: 7px 13px; font-size: 0.74rem; font-weight: 800; cursor: pointer; transition: all 0.2s;" title="Enfermedad, reposo inmune y recuperación celular: suma +50 XP a Salud y blinda la racha">
+              ${selIsConvalescence ? '🌿 En Convalecencia (✕ Quitar)' : '🌿 Convalecencia / Sanación'}
+            </button>
+          </div>
+        </div>
+
+        <!-- 5. GESTIÓN DE ORDEN: INICIO & DIARIO -->
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center; padding-top: 6px; border-top: 1px solid rgba(255,255,255,0.06);">
           ${!selIsStart ? `
             <button onclick="setChallengeStartDate('${selDate}');" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.2); color: #CBD5E1; border-radius: 6px; padding: 6px 12px; font-size: 0.74rem; font-weight: 700; cursor: pointer;" title="Establecer esta fecha como el Día 1 en que arrancó tu orden">
               👑 Fijar como Día de Inicio
