@@ -138,7 +138,11 @@ def build_morning_html(recipient: str) -> tuple[str, str]:
         </div>
         """
 
-    subject = f"☀️ [Caballero Jaguar • {day_key.upper()}] Tu Pulso de Vida, 4 Bloques y Oráculo ({date_str})"
+    subject = f"☀️ [Caballero Jaguar 9:00 AM • {day_key.upper()}] Misión del Día, 4 Bloques y Oráculo ({date_str})"
+    main_mission = blocks[1]["title"] if len(blocks) > 1 else blocks[0]["title"]
+    main_time = blocks[1]["time"] if len(blocks) > 1 else blocks[0]["time"]
+    hero_img_url = f"{APP_URL}assets/img_jaguar_jungle_landing.jpg"
+    logo_img_url = f"{APP_URL}assets/jungle_jaguar_logo.jpg"
 
     html = f"""<!DOCTYPE html>
 <html lang="es">
@@ -150,58 +154,75 @@ def build_morning_html(recipient: str) -> tuple[str, str]:
 <body style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f3ead6; color: #1c1917; padding: 20px 10px; margin: 0;">
     <div style="max-width: 620px; margin: 0 auto; background-color: #faf6ee; border: 2px solid #c59a28; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 32px rgba(40, 30, 15, 0.14);">
         
-        <!-- CABECERA SOLAR & SELVA VIVA -->
-        <div style="background: linear-gradient(135deg, #064e3b 0%, #0f766e 55%, #b45309 100%); padding: 28px 24px; text-align: center; color: #ffffff;">
-            <div style="display: inline-block; background: rgba(255, 255, 255, 0.16); border: 1px solid rgba(253, 224, 71, 0.5); border-radius: 99px; padding: 4px 14px; font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #fef08a; margin-bottom: 10px;">
-                🌿 Santuario Solar • Caballero Jaguar
+        <!-- CABECERA VISUAL CON IMAGEN REAL DEL SANTUARIO + EMBLEMA -->
+        <div style="background: linear-gradient(180deg, rgba(6, 78, 59, 0.72) 0%, rgba(15, 118, 110, 0.88) 100%), url('{hero_img_url}') center/cover no-repeat; padding: 28px 24px; text-align: center; color: #ffffff;">
+            <img src="{logo_img_url}" alt="Caballero Jaguar" width="64" height="64" style="width: 64px; height: 64px; border-radius: 50%; border: 2.5px solid #fde047; object-fit: cover; margin-bottom: 8px;">
+            <div style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #fef08a; margin-bottom: 4px;">
+                ☀️ Despertar de Acción • Caballero Jaguar (09:00 AM)
             </div>
             <h1 style="margin: 4px 0 6px 0; font-size: 23px; font-weight: 900; letter-spacing: 0.5px; color: #ffffff;">
-                ☀️ ¡Buenos días, Daniel!
+                ¡Buenos días, Daniel!
             </h1>
-            <p style="margin: 0; font-size: 14px; color: #d1fae5; font-weight: 600;">
+            <p style="margin: 0; font-size: 13.5px; color: #d1fae5; font-weight: 600;">
                 {day_title} • {date_str}
             </p>
         </div>
 
-        <div style="padding: 24px 20px;">
-            
-            <!-- ORÁCULO MATUTINO -->
-            <div style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1px solid #f59e0b; border-radius: 12px; padding: 16px 18px; margin-bottom: 22px; text-align: center;">
-                <div style="font-size: 11px; font-weight: 800; color: #b45309; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">
-                    ✨ Oráculo de la Mañana
+        <div style="padding: 22px 20px;">
+
+            <!-- MISIÓN PRINCIPAL GIGANTE DEL DÍA (APPROACH 1) -->
+            <div style="background: linear-gradient(135deg, #064e3b 0%, #0f766e 100%); border: 2px solid #f59e0b; border-radius: 14px; padding: 16px 18px; margin-bottom: 18px; color: #ffffff;">
+                <div style="font-size: 11px; font-weight: 800; color: #fde047; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">
+                    👑 Misión Principal de Hoy ({main_time})
                 </div>
-                <blockquote style="margin: 0 0 6px 0; font-size: 15px; font-style: italic; color: #292524; line-height: 1.5;">
+                <div style="font-size: 16px; font-weight: 800; line-height: 1.35; color: #ffffff;">
+                    {main_mission}
+                </div>
+                <div style="font-size: 12px; color: #a7f3d0; margin-top: 6px;">
+                    Si hoy solo conquistas este bloque, ganaste el día.
+                </div>
+            </div>
+            
+            <!-- ORÁCULO MATUTINO & ENERGÍA ARIES/MARTE (APPROACH 2) -->
+            <div style="background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%); border: 1px solid #f59e0b; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px; text-align: center;">
+                <div style="font-size: 11px; font-weight: 800; color: #b45309; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px;">
+                    ✨ Oráculo Estoico &amp; Fuego Aries ♈
+                </div>
+                <blockquote style="margin: 0 0 6px 0; font-size: 14.5px; font-style: italic; color: #292524; line-height: 1.45;">
                     "{oracle['quote']}"
                 </blockquote>
-                <div style="font-size: 12px; font-weight: 800; color: #92400e;">
+                <div style="font-size: 11.5px; font-weight: 800; color: #92400e;">
                     — {oracle['author']}
                 </div>
             </div>
 
             {tk_banner_html}
 
-            <!-- BOTÓN DIRECTO AL CELULAR (ARRIBA PARA ACCIÓN RÁPIDA) -->
-            <div style="text-align: center; margin-bottom: 24px;">
+            <!-- BOTÓN DIRECTO AL CELULAR -->
+            <div style="text-align: center; margin-bottom: 22px;">
                 <a href="{APP_URL}" style="display: inline-block; background: linear-gradient(135deg, #15803d 0%, #0d9488 100%); color: #ffffff; text-decoration: none; font-weight: 800; font-size: 14px; padding: 14px 28px; border-radius: 99px; box-shadow: 0 6px 16px rgba(21, 128, 61, 0.3); letter-spacing: 0.5px;">
-                    📱 ABRIR MI CHECK-IN MATUTINO EN EL CELU &rarr;
+                    📱 ABRIR CHECK-IN &amp; MODO FOCO EN EL CELU &rarr;
                 </a>
             </div>
 
             <!-- SECCIÓN 1: BLOQUES DE HOY -->
-            <div style="margin-bottom: 22px;">
+            <div style="margin-bottom: 20px;">
                 <div style="font-size: 13px; font-weight: 800; color: #065f46; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;">
-                    🎯 Tus 4 Bloques Vitales de Hoy ({day_key.capitalize()})
+                    🎯 Tus 4 Bloques Tácticos de Hoy ({day_key.capitalize()})
                 </div>
                 {blocks_html}
             </div>
 
-            <!-- SECCIÓN 2: LOS 9 BANDERINES & TEMPLANZA -->
+            <!-- SECCIÓN 2: RETO 21 DÍAS & LOS 9 BANDERINES -->
             <div style="background: #f5efe2; border: 1px solid #d6cbb5; border-radius: 12px; padding: 16px; margin-bottom: 20px;">
-                <div style="font-size: 12px; font-weight: 800; color: #78350f; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;">
-                    🦅 Los 9 Estandartes de Vida &amp; Reto 21 Días
+                <div style="font-size: 12px; font-weight: 800; color: #78350f; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;">
+                    🦅 Reto 21 Días (Templanza) &amp; 9 Banderines
                 </div>
-                <p style="margin: 0 0 10px 0; font-size: 13px; color: #44403c; line-height: 1.45;">
-                    Hoy es un nuevo día de <strong>Templanza 100% Limpia (0 Porno)</strong>, hidratación (3.2L agua) y avance real. Elige al menos 3 banderines para iluminar hoy en la app:
+                <div style="font-size: 13px; letter-spacing: 3px; color: #15803d; margin-bottom: 8px; font-weight: 900;">
+                    ■ ■ ■ ■ ■ □ □ □ □ □ □ □ □ □ □ □ □ □ □ □ □
+                </div>
+                <p style="margin: 0 0 10px 0; font-size: 12.5px; color: #44403c; line-height: 1.45;">
+                    Día 100% limpio (0 Porno) + 3.2L de agua. Elige al menos 3 banderines para iluminar hoy en la app:
                 </p>
                 <div style="font-size: 12px; color: #292524; line-height: 1.8;">
                     <span style="display:inline-block; background:#fff; padding:2px 8px; border-radius:6px; margin:2px; border:1px solid #e7e5e4;">👑 Vida</span>
@@ -218,8 +239,7 @@ def build_morning_html(recipient: str) -> tuple[str, str]:
 
             <!-- PIE DEL CORREO -->
             <div style="text-align: center; padding-top: 14px; border-top: 1px solid #e6dec8; font-size: 12px; color: #78716c;">
-                Enviado automáticamente a <strong>{recipient}</strong> por el Motor Matutino de <strong>Caballero Jaguar</strong>.<br>
-                <a href="{APP_URL}" style="color: #0f766e; font-weight: 700; text-decoration: none;">Entrar al Santuario Solar &rarr;</a>
+                Enviado automáticamente a <strong>{recipient}</strong> por GitHub Actions (09:00 AM) • <strong>Caballero Jaguar</strong>.
             </div>
         </div>
     </div>

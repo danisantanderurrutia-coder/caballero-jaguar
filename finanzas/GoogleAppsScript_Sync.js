@@ -58,10 +58,52 @@ function setupSpreadsheetStructure() {
 }
 
 
-// --- 2. ENDPOINT WEBHOOK (RECEPTOR DESDE JAGUAR ROSA APP) ---
+// --- 2. ENDPOINT WEBHOOK (FINANZAS + SINCRONIZACIÓN REAL GOOGLE CALENDAR) ---
+function doGet(e) {
+  try {
+    const action = (e && e.parameter && e.parameter.action) ? e.parameter.action : "calendar";
+    if (action === "calendar") {
+      const cal = CalendarApp.getDefaultCalendar();
+      const today = new Date();
+      const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
+      const formatEv = ev => ({
+        title: ev.getTitle(),
+        start: ev.getStartTime().toISOString(),
+        end: ev.getEndTime().toISOString(),
+        allDay: ev.isAllDayEvent(),
+        location: ev.getLocation() || ""
+      });
+      return ContentService.createTextOutput(JSON.stringify({
+        status: "success",
+        today: cal.getEventsForDay(today).map(formatEv),
+        tomorrow: cal.getEventsForDay(tomorrow).map(formatEv)
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+    return ContentService.createTextOutput(JSON.stringify({ status: "ok" })).setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
 function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
+
+    // A) Crear tarea/evento directamente en Google Calendar
+    if (data.action === "create_calendar_event" && data.title) {
+      const cal = CalendarApp.getDefaultCalendar();
+      const startTime = data.startIso ? new Date(data.startIso) : new Date(Date.now() + 3600000);
+      const endTime = data.endIso ? new Date(data.endIso) : new Date(startTime.getTime() + 60 * 60 * 1000);
+      const ev = cal.createEvent("⚔️ " + data.title, startTime, endTime, {
+        description: data.description || "Sincronizado desde Caballero Jaguar"
+      });
+      return ContentService.createTextOutput(JSON.stringify({
+        status: "success",
+        eventId: ev.getId(),
+        message: "Evento creado en Google Calendar: " + data.title
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     
     if (data.transactions && Array.isArray(data.transactions)) {
@@ -280,6 +322,50 @@ function sendDailyNightTomorrowEmail() {
   const reflection = nightReflections[now.getDate() % nightReflections.length];
   const tomorrowDayOfMonth = tomorrow.getDate();
 
+  const outfitMap = {
+    "LUNES": "outfit_look_lunes.jpg",
+    "MARTES": "outfit_look_martes.jpg",
+    "MIÉRCOLES": "outfit_look_miercoles.jpg",
+    "JUEVES": "outfit_look_jueves.jpg",
+    "VIERNES": "outfit_look_viernes.jpg",
+    "SÁBADO": "outfit_look_sabado.jpg",
+    "DOMINGO": "outfit_look_domingo.jpg"
+  };
+  const outfitImgUrl = appUrl + "assets/" + (outfitMap[tomorrowName] || "outfit_look_lunes.jpg");
+  const romanBgUrl = appUrl + "assets/stoic_roman_bg.jpg";
+
+  // Leer eventos REALES de Google Calendar para mañana
+  let gcalEventsHtml = "";
+  try {
+    const cal = CalendarApp.getDefaultCalendar();
+    const events = cal.getEventsForDay(tomorrow);
+    if (events && events.length > 0) {
+      const evItems = events.map(ev => {
+        const startStr = ev.isAllDayEvent() ? "Todo el día" : Utilities.formatDate(ev.getStartTime(), Session.getScriptTimeZone() || "Europe/Berlin", "HH:mm");
+        const endStr = ev.isAllDayEvent() ? "" : (" - " + Utilities.formatDate(ev.getEndTime(), Session.getScriptTimeZone() || "Europe/Berlin", "HH:mm"));
+        return `<div style="padding: 6px 10px; background: rgba(59, 130, 246, 0.14); border-left: 3px solid #60A5FA; border-radius: 6px; margin-bottom: 6px; font-size: 12.5px; color: #E2E8F0;">
+          <strong style="color: #93C5FD;">📅 ${startStr}${endStr}</strong> • ${ev.getTitle()}
+        </div>`;
+      }).join("");
+      gcalEventsHtml = `
+        <div style="background: rgba(15, 23, 42, 0.85); border: 1px solid rgba(96, 165, 250, 0.4); border-radius: 10px; padding: 12px 14px; margin-bottom: 18px;">
+          <div style="font-size: 11px; font-weight: 800; color: #93C5FD; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;">
+            📆 Tu Agenda Real en Google Calendar Mañana (${events.length})
+          </div>
+          ${evItems}
+        </div>
+      `;
+    } else {
+      gcalEventsHtml = `
+        <div style="background: rgba(15, 23, 42, 0.6); border: 1px dashed rgba(148, 163, 184, 0.35); border-radius: 10px; padding: 10px 14px; margin-bottom: 18px; font-size: 12px; color: #94A3B8;">
+          📆 <strong>Google Calendar Mañana:</strong> Agenda libre de reuniones externas — día ideal para Deep Work.
+        </div>
+      `;
+    }
+  } catch (calErr) {
+    gcalEventsHtml = "";
+  }
+
   let tkAlert = "";
   if (tomorrowDayOfMonth >= 11 && tomorrowDayOfMonth <= 16) {
     tkAlert = `
@@ -297,13 +383,13 @@ function sendDailyNightTomorrowEmail() {
     </div>
   `).join("");
 
-  const subject = "🌙 [Caballero Jaguar 9:00 PM] Prepara tu Mañana: " + tomorrowName + " (" + tomorrowDateStr + ")";
+  const subject = "🌙 [Caballero Jaguar 9:00 PM] Tu Mañana (" + tomorrowName + "), Agenda Google & Outfit (" + tomorrowDateStr + ")";
   const htmlBody = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #0B0E17; border: 2px solid #C59A28; border-radius: 14px; overflow: hidden; color: #F4F6F9;">
-      <div style="background: linear-gradient(135deg, #1E1B2E 0%, #4E1022 55%, #0D121D 100%); padding: 26px 20px; text-align: center; border-bottom: 1.5px solid rgba(197, 154, 40, 0.4);">
-        <div style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: #F3D079; text-transform: uppercase;">🌙 Víspera Imperial • Caballero Jaguar</div>
+      <div style="background: linear-gradient(180deg, rgba(14, 14, 24, 0.72) 0%, rgba(11, 14, 23, 0.96) 100%), url('${romanBgUrl}') center/cover no-repeat; padding: 28px 20px; text-align: center; border-bottom: 1.5px solid rgba(197, 154, 40, 0.45);">
+        <div style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: #F3D079; text-transform: uppercase;">🌙 Víspera del Estratega • Caballero Jaguar</div>
         <h1 style="margin: 6px 0 4px 0; font-size: 21px; color: #FFFFFF;">🌙 Buenas noches, Daniel (09:00 PM)</h1>
-        <p style="margin: 0; font-size: 13px; color: #CBD5E1;">Tu hoja de ruta para mañana: <strong style="color:#F3D079;">${tomorrowName} • ${tomorrowDateStr}</strong></p>
+        <p style="margin: 0; font-size: 13px; color: #CBD5E1;">Prepara tu mañana: <strong style="color:#F3D079;">${tomorrowName} • ${tomorrowDateStr}</strong></p>
       </div>
       <div style="padding: 22px 18px;">
         <div style="background: rgba(155, 35, 53, 0.14); border: 1px solid rgba(197, 154, 40, 0.35); border-radius: 10px; padding: 14px; text-align: center; margin-bottom: 18px;">
@@ -311,16 +397,25 @@ function sendDailyNightTomorrowEmail() {
           <div style="font-size: 11px; font-weight: 800; color: #F3D079; margin-top: 4px;">— ${reflection.a}</div>
         </div>
         ${tkAlert}
+        ${gcalEventsHtml}
+        <!-- TARJETA VISUAL DEL OUTFIT DE MAÑANA -->
+        <div style="display: flex; align-items: center; gap: 14px; background: #131826; border: 1px solid rgba(197, 154, 40, 0.35); border-radius: 10px; padding: 12px; margin-bottom: 18px;">
+          <img src="${outfitImgUrl}" alt="Outfit de mañana" width="84" height="106" style="width: 84px; height: 106px; object-fit: cover; border-radius: 8px; border: 1.5px solid #C59A28;">
+          <div>
+            <div style="font-size: 11px; font-weight: 800; color: #F3D079; text-transform: uppercase; letter-spacing: 0.8px;">👔 Outfit Somático de Mañana (${tomorrowName})</div>
+            <div style="font-size: 13px; color: #E2E8F0; margin-top: 4px; line-height: 1.4;">Deja tu ropa elegida y lista esta noche para despertar sin fricción ni decisiones.</div>
+          </div>
+        </div>
         <div style="font-size: 12px; font-weight: 800; color: #F3D079; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;">
-          ⚔️ Lo que te espera mañana (${tomorrowName}):
+          ⚔️ Línea de Tiempo Táctica de Mañana (${tomorrowName}):
         </div>
         ${blocksHtml}
-        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 14px; margin-top: 14px; font-size: 12.5px; color: #CBD5E1;">
-          🛌 <strong>Ritual de Cierre (21:00 PM):</strong> Deja tu ropa lista para mañana, haz 5 minutos de meditación/lectura estoica y apunta a dormir 7–8 horas.
+        <div style="background: rgba(197, 154, 40, 0.10); border: 1px solid rgba(197, 154, 40, 0.35); border-radius: 10px; padding: 12px 14px; margin-top: 14px; font-size: 12.5px; color: #FDE68A;">
+          🪙 <strong>Cierre de Tesorería &amp; Sueño:</strong> ¿Evitaste algún gasto tonto hoy? Regístralo (+50 XP) y apunta a dormir 7–8 horas reparadoras.
         </div>
         <div style="text-align: center; margin-top: 20px;">
           <a href="${appUrl}" style="display: inline-block; background: linear-gradient(135deg, #9B2335, #C59A28); color: #FFFFFF; text-decoration: none; font-weight: 800; font-size: 13.5px; padding: 13px 24px; border-radius: 8px;">
-            📱 VER OUTFIT Y PLAN DE MAÑANA EN LA APP &rarr;
+            📱 VER AGENDA Y PLAN DE MAÑANA EN LA APP &rarr;
           </a>
         </div>
       </div>

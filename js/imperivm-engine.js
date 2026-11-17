@@ -928,6 +928,14 @@ const imperivmEngine = {
             </select>
           </div>
 
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 14px; background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(96, 165, 250, 0.3); border-radius: 6px; padding: 8px 10px;">
+            <label style="display: flex; align-items: center; gap: 8px; font-size: 0.8rem; color: #93C5FD; font-weight: 700; cursor: pointer;">
+              <input type="checkbox" id="quick-task-gcal-chk" checked style="accent-color: #3B82F6; width: 15px; height: 15px;">
+              <span>📅 Sincronizar con Google Calendar</span>
+            </label>
+            <input type="time" id="quick-task-gcal-time" value="09:00" style="background: #151C2C; border: 1px solid rgba(96, 165, 250, 0.4); border-radius: 5px; padding: 4px 8px; color: #FFF; font-size: 0.78rem;">
+          </div>
+
           <div style="display: flex; justify-content: flex-end; gap: 10px;">
             <button class="btn-imperivm-secondary" onclick="imperivmEngine.closeAddTaskModal();">Cancelar</button>
             <button class="btn-imperivm-primary" onclick="imperivmEngine.saveQuickTask();">Guardar Tarea</button>
@@ -4504,6 +4512,12 @@ const imperivmEngine = {
       showNotification(`✨ Tarea agregada${daySuffix}: ${newTask.title}`);
     }
 
+    const gcalChk = document.getElementById("quick-task-gcal-chk");
+    const gcalTimeInput = document.getElementById("quick-task-gcal-time");
+    if (gcalChk && gcalChk.checked) {
+      this.syncTaskToGoogleCalendar(newTask, gcalTimeInput ? gcalTimeInput.value : "09:00", isSpecificDay ? rawScope : null);
+    }
+
     this.closeAddTaskModal();
     if (typeof renderTasks === "function") renderTasks();
     if (this.activeDrawerDayKey) {
@@ -4511,6 +4525,43 @@ const imperivmEngine = {
     } else {
       this.render();
     }
+  },
+
+  syncTaskToGoogleCalendar(task, timeStr = "09:00", targetDayKey = null) {
+    const [hh, mm] = (timeStr || "09:00").split(":").map(Number);
+    const baseDate = new Date();
+    if (targetDayKey) {
+      const daysKeys = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"];
+      const targetIdx = daysKeys.indexOf(targetDayKey);
+      if (targetIdx !== -1) {
+        const diff = (targetIdx - baseDate.getDay() + 7) % 7;
+        baseDate.setDate(baseDate.getDate() + diff);
+      }
+    }
+    baseDate.setHours(hh || 9, mm || 0, 0, 0);
+    const endDate = new Date(baseDate.getTime() + 60 * 60 * 1000);
+
+    const webhookUrl = localStorage.getItem("CJ_APPS_SCRIPT_URL") || (typeof financeState !== "undefined" ? financeState.googleSheetUrl : "");
+    if (webhookUrl && webhookUrl.includes("/exec")) {
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({
+          action: "create_calendar_event",
+          title: task.title,
+          startIso: baseDate.toISOString(),
+          endIso: endDate.toISOString(),
+          description: `Categoría Caballero Jaguar: ${task.category}`
+        })
+      }).then(() => {
+        if (typeof showNotification === "function") showNotification(`📅 Agendado automáticamente en Google Calendar: ${task.title}`);
+      }).catch(() => {});
+      return;
+    }
+
+    const fmtGCal = d => d.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+    const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent("⚔️ " + task.title)}&dates=${fmtGCal(baseDate)}/${fmtGCal(endDate)}&details=${encodeURIComponent("Sincronizado desde Caballero Jaguar (" + task.category + ")")}`;
+    window.open(gcalUrl, "_blank");
   },
 
   toggleTaskInline(taskId) {
@@ -5052,40 +5103,53 @@ const imperivmEngine = {
         </div>
       </div>
 
-      <!-- CONFIGURACIÓN RÁPIDA Y ACCIONES -->
-      <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 18px; background: rgba(0,0,0,0.25); padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(197,154,40,0.25);">
-        <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; flex: 1;">
-          <label style="font-size: 0.8rem; font-weight: 700;">📬 Destinatario:</label>
-          <input type="text" id="morning-email-input-to" value="${savedEmail}" style="padding: 6px 10px; border-radius: 6px; font-size: 0.82rem; min-width: 230px;">
+      <!-- CONFIGURACIÓN RÁPIDA: CORREO + WEBHOOK GOOGLE CALENDAR -->
+      <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; background: rgba(0,0,0,0.28); padding: 14px 16px; border-radius: 10px; border: 1px solid rgba(197,154,40,0.28);">
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;">
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+            <label style="font-size: 0.8rem; font-weight: 700;">📬 Destinatario:</label>
+            <input type="text" id="morning-email-input-to" value="${savedEmail}" style="padding: 6px 10px; border-radius: 6px; font-size: 0.82rem; min-width: 220px;">
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="btn-solar-action" onclick="imperivmEngine.copyAppsScriptMorningCode()">
+              🌙 Copiar Script Google 9PM + Calendar
+            </button>
+            <button class="btn-solar-action-outline" onclick="imperivmEngine.sendMorningEmailTestNow()">
+              📧 Enviarme Prueba Ahora
+            </button>
+          </div>
         </div>
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-          <button class="btn-solar-action" onclick="imperivmEngine.copyAppsScriptMorningCode()">
-            🌙 Copiar Script Google 9:00 PM (Día Siguiente)
-          </button>
-          <button class="btn-solar-action-outline" onclick="imperivmEngine.sendMorningEmailTestNow()">
-            📧 Enviarme Prueba Ahora
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
+          <label style="font-size: 0.78rem; font-weight: 700; color: #93C5FD;">📅 URL WebApp Google Calendar (opcional, para sync silenciosa):</label>
+          <input type="text" id="gcal-webhook-url-input" value="${localStorage.getItem("CJ_APPS_SCRIPT_URL") || ""}" placeholder="https://script.google.com/macros/s/.../exec" style="flex: 1; min-width: 220px; padding: 5px 10px; border-radius: 6px; font-size: 0.78rem;">
+          <button class="btn-solar-action-outline" style="padding: 5px 12px; font-size: 0.76rem;" onclick="const u=document.getElementById('gcal-webhook-url-input').value.trim(); localStorage.setItem('CJ_APPS_SCRIPT_URL', u); if(typeof showNotification==='function') showNotification('📅 Enlace de Google Calendar guardado.');">
+            💾 Guardar URL
           </button>
         </div>
       </div>
 
-      <!-- VISTA PREVIA DUAL: MAÑANA 9 AM + NOCHE 9 PM (DÍA SIGUIENTE) -->
+      <!-- VISTA PREVIA DUAL (APPROACH 1 + 2 VISUAL): MAÑANA 9 AM + NOCHE 9 PM -->
       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
         <div>
           <div style="font-size: 0.74rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; color: #F3D079;">
-            ☀️ 09:00 AM (GitHub) • Hoy ${todayKey.toUpperCase()}
+            ☀️ 09:00 AM (GitHub) • Despertar de Acción
           </div>
           <div style="background: #faf6ee; border: 1.5px solid #c59a28; border-radius: 12px; overflow: hidden; color: #1c1917; font-family: -apple-system, sans-serif;">
-            <div style="background: linear-gradient(135deg, #064e3b 0%, #0f766e 55%, #b45309 100%); padding: 14px; text-align: center; color: #fff;">
+            <div style="background: linear-gradient(180deg, rgba(6,78,59,0.75), rgba(15,118,110,0.9)), url('assets/img_jaguar_jungle_landing.jpg') center/cover; padding: 14px; text-align: center; color: #fff;">
               <div style="font-size: 14px; font-weight: 800;">☀️ ¡Buenos días, Daniel! (09:00 AM)</div>
               <div style="font-size: 11px; color: #d1fae5;">${todayKey.toUpperCase()} (${todayIso})</div>
             </div>
             <div style="padding: 12px;">
-              <div style="font-size: 11.5px; font-style: italic; background: #fffbeb; border: 1px solid #f59e0b; padding: 8px; border-radius: 8px; margin-bottom: 10px;">
+              <div style="background: #064e3b; color: #fff; border: 1.5px solid #f59e0b; border-radius: 8px; padding: 9px 10px; margin-bottom: 8px;">
+                <div style="font-size: 10px; font-weight: 800; color: #fde047;">👑 MISIÓN PRINCIPAL DE HOY</div>
+                <div style="font-size: 12px; font-weight: 700;">${(blocks[1] || blocks[0] || {}).title || 'Bloque de Foco Principal'}</div>
+              </div>
+              <div style="font-size: 11px; font-style: italic; background: #fffbeb; border: 1px solid #f59e0b; padding: 8px; border-radius: 8px; margin-bottom: 8px;">
                 "${quoteObj.text}" — <strong>${quoteObj.author}</strong>
               </div>
               ${blocks.map((b, i) => `
-                <div style="background: #fff; border: 1px solid #e6dec8; border-left: 3px solid #15803d; border-radius: 6px; padding: 7px 10px; margin-bottom: 6px; font-size: 11.5px;">
-                  <strong style="color:#0f766e;">#${i + 1} ${b.time}</strong><br>${b.title}
+                <div style="background: #fff; border: 1px solid #e6dec8; border-left: 3px solid #15803d; border-radius: 6px; padding: 6px 9px; margin-bottom: 5px; font-size: 11px;">
+                  <strong style="color:#0f766e;">#${i + 1} ${b.time}</strong> • ${b.title}
                 </div>
               `).join("")}
             </div>
@@ -5094,20 +5158,26 @@ const imperivmEngine = {
 
         <div>
           <div style="font-size: 0.74rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; color: #E8A0A8;">
-            🌙 09:00 PM (Gmail) • Mañana ${tomorrowKey.toUpperCase()}
+            🌙 09:00 PM (Gmail) • Víspera + Google Calendar + Outfit
           </div>
           <div style="background: #0B0E17; border: 1.5px solid #C59A28; border-radius: 12px; overflow: hidden; color: #F4F6F9; font-family: -apple-system, sans-serif;">
-            <div style="background: linear-gradient(135deg, #1E1B2E 0%, #4E1022 55%, #0D121D 100%); padding: 14px; text-align: center; color: #fff;">
+            <div style="background: linear-gradient(180deg, rgba(14,14,24,0.72), rgba(11,14,23,0.96)), url('assets/stoic_roman_bg.jpg') center/cover; padding: 14px; text-align: center; color: #fff;">
               <div style="font-size: 14px; font-weight: 800;">🌙 Buenas noches, Daniel (09:00 PM)</div>
               <div style="font-size: 11px; color: #F3D079;">Prepara tu mañana: ${tomorrowKey.toUpperCase()}</div>
             </div>
             <div style="padding: 12px;">
-              <div style="font-size: 11.5px; font-style: italic; background: rgba(155,35,53,0.16); border: 1px solid rgba(197,154,40,0.35); padding: 8px; border-radius: 8px; margin-bottom: 10px; color: #F1F5F9;">
-                "Quien ordena su mañana desde la noche anterior despierta como comandante de su propio tiempo."
+              <div style="background: rgba(59,130,246,0.14); border: 1px solid rgba(96,165,250,0.4); border-radius: 8px; padding: 7px 10px; margin-bottom: 8px; font-size: 11px; color: #93C5FD;">
+                📆 <strong>Google Calendar Mañana:</strong> Lee automáticamente tus reuniones reales desde tu calendario.
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px; background: #131826; border: 1px solid rgba(197,154,40,0.35); border-radius: 8px; padding: 8px; margin-bottom: 8px;">
+                <img src="${IMPERIVM_MEDIA['outfit_' + tomorrowKey] || IMPERIVM_MEDIA.outfit}" alt="Outfit de mañana" style="width: 48px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #C59A28;">
+                <div style="font-size: 11px; color: #E2E8F0;">
+                  <strong style="color:#F3D079;">👔 Outfit de Mañana (${tomorrowKey.toUpperCase()})</strong><br>Deja tu ropa lista antes de dormir.
+                </div>
               </div>
               ${tomorrowBlocks.map((b, i) => `
-                <div style="background: #131826; border: 1px solid rgba(197,154,40,0.25); border-left: 3px solid #9B2335; border-radius: 6px; padding: 7px 10px; margin-bottom: 6px; font-size: 11.5px; color: #F4F6F9;">
-                  <strong style="color:#F3D079;">#${i + 1} ${b.time}</strong><br>${b.title}
+                <div style="background: #131826; border: 1px solid rgba(197,154,40,0.25); border-left: 3px solid #9B2335; border-radius: 6px; padding: 6px 9px; margin-bottom: 5px; font-size: 11px; color: #F4F6F9;">
+                  <strong style="color:#F3D079;">#${i + 1} ${b.time}</strong> • ${b.title}
                 </div>
               `).join("")}
             </div>
