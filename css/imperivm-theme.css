@@ -4043,211 +4043,90 @@ body.dev-labels-visible .dev-labels-corner-trigger {
 }
 
 /* ==========================================================================
-   ☀️ RENACIMIENTO VITAL: MODO LUZ SOLAR & SELVA VIVA ("UN LUGAR DE VIDA")
-   Por defecto activo en body:not(.theme-night). Si el usuario pulsa 🌙,
-   se añade .theme-night y vuelve a la estética nocturna imperial.
+   ☀️ MODO SELVA SOLAR & ESMERALDA ILUMINADA ("UN LUGAR DE VIDA")
+   Reemplaza el negro ceniza/muerto por luz solar dorada, follaje verde esmeralda
+   y fotografías vibrantes a todo color, manteniendo 100% de contraste y armonía
+   con todos los textos, insignias y barras de progreso de la plataforma.
    ========================================================================== */
 
 body:not(.theme-night) {
-  --imperivm-bg-space: #F4ECE0 !important;
-  --imperivm-bg-card: #FAF6EE !important;
-  --imperivm-bg-card-hover: #FFFDF8 !important;
-  --imperivm-surface: #F7F0E4 !important;
-  --imperivm-surface-elevated: #FFFFFF !important;
-  --imperivm-text-main: #1C1917 !important;
-  --imperivm-text-muted: #57534E !important;
-  --imperivm-text-dim: #78716C !important;
-  --imperivm-text-gold: #92400E !important;
-  --imperivm-border: rgba(180, 130, 35, 0.35) !important;
-  --imperivm-border-gold: #C59A28 !important;
-  --imperivm-shadow-card: 0 10px 26px rgba(45, 35, 20, 0.10), 0 2px 6px rgba(21, 128, 61, 0.06) !important;
-  --imperivm-shadow-hover: 0 16px 34px rgba(45, 35, 20, 0.16), 0 0 18px rgba(197, 154, 40, 0.28) !important;
+  --imperivm-bg-space: #071914 !important;
+  --imperivm-bg-card: rgba(11, 31, 25, 0.88) !important;
+  --imperivm-bg-card-hover: rgba(15, 42, 34, 0.94) !important;
+  --imperivm-surface: rgba(12, 34, 27, 0.90) !important;
+  --imperivm-surface-elevated: rgba(16, 45, 36, 0.95) !important;
+  --imperivm-border: rgba(212, 175, 55, 0.38) !important;
+  --imperivm-border-gold: #E5B842 !important;
+  --imperivm-text-gold: #FDE047 !important;
 
-  --bg-deep-space: #F4ECE0 !important;
-  --bg-dark-synth: #EBE0CC !important;
-  --bg-dark-card: #FAF6EE !important;
-  --bg-dark-card-hover: #FFFDF9 !important;
-  --bg-glass: rgba(250, 246, 238, 0.94) !important;
-  --text-main: #1C1917 !important;
-  --text-muted: #57534E !important;
-  --text-dim: #78716C !important;
-
-  background-color: #EFE5D4 !important;
+  background-color: #071914 !important;
   background-image:
-    radial-gradient(ellipse at 50% 0%, rgba(254, 243, 199, 0.85) 0%, rgba(209, 250, 229, 0.45) 45%, rgba(244, 236, 224, 0.92) 100%),
-    linear-gradient(180deg, rgba(250, 245, 232, 0.82) 0%, rgba(238, 228, 208, 0.92) 100%),
+    radial-gradient(ellipse at 50% 0%, rgba(250, 204, 21, 0.22) 0%, rgba(16, 185, 129, 0.16) 45%, rgba(6, 22, 17, 0.78) 100%),
+    linear-gradient(180deg, rgba(10, 35, 26, 0.38) 0%, rgba(6, 20, 15, 0.72) 100%),
     url('../assets/jaguar_master_wallpaper.jpg') !important;
-  color: #1C1917 !important;
+  background-attachment: fixed !important;
+  background-position: center top !important;
+  background-size: cover !important;
 }
 
-/* Gatekeeper Solar & Vivo */
+/* Gatekeeper Solar & Selva */
 body:not(.theme-night) .stoic-gatekeeper-overlay {
   background:
-    radial-gradient(ellipse at 50% 30%, rgba(6, 95, 70, 0.65) 0%, rgba(20, 40, 30, 0.88) 100%),
-    url('../assets/img_jaguar_jungle_landing.jpg') center/cover no-repeat !important;
+    radial-gradient(ellipse at 50% 35%, rgba(6, 78, 59, 0.72) 0%, rgba(4, 24, 18, 0.92) 100%),
+    url('../assets/jaguar_master_wallpaper.jpg') center/cover no-repeat !important;
 }
 
 body:not(.theme-night) .stoic-gatekeeper-card {
-  background: linear-gradient(165deg, rgba(253, 250, 243, 0.97) 0%, rgba(243, 234, 214, 0.98) 100%) !important;
-  border: 2.5px solid #C59A28 !important;
-  box-shadow: 0 25px 70px rgba(10, 30, 20, 0.55), 0 0 35px rgba(245, 158, 11, 0.35) !important;
-  color: #1C1917 !important;
-}
-
-body:not(.theme-night) .gatekeeper-badge {
-  background: linear-gradient(135deg, #15803D, #0D9488) !important;
-  color: #FFFFFF !important;
-  padding: 4px 14px !important;
-  border-radius: 99px !important;
-  font-weight: 800 !important;
-}
-
-body:not(.theme-night) .gatekeeper-title {
-  color: #064E3B !important;
-  text-shadow: none !important;
-}
-
-body:not(.theme-night) .gatekeeper-subtitle {
-  color: #57534E !important;
-}
-
-body:not(.theme-night) .gatekeeper-input {
-  background: #FFFFFF !important;
-  border: 1.5px solid #C59A28 !important;
-  color: #1C1917 !important;
+  background: linear-gradient(165deg, rgba(10, 34, 26, 0.95) 0%, rgba(6, 20, 15, 0.98) 100%) !important;
+  border: 2px solid #E5B842 !important;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8), 0 0 40px rgba(16, 185, 129, 0.3), 0 0 25px rgba(245, 158, 11, 0.25) !important;
 }
 
 body:not(.theme-night) .gatekeeper-btn {
   background: linear-gradient(135deg, #15803D 0%, #0D9488 55%, #D97706 100%) !important;
   color: #FFFFFF !important;
-  border: none !important;
+  border: 1px solid #FDE047 !important;
   font-weight: 900 !important;
-  box-shadow: 0 6px 18px rgba(21, 128, 61, 0.35) !important;
 }
 
-/* Navbar Superior Solar */
+/* Navbar Superior: Verde Esmeralda Real & Oro Solar */
 body:not(.theme-night) .stoic-top-navbar.app-header {
-  background: linear-gradient(180deg, rgba(253, 250, 242, 0.97) 0%, rgba(245, 238, 222, 0.96) 100%) !important;
-  border-bottom: 2px solid rgba(197, 154, 40, 0.45) !important;
-  box-shadow: 0 6px 24px rgba(45, 35, 20, 0.10) !important;
-}
-
-body:not(.theme-night) .stoic-top-navbar .stoic-brand-text .brand-name {
-  color: #064E3B !important;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) !important;
-}
-
-body:not(.theme-night) .stoic-top-navbar .ambient-player-widget {
-  background: rgba(21, 128, 61, 0.07) !important;
-  border: 1px solid rgba(21, 128, 61, 0.25) !important;
-}
-
-body:not(.theme-night) .stoic-top-navbar .btn-ambient-control,
-body:not(.theme-night) .stoic-top-navbar .btn-ambient-vol-icon {
-  color: #065F46 !important;
-}
-
-body:not(.theme-night) .stoic-top-navbar #ambient-play-btn,
-body:not(.theme-night) .stoic-top-navbar .ambient-track-select {
-  background: #FFFFFF !important;
-  border: 1px solid rgba(197, 154, 40, 0.45) !important;
-  color: #1C1917 !important;
-}
-
-body:not(.theme-night) .stoic-top-navbar .stoic-info-seal,
-body:not(.theme-night) .stoic-lightbulb-toggle {
-  background: rgba(255, 255, 255, 0.85) !important;
-  border: 1.5px solid rgba(197, 154, 40, 0.5) !important;
-  color: #78350F !important;
-  opacity: 0.95 !important;
-}
-
-body:not(.theme-night) .stoic-top-navbar .level-badge-card,
-body:not(.theme-night) .stoic-top-navbar .celestial-header-widget {
-  background: rgba(255, 255, 255, 0.88) !important;
-  border: 1px solid rgba(197, 154, 40, 0.45) !important;
-}
-
-body:not(.theme-night) .stoic-top-navbar .level-name,
-body:not(.theme-night) .stoic-top-navbar .celestial-time-text {
-  color: #064E3B !important;
-  text-shadow: none !important;
-}
-
-body:not(.theme-night) .stoic-top-navbar .celestial-calendar-link {
-  color: #78350F !important;
-}
-
-body:not(.theme-night) .stoic-top-navbar .stoic-foco-btn {
-  background: linear-gradient(135deg, #065F46 0%, #0D9488 100%) !important;
-  border: 1px solid #047857 !important;
-  color: #FFFFFF !important;
-  font-weight: 800 !important;
-  box-shadow: 0 3px 10px rgba(13, 148, 136, 0.25) !important;
+  background: linear-gradient(180deg, rgba(8, 30, 23, 0.94) 0%, rgba(6, 22, 17, 0.96) 100%) !important;
+  border-bottom: 1.5px solid rgba(229, 184, 66, 0.45) !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.55), 0 0 20px rgba(16, 185, 129, 0.15) !important;
 }
 
 body:not(.theme-night) #header-morning-email-btn {
-  background: linear-gradient(135deg, #D97706 0%, #B45309 100%) !important;
-  border: 1px solid #F59E0B !important;
-  color: #FFFFFF !important;
-}
-
-body:not(.theme-night) .stoic-avisos-btn {
-  background: linear-gradient(135deg, #FEF2F2 0%, #FEE2E2 100%) !important;
-  border: 1.5px solid #EF4444 !important;
-  color: #991B1B !important;
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.35) 0%, rgba(180, 83, 9, 0.55) 100%) !important;
+  border: 1px solid #FBBF24 !important;
+  color: #FEF08A !important;
   font-weight: 800 !important;
 }
 
-/* Hero Monumental Solar & Selva Viva */
+body:not(.theme-night) #header-morning-email-btn:hover {
+  background: linear-gradient(135deg, #D97706 0%, #B45309 100%) !important;
+  color: #FFFFFF !important;
+}
+
+/* Hero Monumental: Paisaje Renacentista Iluminado sin filtro fúnebre */
 body:not(.theme-night) .stoic-hero-bg-img {
-  filter: brightness(0.96) contrast(1.06) saturate(1.25) !important;
-  object-position: center 35% !important;
+  filter: brightness(0.88) contrast(1.08) saturate(1.22) !important;
+  object-position: center 28% !important;
 }
 
 body:not(.theme-night) .stoic-hero-gradient-overlay {
   background:
-    linear-gradient(180deg, rgba(6, 78, 59, 0.22) 0%, rgba(15, 118, 110, 0.12) 40%, rgba(20, 45, 34, 0.55) 75%, rgba(244, 236, 224, 0.98) 100%),
-    radial-gradient(ellipse at 50% 20%, rgba(253, 224, 71, 0.25) 0%, transparent 65%) !important;
+    linear-gradient(180deg, rgba(6, 28, 20, 0.30) 0%, rgba(16, 185, 129, 0.08) 38%, rgba(6, 26, 20, 0.55) 75%, rgba(7, 25, 20, 0.94) 100%),
+    radial-gradient(ellipse at 50% 20%, rgba(253, 224, 71, 0.22) 0%, transparent 65%) !important;
 }
 
-.solar-hero-vital-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: linear-gradient(135deg, rgba(6, 78, 59, 0.88) 0%, rgba(13, 148, 136, 0.90) 100%);
-  border: 1.5px solid #FDE047;
-  color: #FEF9C3;
-  padding: 5px 16px;
-  border-radius: 99px;
-  font-size: 0.74rem;
-  font-weight: 800;
-  letter-spacing: 1.2px;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(6, 78, 59, 0.45), 0 0 16px rgba(250, 204, 21, 0.35);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.solar-hero-vital-pill:hover {
-  transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 6px 20px rgba(6, 78, 59, 0.6), 0 0 22px rgba(250, 204, 21, 0.55);
-}
-
-.solar-vital-pulse-dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #4ADE80;
-  box-shadow: 0 0 10px #4ADE80;
-  animation: pulseDot 2s infinite ease-in-out;
-}
-
+/* Vexillum Maestro en Verde Imperial & Oro Solar */
 body:not(.theme-night) .stoic-vexillum-cloth {
-  background: linear-gradient(180deg, #065F46 0%, #044E3A 65%, #022C22 100%) !important;
+  background: linear-gradient(180deg, #065F46 0%, #064E3B 60%, #022C22 100%) !important;
   border-left: 2px solid #FBBF24 !important;
   border-right: 2px solid #FBBF24 !important;
   border-top: 1.5px solid #FDE68A !important;
-  box-shadow: 0 12px 28px rgba(6, 78, 59, 0.45), 0 0 24px rgba(245, 158, 11, 0.28) !important;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.45), 0 10px 28px rgba(0, 0, 0, 0.65), 0 0 28px rgba(16, 185, 129, 0.35) !important;
 }
 
 body:not(.theme-night) .stoic-vexillum-v-tip {
@@ -4260,171 +4139,67 @@ body:not(.theme-night) .stoic-vexillum-sub {
   color: #FEF08A !important;
 }
 
+/* Botones de la Pirámide del Hero con brillo esmeralda y oro */
 body:not(.theme-night) .btn-command-pill {
-  background: rgba(253, 250, 242, 0.92) !important;
-  border: 1.5px solid rgba(197, 154, 40, 0.55) !important;
-  color: #1C1917 !important;
-  font-weight: 800 !important;
-  box-shadow: 0 3px 10px rgba(28, 25, 23, 0.12) !important;
+  background: rgba(8, 32, 24, 0.82) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(229, 184, 66, 0.42) !important;
+  color: #F8FAFC !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
 }
 
 body:not(.theme-night) .btn-command-pill:hover {
-  background: #065F46 !important;
-  border-color: #FBBF24 !important;
+  background: rgba(16, 185, 129, 0.28) !important;
+  border-color: #FDE047 !important;
   color: #FFFFFF !important;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.35) !important;
 }
 
 body:not(.theme-night) .btn-command-pill-gold {
   background: linear-gradient(135deg, #15803D 0%, #0D9488 100%) !important;
   border: 1.5px solid #FDE047 !important;
   color: #FFFFFF !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4) !important;
 }
 
-/* Títulos de Carrusel y Tarjetas en Modo Solar */
-body:not(.theme-night) .imperivm-rail-title {
-  color: #064E3B !important;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.85) !important;
-}
-
-body:not(.theme-night) .imperivm-nav-arrow {
-  background: #FAF6EE !important;
-  border: 1.5px solid #C59A28 !important;
-  color: #064E3B !important;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08) !important;
-}
-
+/* Tarjetas de Carrusel: Fotos 100% vivas y luminosas + Cristal Esmeralda */
 body:not(.theme-night) .imperivm-card,
 body:not(.theme-night) .bitacora-cinematic-card,
-body:not(.theme-night) .finance-streaming-card {
-  background: #FAF6EE !important;
-  border: 1.5px solid rgba(197, 154, 40, 0.42) !important;
-  box-shadow: 0 8px 22px rgba(45, 35, 20, 0.10) !important;
+body:not(.theme-night) .finance-streaming-card,
+body:not(.theme-night) .jaguar-card {
+  background: linear-gradient(160deg, rgba(12, 35, 28, 0.88) 0%, rgba(7, 22, 18, 0.92) 100%) !important;
+  border: 1px solid rgba(212, 175, 55, 0.36) !important;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45), 0 0 14px rgba(16, 185, 129, 0.08) !important;
 }
 
-/* Imágenes de tarjetas con VIDA y color pleno (sin oscurecimiento muerto) */
+body:not(.theme-night) .imperivm-card:hover,
+body:not(.theme-night) .bitacora-cinematic-card:hover,
+body:not(.theme-night) .jaguar-card:hover {
+  border-color: #FBBF24 !important;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(16, 185, 129, 0.25) !important;
+}
+
 body:not(.theme-night) .imperivm-card-media img,
 body:not(.theme-night) .bitacora-card-media img {
-  filter: brightness(1.0) contrast(1.06) saturate(1.16) !important;
+  filter: brightness(0.98) contrast(1.06) saturate(1.18) !important;
 }
 
 body:not(.theme-night) .imperivm-card:hover .imperivm-card-media img,
 body:not(.theme-night) .bitacora-cinematic-card:hover .bitacora-card-media img {
-  filter: brightness(1.06) saturate(1.22) !important;
-}
-
-body:not(.theme-night) .imperivm-card-title,
-body:not(.theme-night) .bitacora-card-title {
-  color: #14261C !important;
-}
-
-body:not(.theme-night) .imperivm-card-desc,
-body:not(.theme-night) .bitacora-card-desc {
-  color: #57534E !important;
-}
-
-/* Cajas de estadísticas en Caballería y Panel Estratégico en Modo Solar */
-body:not(.theme-night) #rail-caballeria-maestria .cj-caballeria-row > div:not(.cj-emblem-card) {
-  background: linear-gradient(160deg, #FAF6EE 0%, #F2E8D5 100%) !important;
-  border: 1.5px solid rgba(197, 154, 40, 0.45) !important;
-  box-shadow: 0 6px 18px rgba(45, 35, 20, 0.08) !important;
-  color: #1C1917 !important;
-}
-
-body:not(.theme-night) #rail-caballeria-maestria .cj-caballeria-row > div:not(.cj-emblem-card) div,
-body:not(.theme-night) #rail-caballeria-maestria .cj-caballeria-row > div:not(.cj-emblem-card) span {
-  color: #292524 !important;
-}
-
-body:not(.theme-night) .cj-emblem-card {
-  background: linear-gradient(145deg, #064E3B 0%, #042F2E 100%) !important;
-  border: 2px solid #C59A28 !important;
-}
-
-body:not(.theme-night) .imperivm-mood-strategic-card {
-  background: linear-gradient(135deg, rgba(255, 253, 248, 0.96) 0%, rgba(236, 253, 245, 0.94) 100%) !important;
-  border: 2px solid rgba(16, 185, 129, 0.45) !important;
-  box-shadow: 0 8px 24px rgba(15, 118, 110, 0.10) !important;
-}
-
-body:not(.theme-night) .imperivm-mood-strategic-card span,
-body:not(.theme-night) .imperivm-mood-strategic-card strong,
-body:not(.theme-night) .imperivm-mood-strategic-card div {
-  color: #1C1917 !important;
-}
-
-body:not(.theme-night) .imperivm-mood-strategic-card div[style*="background: rgba(0,0,0,0.35)"] {
-  background: #FFFFFF !important;
-  border: 1px solid rgba(197, 154, 40, 0.35) !important;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04) !important;
-}
-
-body:not(.theme-night) .jaguar-card,
-body:not(.theme-night) .card-highlight {
-  background: rgba(250, 246, 238, 0.94) !important;
-  border: 1.5px solid rgba(197, 154, 40, 0.4) !important;
-  color: #1C1917 !important;
-  box-shadow: 0 8px 24px rgba(45, 35, 20, 0.09) !important;
-}
-
-body:not(.theme-night) .jaguar-card .card-title {
-  color: #064E3B !important;
-}
-
-body:not(.theme-night) .btn-campaign-toggle {
-  background: #FAF6EE !important;
-  border: 1px solid rgba(197, 154, 40, 0.45) !important;
-  color: #292524 !important;
-  font-weight: 700 !important;
-}
-
-body:not(.theme-night) .btn-campaign-toggle.active,
-body:not(.theme-night) .btn-campaign-toggle:hover {
-  background: linear-gradient(135deg, #15803D 0%, #0D9488 100%) !important;
-  border-color: #065F46 !important;
-  color: #FFFFFF !important;
-}
-
-/* Modales en Modo Solar */
-body:not(.theme-night) .kcd-inspector-codex,
-body:not(.theme-night) .jaguar-modal-card {
-  background: linear-gradient(165deg, #FAF6EE 0%, #F3EAD6 100%) !important;
-  border: 2px solid #C59A28 !important;
-  color: #1C1917 !important;
-  box-shadow: 0 24px 70px rgba(20, 15, 10, 0.35) !important;
-}
-
-body:not(.theme-night) .kcd-inspector-codex h2,
-body:not(.theme-night) .kcd-inspector-codex h3,
-body:not(.theme-night) .kcd-inspector-codex h4 {
-  color: #064E3B !important;
-  text-shadow: none !important;
-}
-
-body:not(.theme-night) .kcd-inspector-codex p,
-body:not(.theme-night) .kcd-inspector-codex span,
-body:not(.theme-night) .kcd-inspector-codex div {
-  color: #292524;
-}
-
-body:not(.theme-night) select,
-body:not(.theme-night) input[type="text"],
-body:not(.theme-night) input[type="number"],
-body:not(.theme-night) textarea {
-  background: #FFFFFF !important;
-  border: 1px solid rgba(197, 154, 40, 0.5) !important;
-  color: #1C1917 !important;
+  filter: brightness(1.06) saturate(1.25) !important;
 }
 
 /* ==========================================================================
-   🌱 WIDGET DE CHECK-IN MATUTINO & PÍLDORAS DE CATEGORÍA ESTILO NETFLIX
+   🎬 PÍLDORAS DE NAVEGACIÓN RÁPIDA ESTILO NETFLIX & BOTONES DEL MODAL AM
    ========================================================================== */
-
 .cj-netflix-pills-bar {
   display: flex;
   align-items: center;
   gap: 8px;
   overflow-x: auto;
-  padding: 6px 4px;
+  padding: 4px 2px;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
@@ -4434,334 +4209,63 @@ body:not(.theme-night) textarea {
 }
 
 .cj-netflix-pill {
-  background: rgba(255, 255, 255, 0.85);
-  border: 1.5px solid rgba(197, 154, 40, 0.45);
-  color: #1C1917;
+  background: rgba(12, 34, 27, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.38);
+  color: #E2E8F0;
   font-size: 0.78rem;
-  font-weight: 800;
+  font-weight: 700;
   padding: 7px 15px;
   border-radius: 99px;
   white-space: nowrap;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-body.theme-night .cj-netflix-pill {
-  background: rgba(15, 23, 42, 0.85);
-  color: #E2E8F0;
+  backdrop-filter: blur(8px);
 }
 
 .cj-netflix-pill.active,
 .cj-netflix-pill:hover {
   background: linear-gradient(135deg, #15803D 0%, #0D9488 100%);
-  border-color: #065F46;
+  border-color: #FDE047;
   color: #FFFFFF !important;
-  box-shadow: 0 4px 12px rgba(21, 128, 61, 0.28);
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
   transform: translateY(-1px);
 }
 
 .cj-netflix-pill-gold {
-  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
-  border-color: #D97706;
-  color: #78350F !important;
-}
-
-/* Tarjeta Maestra de Check-in Matutino */
-.cj-morning-checkin-card {
-  background: linear-gradient(135deg, #FAF6EE 0%, #ECFDF5 55%, #FEF3C7 100%);
-  border: 2px solid #C59A28;
-  border-radius: 16px;
-  padding: 20px 22px;
-  box-shadow: 0 12px 30px rgba(21, 128, 61, 0.12), 0 2px 8px rgba(197, 154, 40, 0.15);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-body.theme-night .cj-morning-checkin-card {
-  background: linear-gradient(135deg, #0D1520 0%, #091E1A 60%, #1A140B 100%);
-  border-color: rgba(197, 154, 40, 0.55);
-  color: #F8FAFC;
-}
-
-.cj-morning-checkin-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.cj-morning-live-badge {
-  display: inline-block;
-  background: rgba(21, 128, 61, 0.14);
-  border: 1px solid rgba(21, 128, 61, 0.4);
-  color: #065F46;
-  font-size: 0.7rem;
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.3) 0%, rgba(180, 83, 9, 0.5) 100%);
+  border-color: #FBBF24;
+  color: #FEF08A !important;
   font-weight: 800;
-  padding: 3px 10px;
-  border-radius: 99px;
-  letter-spacing: 1px;
-}
-
-body.theme-night .cj-morning-live-badge {
-  color: #6EE7B7;
-  background: rgba(16, 185, 129, 0.18);
-}
-
-.cj-morning-checkin-title {
-  font-family: 'Cinzel', serif;
-  font-size: 1.3rem;
-  font-weight: 900;
-  color: #064E3B;
-  margin: 4px 0 2px 0;
-}
-
-body.theme-night .cj-morning-checkin-title {
-  color: #FFFFFF;
-}
-
-.cj-morning-checkin-sub {
-  font-size: 0.84rem;
-  color: #44403C;
-  margin: 0;
-}
-
-body.theme-night .cj-morning-checkin-sub {
-  color: #94A3B8;
-}
-
-.cj-morning-header-actions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
 }
 
 .btn-solar-action {
   background: linear-gradient(135deg, #15803D 0%, #0D9488 100%);
-  border: 1px solid #065F46;
+  border: 1px solid #34D399;
   color: #FFFFFF !important;
   font-weight: 800;
   font-size: 0.8rem;
   padding: 9px 16px;
   border-radius: 99px;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(21, 128, 61, 0.28);
+  box-shadow: 0 4px 12px rgba(21, 128, 61, 0.35);
   transition: all 0.2s ease;
 }
 
 .btn-solar-action:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(21, 128, 61, 0.4);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.5);
 }
 
 .btn-solar-action-outline {
-  background: rgba(255, 255, 255, 0.85);
-  border: 1.5px solid #C59A28;
-  color: #78350F !important;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid #FBBF24;
+  color: #FEF08A !important;
   font-weight: 800;
   font-size: 0.8rem;
   padding: 9px 16px;
   border-radius: 99px;
   cursor: pointer;
   transition: all 0.2s ease;
-}
-
-/* Grid de Top 3 Prioridades con Números Gigantes Estilo Netflix */
-.cj-top3-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 12px;
-}
-
-.cj-top3-item {
-  background: rgba(255, 255, 255, 0.92);
-  border: 1.5px solid rgba(197, 154, 40, 0.4);
-  border-radius: 12px;
-  padding: 12px 14px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
-}
-
-body.theme-night .cj-top3-item {
-  background: rgba(15, 23, 42, 0.85);
-  border-color: rgba(197, 154, 40, 0.3);
-}
-
-.cj-top3-item:hover {
-  border-color: #15803D;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(21, 128, 61, 0.14);
-}
-
-.cj-top3-item.is-done {
-  background: linear-gradient(135deg, rgba(209, 250, 229, 0.85) 0%, rgba(255, 255, 255, 0.95) 100%);
-  border-color: #10B981;
-}
-
-body.theme-night .cj-top3-item.is-done {
-  background: rgba(6, 78, 59, 0.45);
-}
-
-.cj-top3-rank-num {
-  font-family: 'Cinzel', serif;
-  font-size: 2.2rem;
-  font-weight: 900;
-  line-height: 1;
-  color: transparent;
-  -webkit-text-stroke: 2px #15803D;
-  background: linear-gradient(180deg, #15803D 0%, #D97706 100%);
-  -webkit-background-clip: text;
-  flex-shrink: 0;
-  width: 28px;
-  text-align: center;
-}
-
-.cj-top3-content {
-  flex: 1;
-  min-width: 0;
-}
-
-.cj-top3-meta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-bottom: 3px;
-}
-
-.cj-top3-time {
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: #0F766E;
-  font-family: monospace;
-}
-
-.cj-top3-aura-pill {
-  font-size: 0.66rem;
-  font-weight: 700;
-  background: rgba(197, 154, 40, 0.18);
-  color: #78350F;
-  padding: 1px 7px;
-  border-radius: 99px;
-}
-
-body.theme-night .cj-top3-aura-pill {
-  color: #FDE68A;
-}
-
-.cj-top3-text {
-  font-size: 0.83rem;
-  font-weight: 700;
-  color: #1C1917;
-  line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-body.theme-night .cj-top3-text {
-  color: #F1F5F9;
-}
-
-.cj-top3-check-btn {
-  background: rgba(21, 128, 61, 0.12);
-  border: 1.5px solid #15803D;
-  color: #065F46;
-  font-size: 0.72rem;
-  font-weight: 800;
-  padding: 6px 10px;
-  border-radius: 8px;
-  white-space: nowrap;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-.cj-top3-check-btn.checked {
-  background: #15803D;
-  color: #FFFFFF;
-}
-
-/* Tira de Toque Rápido de los 9 Banderines */
-.cj-quick-pennants-strip {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding-top: 10px;
-  border-top: 1px dashed rgba(197, 154, 40, 0.45);
-  overflow: hidden;
-}
-
-.cj-quick-pennants-label {
-  font-size: 0.75rem;
-  font-weight: 800;
-  color: #78350F;
-  white-space: nowrap;
-}
-
-body.theme-night .cj-quick-pennants-label {
-  color: #FDE68A;
-}
-
-.cj-quick-pennants-scroll {
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-
-.cj-quick-pennants-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-.cj-quick-pennant-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  background: #FFFFFF;
-  border: 1px solid rgba(197, 154, 40, 0.45);
-  color: #1C1917;
-  font-size: 0.74rem;
-  font-weight: 700;
-  padding: 5px 11px;
-  border-radius: 99px;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: all 0.18s ease;
-}
-
-body.theme-night .cj-quick-pennant-chip {
-  background: rgba(15, 23, 42, 0.9);
-  color: #E2E8F0;
-}
-
-.cj-quick-pennant-chip:hover,
-.cj-quick-pennant-chip.is-tapped {
-  background: #065F46;
-  border-color: #10B981;
-  color: #FFFFFF;
-}
-
-.cj-qp-plus {
-  font-size: 0.66rem;
-  font-weight: 900;
-  background: rgba(21, 128, 61, 0.15);
-  color: #15803D;
-  padding: 1px 5px;
-  border-radius: 99px;
-}
-
-.cj-quick-pennant-chip:hover .cj-qp-plus,
-.cj-quick-pennant-chip.is-tapped .cj-qp-plus {
-  background: rgba(255, 255, 255, 0.25);
-  color: #FEF08A;
 }
 
 /* ==========================================================================
@@ -4771,15 +4275,11 @@ body.theme-night .cj-quick-pennant-chip {
   display: none;
 }
 
-/* ==========================================================================
-   📱 EXPERIENCIA CELULAR A LA ALTURA (NETFLIX MOBILE POSTERS + BOTTOM NAV)
-   ========================================================================== */
 @media (max-width: 768px) {
   .app-container {
-    padding: 8px 12px 98px 12px !important;
+    padding: 8px 12px 96px 12px !important;
   }
 
-  /* Navbar superior compacta y ágil en el celu */
   .stoic-top-navbar.app-header {
     padding: 6px 10px !important;
     min-height: 56px !important;
@@ -4806,48 +4306,22 @@ body.theme-night .cj-quick-pennant-chip {
     font-size: 0.7rem !important;
   }
 
-  /* Hero compacto y lleno de vida en el celu */
   .stoic-hero-header {
     height: auto !important;
-    min-height: 250px !important;
+    min-height: 280px !important;
     padding: 14px 0 !important;
   }
 
   .stoic-hero-content {
     padding: 12px 10px !important;
-    gap: 12px !important;
+    gap: 14px !important;
   }
 
   .stoic-pyramid-command-dock {
     display: none !important;
   }
 
-  /* Check-in Matutino compacto en móvil */
-  .cj-morning-checkin-card {
-    padding: 14px 14px !important;
-    gap: 12px !important;
-  }
-
-  .cj-morning-checkin-title {
-    font-size: 1.08rem !important;
-  }
-
-  .cj-top3-grid {
-    grid-template-columns: 1fr !important;
-    gap: 8px !important;
-  }
-
-  .cj-quick-pennants-strip {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-    gap: 6px !important;
-  }
-
-  .cj-quick-pennants-scroll {
-    width: 100% !important;
-  }
-
-  /* 🎬 CARRUSELES ESTILO APP DE NETFLIX EN CELULAR (PÓSTERS VERTICALES 2.3 POR FILA) */
+  /* Carruseles Ágiles en Celular (Tarjetas de 230px: se ven ~1.7 por fila sin aplastar contenido) */
   .imperivm-rail-controls {
     display: none !important;
   }
@@ -4864,56 +4338,28 @@ body.theme-night .cj-quick-pennant-chip {
 
   .imperivm-carousel-track .imperivm-card,
   .imperivm-carousel-track .bitacora-cinematic-card {
-    flex: 0 0 156px !important;
-    min-width: 156px !important;
-    max-width: 156px !important;
-    width: 156px !important;
-    height: 216px !important;
-    border-radius: 14px !important;
-    position: relative !important;
+    flex: 0 0 230px !important;
+    min-width: 230px !important;
+    max-width: 230px !important;
+    width: 230px !important;
     scroll-snap-align: start !important;
   }
 
   .imperivm-carousel-track .imperivm-card-media,
   .imperivm-carousel-track .bitacora-card-media {
-    position: absolute !important;
-    inset: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    min-height: 100% !important;
-    max-height: 100% !important;
-  }
-
-  .imperivm-carousel-track .imperivm-card-media img,
-  .imperivm-carousel-track .bitacora-card-media img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-    filter: brightness(0.98) contrast(1.08) saturate(1.2) !important;
+    height: 128px !important;
+    min-height: 128px !important;
+    max-height: 128px !important;
   }
 
   .imperivm-carousel-track .imperivm-card-body,
   .imperivm-carousel-track .bitacora-card-body {
-    position: absolute !important;
-    inset: auto 0 0 0 !important;
-    z-index: 3 !important;
-    background: linear-gradient(to top, rgba(4, 34, 25, 0.96) 0%, rgba(4, 34, 25, 0.72) 58%, transparent 100%) !important;
-    padding: 28px 10px 10px 10px !important;
-    justify-content: flex-end !important;
-    flex: unset !important;
+    padding: 12px !important;
   }
 
   .imperivm-carousel-track .imperivm-card-title,
   .imperivm-carousel-track .bitacora-card-title {
-    font-size: 0.82rem !important;
-    line-height: 1.25 !important;
-    color: #FFFFFF !important;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.9) !important;
-  }
-
-  .imperivm-carousel-track .imperivm-card-desc,
-  .imperivm-carousel-track .bitacora-card-desc {
-    display: none !important;
+    font-size: 0.9rem !important;
   }
 
   /* Barra Inferior Fija de App Nativa en Celular */
@@ -4924,19 +4370,14 @@ body.theme-night .cj-quick-pennant-chip {
     left: 0 !important;
     right: 0 !important;
     z-index: 99990 !important;
-    background: rgba(252, 248, 238, 0.96) !important;
+    background: rgba(8, 28, 22, 0.96) !important;
     backdrop-filter: blur(20px) !important;
     -webkit-backdrop-filter: blur(20px) !important;
-    border-top: 2px solid rgba(197, 154, 40, 0.5) !important;
+    border-top: 1.5px solid rgba(212, 175, 55, 0.45) !important;
     padding: 6px 8px calc(8px + env(safe-area-inset-bottom)) 8px !important;
     justify-content: space-around !important;
     align-items: center !important;
-    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.14) !important;
-  }
-
-  body.theme-night .cj-mobile-bottom-nav {
-    background: rgba(10, 14, 23, 0.96) !important;
-    border-top-color: rgba(197, 154, 40, 0.35) !important;
+    box-shadow: 0 -6px 24px rgba(0, 0, 0, 0.6) !important;
   }
 
   .cj-mob-nav-btn {
@@ -4947,25 +4388,16 @@ body.theme-night .cj-quick-pennant-chip {
     align-items: center !important;
     justify-content: center !important;
     gap: 2px !important;
-    color: #57534E !important;
+    color: #94A3B8 !important;
     padding: 4px 10px !important;
     border-radius: 10px !important;
     cursor: pointer !important;
     transition: all 0.2s ease !important;
   }
 
-  body.theme-night .cj-mob-nav-btn {
-    color: #94A3B8 !important;
-  }
-
   .cj-mob-nav-btn.active {
-    color: #065F46 !important;
-    background: rgba(21, 128, 61, 0.12) !important;
-  }
-
-  body.theme-night .cj-mob-nav-btn.active {
     color: #FDE047 !important;
-    background: rgba(197, 154, 40, 0.16) !important;
+    background: rgba(16, 185, 129, 0.22) !important;
   }
 
   .cj-mob-nav-icon {
@@ -4983,6 +4415,7 @@ body.theme-night .cj-quick-pennant-chip {
     bottom: 74px !important;
   }
 }
+
 
 
 

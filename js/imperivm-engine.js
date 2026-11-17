@@ -817,41 +817,38 @@ const imperivmEngine = {
         <!-- 0. BARRA FLOTANTE DE CATEGORÍAS ESTILO NETFLIX APP -->
         ${typeof this.renderNetflixCategoryPills === "function" ? this.renderNetflixCategoryPills() : ""}
 
-        <!-- 1. CHECK-IN MATUTINO EN 1 TOQUE (TOP 3 PRIORIDADES + 9 BANDERINES VIVOS) -->
-        ${typeof this.renderMorningCheckinHub === "function" ? this.renderMorningCheckinHub() : ""}
-
         <!-- ====================================================================
-             2. HOY: PLAN DEL DÍA (CON EXPLORADOR SEMANAL Y MOOD ESPACIOSO)
+             1. HOY: PLAN DEL DÍA (CON CHECK-IN EN 1 TOQUE, EXPLORADOR SEMANAL Y MOOD)
              ==================================================================== -->
         ${this.renderTodayFlowRail()}
 
         <!-- ====================================================================
-             3. SECCIÓN DE CABALLERÍA: HÁBITOS, RANGOS, TÍTULOS & STATS INTEGRADOS
+             2. SECCIÓN DE CABALLERÍA: HÁBITOS, RANGOS, TÍTULOS & STATS INTEGRADOS
              ==================================================================== -->
         ${this.renderCaballeriaRail()}
 
         <!-- ====================================================================
-             4. MISIONES Y PROYECTOS (PRINCIPALES & CONQUISTADAS UNIFICADAS CON ESTRELLA)
+             3. MISIONES Y PROYECTOS (PRINCIPALES & CONQUISTADAS UNIFICADAS CON ESTRELLA)
              ==================================================================== -->
         ${this.renderMisionesRail()}
 
         <!-- ====================================================================
-             5. CUERPO Y SALUD: DEPORTES, HÁBITOS, BIENESTAR, DATEMASTER
+             4. CUERPO Y SALUD: DEPORTES, HÁBITOS, BIENESTAR, DATEMASTER
              ==================================================================== -->
         ${this.renderCuerpoYSaludRail()}
 
         <!-- ====================================================================
-             6. EXPLORACIÓN PERSONAL: LECTURA, IDIOMAS, ARTES, MÚSICA & MEDITACIÓN
+             5. EXPLORACIÓN PERSONAL: LECTURA, IDIOMAS, ARTES, MÚSICA & MEDITACIÓN
              ==================================================================== -->
         ${this.renderExploracionPersonalRail()}
 
         <!-- ====================================================================
-             7. ESPIRITUALIDAD: RITOS ANCESTRALES, OBSERVACIÓN & CICLOS
+             6. ESPIRITUALIDAD: RITOS ANCESTRALES, OBSERVACIÓN & CICLOS
              ==================================================================== -->
         ${this.renderRitosAncestralesRail()}
 
         <!-- ====================================================================
-             8. ARCHIVO DE LEGADO: BOTÓN DISCRETO AL PIE DE PÁGINA
+             7. ARCHIVO DE LEGADO: BOTÓN DISCRETO AL PIE DE PÁGINA
              ==================================================================== -->
         ${this.renderLegadoFooterButton()}
 
@@ -1217,25 +1214,40 @@ const imperivmEngine = {
             </div>
           </div>
 
-          <!-- FILA INFERIOR: TIMELINE DE BLOQUES HORARIOS DE HOY (ESPACIOSO) -->
+          <!-- FILA INFERIOR: TIMELINE DE BLOQUES HORARIOS DE HOY (CLIQUEABLES EN 1 TOQUE PARA +50 XP) -->
           <div style="margin-top: 14px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
               <span style="font-size: 0.74rem; font-weight: 700; letter-spacing: 1.2px; color: var(--imperivm-text-gold); text-transform: uppercase;">
-                ⏱️ ${currentMood === 'testudo' ? 'Escudos de Contención en Trinchera Hoy' : `Cronograma Táctico de Hoy (${todayPlan.blocks.length} Bloques)`}
+                ⏱️ ${currentMood === 'testudo' ? 'Escudos de Contención en Trinchera Hoy' : `Cronograma Táctico de Hoy (${todayPlan.blocks.length} Bloques • Toca un bloque para marcar +50 XP)`}
               </span>
+              <button onclick="imperivmEngine.openMorningEmailModal();" style="background: rgba(16, 185, 129, 0.18); border: 1px solid #10B981; color: #6EE7B7; padding: 4px 12px; border-radius: 99px; font-size: 0.72rem; font-weight: 800; cursor: pointer;">
+                ☀️ Correo Diario 9:00 AM
+              </button>
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 10px;">
-              ${todayPlan.blocks.map(b => `
-                <div style="background: rgba(0,0,0,0.35); border: 1px solid rgba(255,255,255,0.08); border-left: 3.5px solid ${currentMood === 'testudo' ? '#F3D079' : (currentMood === 'emergency' ? '#F43F5E' : '#10B981')}; border-radius: 8px; padding: 10px 14px; display: flex; flex-direction: column; gap: 4px;">
-                  <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <strong style="font-size: 0.85rem; color: #FFF; font-family: monospace; letter-spacing: 0.5px;">${b.time}</strong>
-                    <span class="badge-tag ${currentMood === 'testudo' ? 'badge-gold' : (currentMood === 'emergency' ? 'badge-pink' : 'badge-emerald')}" style="font-size: 0.65rem; padding: 1px 7px;">${b.badge}</span>
-                  </div>
-                  <div style="font-size: 0.82rem; color: #E2E8F0; font-weight: 600;">
-                    ${b.title}
-                  </div>
-                </div>
-              `).join('')}
+              ${(() => {
+                const todayIso = window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10);
+                let doneMap = {};
+                try { doneMap = JSON.parse(localStorage.getItem("CJ_MORNING_CHECKIN_" + todayIso) || "{}"); } catch(e) {}
+                return todayPlan.blocks.map((b, idx) => {
+                  const pid = "prio_" + idx;
+                  const isDone = !!doneMap[pid];
+                  return `
+                    <div onclick="imperivmEngine.toggleMorningPriority('${pid}', '${b.aura || 'vida'}', 50, '${b.title.replace(/'/g, "\\'")}');" style="cursor: pointer; background: ${isDone ? 'rgba(16, 185, 129, 0.22)' : 'rgba(0,0,0,0.38)'}; border: 1px solid ${isDone ? '#10B981' : 'rgba(255,255,255,0.12)'}; border-left: 3.5px solid ${isDone ? '#10B981' : (currentMood === 'testudo' ? '#F3D079' : (currentMood === 'emergency' ? '#F43F5E' : '#10B981'))}; border-radius: 8px; padding: 10px 14px; display: flex; flex-direction: column; gap: 4px; transition: all 0.2s ease;">
+                      <div style="display: flex; justify-content: space-between; align-items: center; gap: 6px;">
+                        <strong style="font-size: 0.85rem; color: #FFF; font-family: monospace; letter-spacing: 0.5px;">${b.time}</strong>
+                        <div style="display: flex; align-items: center; gap: 6px;">
+                          <span class="badge-tag ${currentMood === 'testudo' ? 'badge-gold' : (currentMood === 'emergency' ? 'badge-pink' : 'badge-emerald')}" style="font-size: 0.65rem; padding: 1px 7px;">${b.badge}</span>
+                          <span style="font-size: 0.68rem; font-weight: 800; padding: 1px 7px; border-radius: 99px; background: ${isDone ? '#10B981' : 'rgba(255,255,255,0.08)'}; color: ${isDone ? '#052E16' : '#A7F3D0'}; border: 1px solid rgba(16,185,129,0.4);">${isDone ? '✓ Hecho' : '+50 XP'}</span>
+                        </div>
+                      </div>
+                      <div style="font-size: 0.82rem; color: ${isDone ? '#D1FAE5' : '#E2E8F0'}; font-weight: 600;">
+                        ${b.title}
+                      </div>
+                    </div>
+                  `;
+                }).join('');
+              })()}
             </div>
           </div>
         </div>
@@ -4752,26 +4764,16 @@ const imperivmEngine = {
 
     const heroImg = document.getElementById("stoic-hero-bg-img");
     if (heroImg) {
-      heroImg.src = isNight ? "assets/stoic_roman_bg.jpg" : "assets/img_jaguar_jungle_landing.jpg";
+      heroImg.src = isNight ? "assets/stoic_roman_bg.jpg" : "assets/jaguar_master_wallpaper.jpg";
     }
     const toggleBtn = document.getElementById("header-theme-toggle-btn");
     if (toggleBtn) {
       toggleBtn.innerHTML = isNight ? "🌙" : "☀️";
-      toggleBtn.title = isNight ? "Modo Noche Imperial activo (Clic para Luz Solar & Selva Viva)" : "Modo Luz Solar & Selva Viva activo (Clic para Modo Noche)";
+      toggleBtn.title = isNight ? "Modo Noche Imperial activo (Clic para Modo Selva Solar)" : "Modo Selva Solar activo (Clic para Modo Noche)";
     }
     const metaTheme = document.getElementById("meta-theme-color");
     if (metaTheme) {
-      metaTheme.setAttribute("content", isNight ? "#07090E" : "#0f766e");
-    }
-
-    const greetEl = document.getElementById("solar-hero-greeting-text");
-    if (greetEl) {
-      const hr = new Date().getHours();
-      let greet = "🌿 SANTUARIO VIVO • PRESENCIA & PROPÓSITO";
-      if (hr >= 5 && hr < 12) greet = "☀️ BUENOS DÍAS, DANIEL • EL SANTUARIO ESTÁ VIVO";
-      else if (hr >= 12 && hr < 19) greet = "🌿 PLENO SOL EN EL SANTUARIO • AVANCE & VITALIDAD";
-      else greet = "🕯️ TEMPLO SERENO • DESCANSO, ARTES & CONEXIÓN";
-      greetEl.textContent = greet;
+      metaTheme.setAttribute("content", isNight ? "#07090E" : "#071A14");
     }
   },
 
@@ -4781,7 +4783,7 @@ const imperivmEngine = {
     localStorage.setItem("CJ_THEME_MODE", next);
     this.initSolarTheme();
     if (typeof showNotification === "function") {
-      showNotification(next === "solar" ? "☀️ Modo Luz Solar & Selva Viva activado" : "🌙 Modo Noche Imperial activado");
+      showNotification(next === "solar" ? "☀️ Modo Selva Solar & Luz Dorada activado" : "🌙 Modo Noche Imperial activado");
     }
   },
 
@@ -4790,13 +4792,12 @@ const imperivmEngine = {
   // ==========================================================================
   renderNetflixCategoryPills() {
     const pills = [
-      { id: "cj-morning-checkin-hub", label: "☀️ Check-in Hoy", active: true },
-      { id: "rail-today-flow", label: "🌅 Plan del Día" },
+      { id: "rail-today-flow", label: "🌅 Plan de Hoy", active: true },
+      { id: "rail-caballeria-maestria", label: "⚔️ Caballería" },
       { id: "rail-misiones-unificadas", label: "🎯 Misiones" },
       { id: "rail-cuerpo-salud", label: "🏃 Cuerpo & Salud" },
       { id: "rail-exploracion-personal", label: "🧭 Exploración" },
-      { id: "rail-ritos-ancestrales", label: "🕯️ Espíritu" },
-      { id: "rail-caballeria-maestria", label: "⚔️ Caballería" }
+      { id: "rail-ritos-ancestrales", label: "🕯️ Espíritu" }
     ];
     return `
       <div class="cj-netflix-pills-bar" role="navigation" aria-label="Salto rápido de secciones">
@@ -4806,7 +4807,7 @@ const imperivmEngine = {
           </button>
         `).join("")}
         <button class="cj-netflix-pill cj-netflix-pill-gold" onclick="imperivmEngine.openMorningEmailModal()">
-          📧 Correo AM
+          ☀️ Correo 9:00 AM
         </button>
       </div>
     `;
