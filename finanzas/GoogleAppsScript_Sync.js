@@ -190,31 +190,164 @@ function categorizeTransaction(desc) {
 }
 
 
-// --- 4. CORREO MATUTINO 9:00 AM AUTOMÁTICO DESDE TU PROPIO GMAIL (GOOGLE APPS SCRIPT) ---
+// --- 4. CORREO NOCTURNO 9:00 PM (21:00) PARA PREPARAR EL DÍA SIGUIENTE (GMAIL / APPS SCRIPT) ---
 // INSTRUCCIÓN EN 1 CLIC:
-// Pega este código en https://script.google.com (o en Extensiones -> Apps Script de tu Google Sheet),
-// selecciona arriba la función `activarCorreo9AM` y dale a "Ejecutar" (Run).
-// ¡Eso dejará programado automáticamente el envío todos los días a las 09:00 AM y te enviará uno de prueba!
+// 1. Pega este código en https://script.google.com (o en Extensiones -> Apps Script de tu Google Sheet).
+// 2. Arriba selecciona la función `activarCorreoNoche9PM` y dale a "Ejecutar" (Run).
+// ¡Eso programará automáticamente el envío todos los días a las 21:00 (9:00 PM) con el plan del DÍA SIGUIENTE y te enviará uno de prueba!
 
+function activarCorreoNoche9PM() {
+  const triggers = ScriptApp.getProjectTriggers();
+  triggers.forEach(t => {
+    if (t.getHandlerFunction() === "sendDailyNightTomorrowEmail") {
+      ScriptApp.deleteTrigger(t);
+    }
+  });
+
+  // Crear activador diario a las 21:00 (9:00 PM hora local de tu cuenta Google)
+  ScriptApp.newTrigger("sendDailyNightTomorrowEmail")
+    .timeBased()
+    .everyDays(1)
+    .atHour(21)
+    .create();
+
+  // Enviar correo de prueba inmediato para confirmar que funciona
+  sendDailyNightTomorrowEmail();
+  Logger.log("✅ Correo Nocturno de las 09:00 PM (21:00) activado y correo de prueba enviado.");
+}
+
+function sendDailyNightTomorrowEmail() {
+  const recipient = Session.getActiveUser().getEmail() || "danisantander.urrutia@gmail.com";
+  const now = new Date();
+  const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+  const days = ["DOMINGO", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO"];
+  const tomorrowName = days[tomorrow.getDay()];
+  const tomorrowDateStr = Utilities.formatDate(tomorrow, Session.getScriptTimeZone() || "Europe/Berlin", "dd/MM/yyyy");
+  const appUrl = "https://danisantanderurrutia-coder.github.io/caballero-jaguar/";
+
+  const schedules = {
+    "LUNES": [
+      { time: "09:00 - 09:30", title: "🥊 Activación Física: 100 Abs, 100 Sentadillas, 100 Flexiones o Running", badge: "🥊 Deporte", color: "#9B2335" },
+      { time: "09:30 - 12:45", title: "👑 Bloque Foco Dual: Empleo Profesión + Trabajos Locales Hannover", badge: "👑 Vida", color: "#B8860B" },
+      { time: "13:00 - 13:20", title: "🇩🇪 Alemán al Mediodía: 15 min Vocabulario Activo & Habla", badge: "🧠 Mente", color: "#4A79A7" },
+      { time: "14:30 - 17:30", title: "🧭 Proyectos: Paper Lauwersmeer (Modelación & Redacción)", badge: "🧭 Exploración", color: "#6D28D9" }
+    ],
+    "MARTES": [
+      { time: "09:00 - 09:30", title: "🏃 Activación Física: Cardio, Muay Thai Shadowboxing o Fuerza", badge: "🥊 Deporte", color: "#9B2335" },
+      { time: "09:30 - 12:45", title: "👑 Bloque Foco Dual: Postulaciones Profesionales (Alemania/Euskadi) + Hannover", badge: "👑 Vida", color: "#B8860B" },
+      { time: "13:00 - 13:20", title: "🇩🇪 Alemán B1: Escucha Activa & Frase en el Diario", badge: "🧠 Mente", color: "#4A79A7" },
+      { time: "19:30 - 21:00", title: "💖 Presencia en Pareja: Escucha Consciente, Cariño & Cero Pantallas", badge: "💖 Amor", color: "#BE185D" }
+    ],
+    "MIÉRCOLES": [
+      { time: "09:00 - 09:30", title: "🧘‍♂️ Movilidad Somática, Respiración 4x4 & Calistenia Base", badge: "🌿 Salud", color: "#15803D" },
+      { time: "09:30 - 12:45", title: "👑 Bloque Foco: Avance Profesional, CV/Entrevistas & Gestión Vital", badge: "👑 Vida", color: "#B8860B" },
+      { time: "13:00 - 13:20", title: "🇩🇪 Alemán al Mediodía + 🎺 20 min Trompeta / Música", badge: "🧭 Exploración", color: "#4A79A7" },
+      { time: "14:30 - 17:30", title: "🌱 Chile Agrotech (AgriTwin) & ReWild Bosque Nativo", badge: "🌲 Naturaleza", color: "#15803D" }
+    ],
+    "JUEVES": [
+      { time: "09:00 - 09:30", title: "🏋️‍♂️ Fuerza & Potencia: Circuito de Caballería (100x3)", badge: "🥊 Deporte", color: "#9B2335" },
+      { time: "09:30 - 12:45", title: "👑 Bloque Foco: Empleo Hannover / Bilbao & Trámites Estratégicos", badge: "👑 Vida", color: "#B8860B" },
+      { time: "14:30 - 17:30", title: "🧭 Proyectos: Maule Red / Museo de la Memoria / Ciencia & Territorio", badge: "🧭 Exploración", color: "#6D28D9" },
+      { time: "20:00 - 21:30", title: "💆 Aftercare, Masajes en Pareja & Descompresión Somática", badge: "💖 Amor", color: "#BE185D" }
+    ],
+    "VIERNES": [
+      { time: "09:00 - 09:30", title: "🥊 Sparring / Cardio Matutino & Ducha Fría", badge: "🥊 Deporte", color: "#9B2335" },
+      { time: "09:30 - 12:45", title: "👑 Cierre de Semana Laboral: Seguimiento de Postulaciones & Objetivos", badge: "👑 Vida", color: "#B8860B" },
+      { time: "16:00 - 18:00", title: "🌲 Caminata en Bosque / Naturaleza Viva & Desconexión Digital", badge: "🌲 Naturaleza", color: "#15803D" },
+      { time: "20:00 - 23:00", title: "🍷 Cita de Viernes con Mi Novia: Goce, Conversación & Conexión", badge: "💖 Amor", color: "#BE185D" }
+    ],
+    "SÁBADO": [
+      { time: "09:30 - 11:00", title: "🧗‍♂️ Deporte Outdoor, Escalada, Ciclismo o Entrenamiento Libre", badge: "🥊 Deporte", color: "#9B2335" },
+      { time: "11:30 - 13:30", title: "🎨 Exploración Creativa: Pintura al Óleo, Fotografía o Cómic Piratas", badge: "🧭 Exploración", color: "#6D28D9" },
+      { time: "16:00 - 18:30", title: "🌲 Conexión Tierra / Paseo Exterior & Recarga Solar", badge: "🌲 Naturaleza", color: "#15803D" },
+      { time: "20:30 - 22:30", title: "🕯️ Presencia Íntima, Tantra & Disfrute Consciente", badge: "💖 Amor", color: "#BE185D" }
+    ],
+    "DOMINGO": [
+      { time: "10:00 - 10:45", title: "🪙 Auditoría Dominical: Cuentas Sparkasse (€), Banco Chile ($) & Cero Gastos Tontos", badge: "🪙 Soberanía", color: "#B8860B" },
+      { time: "11:00 - 12:30", title: "🕯️ Rito Ancestral, Meditación & Planificación de la Nueva Semana", badge: "🕯️ Espíritu", color: "#6D28D9" },
+      { time: "13:00 - 14:30", title: "👨‍🍳 Cocina con Afecto & Meal Prep Nutritivo", badge: "🌿 Salud", color: "#15803D" },
+      { time: "18:00 - 20:00", title: "📖 Lectura Estoica, Diario Hypomnémata & Sueño Reparador Temprano", badge: "🧠 Mente", color: "#4A79A7" }
+    ]
+  };
+
+  const nightReflections = [
+    { q: "Antes de dormir, revisa tu día con serenidad: ¿qué hiciste bien, qué puedes mejorar mañana y qué carga puedes soltar ahora?", a: "Séneca • De la Ira III, 36" },
+    { q: "Prepara esta noche el terreno de mañana: ropa lista, mente limpia y 7-8 horas de sueño reparador.", a: "Marco Aurelio • Disciplina Nocturna" },
+    { q: "Quien ordena su mañana desde la noche anterior despierta como comandante de su propio tiempo.", a: "Códice Caballero Jaguar" }
+  ];
+
+  const tomorrowBlocks = schedules[tomorrowName] || schedules["LUNES"];
+  const reflection = nightReflections[now.getDate() % nightReflections.length];
+  const tomorrowDayOfMonth = tomorrow.getDate();
+
+  let tkAlert = "";
+  if (tomorrowDayOfMonth >= 11 && tomorrowDayOfMonth <= 16) {
+    tkAlert = `
+      <div style="background: rgba(30, 58, 138, 0.25); border: 1px solid #3B82F6; border-left: 4px solid #60A5FA; border-radius: 8px; padding: 12px 14px; margin-bottom: 16px;">
+        <div style="font-size: 11px; font-weight: 800; color: #93C5FD; text-transform: uppercase;">🏥 Mañana toca revisar: Techniker Krankenkasse (Día 15)</div>
+        <div style="font-size: 12.5px; color: #E0F2FE; margin-top: 3px;">Deja listo el pago mensual de tu seguro estudiantil TK (~145 €) y márcalo en la app.</div>
+      </div>
+    `;
+  }
+
+  const blocksHtml = tomorrowBlocks.map((b, idx) => `
+    <div style="background: #131826; border: 1px solid rgba(197, 154, 40, 0.28); border-left: 4px solid ${b.color}; border-radius: 8px; padding: 12px 14px; margin-bottom: 10px;">
+      <div style="font-size: 11px; font-weight: 800; color: #F3D079; margin-bottom: 3px;">#${idx + 1} • ⏱️ ${b.time} (${b.badge})</div>
+      <div style="font-size: 13.5px; font-weight: 700; color: #F4F6F9;">${b.title}</div>
+    </div>
+  `).join("");
+
+  const subject = "🌙 [Caballero Jaguar 9:00 PM] Prepara tu Mañana: " + tomorrowName + " (" + tomorrowDateStr + ")";
+  const htmlBody = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #0B0E17; border: 2px solid #C59A28; border-radius: 14px; overflow: hidden; color: #F4F6F9;">
+      <div style="background: linear-gradient(135deg, #1E1B2E 0%, #4E1022 55%, #0D121D 100%); padding: 26px 20px; text-align: center; border-bottom: 1.5px solid rgba(197, 154, 40, 0.4);">
+        <div style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: #F3D079; text-transform: uppercase;">🌙 Víspera Imperial • Caballero Jaguar</div>
+        <h1 style="margin: 6px 0 4px 0; font-size: 21px; color: #FFFFFF;">🌙 Buenas noches, Daniel (09:00 PM)</h1>
+        <p style="margin: 0; font-size: 13px; color: #CBD5E1;">Tu hoja de ruta para mañana: <strong style="color:#F3D079;">${tomorrowName} • ${tomorrowDateStr}</strong></p>
+      </div>
+      <div style="padding: 22px 18px;">
+        <div style="background: rgba(155, 35, 53, 0.14); border: 1px solid rgba(197, 154, 40, 0.35); border-radius: 10px; padding: 14px; text-align: center; margin-bottom: 18px;">
+          <em style="font-size: 13.5px; color: #F1F5F9;">"${reflection.q}"</em>
+          <div style="font-size: 11px; font-weight: 800; color: #F3D079; margin-top: 4px;">— ${reflection.a}</div>
+        </div>
+        ${tkAlert}
+        <div style="font-size: 12px; font-weight: 800; color: #F3D079; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 10px;">
+          ⚔️ Lo que te espera mañana (${tomorrowName}):
+        </div>
+        ${blocksHtml}
+        <div style="background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px 14px; margin-top: 14px; font-size: 12.5px; color: #CBD5E1;">
+          🛌 <strong>Ritual de Cierre (21:00 PM):</strong> Deja tu ropa lista para mañana, haz 5 minutos de meditación/lectura estoica y apunta a dormir 7–8 horas.
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+          <a href="${appUrl}" style="display: inline-block; background: linear-gradient(135deg, #9B2335, #C59A28); color: #FFFFFF; text-decoration: none; font-weight: 800; font-size: 13.5px; padding: 13px 24px; border-radius: 8px;">
+            📱 VER OUTFIT Y PLAN DE MAÑANA EN LA APP &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+  `;
+
+  MailApp.sendEmail({
+    to: recipient,
+    subject: subject,
+    htmlBody: htmlBody
+  });
+}
+
+// --- 5. CORREO MATUTINO 9:00 AM (RESPALDO EN APPS SCRIPT SI SE DESEA) ---
 function activarCorreo9AM() {
-  // Eliminar activadores previos de esta función para no duplicar
   const triggers = ScriptApp.getProjectTriggers();
   triggers.forEach(t => {
     if (t.getHandlerFunction() === "sendDailyMorningJaguarEmail") {
       ScriptApp.deleteTrigger(t);
     }
   });
-
-  // Crear activador diario a las 09:00 AM (9 a 10 AM hora local de tu cuenta Google)
   ScriptApp.newTrigger("sendDailyMorningJaguarEmail")
     .timeBased()
     .everyDays(1)
     .atHour(9)
     .create();
-
-  // Enviar un correo de prueba inmediato para confirmar que funciona
   sendDailyMorningJaguarEmail();
-  Logger.log("✅ Correo Matutino de las 09:00 AM activado y correo de prueba enviado.");
 }
 
 function sendDailyMorningJaguarEmail() {
