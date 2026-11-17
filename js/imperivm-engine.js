@@ -807,25 +807,23 @@ const imperivmEngine = {
     const container = document.getElementById("rpg-landing-master-container");
     if (!container) return;
 
-    if (typeof this.initSolarTheme === "function") this.initSolarTheme();
     this.updateVexillumVisuals();
     this.renderHeaderCategoryPennants();
 
     container.innerHTML = `
       <div class="imperivm-ide-layout">
         
-        <!-- 0. BARRA FLOTANTE DE CATEGORÍAS ESTILO NETFLIX APP -->
-        ${typeof this.renderNetflixCategoryPills === "function" ? this.renderNetflixCategoryPills() : ""}
+        <!-- Barra de comandos ahora integrada en la Pirámide Invertida del Hero -->
 
         <!-- ====================================================================
-             1. HOY: PLAN DEL DÍA (CON CHECK-IN EN 1 TOQUE, EXPLORADOR SEMANAL Y MOOD)
-             ==================================================================== -->
-        ${this.renderTodayFlowRail()}
-
-        <!-- ====================================================================
-             2. SECCIÓN DE CABALLERÍA: HÁBITOS, RANGOS, TÍTULOS & STATS INTEGRADOS
+             1. SECCIÓN DE CABALLERÍA: HÁBITOS, RANGOS, TÍTULOS & STATS INTEGRADOS
              ==================================================================== -->
         ${this.renderCaballeriaRail()}
+
+        <!-- ====================================================================
+             2. HOY: PLAN DEL DÍA (CON EXPLORADOR SEMANAL Y MOOD ESPACIOSO)
+             ==================================================================== -->
+        ${this.renderTodayFlowRail()}
 
         <!-- ====================================================================
              3. MISIONES Y PROYECTOS (PRINCIPALES & CONQUISTADAS UNIFICADAS CON ESTRELLA)
@@ -838,17 +836,17 @@ const imperivmEngine = {
         ${this.renderCuerpoYSaludRail()}
 
         <!-- ====================================================================
-             5. EXPLORACIÓN PERSONAL: LECTURA, IDIOMAS, ARTES, MÚSICA & MEDITACIÓN
+             4. EXPLORACIÓN PERSONAL: LECTURA, IDIOMAS, ARTES, MÚSICA & MEDITACIÓN
              ==================================================================== -->
         ${this.renderExploracionPersonalRail()}
 
         <!-- ====================================================================
-             6. ESPIRITUALIDAD: RITOS ANCESTRALES, OBSERVACIÓN & CICLOS
+             5. ESPIRITUALIDAD: RITOS ANCESTRALES, OBSERVACIÓN & CICLOS
              ==================================================================== -->
         ${this.renderRitosAncestralesRail()}
 
         <!-- ====================================================================
-             7. ARCHIVO DE LEGADO: BOTÓN DISCRETO AL PIE DE PÁGINA
+             8. ARCHIVO DE LEGADO: BOTÓN DISCRETO AL PIE DE PÁGINA
              ==================================================================== -->
         ${this.renderLegadoFooterButton()}
 
@@ -5028,28 +5026,28 @@ const imperivmEngine = {
       </div>
 
       <!-- EXPLICACIÓN CLARA: GOOGLE APPS SCRIPT (RECOMENDADO) VS GITHUB -->
-      <div style="background: rgba(16, 185, 129, 0.1); border: 1.5px solid rgba(16, 185, 129, 0.4); border-radius: 12px; padding: 16px 18px; margin-bottom: 20px;">
-        <div style="font-weight: 800; font-size: 0.95rem; color: #059669; margin-bottom: 8px;">
+      <div style="background: rgba(15, 23, 42, 0.85); border: 1.5px solid rgba(197, 154, 40, 0.45); border-radius: 12px; padding: 16px 18px; margin-bottom: 20px;">
+        <div style="font-weight: 800; font-size: 0.95rem; color: #F3D079; margin-bottom: 8px;">
           ⭐ ¿Qué te conviene más: Google Apps Script o GitHub Actions?
         </div>
-        <p style="font-size: 0.84rem; line-height: 1.55; margin: 0 0 10px 0;">
+        <p style="font-size: 0.84rem; color: #E2E8F0; line-height: 1.55; margin: 0 0 10px 0;">
           <strong>¡Google Apps Script te sirve mucho más y es más directo!</strong> Como corre dentro de tu propia cuenta de Google (<code>danisantander.urrutia@gmail.com</code>), <strong>no necesitas configurar claves SMTP ni API Keys</strong>, nunca caduca, y además dejamos lista la función auto-instalable <code>activarCorreo9AM()</code> que programa sola el reloj diario a las <strong>09:00 AM</strong> y te manda un correo de prueba inmediato.
         </p>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 10px;">
-          <div style="background: rgba(255,255,255,0.85); border: 2px solid #15803d; border-radius: 10px; padding: 12px 14px; color: #1c1917;">
-            <div style="font-weight: 800; font-size: 0.84rem; color: #065f46; margin-bottom: 4px;">
+          <div style="background: rgba(10, 14, 22, 0.9); border: 1.5px solid #10B981; border-radius: 10px; padding: 12px 14px; color: #F1F5F9;">
+            <div style="font-weight: 800; font-size: 0.84rem; color: #6EE7B7; margin-bottom: 4px;">
               📨 Opción 1 (Recomendada): Google Apps Script (09:00 AM)
             </div>
-            <p style="font-size: 0.78rem; color: #44403c; line-height: 1.45; margin: 0;">
+            <p style="font-size: 0.78rem; color: #CBD5E1; line-height: 1.45; margin: 0;">
               1. Haz clic abajo en <strong>"📋 Copiar Script Auto-Instalable 9 AM"</strong>.<br>
-              2. Abre <a href="https://script.google.com" target="_blank" style="color:#065f46;font-weight:bold;">script.google.com</a> (Nuevo proyecto), pega el código y dale a <strong>Ejecutar <code>activarCorreo9AM</code></strong>. ¡Listo para siempre!
+              2. Abre <a href="https://script.google.com" target="_blank" style="color:#F3D079;font-weight:bold;">script.google.com</a> (Nuevo proyecto), pega el código y dale a <strong>Ejecutar <code>activarCorreo9AM</code></strong>. ¡Listo para siempre!
             </p>
           </div>
-          <div style="background: rgba(255,255,255,0.65); border: 1px solid rgba(197,154,40,0.4); border-radius: 10px; padding: 12px 14px; color: #1c1917;">
-            <div style="font-weight: 800; font-size: 0.84rem; color: #b45309; margin-bottom: 4px;">
+          <div style="background: rgba(10, 14, 22, 0.9); border: 1px solid rgba(197,154,40,0.4); border-radius: 10px; padding: 12px 14px; color: #F1F5F9;">
+            <div style="font-weight: 800; font-size: 0.84rem; color: #F3D079; margin-bottom: 4px;">
               🤖 Opción 2 (Respaldo): GitHub Actions (09:00 AM)
             </div>
-            <p style="font-size: 0.78rem; color: #44403c; line-height: 1.45; margin: 0;">
+            <p style="font-size: 0.78rem; color: #CBD5E1; line-height: 1.45; margin: 0;">
               También queda configurado a las <strong>09:00 AM</strong> en <code>.github/workflows/daily_morning_jaguar.yml</code> por si algún día quieres dispararlo desde GitHub.
             </p>
           </div>

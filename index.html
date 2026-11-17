@@ -3,43 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Caballero Jaguar • Santuario Solar & Desarrollo Integral</title>
+  <title>Caballero Jaguar • Orden Imperial & Desarrollo Integral</title>
   <meta name="description" content="Plataforma de Desarrollo Integral Caballero Jaguar: Proyectos de Campaña, ReWild, Lauwersmeer, Chile Agrotech, Los Manejadores, Ciencia & Territorios, Balance Económico Sparkasse/Banco Chile, Matriz de Caballería 21 días.">
-  <meta name="theme-color" content="#0f766e" id="meta-theme-color">
+  <meta name="theme-color" content="#07090E">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Caballero Jaguar">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" type="image/x-icon" href="assets/favicon.ico?v=renacimiento">
   <link rel="icon" type="image/png" href="assets/favicon.png?v=renacimiento">
-  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png?v=renacimiento">
-  <link rel="stylesheet" href="css/jaguar-theme.css?v=20261117_v2">
-  <link rel="stylesheet" href="css/imperivm-theme.css?v=20261117_v2">
+  <link rel="apple-touch-icon" href="assets/favicon.png?v=renacimiento">
+  <link rel="stylesheet" href="css/jaguar-theme.css?v=20261117_v3">
+  <link rel="stylesheet" href="css/imperivm-theme.css?v=20261117_v3">
 </head>
-<body class="theme-solar">
+<body>
 
-  <!-- GATEKEEPER / PANEL DE ACCESO SOLAR DEL SANTUARIO -->
+  <!-- GATEKEEPER / PANEL DE ACCESO DE COMANDO ESTOICO -->
   <div id="stoic-gatekeeper-overlay" class="stoic-gatekeeper-overlay">
     <div class="stoic-gatekeeper-card">
-      <!-- LOGO DEL JAGUAR AGRANDADO EN LA CÚPULA SUPERIOR -->
-      <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 16px;">
-        <img src="assets/jungle_jaguar_logo.jpg" alt="Caballero Jaguar" class="gatekeeper-jaguar-logo" style="width: 190px; height: 190px; border-radius: 50%; border: 3.5px solid #C59A28; box-shadow: 0 0 35px rgba(197, 154, 40, 0.55), 0 0 24px rgba(16, 185, 129, 0.45); object-fit: cover;">
+      <!-- LOGO DEL JAGUAR AGRANDADO EN LA CÚPULA SUPERIOR (X6 TAMAÑO MAJESTUOSO) -->
+      <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 18px;">
+        <img src="assets/jungle_jaguar_logo.jpg" alt="Caballero Jaguar" class="gatekeeper-jaguar-logo" style="width: 260px; height: 260px; border-radius: 50%; border: 3.5px solid #C59A28; box-shadow: 0 0 35px rgba(197, 154, 40, 0.6), 0 0 20px rgba(155, 35, 53, 0.7); object-fit: cover;">
       </div>
-      <span class="gatekeeper-badge">🌿 SANTUARIO DE VIDA • CABALLERO JAGUAR</span>
-      <h2 class="gatekeeper-title">BIENVENIDO AL SANTUARIO</h2>
-      <p class="gatekeeper-subtitle">Luz Solar, Presencia &amp; Maestría Cotidiana</p>
+      <span class="gatekeeper-badge">GUERRERO JAGUAR</span>
+      <h2 class="gatekeeper-title">ACCESO DE COMANDO</h2>
+      <p class="gatekeeper-subtitle">Identificación de Caballería Requerida</p>
       <div class="gatekeeper-input-group">
         <input type="password" id="gatekeeper-pass-input" class="gatekeeper-input" placeholder="Credencial de la Orden..." onkeyup="if(event.key==='Enter') verifyGatekeeperPass();" autofocus>
-        <button class="gatekeeper-btn" onclick="verifyGatekeeperPass();">☀️ ENTRAR</button>
+        <button class="gatekeeper-btn" onclick="verifyGatekeeperPass();">⚔️ INGRESAR</button>
       </div>
-      <label style="display: inline-flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 0.8rem; color: var(--text-muted); cursor: pointer; user-select: none;">
-        <input type="checkbox" id="gatekeeper-remember-chk" checked style="accent-color: #15803d; width: 16px; height: 16px; cursor: pointer;">
-        <span>📱 Recordar acceso en este dispositivo (entrar directo desde el celu)</span>
-      </label>
       <div id="gatekeeper-feedback" class="gatekeeper-feedback"></div>
-      <div class="gatekeeper-bottom-seal" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 18px; padding-top: 12px; border-top: 1px solid rgba(197, 154, 40, 0.25);">
-        <div class="gatekeeper-eagle" style="margin: 0; font-size: 1.8rem; line-height: 1;">🐆</div>
-        <span style="font-size: 0.62rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; font-weight: 700; opacity: 0.8;">Ordo Vivendi • Luz &amp; Selva</span>
+      <!-- ÁGUILA IMPERIAL DESPLAZADA AL FONDO CERRANDO EL MENÚ Y AL CENTRO -->
+      <div class="gatekeeper-bottom-seal" style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 20px; padding-top: 14px; border-top: 1px solid rgba(197, 154, 40, 0.25);">
+        <div class="gatekeeper-eagle" style="margin: 0; font-size: 2rem; line-height: 1;">🦅</div>
+        <span style="font-size: 0.62rem; color: #94A3B8; letter-spacing: 2px; text-transform: uppercase; margin-top: 4px; font-weight: 700;">Vexillum Legionis</span>
       </div>
     </div>
   </div>
@@ -79,9 +76,6 @@
         <button class="btn-header-info stoic-info-seal" id="header-info-btn" onclick="event.stopPropagation(); openSistemaMaestroModal();" title="Sistema Maestro de Progresión">
           ℹ️
         </button>
-        <button class="stoic-lightbulb-toggle" id="header-theme-toggle-btn" onclick="event.stopPropagation(); imperivmEngine.toggleSolarNightTheme();" title="☀️/🌙 Cambiar entre Modo Selva Solar (Día) y Modo Noche Imperial">
-          ☀️
-        </button>
         <button class="stoic-lightbulb-toggle" id="header-lightbulb-btn" onclick="event.stopPropagation(); imperivmEngine.toggleDevSectionLabels();" title="💡 Activar/Desactivar Etiquetas de Referencia Técnica">
           💡
         </button>
@@ -103,7 +97,7 @@
         </div>
       </div>
 
-      <!-- BLOQUE DERECHO: TOTAL XP + CALENDARIO GOOGLE & HORA + BOTÓN FOCO + CORREO AM -->
+      <!-- BLOQUE DERECHO: TOTAL XP + CALENDARIO GOOGLE & HORA + BOTÓN FOCO -->
       <div class="stoic-nav-segment stoic-nav-right">
         <!-- EXPERIENCIA TOTAL -->
         <div class="level-badge-card stoic-xp-badge" style="cursor: pointer;" onclick="openKCDInspector({ type: 'level' });" title="Ver Códice del Cursus Honorum">
@@ -130,8 +124,8 @@
         </div>
 
         <!-- BOTÓN CORREO DIARIO AM -->
-        <button class="btn-jaguar btn-micro-pill stoic-foco-btn" id="header-morning-email-btn" onclick="imperivmEngine.openMorningEmailModal();" title="☀️ Correo Diario AM (Motor Headhunter + Vista Previa)">
-          <span>☀️ Correo AM</span>
+        <button class="btn-jaguar btn-micro-pill stoic-foco-btn" id="header-morning-email-btn" onclick="imperivmEngine.openMorningEmailModal();" title="☀️ Correo Diario 9:00 AM">
+          <span>☀️ Correo 9AM</span>
         </button>
 
         <!-- BOTÓN DE FOCO (SOLO FOCO) -->
@@ -150,10 +144,10 @@
     </header>
 
     <!-- ================================================================
-         HERO HEADER SOLAR & SELVA VIVA: SANTUARIO DEL JAGUAR + VEXILLVM + 9 ESTANDARTES
+         HERO HEADER MONUMENTAL ESTOICO: GUERRERO ROMANO + VEXILLVM + 9 ESTANDARTES
          ================================================================ -->
     <section class="stoic-hero-header">
-      <img src="assets/jaguar_master_wallpaper.jpg" id="stoic-hero-bg-img" alt="Santuario del Caballero Jaguar" class="stoic-hero-bg-img">
+      <img src="assets/stoic_roman_bg.jpg" alt="Centurión Romano en el Partenón" class="stoic-hero-bg-img">
       <div class="stoic-hero-gradient-overlay"></div>
       
       <div class="stoic-hero-content">
@@ -193,13 +187,14 @@
           <!-- Fila 2: 3 botones (Fila intermedia) -->
           <div class="pyramid-row">
             <button class="btn-command-pill btn-command-pill-gold" onclick="imperivmEngine.startFocusMode();" title="Iniciar Modo Enfoque / Deep Work">▶ MODO ENFOQUE</button>
-            <button class="btn-command-pill" onclick="imperivmEngine.openMorningEmailModal();" title="Correo Diario 9:00 AM y Vista Previa">☀️ Correo 9:00 AM</button>
+            <button class="btn-command-pill" onclick="openCelestialHoroscopesModal();" title="Ciclo Solar y Calendario">☀️ Ciclo Solar</button>
             <a href="https://calendar.google.com/calendar" target="_blank" class="btn-command-pill" style="text-decoration: none;" title="Abrir Google Calendar">📅 Google Calendar</a>
           </div>
-          <!-- Fila 3: 2 botones (Vértice inferior) -->
+          <!-- Fila 3: 3 botones (Vértice inferior) -->
           <div class="pyramid-row">
             <button class="btn-command-pill" onclick="openAvisosModal();" title="Avisos Oficiales (Techniker Krankenkasse y Pagos)">🔔 Avisos &amp; TK</button>
             <button class="btn-command-pill" onclick="openSistemaMaestroModal();" title="Guía y Hábitos de Vida">ℹ️ Guía de Hábitos</button>
+            <button class="btn-command-pill" onclick="imperivmEngine.openMorningEmailModal();" title="Correo Diario 9:00 AM">📧 Correo 9:00 AM</button>
           </div>
         </div>
       </div>
@@ -1825,9 +1820,9 @@
   <script src="js/data/armamentum-items.js?v=20261111_v44"></script>
   <script src="js/therapy-stoic.js?v=20261111_v44"></script>
   <script src="js/hypomnemata-journal.js?v=20261111_v44"></script>
-  <script src="js/scoring-engine.js?v=20261117_v2"></script>
-  <script src="js/imperivm-engine.js?v=20261117_v2"></script>
-  <script src="js/rey-jaguar-engine.js?v=20261117_v2"></script>
+  <script src="js/scoring-engine.js?v=20261117_v3"></script>
+  <script src="js/imperivm-engine.js?v=20261117_v3"></script>
+  <script src="js/rey-jaguar-engine.js?v=20261117_v3"></script>
   <script src="js/astral-observatory.js?v=20261111_v44"></script>
   <script src="js/santuario-somatico.js?v=20261111_v44"></script>
   <script src="js/tk-health-tracker.js?v=20261111_v44"></script>
