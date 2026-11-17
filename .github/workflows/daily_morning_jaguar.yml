@@ -1,0 +1,42 @@
+name: "☀️ Correo Matutino AM • Caballero Jaguar"
+
+on:
+  schedule:
+    # Se ejecuta todas las mañanas a las 08:00 UTC (09:00 AM CET en Alemania y España)
+    - cron: '0 8 * * *'
+  workflow_dispatch: # Permite disparo manual con 1 clic desde la pestaña Actions de GitHub
+
+permissions:
+  contents: read
+
+jobs:
+  send-morning-briefing:
+    name: Enviar Correo Matutino del Jaguar
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Ejecutar Motor Matutino AM (SMTP / Resend)
+        env:
+          ALERT_RECIPIENT_EMAIL: ${{ secrets.ALERT_RECIPIENT_EMAIL || 'danisantander.urrutia@gmail.com' }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST || 'smtp.gmail.com' }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT || '587' }}
+          SMTP_USER: ${{ secrets.SMTP_USER || 'danisantander.urrutia@gmail.com' }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+        run: |
+          python scripts/daily_morning_jaguar.py
+
+      - name: Subir Vista Previa HTML del Correo
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: latest-morning-jaguar-email
+          path: scripts/latest_morning_jaguar.html
+          retention-days: 7

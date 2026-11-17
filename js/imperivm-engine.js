@@ -807,18 +807,18 @@ const imperivmEngine = {
     const container = document.getElementById("rpg-landing-master-container");
     if (!container) return;
 
+    if (typeof this.initSolarTheme === "function") this.initSolarTheme();
     this.updateVexillumVisuals();
     this.renderHeaderCategoryPennants();
 
     container.innerHTML = `
       <div class="imperivm-ide-layout">
         
-        <!-- Barra de comandos ahora integrada en la Pirámide Invertida del Hero -->
+        <!-- 0. BARRA FLOTANTE DE CATEGORÍAS ESTILO NETFLIX APP -->
+        ${typeof this.renderNetflixCategoryPills === "function" ? this.renderNetflixCategoryPills() : ""}
 
-        <!-- ====================================================================
-             1. SECCIÓN DE CABALLERÍA: HÁBITOS, RANGOS, TÍTULOS & STATS INTEGRADOS
-             ==================================================================== -->
-        ${this.renderCaballeriaRail()}
+        <!-- 1. CHECK-IN MATUTINO EN 1 TOQUE (TOP 3 PRIORIDADES + 9 BANDERINES VIVOS) -->
+        ${typeof this.renderMorningCheckinHub === "function" ? this.renderMorningCheckinHub() : ""}
 
         <!-- ====================================================================
              2. HOY: PLAN DEL DÍA (CON EXPLORADOR SEMANAL Y MOOD ESPACIOSO)
@@ -826,22 +826,27 @@ const imperivmEngine = {
         ${this.renderTodayFlowRail()}
 
         <!-- ====================================================================
-             3. MISIONES Y PROYECTOS (PRINCIPALES & CONQUISTADAS UNIFICADAS CON ESTRELLA)
+             3. SECCIÓN DE CABALLERÍA: HÁBITOS, RANGOS, TÍTULOS & STATS INTEGRADOS
+             ==================================================================== -->
+        ${this.renderCaballeriaRail()}
+
+        <!-- ====================================================================
+             4. MISIONES Y PROYECTOS (PRINCIPALES & CONQUISTADAS UNIFICADAS CON ESTRELLA)
              ==================================================================== -->
         ${this.renderMisionesRail()}
 
         <!-- ====================================================================
-             4. CUERPO Y SALUD: DEPORTES, HÁBITOS, BIENESTAR, DATEMASTER
+             5. CUERPO Y SALUD: DEPORTES, HÁBITOS, BIENESTAR, DATEMASTER
              ==================================================================== -->
         ${this.renderCuerpoYSaludRail()}
 
         <!-- ====================================================================
-             4. EXPLORACIÓN PERSONAL: LECTURA, IDIOMAS, ARTES, MÚSICA & MEDITACIÓN
+             6. EXPLORACIÓN PERSONAL: LECTURA, IDIOMAS, ARTES, MÚSICA & MEDITACIÓN
              ==================================================================== -->
         ${this.renderExploracionPersonalRail()}
 
         <!-- ====================================================================
-             5. ESPIRITUALIDAD: RITOS ANCESTRALES, OBSERVACIÓN & CICLOS
+             7. ESPIRITUALIDAD: RITOS ANCESTRALES, OBSERVACIÓN & CICLOS
              ==================================================================== -->
         ${this.renderRitosAncestralesRail()}
 
@@ -4734,6 +4739,547 @@ const imperivmEngine = {
     if (name.includes("Águila")) return "🦅";
     if (name.includes("Corona")) return "👑";
     return "⚔️";
+  },
+
+  // ==========================================================================
+  // MODO LUZ SOLAR & SELVA VIVA (CONMUTADOR DÍA / NOCHE)
+  // ==========================================================================
+  initSolarTheme() {
+    const mode = localStorage.getItem("CJ_THEME_MODE") || "solar";
+    const isNight = mode === "night";
+    document.body.classList.toggle("theme-night", isNight);
+    document.body.classList.toggle("theme-solar", !isNight);
+
+    const heroImg = document.getElementById("stoic-hero-bg-img");
+    if (heroImg) {
+      heroImg.src = isNight ? "assets/stoic_roman_bg.jpg" : "assets/img_jaguar_jungle_landing.jpg";
+    }
+    const toggleBtn = document.getElementById("header-theme-toggle-btn");
+    if (toggleBtn) {
+      toggleBtn.innerHTML = isNight ? "🌙" : "☀️";
+      toggleBtn.title = isNight ? "Modo Noche Imperial activo (Clic para Luz Solar & Selva Viva)" : "Modo Luz Solar & Selva Viva activo (Clic para Modo Noche)";
+    }
+    const metaTheme = document.getElementById("meta-theme-color");
+    if (metaTheme) {
+      metaTheme.setAttribute("content", isNight ? "#07090E" : "#0f766e");
+    }
+
+    const greetEl = document.getElementById("solar-hero-greeting-text");
+    if (greetEl) {
+      const hr = new Date().getHours();
+      let greet = "🌿 SANTUARIO VIVO • PRESENCIA & PROPÓSITO";
+      if (hr >= 5 && hr < 12) greet = "☀️ BUENOS DÍAS, DANIEL • EL SANTUARIO ESTÁ VIVO";
+      else if (hr >= 12 && hr < 19) greet = "🌿 PLENO SOL EN EL SANTUARIO • AVANCE & VITALIDAD";
+      else greet = "🕯️ TEMPLO SERENO • DESCANSO, ARTES & CONEXIÓN";
+      greetEl.textContent = greet;
+    }
+  },
+
+  toggleSolarNightTheme() {
+    const current = localStorage.getItem("CJ_THEME_MODE") || "solar";
+    const next = current === "solar" ? "night" : "solar";
+    localStorage.setItem("CJ_THEME_MODE", next);
+    this.initSolarTheme();
+    if (typeof showNotification === "function") {
+      showNotification(next === "solar" ? "☀️ Modo Luz Solar & Selva Viva activado" : "🌙 Modo Noche Imperial activado");
+    }
+  },
+
+  // ==========================================================================
+  // PÍLDORAS FLOTANTES DE CATEGORÍA ESTILO NETFLIX APP (MÓVIL & DESKTOP)
+  // ==========================================================================
+  renderNetflixCategoryPills() {
+    const pills = [
+      { id: "cj-morning-checkin-hub", label: "☀️ Check-in Hoy", active: true },
+      { id: "rail-today-flow", label: "🌅 Plan del Día" },
+      { id: "rail-misiones-unificadas", label: "🎯 Misiones" },
+      { id: "rail-cuerpo-salud", label: "🏃 Cuerpo & Salud" },
+      { id: "rail-exploracion-personal", label: "🧭 Exploración" },
+      { id: "rail-ritos-ancestrales", label: "🕯️ Espíritu" },
+      { id: "rail-caballeria-maestria", label: "⚔️ Caballería" }
+    ];
+    return `
+      <div class="cj-netflix-pills-bar" role="navigation" aria-label="Salto rápido de secciones">
+        ${pills.map((p, idx) => `
+          <button class="cj-netflix-pill ${idx === 0 ? 'active' : ''}" onclick="imperivmEngine.scrollToRail('${p.id}', this)">
+            ${p.label}
+          </button>
+        `).join("")}
+        <button class="cj-netflix-pill cj-netflix-pill-gold" onclick="imperivmEngine.openMorningEmailModal()">
+          📧 Correo AM
+        </button>
+      </div>
+    `;
+  },
+
+  scrollToRail(railId, btnEl) {
+    if (btnEl) {
+      document.querySelectorAll(".cj-netflix-pill").forEach(b => b.classList.remove("active"));
+      btnEl.classList.add("active");
+    }
+    const target = document.getElementById(railId);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  },
+
+  handleMobileNav(action, btnEl) {
+    if (btnEl) {
+      document.querySelectorAll(".cj-mob-nav-btn").forEach(b => b.classList.remove("active"));
+      btnEl.classList.add("active");
+    }
+    if (action === "hoy") {
+      if (typeof selectMainTab === "function") selectMainTab("dashboard");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else if (action === "21dias") {
+      if (typeof openCaballeroChallengeModal === "function") openCaballeroChallengeModal();
+    } else if (action === "misiones") {
+      if (typeof selectMainTab === "function") selectMainTab("dashboard");
+      setTimeout(() => this.scrollToRail("rail-misiones-unificadas"), 80);
+    } else if (action === "correo") {
+      this.openMorningEmailModal();
+    } else if (action === "finanzas") {
+      if (typeof selectMainTab === "function") selectMainTab("finanzas");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  },
+
+  // ==========================================================================
+  // CHECK-IN MATUTINO EN 1 TOQUE (TOP 3 PRIORIDADES + 9 BANDERINES)
+  // ==========================================================================
+  renderMorningCheckinHub() {
+    const todayKey = this.getTodayKey();
+    const todayIso = window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10);
+    const checkinStoreKey = "CJ_MORNING_CHECKIN_" + todayIso;
+    let doneMap = {};
+    try {
+      doneMap = JSON.parse(localStorage.getItem(checkinStoreKey) || "{}");
+    } catch (e) { doneMap = {}; }
+
+    let currentMood = localStorage.getItem("CABALLERO_WEEKLY_MOOD") || imperivmState.weeklyMood || "fresh";
+    const scheduleData = (typeof WEEKLY_STRATEGY_SCHEDULE !== "undefined") ? (WEEKLY_STRATEGY_SCHEDULE[currentMood] || WEEKLY_STRATEGY_SCHEDULE.fresh) : null;
+    const todayPlan = (scheduleData && scheduleData.days && scheduleData.days[todayKey]) ? scheduleData.days[todayKey] : { focus: "Día de Presencia y Avance", blocks: [] };
+
+    const rawBlocks = (todayPlan.blocks && todayPlan.blocks.length >= 3) ? todayPlan.blocks.slice(0, 3) : [
+      { time: "09:00", title: "🥊 Activación Física: 100x3 o Cardio", aura: "deporte", badge: "🥊 Deporte" },
+      { time: "09:30", title: "👑 Bloque Foco: Empleo Profesión & Proyectos", aura: "vida", badge: "👑 Vida" },
+      { time: "13:00", title: "🇩🇪 Alemán 15 min + Nutrición Limpia", aura: "mente", badge: "🧠 Mente" }
+    ];
+
+    const priorities = rawBlocks.map((b, i) => ({
+      id: "prio_" + i,
+      rank: i + 1,
+      time: b.time ? b.time.split("-")[0].trim() : "Hoy",
+      title: b.title,
+      aura: b.aura || "vida",
+      badge: b.badge || "👑 Vida",
+      xp: 50,
+      done: !!doneMap["prio_" + i]
+    }));
+
+    const doneCount = priorities.filter(p => p.done).length;
+
+    const quickPennants = [
+      { key: "vida", icon: "👑", label: "Vida / Empleo" },
+      { key: "exploracion", icon: "🧭", label: "Proyectos" },
+      { key: "amor", icon: "💖", label: "Amor / Pareja" },
+      { key: "mente", icon: "🧠", label: "Foco / Alemán" },
+      { key: "salud", icon: "🌿", label: "Salud / 0 Porno" },
+      { key: "deporte", icon: "🥊", label: "Deporte" },
+      { key: "soberania", icon: "🪙", label: "0 Gasto Tonto" },
+      { key: "naturaleza", icon: "🌲", label: "Naturaleza" },
+      { key: "espiritualidad", icon: "🕯️", label: "Meditación" }
+    ];
+
+    return `
+      <section class="cj-morning-checkin-card" id="cj-morning-checkin-hub">
+        <div class="cj-morning-checkin-header">
+          <div class="cj-morning-checkin-title-wrap">
+            <span class="cj-morning-live-badge">🌱 PULSO DE VIDA • ${todayKey.toUpperCase()}</span>
+            <h3 class="cj-morning-checkin-title">☀️ Check-in Rápido de Hoy (${doneCount}/3 Prioridades)</h3>
+            <p class="cj-morning-checkin-sub">Marca tus 3 pilares del día en 1 toque desde el celu o ilumina un banderín (+XP instantáneo).</p>
+          </div>
+          <div class="cj-morning-header-actions">
+            <button class="btn-solar-action" onclick="imperivmEngine.openMorningEmailModal()">
+              ☀️ Correo Diario AM
+            </button>
+            <button class="btn-solar-action-outline" onclick="openCaballeroChallengeModal()">
+              🦅 Matriz 21 Días
+            </button>
+          </div>
+        </div>
+
+        <!-- TOP 3 PRIORIDADES ESTILO NETFLIX TOP 10 -->
+        <div class="cj-top3-grid">
+          ${priorities.map(p => `
+            <div class="cj-top3-item ${p.done ? 'is-done' : ''}" onclick="imperivmEngine.toggleMorningPriority('${p.id}', '${p.aura}', ${p.xp}, '${p.title.replace(/'/g, "\\'")}')">
+              <div class="cj-top3-rank-num">${p.rank}</div>
+              <div class="cj-top3-content">
+                <div class="cj-top3-meta">
+                  <span class="cj-top3-time">⏱️ ${p.time}</span>
+                  <span class="cj-top3-aura-pill">${p.badge}</span>
+                </div>
+                <div class="cj-top3-text">${p.title}</div>
+              </div>
+              <button class="cj-top3-check-btn ${p.done ? 'checked' : ''}" type="button" aria-label="Marcar prioridad">
+                ${p.done ? '✅ Hecho' : '✓ +50 XP'}
+              </button>
+            </div>
+          `).join("")}
+        </div>
+
+        <!-- BARRA RÁPIDA DE 9 BANDERINES EN 1 TOQUE -->
+        <div class="cj-quick-pennants-strip">
+          <span class="cj-quick-pennants-label">⚡ Sumar +25 XP en 1 toque:</span>
+          <div class="cj-quick-pennants-scroll">
+            ${quickPennants.map(qp => {
+              const tapped = !!doneMap["qp_" + qp.key];
+              return `
+                <button class="cj-quick-pennant-chip ${tapped ? 'is-tapped' : ''}" onclick="imperivmEngine.quickTapPennant('${qp.key}', '${qp.label}')">
+                  <span>${qp.icon}</span>
+                  <span>${qp.label}</span>
+                  <span class="cj-qp-plus">${tapped ? '✔' : '+25'}</span>
+                </button>
+              `;
+            }).join("")}
+          </div>
+        </div>
+      </section>
+    `;
+  },
+
+  toggleMorningPriority(priorityId, auraKey, xpAmount, titleText) {
+    const todayIso = window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10);
+    const checkinStoreKey = "CJ_MORNING_CHECKIN_" + todayIso;
+    let doneMap = {};
+    try {
+      doneMap = JSON.parse(localStorage.getItem(checkinStoreKey) || "{}");
+    } catch (e) { doneMap = {}; }
+
+    if (doneMap[priorityId]) {
+      delete doneMap[priorityId];
+      localStorage.setItem(checkinStoreKey, JSON.stringify(doneMap));
+      if (typeof showNotification === "function") showNotification("↩️ Prioridad desmarcada por hoy.");
+    } else {
+      doneMap[priorityId] = true;
+      localStorage.setItem(checkinStoreKey, JSON.stringify(doneMap));
+      if (typeof CaballeroScoringEngine !== "undefined" && typeof CaballeroScoringEngine.awardXP === "function") {
+        CaballeroScoringEngine.awardXP(auraKey || "vida", xpAmount || 50, `☀️ Prioridad del Día: ${titleText}`);
+      }
+      if (typeof showNotification === "function") {
+        showNotification(`🌿 ¡Prioridad cumplida! +${xpAmount || 50} XP en ${auraKey.toUpperCase()}`);
+      }
+    }
+    this.render();
+  },
+
+  quickTapPennant(auraKey, label) {
+    const todayIso = window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10);
+    const checkinStoreKey = "CJ_MORNING_CHECKIN_" + todayIso;
+    let doneMap = {};
+    try {
+      doneMap = JSON.parse(localStorage.getItem(checkinStoreKey) || "{}");
+    } catch (e) { doneMap = {}; }
+
+    doneMap["qp_" + auraKey] = true;
+    localStorage.setItem(checkinStoreKey, JSON.stringify(doneMap));
+
+    if (typeof CaballeroScoringEngine !== "undefined" && typeof CaballeroScoringEngine.awardXP === "function") {
+      CaballeroScoringEngine.awardXP(auraKey, 25, `⚡ Check-in Rápido: ${label}`);
+    }
+    if (typeof showNotification === "function") {
+      showNotification(`🦅 +25 XP al Estandarte de ${label}`);
+    }
+    this.render();
+  },
+
+  // ==========================================================================
+  // CENTRO DE CORREO MATUTINO AM (MOTOR HEADHUNTER + GOOGLE APPS SCRIPT)
+  // ==========================================================================
+  openMorningEmailModal() {
+    const modal = document.getElementById("morning-email-modal");
+    const content = document.getElementById("morning-email-modal-content");
+    if (!modal || !content) return;
+
+    const todayKey = this.getTodayKey();
+    const todayIso = window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10);
+    const P = window.CJProgress;
+    const snap = P ? P.snapshot() : { xp: 350, streak: { days: 1 } };
+    const savedEmail = localStorage.getItem("CJ_MORNING_EMAIL_TO") || "danisantander.urrutia@gmail.com";
+    const savedHour = localStorage.getItem("CJ_MORNING_EMAIL_HOUR") || "09:00";
+
+    let currentMood = localStorage.getItem("CABALLERO_WEEKLY_MOOD") || imperivmState.weeklyMood || "fresh";
+    const scheduleData = (typeof WEEKLY_STRATEGY_SCHEDULE !== "undefined") ? (WEEKLY_STRATEGY_SCHEDULE[currentMood] || WEEKLY_STRATEGY_SCHEDULE.fresh) : null;
+    const todayPlan = (scheduleData && scheduleData.days && scheduleData.days[todayKey]) ? scheduleData.days[todayKey] : { focus: "Fuerza Base & Presencia", blocks: [] };
+    const blocks = (todayPlan.blocks || []).slice(0, 4);
+    const quoteObj = STOIC_QUOTES[new Date().getDate() % STOIC_QUOTES.length];
+
+    content.innerHTML = `
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; border-bottom: 2px solid rgba(197, 154, 40, 0.35); padding-bottom: 14px; margin-bottom: 18px;">
+        <div>
+          <span class="badge-tag badge-emerald" style="font-size: 0.72rem;">☀️ BRIEFING MATUTINO AUTOMÁTICO • 09:00 AM</span>
+          <h2 style="font-family: 'Cinzel', serif; font-size: 1.55rem; margin: 6px 0 2px 0;">Centro de Correo Diario AM (09:00 AM) • Caballero Jaguar</h2>
+          <p style="font-size: 0.86rem; opacity: 0.85; margin: 0;">
+            Recibe cada mañana a las 09:00 AM en tu celular tu hoja de ruta viva, tus prioridades, tu racha de los 9 banderines y tu oráculo.
+          </p>
+        </div>
+        <button class="btn-close-modal" onclick="imperivmEngine.closeMorningEmailModal()">✕</button>
+      </div>
+
+      <!-- EXPLICACIÓN CLARA: GOOGLE APPS SCRIPT (RECOMENDADO) VS GITHUB -->
+      <div style="background: rgba(16, 185, 129, 0.1); border: 1.5px solid rgba(16, 185, 129, 0.4); border-radius: 12px; padding: 16px 18px; margin-bottom: 20px;">
+        <div style="font-weight: 800; font-size: 0.95rem; color: #059669; margin-bottom: 8px;">
+          ⭐ ¿Qué te conviene más: Google Apps Script o GitHub Actions?
+        </div>
+        <p style="font-size: 0.84rem; line-height: 1.55; margin: 0 0 10px 0;">
+          <strong>¡Google Apps Script te sirve mucho más y es más directo!</strong> Como corre dentro de tu propia cuenta de Google (<code>danisantander.urrutia@gmail.com</code>), <strong>no necesitas configurar claves SMTP ni API Keys</strong>, nunca caduca, y además dejamos lista la función auto-instalable <code>activarCorreo9AM()</code> que programa sola el reloj diario a las <strong>09:00 AM</strong> y te manda un correo de prueba inmediato.
+        </p>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; margin-top: 10px;">
+          <div style="background: rgba(255,255,255,0.85); border: 2px solid #15803d; border-radius: 10px; padding: 12px 14px; color: #1c1917;">
+            <div style="font-weight: 800; font-size: 0.84rem; color: #065f46; margin-bottom: 4px;">
+              📨 Opción 1 (Recomendada): Google Apps Script (09:00 AM)
+            </div>
+            <p style="font-size: 0.78rem; color: #44403c; line-height: 1.45; margin: 0;">
+              1. Haz clic abajo en <strong>"📋 Copiar Script Auto-Instalable 9 AM"</strong>.<br>
+              2. Abre <a href="https://script.google.com" target="_blank" style="color:#065f46;font-weight:bold;">script.google.com</a> (Nuevo proyecto), pega el código y dale a <strong>Ejecutar <code>activarCorreo9AM</code></strong>. ¡Listo para siempre!
+            </p>
+          </div>
+          <div style="background: rgba(255,255,255,0.65); border: 1px solid rgba(197,154,40,0.4); border-radius: 10px; padding: 12px 14px; color: #1c1917;">
+            <div style="font-weight: 800; font-size: 0.84rem; color: #b45309; margin-bottom: 4px;">
+              🤖 Opción 2 (Respaldo): GitHub Actions (09:00 AM)
+            </div>
+            <p style="font-size: 0.78rem; color: #44403c; line-height: 1.45; margin: 0;">
+              También queda configurado a las <strong>09:00 AM</strong> en <code>.github/workflows/daily_morning_jaguar.yml</code> por si algún día quieres dispararlo desde GitHub.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONFIGURACIÓN RÁPIDA Y ACCIONES -->
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 18px; background: rgba(0,0,0,0.05); padding: 12px 16px; border-radius: 10px; border: 1px solid rgba(197,154,40,0.25);">
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; flex: 1;">
+          <label style="font-size: 0.8rem; font-weight: 700;">📬 Destinatario:</label>
+          <input type="text" id="morning-email-input-to" value="${savedEmail}" style="padding: 6px 10px; border-radius: 6px; font-size: 0.82rem; min-width: 230px;">
+          <label style="font-size: 0.8rem; font-weight: 700;">⏰ Hora AM:</label>
+          <select id="morning-email-input-hour" style="padding: 6px 10px; border-radius: 6px; font-size: 0.82rem;">
+            <option value="07:30" ${savedHour === '07:30' ? 'selected' : ''}>07:30 AM</option>
+            <option value="08:00" ${savedHour === '08:00' ? 'selected' : ''}>08:00 AM</option>
+            <option value="08:30" ${savedHour === '08:30' ? 'selected' : ''}>08:30 AM</option>
+            <option value="09:00" ${savedHour === '09:00' ? 'selected' : ''}>09:00 AM (Activo ⭐)</option>
+          </select>
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button class="btn-solar-action" onclick="imperivmEngine.copyAppsScriptMorningCode()">
+            📋 Copiar Script Auto-Instalable 9 AM
+          </button>
+          <button class="btn-solar-action-outline" onclick="imperivmEngine.sendMorningEmailTestNow()">
+            📧 Enviarme Prueba Ahora
+          </button>
+        </div>
+      </div>
+
+      <!-- VISTA PREVIA EN VIVO DEL CORREO MATUTINO DE HOY -->
+      <div style="font-size: 0.76rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; color: #059669;">
+        👁️ VISTA PREVIA EN VIVO DEL CORREO QUE RECIBIRÁS EN EL CELULAR:
+      </div>
+
+      <div style="background: #f3ead6; padding: 18px 12px; border-radius: 14px; border: 1.5px solid #c59a28;">
+        <div style="max-width: 580px; margin: 0 auto; background: #faf6ee; border: 2px solid #c59a28; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.12); color: #1c1917; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+          <div style="background: linear-gradient(135deg, #064e3b 0%, #0f766e 55%, #b45309 100%); padding: 22px 18px; text-align: center; color: #fff;">
+            <div style="display: inline-block; background: rgba(255,255,255,0.18); border: 1px solid rgba(253,224,71,0.5); border-radius: 99px; padding: 3px 12px; font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #fef08a; margin-bottom: 6px;">
+              🌿 SANTUARIO SOLAR • CABALLERO JAGUAR
+            </div>
+            <h3 style="margin: 4px 0; font-size: 20px; color: #fff; font-family: 'Cinzel', serif;">☀️ ¡Buenos días, Daniel!</h3>
+            <div style="font-size: 13px; color: #d1fae5; font-weight: 600;">
+              ${todayKey.toUpperCase()} (${todayIso}) • 🔥 Racha: ${snap.streak.days || 1} día(s) • 🏛️ ${snap.xp || 350} XP
+            </div>
+          </div>
+
+          <div style="padding: 18px;">
+            <div style="background: #fffbeb; border: 1px solid #f59e0b; border-radius: 10px; padding: 12px 14px; text-align: center; margin-bottom: 16px;">
+              <div style="font-size: 10px; font-weight: 800; color: #b45309; text-transform: uppercase; letter-spacing: 1px;">✨ Oráculo de la Mañana</div>
+              <div style="font-size: 13.5px; font-style: italic; color: #292524; margin: 4px 0;">"${quoteObj.text}"</div>
+              <div style="font-size: 11px; font-weight: 800; color: #92400e;">— ${quoteObj.author}</div>
+            </div>
+
+            <div style="font-size: 12px; font-weight: 800; color: #065f46; text-transform: uppercase; margin-bottom: 8px;">
+              🎯 Tus Bloques Prioritarios de Hoy (${todayPlan.focus}):
+            </div>
+            ${blocks.map((b, i) => `
+              <div style="background: #ffffff; border: 1px solid #e6dec8; border-left: 4px solid #15803d; border-radius: 8px; padding: 10px 12px; margin-bottom: 8px;">
+                <div style="display: flex; justify-content: space-between; font-size: 11px; font-weight: 800; color: #0f766e;">
+                  <span>#${i + 1} • ⏱️ ${b.time}</span>
+                  <span>${b.badge}</span>
+                </div>
+                <div style="font-size: 13px; font-weight: 700; color: #1c1917; margin-top: 2px;">${b.title}</div>
+              </div>
+            `).join("")}
+
+            <div style="text-align: center; margin-top: 16px;">
+              <span style="display: inline-block; background: linear-gradient(135deg, #15803d, #0d9488); color: #fff; font-weight: 800; font-size: 12.5px; padding: 10px 22px; border-radius: 99px;">
+                📱 ABRIR MI CHECK-IN EN EL CELULAR &rarr;
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    modal.style.display = "flex";
+    setTimeout(() => modal.classList.add("active"), 10);
+  },
+
+  closeMorningEmailModal() {
+    const modal = document.getElementById("morning-email-modal");
+    if (!modal) return;
+    modal.classList.remove("active");
+    setTimeout(() => { modal.style.display = "none"; }, 220);
+  },
+
+  sendMorningEmailTestNow() {
+    const toInput = document.getElementById("morning-email-input-to");
+    const hourInput = document.getElementById("morning-email-input-hour");
+    const email = toInput ? toInput.value.trim() : "danisantander.urrutia@gmail.com";
+    const hour = hourInput ? hourInput.value : "07:30";
+    localStorage.setItem("CJ_MORNING_EMAIL_TO", email);
+    localStorage.setItem("CJ_MORNING_EMAIL_HOUR", hour);
+
+    const todayKey = this.getTodayKey().toUpperCase();
+    const todayIso = window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10);
+    let currentMood = localStorage.getItem("CABALLERO_WEEKLY_MOOD") || imperivmState.weeklyMood || "fresh";
+    const scheduleData = (typeof WEEKLY_STRATEGY_SCHEDULE !== "undefined") ? (WEEKLY_STRATEGY_SCHEDULE[currentMood] || WEEKLY_STRATEGY_SCHEDULE.fresh) : null;
+    const todayPlan = (scheduleData && scheduleData.days && scheduleData.days[this.getTodayKey()]) ? scheduleData.days[this.getTodayKey()] : { focus: "Presencia y Avance", blocks: [] };
+    const blocksText = (todayPlan.blocks || []).slice(0, 4).map((b, i) => `${i + 1}. [${b.time}] ${b.title}`).join("\n");
+
+    const subject = encodeURIComponent(`☀️ [Caballero Jaguar • ${todayKey}] Mi Plan de Vida y 3 Prioridades (${todayIso})`);
+    const body = encodeURIComponent(
+      `🌿 SANTUARIO SOLAR • CABALLERO JAGUAR (${todayKey} ${todayIso})\n\n` +
+      `🎯 Enfoque de Hoy: ${todayPlan.focus}\n\n` +
+      `⚡ MIS BLOQUES PRIORITARIOS DE HOY:\n${blocksText}\n\n` +
+      `🦅 COMPROMISO DE TEMPLANZA:\n- Día 100% Limpio (0 Porno)\n- Hidratación 3.2L Agua\n- Iluminar al menos 3 de los 9 Estandartes\n\n` +
+      `📱 Entrar directo desde el celular:\nhttps://danisantanderurrutia-coder.github.io/caballero-jaguar/`
+    );
+
+    window.open(`mailto:${email}?subject=${subject}&body=${body}`, "_blank");
+    if (typeof showNotification === "function") {
+      showNotification(`☀️ Preferencia guardada (${hour} AM). Abriendo envío rápido a ${email}`);
+    }
+  },
+
+  copyAppsScriptMorningCode() {
+    const recipient = localStorage.getItem("CJ_MORNING_EMAIL_TO") || "danisantander.urrutia@gmail.com";
+    const code = `// ============================================================================
+// CABALLERO JAGUAR • CORREO MATUTINO AUTOMÁTICO A LAS 09:00 AM (GOOGLE APPS SCRIPT)
+// ============================================================================
+// PASOS:
+// 1. Pega este código en https://script.google.com (Nuevo Proyecto).
+// 2. Arriba elige la función "activarCorreo9AM" y pulsa "Ejecutar" (Run).
+// ¡Eso creará automáticamente el reloj diario a las 09:00 AM y te enviará un correo de prueba!
+
+function activarCorreo9AM() {
+  ScriptApp.getProjectTriggers().forEach(function(t) {
+    if (t.getHandlerFunction() === "sendDailyMorningJaguarEmail") ScriptApp.deleteTrigger(t);
+  });
+  ScriptApp.newTrigger("sendDailyMorningJaguarEmail")
+    .timeBased()
+    .everyDays(1)
+    .atHour(9)
+    .create();
+  sendDailyMorningJaguarEmail();
+}
+
+function sendDailyMorningJaguarEmail() {
+  var recipient = "${recipient}";
+  var now = new Date();
+  var days = ["DOMINGO", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO"];
+  var dayName = days[now.getDay()];
+  var dateStr = Utilities.formatDate(now, Session.getScriptTimeZone() || "Europe/Berlin", "dd/MM/yyyy");
+  var appUrl = "https://danisantanderurrutia-coder.github.io/caballero-jaguar/";
+
+  var schedules = {
+    "LUNES": [
+      { time: "09:00 - 09:30", title: "🥊 Activación Física: 100 Abs, 100 Sentadillas, 100 Flexiones o Running", badge: "🥊 Deporte", color: "#15803d" },
+      { time: "09:30 - 12:45", title: "👑 Bloque Foco Dual: Empleo Profesión + Trabajos Locales Hannover", badge: "👑 Vida", color: "#b45309" },
+      { time: "13:00 - 13:20", title: "🇩🇪 Alemán al Mediodía: 15 min Vocabulario Activo & Habla", badge: "🧠 Mente", color: "#0f766e" },
+      { time: "14:30 - 17:30", title: "🧭 Proyectos: Paper Lauwersmeer (Modelación & Redacción)", badge: "🧭 Exploración", color: "#1d4ed8" }
+    ],
+    "MARTES": [
+      { time: "09:00 - 09:30", title: "🏃 Activación Física: Cardio, Muay Thai Shadowboxing o Fuerza", badge: "🥊 Deporte", color: "#15803d" },
+      { time: "09:30 - 12:45", title: "👑 Bloque Foco Dual: Postulaciones Profesionales (Alemania/Euskadi) + Hannover", badge: "👑 Vida", color: "#b45309" },
+      { time: "13:00 - 13:20", title: "🇩🇪 Alemán B1: Escucha Activa & Frase en el Diario", badge: "🧠 Mente", color: "#0f766e" },
+      { time: "19:30 - 21:00", title: "💖 Presencia en Pareja: Escucha Consciente, Cariño & Cero Pantallas", badge: "💖 Amor", color: "#be185d" }
+    ],
+    "MIÉRCOLES": [
+      { time: "09:00 - 09:30", title: "🧘‍♂️ Movilidad Somática, Respiración 4x4 & Calistenia Base", badge: "🌿 Salud", color: "#15803d" },
+      { time: "09:30 - 12:45", title: "👑 Bloque Foco: Avance Profesional, CV/Entrevistas & Gestión Vital", badge: "👑 Vida", color: "#b45309" },
+      { time: "13:00 - 13:20", title: "🇩🇪 Alemán al Mediodía + 🎺 20 min Trompeta / Música", badge: "🧭 Exploración", color: "#0f766e" },
+      { time: "14:30 - 17:30", title: "🌱 Chile Agrotech (AgriTwin) & ReWild Bosque Nativo", badge: "🌲 Naturaleza", color: "#15803d" }
+    ],
+    "JUEVES": [
+      { time: "09:00 - 09:30", title: "🏋️‍♂️ Fuerza & Potencia: Circuito de Caballería (100x3)", badge: "🥊 Deporte", color: "#15803d" },
+      { time: "09:30 - 12:45", title: "👑 Bloque Foco: Empleo Hannover / Bilbao & Trámites Estratégicos", badge: "👑 Vida", color: "#b45309" },
+      { time: "14:30 - 17:30", title: "🧭 Proyectos: Maule Red / Museo de la Memoria / Ciencia & Territorio", badge: "🧭 Exploración", color: "#1d4ed8" },
+      { time: "20:00 - 21:30", title: "💆 Aftercare, Masajes en Pareja & Descompresión Somática", badge: "💖 Amor", color: "#be185d" }
+    ],
+    "VIERNES": [
+      { time: "09:00 - 09:30", title: "🥊 Sparring / Cardio Matutino & Ducha Fría", badge: "🥊 Deporte", color: "#15803d" },
+      { time: "09:30 - 12:45", title: "👑 Cierre de Semana Laboral: Seguimiento de Postulaciones & Objetivos", badge: "👑 Vida", color: "#b45309" },
+      { time: "16:00 - 18:00", title: "🌲 Caminata en Bosque / Naturaleza Viva & Desconexión Digital", badge: "🌲 Naturaleza", color: "#15803d" },
+      { time: "20:00 - 23:00", title: "🍷 Cita de Viernes con Mi Novia: Goce, Conversación & Conexión", badge: "💖 Amor", color: "#be185d" }
+    ],
+    "SÁBADO": [
+      { time: "09:30 - 11:00", title: "🧗‍♂️ Deporte Outdoor, Escalada, Ciclismo o Entrenamiento Libre", badge: "🥊 Deporte", color: "#15803d" },
+      { time: "11:30 - 13:30", title: "🎨 Exploración Creativa: Pintura al Óleo, Fotografía o Cómic Piratas", badge: "🧭 Exploración", color: "#1d4ed8" },
+      { time: "16:00 - 18:30", title: "🌲 Conexión Tierra / Paseo Exterior & Recarga Solar", badge: "🌲 Naturaleza", color: "#15803d" },
+      { time: "20:30 - 22:30", title: "🕯️ Presencia Íntima, Tantra & Disfrute Consciente", badge: "💖 Amor", color: "#be185d" }
+    ],
+    "DOMINGO": [
+      { time: "10:00 - 10:45", title: "🪙 Auditoría Dominical: Cuentas Sparkasse (€), Banco Chile ($) & Cero Gastos Tontos", badge: "🪙 Soberanía", color: "#b45309" },
+      { time: "11:00 - 12:30", title: "🕯️ Rito Ancestral, Meditación & Planificación de la Nueva Semana", badge: "🕯️ Espíritu", color: "#6d28d9" },
+      { time: "13:00 - 14:30", title: "👨‍🍳 Cocina con Afecto & Meal Prep Nutritivo", badge: "🌿 Salud", color: "#15803d" },
+      { time: "18:00 - 20:00", title: "📖 Lectura Estoica, Diario Hypomnémata & Sueño Reparador Temprano", badge: "🧠 Mente", color: "#0f766e" }
+    ]
+  };
+
+  var oracles = [
+    { q: "Al amanecer, cuando te cueste levantarte, dite a ti mismo: me despierto para hacer la obra de un ser humano vivo y libre.", a: "Marco Aurelio • Meditaciones V, 1" },
+    { q: "No gastes más tiempo argumentando lo que debería ser un buen hombre. Sé uno hoy mismo.", a: "Marco Aurelio • Meditaciones X, 16" },
+    { q: "Primero di a ti mismo quién quieres ser; y luego haz con alegría lo que tengas que hacer.", a: "Epicteto • Discursos" },
+    { q: "El alma se tiñe del color de sus pensamientos. Tiñe hoy tu mente de luz, enfoque y templanza.", a: "Marco Aurelio • Meditaciones V, 16" }
+  ];
+
+  var todayBlocks = schedules[dayName] || schedules["LUNES"];
+  var oracle = oracles[now.getDate() % oracles.length];
+  var blocksHtml = todayBlocks.map(function(b, idx) {
+    return '<div style="background:#fff;border:1px solid #e6dec8;border-left:4px solid ' + b.color + ';border-radius:10px;padding:12px 14px;margin-bottom:10px;">' +
+      '<div style="font-size:11px;font-weight:800;color:' + b.color + ';margin-bottom:3px;">#' + (idx + 1) + ' • ⏱️ ' + b.time + ' (' + b.badge + ')</div>' +
+      '<div style="font-size:14px;font-weight:700;color:#1c1917;">' + b.title + '</div></div>';
+  }).join("");
+
+  var htmlBody = '<div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#faf6ee;border:2px solid #c59a28;border-radius:16px;overflow:hidden;">' +
+    '<div style="background:linear-gradient(135deg,#064e3b 0%,#0f766e 55%,#b45309 100%);padding:26px 20px;text-align:center;color:#fff;">' +
+    '<div style="font-size:11px;font-weight:800;letter-spacing:1.5px;color:#fef08a;">🌿 SANTUARIO SOLAR • CABALLERO JAGUAR</div>' +
+    '<h1 style="margin:6px 0 4px 0;font-size:22px;color:#fff;">☀️ ¡Buenos días, Daniel! (09:00 AM)</h1>' +
+    '<p style="margin:0;font-size:13px;color:#d1fae5;">' + dayName + ' • ' + dateStr + '</p></div>' +
+    '<div style="padding:22px 18px;color:#1c1917;">' +
+    '<div style="background:#fffbeb;border:1px solid #f59e0b;border-radius:12px;padding:14px;text-align:center;margin-bottom:18px;">' +
+    '<em style="font-size:14px;color:#292524;">"' + oracle.q + '"</em><div style="font-size:11px;font-weight:800;color:#92400e;margin-top:4px;">— ' + oracle.a + '</div></div>' +
+    '<div style="text-align:center;margin-bottom:20px;"><a href="' + appUrl + '" style="display:inline-block;background:linear-gradient(135deg,#15803d,#0d9488);color:#fff;text-decoration:none;font-weight:800;font-size:14px;padding:14px 26px;border-radius:99px;">📱 ABRIR CHECK-IN MATUTINO EN EL CELULAR &rarr;</a></div>' +
+    blocksHtml + '</div></div>';
+
+  MailApp.sendEmail({
+    to: recipient,
+    subject: "☀️ [Caballero Jaguar 9:00 AM • " + dayName + "] Tu Pulso de Vida y Prioridades (" + dateStr + ")",
+    htmlBody: htmlBody
+  });
+}`;
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(code).then(() => {
+        if (typeof showNotification === "function") {
+          showNotification("📋 ¡Script Auto-Instalable 09:00 AM copiado! Pégalo en script.google.com y ejecuta activarCorreo9AM");
+        }
+      });
+    }
   }
 };
 
