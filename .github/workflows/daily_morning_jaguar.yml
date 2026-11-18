@@ -1,9 +1,7 @@
-name: "☀️ Correo Matutino AM • Caballero Jaguar"
+name: "☀️ Correo Matutino AM • Caballero Jaguar (Manual / Respaldo)"
 
 on:
-  schedule:
-    # Se ejecuta todas las mañanas a las 08:00 UTC (09:00 AM CET en Alemania y España)
-    - cron: '0 8 * * *'
+  # El envío automático diario de las 09:00 AM y 09:00 PM corre en Google Apps Script (con Google Calendar en vivo)
   workflow_dispatch: # Permite disparo manual con 1 clic desde la pestaña Actions de GitHub
 
 permissions:

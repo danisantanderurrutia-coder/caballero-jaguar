@@ -429,20 +429,38 @@ function sendDailyNightTomorrowEmail() {
   });
 }
 
-// --- 5. CORREO MATUTINO 9:00 AM (RESPALDO EN APPS SCRIPT SI SE DESEA) ---
-function activarCorreo9AM() {
+// --- 5. ACTIVADOR MAESTRO DUAL (09:00 AM + 09:00 PM EN GOOGLE APPS SCRIPT) ---
+function activarAmbosCorreos9AMy9PM() {
   const triggers = ScriptApp.getProjectTriggers();
   triggers.forEach(t => {
-    if (t.getHandlerFunction() === "sendDailyMorningJaguarEmail") {
+    const fn = t.getHandlerFunction();
+    if (fn === "sendDailyMorningJaguarEmail" || fn === "sendDailyNightTomorrowEmail") {
       ScriptApp.deleteTrigger(t);
     }
   });
+
+  // 1) Correo Matutino todos los días a las 09:00 AM
   ScriptApp.newTrigger("sendDailyMorningJaguarEmail")
     .timeBased()
     .everyDays(1)
     .atHour(9)
     .create();
+
+  // 2) Correo Nocturno todos los días a las 21:00 (9:00 PM)
+  ScriptApp.newTrigger("sendDailyNightTomorrowEmail")
+    .timeBased()
+    .everyDays(1)
+    .atHour(21)
+    .create();
+
+  // Enviar ambos correos de prueba ahora para verificar tus eventos de hoy y mañana en Google Calendar
   sendDailyMorningJaguarEmail();
+  sendDailyNightTomorrowEmail();
+  Logger.log("✅ Correos 09:00 AM y 09:00 PM activados con Google Calendar en vivo.");
+}
+
+function activarCorreo9AM() {
+  activarAmbosCorreos9AMy9PM();
 }
 
 function sendDailyMorningJaguarEmail() {
@@ -510,6 +528,39 @@ function sendDailyMorningJaguarEmail() {
   const todayBlocks = schedules[dayName] || schedules["LUNES"];
   const oracle = oracles[now.getDate() % oracles.length];
   const dayOfMonth = now.getDate();
+  const mainMission = (todayBlocks[1] || todayBlocks[0]).title;
+  const mainTime = (todayBlocks[1] || todayBlocks[0]).time;
+  const heroImgUrl = appUrl + "assets/img_jaguar_jungle_landing.jpg";
+  const logoImgUrl = appUrl + "assets/jungle_jaguar_logo.jpg";
+
+  // Leer eventos REALES de Google Calendar para HOY
+  let gcalTodayHtml = "";
+  try {
+    const events = CalendarApp.getDefaultCalendar().getEventsForDay(now);
+    if (events && events.length > 0) {
+      const evItems = events.map(ev => {
+        const startStr = ev.isAllDayEvent() ? "Todo el día" : Utilities.formatDate(ev.getStartTime(), Session.getScriptTimeZone() || "Europe/Berlin", "HH:mm");
+        const endStr = ev.isAllDayEvent() ? "" : (" - " + Utilities.formatDate(ev.getEndTime(), Session.getScriptTimeZone() || "Europe/Berlin", "HH:mm"));
+        return `<div style="padding: 6px 10px; background: #ffffff; border-left: 3.5px solid #1d4ed8; border-radius: 6px; margin-bottom: 6px; font-size: 13px; color: #1e293b;">
+          <strong style="color: #1d4ed8;">📅 ${startStr}${endStr}</strong> • ${ev.getTitle()}
+        </div>`;
+      }).join("");
+      gcalTodayHtml = `
+        <div style="background: #eff6ff; border: 1.5px solid #93c5fd; border-radius: 12px; padding: 12px 14px; margin-bottom: 18px;">
+          <div style="font-size: 11px; font-weight: 800; color: #1d4ed8; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px;">
+            📆 Tu Agenda Real en Google Calendar Hoy (${events.length})
+          </div>
+          ${evItems}
+        </div>
+      `;
+    } else {
+      gcalTodayHtml = `
+        <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; padding: 10px 14px; margin-bottom: 18px; font-size: 12.5px; color: #475569;">
+          📆 <strong>Google Calendar Hoy:</strong> Sin reuniones externas — día despejado para tu Misión Principal.
+        </div>
+      `;
+    }
+  } catch (e) {}
 
   let tkAlert = "";
   if (dayOfMonth >= 11 && dayOfMonth <= 16) {
@@ -528,26 +579,33 @@ function sendDailyMorningJaguarEmail() {
     </div>
   `).join("");
 
-  const subject = "☀️ [Caballero Jaguar 9:00 AM • " + dayName + "] Tu Pulso de Vida, 4 Bloques y Check-in (" + dateStr + ")";
+  const subject = "☀️ [Caballero Jaguar 9:00 AM • " + dayName + "] Misión del Día, Google Calendar y 4 Bloques (" + dateStr + ")";
   const htmlBody = `
     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; background: #faf6ee; border: 2px solid #c59a28; border-radius: 16px; overflow: hidden;">
-      <div style="background: linear-gradient(135deg, #064e3b 0%, #0f766e 55%, #b45309 100%); padding: 26px 20px; text-align: center; color: #fff;">
-        <div style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: #fef08a; text-transform: uppercase;">🌿 Santuario Solar • Caballero Jaguar</div>
-        <h1 style="margin: 6px 0 4px 0; font-size: 22px; color: #fff;">☀️ ¡Buenos días, Daniel! (09:00 AM)</h1>
+      <div style="background: linear-gradient(180deg, rgba(6, 78, 59, 0.72) 0%, rgba(15, 118, 110, 0.88) 100%), url('${heroImgUrl}') center/cover no-repeat; padding: 28px 20px; text-align: center; color: #fff;">
+        <img src="${logoImgUrl}" alt="Caballero Jaguar" width="60" height="60" style="width: 60px; height: 60px; border-radius: 50%; border: 2.5px solid #fde047; object-fit: cover; margin-bottom: 8px;">
+        <div style="font-size: 11px; font-weight: 800; letter-spacing: 1.5px; color: #fef08a; text-transform: uppercase;">☀️ Despertar de Acción • Caballero Jaguar (09:00 AM)</div>
+        <h1 style="margin: 6px 0 4px 0; font-size: 22px; color: #fff;">¡Buenos días, Daniel!</h1>
         <p style="margin: 0; font-size: 13px; color: #d1fae5;">${dayName} • ${dateStr}</p>
       </div>
       <div style="padding: 22px 18px; color: #1c1917;">
+        <div style="background: linear-gradient(135deg, #064e3b 0%, #0f766e 100%); border: 2px solid #f59e0b; border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; color: #fff;">
+          <div style="font-size: 10.5px; font-weight: 800; color: #fde047; text-transform: uppercase; letter-spacing: 1px;">👑 Misión Principal de Hoy (${mainTime})</div>
+          <div style="font-size: 15px; font-weight: 800; margin-top: 4px; line-height: 1.35;">${mainMission}</div>
+        </div>
         <div style="background: #fffbeb; border: 1px solid #f59e0b; border-radius: 12px; padding: 14px; text-align: center; margin-bottom: 18px;">
+          <div style="font-size: 10.5px; font-weight: 800; color: #b45309; text-transform: uppercase; margin-bottom: 4px;">✨ Oráculo Estoico &amp; Fuego Aries ♈</div>
           <em style="font-size: 14px; color: #292524;">"${oracle.q}"</em>
           <div style="font-size: 11px; font-weight: 800; color: #92400e; margin-top: 4px;">— ${oracle.a}</div>
         </div>
         ${tkAlert}
+        ${gcalTodayHtml}
         <div style="text-align: center; margin-bottom: 20px;">
           <a href="${appUrl}" style="display: inline-block; background: linear-gradient(135deg, #15803d, #0d9488); color: #fff; text-decoration: none; font-weight: 800; font-size: 14px; padding: 14px 26px; border-radius: 99px;">
-            📱 ABRIR CHECK-IN MATUTINO EN EL CELULAR &rarr;
+            📱 ABRIR CHECK-IN &amp; MODO FOCO EN EL CELULAR &rarr;
           </a>
         </div>
-        <div style="font-size: 12px; font-weight: 800; color: #065f46; text-transform: uppercase; margin-bottom: 8px;">🎯 Tus 4 Bloques Vitales de Hoy (${dayName}):</div>
+        <div style="font-size: 12px; font-weight: 800; color: #065f46; text-transform: uppercase; margin-bottom: 8px;">🎯 Tus 4 Bloques Tácticos de Hoy (${dayName}):</div>
         ${blocksHtml}
         <div style="background: #f5efe2; border: 1px solid #d6cbb5; border-radius: 10px; padding: 12px 14px; margin-top: 14px; font-size: 12.5px; color: #44403c;">
           🦅 <strong>Reto 21 Días &amp; 9 Banderines:</strong> Día 100% Limpio (0 Porno), 3.2L de agua y marca tus prioridades cumplidas desde el celular.
