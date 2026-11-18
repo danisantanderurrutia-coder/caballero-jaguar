@@ -371,7 +371,7 @@ function sendDailyNightTomorrowEmail() {
     tkAlert = `
       <div style="background: rgba(30, 58, 138, 0.25); border: 1px solid #3B82F6; border-left: 4px solid #60A5FA; border-radius: 8px; padding: 12px 14px; margin-bottom: 16px;">
         <div style="font-size: 11px; font-weight: 800; color: #93C5FD; text-transform: uppercase;">🏥 Mañana toca revisar: Techniker Krankenkasse (Día 15)</div>
-        <div style="font-size: 12.5px; color: #E0F2FE; margin-top: 3px;">Deja listo el pago mensual de tu seguro estudiantil TK (~145 €) y márcalo en la app.</div>
+        <div style="font-size: 12.5px; color: #E0F2FE; margin-top: 3px;">Deja listo el pago mensual de tu seguro estudiantil TK y márcalo en la app.</div>
       </div>
     `;
   }
@@ -567,7 +567,7 @@ function sendDailyMorningJaguarEmail() {
     tkAlert = `
       <div style="background: #eff6ff; border: 1.5px solid #3b82f6; border-left: 5px solid #1d4ed8; border-radius: 10px; padding: 12px 14px; margin-bottom: 18px;">
         <div style="font-size: 11px; font-weight: 800; color: #1d4ed8; text-transform: uppercase;">🏥 Recordatorio Día 15 • Techniker Krankenkasse (TK)</div>
-        <div style="font-size: 13px; color: #1e3a8a; margin-top: 3px;">Recuerda verificar el pago mensual de tu seguro estudiantil TK (~145 €) y marcarlo en la app.</div>
+        <div style="font-size: 13px; color: #1e3a8a; margin-top: 3px;">Recuerda verificar el pago mensual de tu seguro estudiantil TK y marcarlo en la app.</div>
       </div>
     `;
   }
