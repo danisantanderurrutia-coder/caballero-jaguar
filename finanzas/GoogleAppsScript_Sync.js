@@ -246,11 +246,13 @@ function activarCorreoNoche9PM() {
     }
   });
 
-  // Crear activador diario a las 21:00 (9:00 PM hora local de tu cuenta Google)
+  // Crear activador diario a las 21:00 hora europea (Europe/Berlin)
   ScriptApp.newTrigger("sendDailyNightTomorrowEmail")
     .timeBased()
     .everyDays(1)
     .atHour(21)
+    .nearMinute(0)
+    .inTimezone("Europe/Berlin")
     .create();
 
   // Enviar correo de prueba inmediato para confirmar que funciona
@@ -260,11 +262,12 @@ function activarCorreoNoche9PM() {
 
 function sendDailyNightTomorrowEmail() {
   const recipient = Session.getActiveUser().getEmail() || "danisantander.urrutia@gmail.com";
+  const tz = "Europe/Berlin";
   const now = new Date();
   const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-  const days = ["DOMINGO", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO"];
-  const tomorrowName = days[tomorrow.getDay()];
-  const tomorrowDateStr = Utilities.formatDate(tomorrow, Session.getScriptTimeZone() || "Europe/Berlin", "dd/MM/yyyy");
+  const daysIso = ["", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO", "DOMINGO"];
+  const tomorrowName = daysIso[parseInt(Utilities.formatDate(tomorrow, tz, "u"), 10)];
+  const tomorrowDateStr = Utilities.formatDate(tomorrow, tz, "dd/MM/yyyy");
   const appUrl = "https://danisantanderurrutia-coder.github.io/caballero-jaguar/";
 
   const schedules = {
@@ -439,18 +442,22 @@ function activarAmbosCorreos9AMy9PM() {
     }
   });
 
-  // 1) Correo Matutino todos los días a las 09:00 AM
+  // 1) Correo Matutino todos los días a las 09:00 AM (Hora Europea: Europe/Berlin)
   ScriptApp.newTrigger("sendDailyMorningJaguarEmail")
     .timeBased()
     .everyDays(1)
     .atHour(9)
+    .nearMinute(0)
+    .inTimezone("Europe/Berlin")
     .create();
 
-  // 2) Correo Nocturno todos los días a las 21:00 (9:00 PM)
+  // 2) Correo Nocturno todos los días a las 21:00 (9:00 PM Hora Europea: Europe/Berlin)
   ScriptApp.newTrigger("sendDailyNightTomorrowEmail")
     .timeBased()
     .everyDays(1)
     .atHour(21)
+    .nearMinute(0)
+    .inTimezone("Europe/Berlin")
     .create();
 
   // Enviar ambos correos de prueba ahora para verificar tus eventos de hoy y mañana en Google Calendar
@@ -465,10 +472,11 @@ function activarCorreo9AM() {
 
 function sendDailyMorningJaguarEmail() {
   const recipient = Session.getActiveUser().getEmail() || "danisantander.urrutia@gmail.com";
+  const tz = "Europe/Berlin";
   const now = new Date();
-  const days = ["DOMINGO", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO"];
-  const dayName = days[now.getDay()];
-  const dateStr = Utilities.formatDate(now, Session.getScriptTimeZone() || "Europe/Berlin", "dd/MM/yyyy");
+  const daysIso = ["", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO", "DOMINGO"];
+  const dayName = daysIso[parseInt(Utilities.formatDate(now, tz, "u"), 10)];
+  const dateStr = Utilities.formatDate(now, tz, "dd/MM/yyyy");
   const appUrl = "https://danisantanderurrutia-coder.github.io/caballero-jaguar/";
 
   const schedules = {
