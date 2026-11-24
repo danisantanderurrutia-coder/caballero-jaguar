@@ -5160,59 +5160,40 @@ const imperivmEngine = {
     const tomorrowPlan = (scheduleData && scheduleData.days && scheduleData.days[tomorrowKey]) ? scheduleData.days[tomorrowKey] : { focus: "Estrategia & Disciplina", blocks: [] };
     const tomorrowBlocks = (tomorrowPlan.blocks || []).slice(0, 4);
 
-    // Protocolo dinámico de banderas
-    let protocolStatus = "";
-    let protocolFeedback = "";
+    // Protocolo dinámico de banderas compacto
+    let flagsLine = "";
     if (real.activeFlags.length === 0) {
-      protocolStatus = "🚨 *ESTADO SEMANAL: CAMPAMENTO FRÍO (0 Banderas)*";
-      protocolFeedback = "⚠️ *Alerta de Inercia:* No hay banderas encendidas todavía esta semana.\nLa inercia pesa si la dejas crecer, pero el primer paso la destruye al instante. Elige UNA sola bandera mañana (ej. 20 min de Deporte o Foco) y pon el primer punto en la tabla.";
+      flagsLine = "🚩 *Banderas:* 0/9 encendidas ⚪\n_Campamento frío. Mañana sal del cero con 1 frente._";
     } else if (real.activeFlags.length <= 3) {
-      protocolStatus = `⚠️ *ESTADO SEMANAL: COMBATE PARCIAL (${real.activeFlags.length}/9 Banderas)*`;
-      protocolFeedback = `Tienes frentes activos (${real.activeFlags.join(" · ")}), pero la mayoría sigue en sombra.\n¿Qué está pasando con los otros flancos? ¿Dónde está el cuello de botella o la fuga de energía? Mañana reconquista al menos un frente descuidado.`;
+      flagsLine = `🚩 *Banderas:* ${real.activeFlags.length}/9 (${real.activeFlags.join(" · ")}) ⚠️\n_Flancos en sombra. ¿Dónde está el freno?_`;
     } else {
-      protocolStatus = `🔥 *ESTADO SEMANAL: ALTA TRACCIÓN (${real.activeFlags.length}/9 Banderas)*`;
-      protocolFeedback = `¡Excelente tracción! Llevas ${real.activeFlags.length} banderas encendidas (${real.activeFlags.join(" · ")}).\nEl impulso está de tu lado; no te confíes ni bajes la guardia. Sigue sumando y consolida la victoria de la semana como un verdadero Caballero Jaguar.`;
+      flagsLine = `🚩 *Banderas:* ${real.activeFlags.length}/9 (${real.activeFlags.join(" · ")}) 🔥\n_¡Gran tracción! Mantén el ritmo._`;
     }
 
-    // Desafío 21 días (No Fap / Templanza)
-    let nofapVisual = "";
-    let nofapMsg = "";
+    // Desafío 21 días (No Fap / Templanza) compacto
+    let retoLine = "";
     if (real.noPornDays <= 0) {
-      nofapVisual = "░░░░░░░░░░░░░░░░░░░░░ *[Racha en pausa / 0 Días]*";
-      nofapMsg = "⚠️ *Alerta de Guardia:* No hay marcas activas registradas en la app.\n• ¿Te mantuviste firme y solo olvidaste marcarlo? ➡️ Entra a la app y pulsa *Reconciliar con Honores*.\n• ¿Hubo quiebre o desconexión? ➡️ Asumir con serenidad estoica y consagrar mañana el *Nuevo Día 1*.";
+      retoLine = "🔥 *Reto 21d:* 0/21 (Pausa) ⚠️\n_¿Olvidaste marcar o es Día 1?_";
     } else {
       const filled = Math.min(21, real.noPornDays);
-      const empty = 21 - filled;
-      const pct = Math.round((filled / 21) * 100);
-      const bar = "▓".repeat(filled) + "░".repeat(empty);
-      nofapVisual = `${bar} *[Día ${filled} de 21]* (${pct}%)`;
-      nofapMsg = "🛡️ *Templanza Activa:* Sistema nervioso en calma, energía vital protegida y voluntad soberana al mando.";
+      const bar = "▓".repeat(filled) + "░".repeat(21 - filled);
+      retoLine = `🔥 *Reto 21d:* ${bar} ${filled}/21d\n_Templanza y energía vital al mando._`;
     }
 
-    const blocksLines = tomorrowBlocks.map((b, idx) => `• *${b.time}* [${b.badge || "Táctico"}] ${b.title}`).join("\n") || "• 09:00 - 12:45 [Foco] Postulaciones y Avance Profesional";
+    const blocksLines = tomorrowBlocks.map((b) => `• ${b.time.split(" - ")[0]} [${b.badge || "Táctico"}] ${b.title.split(":")[1] || b.title}`).join("\n") || "• 09:30 [Vida] Postulaciones y Foco Dual";
 
-    const messageText = `🌙 *CABALLERO JAGUAR • REPORTE DE LAS 21:00*
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-📅 *Víspera: Preparando ${tomorrowName} (${tomorrowDateStr})*
+    const messageText = `🌙 *JAGUAR • 21:00* | Víspera de *${tomorrowName}*
 
-${protocolStatus}
-${protocolFeedback}
+${flagsLine}
 
-🔥 *DESAFÍO 21 DÍAS (TEMPLANZA & NO FAP):*
-${nofapVisual}
-${nofapMsg}
+${retoLine}
 
-⚔️ *MISIÓN DE ASALTO PARA MAÑANA (${tomorrowName}):*
+⚔️ *Plan de Mañana:*
 ${blocksLines}
+📅 _Calendar: Sin reuniones externas_
 
-📆 *GOOGLE CALENDAR (MAÑANA):*
-• 📅 Agenda libre de reuniones externas — Día ideal para Deep Work.
+🏛️ _"${real.oracleQuote.text.slice(0, 80)}..."_
 
-🏛️ *REFLEXIÓN NOCTURNA DEL ESTRATEGA:*
-_"${real.oracleQuote.text}"_
-— ${real.oracleQuote.author}
-
-👔 *Rito de la Noche:* Deja tu ropa lista, apaga pantallas temprano y entra al santuario:
 📲 https://danisantanderurrutia-coder.github.io/caballero-jaguar/`;
 
     try {

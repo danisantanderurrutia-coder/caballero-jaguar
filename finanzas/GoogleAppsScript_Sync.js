@@ -601,78 +601,65 @@ function sendDailyNightTomorrowWhatsApp() {
   });
   const activeCount = activeFlags.length;
 
-  let protocolStatus = "";
-  let protocolFeedback = "";
+  let flagsLine = "";
   if (activeCount === 0) {
-    protocolStatus = "🚨 *ESTADO SEMANAL: CAMPAMENTO FRÍO (0 Banderas)*";
-    protocolFeedback = "⚠️ *Alerta de Inercia:* No hay banderas encendidas todavía esta semana.\nLa inercia pesa si la dejas crecer, pero el primer paso la destruye al instante. Elige UNA sola bandera mañana (ej. 20 min de Deporte o Foco) y pon el primer punto en la tabla.";
+    flagsLine = "🚩 *Banderas:* 0/9 encendidas ⚪\n_Campamento frío. Mañana sal del cero con 1 frente._";
   } else if (activeCount <= 3) {
-    protocolStatus = `⚠️ *ESTADO SEMANAL: COMBATE PARCIAL (${activeCount}/9 Banderas)*`;
-    protocolFeedback = `Tienes frentes activos (${activeFlags.join(" · ")}), pero la mayoría sigue en sombra.\n¿Qué está pasando con los otros flancos? ¿Dónde está el cuello de botella o la fuga de energía? Mañana reconquista al menos un frente descuidado.`;
+    flagsLine = `🚩 *Banderas:* ${activeCount}/9 (${activeFlags.join(" · ")}) ⚠️\n_Flancos en sombra. ¿Dónde está el freno?_`;
   } else {
-    protocolStatus = `🔥 *ESTADO SEMANAL: ALTA TRACCIÓN (${activeCount}/9 Banderas)*`;
-    protocolFeedback = `¡Excelente tracción! Llevas ${activeCount} banderas encendidas (${activeFlags.join(" · ")}).\nEl impulso está de tu lado; no te confíes ni bajes la guardia. Sigue sumando y consolida la victoria de la semana como un verdadero Caballero Jaguar.`;
+    flagsLine = `🚩 *Banderas:* ${activeCount}/9 (${activeFlags.join(" · ")}) 🔥\n_¡Gran tracción! Mantén el ritmo._`;
   }
 
   // 2) ESTADO DEL DESAFÍO 21 DÍAS (NO FAP / TEMPLANZA)
-  let nofapVisual = "";
-  let nofapMsg = "";
+  let retoLine = "";
   if (noPornDays <= 0) {
-    nofapVisual = "░░░░░░░░░░░░░░░░░░░░░ *[Racha en pausa / 0 Días]*";
-    nofapMsg = "⚠️ *Alerta de Guardia:* No hay marcas activas registradas en la app.\n• ¿Te mantuviste firme y solo olvidaste marcarlo? ➡️ Entra a la app y pulsa *Reconciliar con Honores*.\n• ¿Hubo quiebre o desconexión? ➡️ Asumir con serenidad estoica y consagrar mañana el *Nuevo Día 1*.";
+    retoLine = "🔥 *Reto 21d:* 0/21 (Pausa) ⚠️\n_¿Olvidaste marcar o es Día 1?_";
   } else {
     const filled = Math.min(21, noPornDays);
-    const empty = 21 - filled;
-    const pct = Math.round((filled / 21) * 100);
-    const bar = "▓".repeat(filled) + "░".repeat(empty);
-    nofapVisual = `${bar} *[Día ${filled} de 21]* (${pct}%)`;
-    nofapMsg = "🛡️ *Templanza Activa:* Sistema nervioso en calma, energía vital protegida y voluntad soberana al mando.";
+    const bar = "▓".repeat(filled) + "░".repeat(21 - filled);
+    retoLine = `🔥 *Reto 21d:* ${bar} ${filled}/21d\n_Templanza y energía vital al mando._`;
   }
 
-  // 3) PLANES PARA MAÑANA (HORARIOS TÁCTICOS)
+  // 3) PLANES PARA MAÑANA (HORARIOS TÁCTICOS COMPACTOS)
   const tomorrowBlocks = schedules[tomorrowName] || schedules["LUNES"];
-  const blocksLines = tomorrowBlocks.map((b, idx) => `• *${b.time}* [${b.badge}] ${b.title}`).join("\n");
+  const blocksLines = tomorrowBlocks.map((b) => `• ${b.time.split(" - ")[0]} [${b.badge}] ${b.title.split(":")[1] || b.title}`).join("\n");
 
   // 4) AGENDA REAL GOOGLE CALENDAR
-  let calLines = "• 📅 Agenda libre de reuniones externas — Día ideal para Deep Work.";
+  let calLine = "📅 _Calendar: Sin reuniones externas_";
   try {
     const cal = CalendarApp.getDefaultCalendar();
     const events = cal.getEventsForDay(tomorrow);
     if (events && events.length > 0) {
-      calLines = events.map(ev => {
+      const evTitles = events.map(ev => {
         const startStr = ev.isAllDayEvent() ? "Todo el día" : Utilities.formatDate(ev.getStartTime(), tz, "HH:mm");
-        const endStr = ev.isAllDayEvent() ? "" : (" - " + Utilities.formatDate(ev.getEndTime(), tz, "HH:mm"));
-        return `• 📅 *${startStr}${endStr}* • ${ev.getTitle()}`;
-      }).join("\n");
+        return `${startStr} ${ev.getTitle()}`;
+      });
+      calLine = `📅 _Calendar: ${evTitles.join("; ")}_`;
     }
   } catch (e) {}
 
   // 5) REFLEXIÓN NOCTURNA ESTOICA
-  const reflection = nightReflections[now.getDate() % nightReflections.length];
+  const quotes = [
+    "La disciplina de la noche es la victoria del alba.",
+    "Prepara el terreno hoy; despierta como comandante mañana.",
+    "No negocies con la inercia: cumple tu siguiente deber con calma.",
+    "Mente limpia, ropa lista y descanso reparador."
+  ];
+  const quote = quotes[now.getDate() % quotes.length];
 
-  // Ensamblar mensaje final de WhatsApp
-  const messageText = `🌙 *CABALLERO JAGUAR • REPORTE DE LAS 21:00*
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-📅 *Víspera: Preparando ${tomorrowName} (${tomorrowDateStr})*
+  // Ensamblar mensaje final ultra-compacto
+  const messageText = `🌙 *JAGUAR • 21:00* | Víspera de *${tomorrowName}*
 
-${protocolStatus}
-${protocolFeedback}
+${flagsLine}
 
-🔥 *DESAFÍO 21 DÍAS (TEMPLANZA & NO FAP):*
-${nofapVisual}
-${nofapMsg}
+${retoLine}
 
-⚔️ *MISIÓN DE ASALTO PARA MAÑANA (${tomorrowName}):*
+⚔️ *Plan de Mañana:*
 ${blocksLines}
+${calLine}
 
-📆 *GOOGLE CALENDAR (MAÑANA):*
-${calLines}
+🏛️ _"${quote}"_
 
-🏛️ *REFLEXIÓN NOCTURNA DEL ESTRATEGA:*
-_"${reflection.q}"_
-— ${reflection.a}
-
-👔 *Rito de la Noche:* Deja tu ropa lista, apaga pantallas temprano y entra al santuario:
 📲 ${appUrl}`;
 
   // Envío a WhatsApp vía Green-API
@@ -1158,78 +1145,65 @@ function sendDailyNightTomorrowWhatsApp() {
   });
   const activeCount = activeFlags.length;
 
-  let protocolStatus = "";
-  let protocolFeedback = "";
+  let flagsLine = "";
   if (activeCount === 0) {
-    protocolStatus = "🚨 *ESTADO SEMANAL: CAMPAMENTO FRÍO (0 Banderas)*";
-    protocolFeedback = "⚠️ *Alerta de Inercia:* No hay banderas encendidas todavía esta semana.\nLa inercia pesa si la dejas crecer, pero el primer paso la destruye al instante. Elige UNA sola bandera mañana (ej. 20 min de Deporte o Foco) y pon el primer punto en la tabla.";
+    flagsLine = "🚩 *Banderas:* 0/9 encendidas ⚪\n_Campamento frío. Mañana sal del cero con 1 frente._";
   } else if (activeCount <= 3) {
-    protocolStatus = `⚠️ *ESTADO SEMANAL: COMBATE PARCIAL (${activeCount}/9 Banderas)*`;
-    protocolFeedback = `Tienes frentes activos (${activeFlags.join(" · ")}), pero la mayoría sigue en sombra.\n¿Qué está pasando con los otros flancos? ¿Dónde está el cuello de botella o la fuga de energía? Mañana reconquista al menos un frente descuidado.`;
+    flagsLine = `🚩 *Banderas:* ${activeCount}/9 (${activeFlags.join(" · ")}) ⚠️\n_Flancos en sombra. ¿Dónde está el freno?_`;
   } else {
-    protocolStatus = `🔥 *ESTADO SEMANAL: ALTA TRACCIÓN (${activeCount}/9 Banderas)*`;
-    protocolFeedback = `¡Excelente tracción! Llevas ${activeCount} banderas encendidas (${activeFlags.join(" · ")}).\nEl impulso está de tu lado; no te confíes ni bajes la guardia. Sigue sumando y consolida la victoria de la semana como un verdadero Caballero Jaguar.`;
+    flagsLine = `🚩 *Banderas:* ${activeCount}/9 (${activeFlags.join(" · ")}) 🔥\n_¡Gran tracción! Mantén el ritmo._`;
   }
 
   // 2) ESTADO DEL DESAFÍO 21 DÍAS (NO FAP / TEMPLANZA)
-  let nofapVisual = "";
-  let nofapMsg = "";
+  let retoLine = "";
   if (noPornDays <= 0) {
-    nofapVisual = "░░░░░░░░░░░░░░░░░░░░░ *[Racha en pausa / 0 Días]*";
-    nofapMsg = "⚠️ *Alerta de Guardia:* No hay marcas activas registradas en la app.\n• ¿Te mantuviste firme y solo olvidaste marcarlo? ➡️ Entra a la app y pulsa *Reconciliar con Honores*.\n• ¿Hubo quiebre o desconexión? ➡️ Asumir con serenidad estoica y consagrar mañana el *Nuevo Día 1*.";
+    retoLine = "🔥 *Reto 21d:* 0/21 (Pausa) ⚠️\n_¿Olvidaste marcar o es Día 1?_";
   } else {
     const filled = Math.min(21, noPornDays);
-    const empty = 21 - filled;
-    const pct = Math.round((filled / 21) * 100);
-    const bar = "▓".repeat(filled) + "░".repeat(empty);
-    nofapVisual = `${bar} *[Día ${filled} de 21]* (${pct}%)`;
-    nofapMsg = "🛡️ *Templanza Activa:* Sistema nervioso en calma, energía vital protegida y voluntad soberana al mando.";
+    const bar = "▓".repeat(filled) + "░".repeat(21 - filled);
+    retoLine = `🔥 *Reto 21d:* ${bar} ${filled}/21d\n_Templanza y energía vital al mando._`;
   }
 
-  // 3) PLANES PARA MAÑANA (HORARIOS TÁCTICOS)
+  // 3) PLANES PARA MAÑANA (HORARIOS TÁCTICOS COMPACTOS)
   const tomorrowBlocks = schedules[tomorrowName] || schedules["LUNES"];
-  const blocksLines = tomorrowBlocks.map((b, idx) => `• *${b.time}* [${b.badge}] ${b.title}`).join("\n");
+  const blocksLines = tomorrowBlocks.map((b) => `• ${b.time.split(" - ")[0]} [${b.badge}] ${b.title.split(":")[1] || b.title}`).join("\n");
 
   // 4) AGENDA REAL GOOGLE CALENDAR
-  let calLines = "• 📅 Agenda libre de reuniones externas — Día ideal para Deep Work.";
+  let calLine = "📅 _Calendar: Sin reuniones externas_";
   try {
     const cal = CalendarApp.getDefaultCalendar();
     const events = cal.getEventsForDay(tomorrow);
     if (events && events.length > 0) {
-      calLines = events.map(ev => {
+      const evTitles = events.map(ev => {
         const startStr = ev.isAllDayEvent() ? "Todo el día" : Utilities.formatDate(ev.getStartTime(), tz, "HH:mm");
-        const endStr = ev.isAllDayEvent() ? "" : (" - " + Utilities.formatDate(ev.getEndTime(), tz, "HH:mm"));
-        return `• 📅 *${startStr}${endStr}* • ${ev.getTitle()}`;
-      }).join("\n");
+        return `${startStr} ${ev.getTitle()}`;
+      });
+      calLine = `📅 _Calendar: ${evTitles.join("; ")}_`;
     }
   } catch (e) {}
 
   // 5) REFLEXIÓN NOCTURNA ESTOICA
-  const reflection = nightReflections[now.getDate() % nightReflections.length];
+  const quotes = [
+    "La disciplina de la noche es la victoria del alba.",
+    "Prepara el terreno hoy; despierta como comandante mañana.",
+    "No negocies con la inercia: cumple tu siguiente deber con calma.",
+    "Mente limpia, ropa lista y descanso reparador."
+  ];
+  const quote = quotes[now.getDate() % quotes.length];
 
-  // Ensamblar mensaje final de WhatsApp
-  const messageText = `🌙 *CABALLERO JAGUAR • REPORTE DE LAS 21:00*
-━━━━━━━━━━━━━━━━━━━━━━━━━━
-📅 *Víspera: Preparando ${tomorrowName} (${tomorrowDateStr})*
+  // Ensamblar mensaje final ultra-compacto
+  const messageText = `🌙 *JAGUAR • 21:00* | Víspera de *${tomorrowName}*
 
-${protocolStatus}
-${protocolFeedback}
+${flagsLine}
 
-🔥 *DESAFÍO 21 DÍAS (TEMPLANZA & NO FAP):*
-${nofapVisual}
-${nofapMsg}
+${retoLine}
 
-⚔️ *MISIÓN DE ASALTO PARA MAÑANA (${tomorrowName}):*
+⚔️ *Plan de Mañana:*
 ${blocksLines}
+${calLine}
 
-📆 *GOOGLE CALENDAR (MAÑANA):*
-${calLines}
+🏛️ _"${quote}"_
 
-🏛️ *REFLEXIÓN NOCTURNA DEL ESTRATEGA:*
-_"${reflection.q}"_
-— ${reflection.a}
-
-👔 *Rito de la Noche:* Deja tu ropa lista, apaga pantallas temprano y entra al santuario:
 📲 ${appUrl}`;
 
   // Envío a WhatsApp vía Green-API
