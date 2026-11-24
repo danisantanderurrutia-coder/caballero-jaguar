@@ -104,6 +104,22 @@ function doPost(e) {
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
+    // B) Sincronizar estado real del usuario (Reto 21 días Sin Fap + XP semanal por bandera)
+    if (data.action === "sync_jaguar_state") {
+      const snapshot = {
+        noPornDays: Math.max(0, Number(data.noPornDays) || 0),
+        noPornMarked: Boolean(data.noPornMarked),
+        weeklyAuraXP: (data.weeklyAuraXP && typeof data.weeklyAuraXP === "object") ? data.weeklyAuraXP : {},
+        lastSyncIso: data.lastSyncIso || new Date().toISOString()
+      };
+      PropertiesService.getUserProperties().setProperty("CABALLERO_JAGUAR_STATE", JSON.stringify(snapshot));
+      return ContentService.createTextOutput(JSON.stringify({
+        status: "success",
+        message: "Estado real de Caballero Jaguar sincronizado para el correo 09:00 AM.",
+        snapshot: snapshot
+      })).setMimeType(ContentService.MimeType.JSON);
+    }
+
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     
     if (data.transactions && Array.isArray(data.transactions)) {
@@ -545,17 +561,141 @@ function sendDailyMorningJaguarEmail() {
     ]
   };
 
-  const oracles = [
-    { q: "Al amanecer, cuando te cueste levantarte, dite a ti mismo: me despierto para hacer la obra de un ser humano vivo y libre.", a: "Marco Aurelio • Meditaciones V, 1" },
-    { q: "No gastes más tiempo argumentando lo que debería ser un buen hombre. Sé uno hoy mismo.", a: "Marco Aurelio • Meditaciones X, 16" },
-    { q: "Primero di a ti mismo quién quieres ser; y luego haz con alegría lo que tengas que hacer.", a: "Epicteto • Discursos" },
-    { q: "Cada nuevo día es una vida entera en miniatura: despierta con propósito, actúa con presencia y descansa en paz.", a: "Séneca • Cartas a Lucilio" },
-    { q: "El alma se tiñe del color de sus pensamientos. Tiñe hoy tu mente de luz, enfoque y templanza.", a: "Marco Aurelio • Meditaciones V, 16" },
-    { q: "Caminar en belleza (Hózhó): que haya belleza delante de ti, detrás de ti y en cada paso que des hoy.", a: "Tradición Navajo Diné • Rito del Jaguar" }
+  // --- LECTURA DEL ESTADO REAL DEL USUARIO (SIN ASUMIR PROGRESO SI NO ESTÁ MARCADO) ---
+  let realState = { noPornDays: 0, noPornMarked: false, weeklyAuraXP: {} };
+  try {
+    const rawProp = PropertiesService.getUserProperties().getProperty("CABALLERO_JAGUAR_STATE");
+    if (rawProp) {
+      const parsed = JSON.parse(rawProp);
+      if (parsed && typeof parsed === "object") {
+        realState = {
+          noPornDays: Math.max(0, Number(parsed.noPornDays) || 0),
+          noPornMarked: Boolean(parsed.noPornMarked),
+          weeklyAuraXP: (parsed.weeklyAuraXP && typeof parsed.weeklyAuraXP === "object") ? parsed.weeklyAuraXP : {}
+        };
+      }
+    }
+  } catch (stErr) {}
+
+  // 1) CONTADOR REAL DE DÍAS SIN FAP (RETO 21 DÍAS)
+  const noPornDays = realState.noPornMarked ? realState.noPornDays : 0;
+  let reto21Html = "";
+  if (noPornDays <= 0) {
+    reto21Html = `
+      <div style="background: #fef2f2; border: 1.5px solid #ef4444; border-left: 5px solid #b91c1c; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px;">
+        <div style="font-size: 11px; font-weight: 800; color: #b91c1c; text-transform: uppercase; letter-spacing: 0.8px;">
+          🦅 Reto 21 Días Sin Fap • Racha en pausa / 0 días
+        </div>
+        <p style="margin: 6px 0 0 0; font-size: 13px; color: #7f1d1d; line-height: 1.45;">
+          Racha en pausa / 0 días. Si te mantuviste firme y olvidaste marcarlo, entra a reconciliar con honores; si hubo caída, hoy es tu nuevo Día 1 con cabeza fría.
+        </p>
+      </div>
+    `;
+  } else {
+    const capped = Math.min(21, noPornDays);
+    const filledSquares = "■ ".repeat(capped).trim();
+    const emptySquares = "□ ".repeat(Math.max(0, 21 - capped)).trim();
+    const barText = (filledSquares + (emptySquares ? " " + emptySquares : "")).trim();
+    reto21Html = `
+      <div style="background: #ecfdf5; border: 1.5px solid #10b981; border-left: 5px solid #047857; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px;">
+        <div style="font-size: 11px; font-weight: 800; color: #065f46; text-transform: uppercase; letter-spacing: 0.8px;">
+          🦅 Reto 21 Días Sin Fap • [Día ${noPornDays} de 21]
+        </div>
+        <div style="font-size: 13px; letter-spacing: 2px; color: #059669; font-weight: 900; margin: 6px 0;">
+          ${barText}
+        </div>
+        <p style="margin: 0; font-size: 12.5px; color: #064e3b; line-height: 1.45;">
+          Templanza activa (${noPornDays} día(s) firme(s)). Mente limpia, energía preservada y dominio sobre el impulso.
+        </p>
+      </div>
+    `;
+  }
+
+  // 2) PROTOCOLO TÁCTICO DE BANDERAS SEMANALES (XP REAL REGISTRADO ESTA SEMANA)
+  const auraDefs = [
+    { key: "vida", label: "👑 Vida" },
+    { key: "exploracion", label: "🧭 Exploración" },
+    { key: "amor", label: "💖 Amor" },
+    { key: "mente", label: "🧠 Mente" },
+    { key: "salud", label: "🌿 Salud" },
+    { key: "deporte", label: "🥊 Deporte" },
+    { key: "soberania", label: "🪙 Soberanía" },
+    { key: "naturaleza", label: "🌲 Naturaleza" },
+    { key: "espiritualidad", label: "🕯️ Espíritu" }
   ];
 
+  const activeFlags = [];
+  const shadowFlags = [];
+  auraDefs.forEach(a => {
+    const xpVal = Number(realState.weeklyAuraXP[a.key]) || 0;
+    if (xpVal > 0) {
+      activeFlags.push(`${a.label} (${xpVal} XP)`);
+    } else {
+      shadowFlags.push(a.label);
+    }
+  });
+  const activeCount = activeFlags.length;
+
+  let banderasHtml = "";
+  if (activeCount === 0) {
+    banderasHtml = `
+      <div style="background: #fff7ed; border: 1.5px solid #f97316; border-left: 5px solid #c2410c; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px;">
+        <div style="font-size: 11px; font-weight: 800; color: #c2410c; text-transform: uppercase; letter-spacing: 0.8px;">
+          🚩 [Alerta de Inercia] • 0 / 9 Banderas Activadas Esta Semana
+        </div>
+        <p style="margin: 6px 0 0 0; font-size: 13px; color: #7c2d12; line-height: 1.45;">
+          Campamento frío. Elige UNA sola bandera hoy —ej. 20 min de deporte o foco— y sal del cero.
+        </p>
+      </div>
+    `;
+  } else if (activeCount <= 3) {
+    banderasHtml = `
+      <div style="background: #fefce8; border: 1.5px solid #eab308; border-left: 5px solid #a16207; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px;">
+        <div style="font-size: 11px; font-weight: 800; color: #a16207; text-transform: uppercase; letter-spacing: 0.8px;">
+          ⚔️ [Chequeo Táctico] • ${activeCount} / 9 Banderas Activadas Esta Semana
+        </div>
+        <p style="margin: 6px 0 8px 0; font-size: 13px; color: #713f12; line-height: 1.45;">
+          Llevas ${activeCount} frente(s) activo(s), pero el resto sigue en sombra. ¿Dónde está el cuello de botella o fuga de energía? Reconquista un flanco hoy.
+        </p>
+        <div style="font-size: 11.5px; color: #422006; line-height: 1.5;">
+          <strong>Encendidas:</strong> ${activeFlags.join(" · ")}<br>
+          <strong>En sombra (0 XP):</strong> ${shadowFlags.join(" · ")}
+        </div>
+      </div>
+    `;
+  } else {
+    banderasHtml = `
+      <div style="background: #ecfdf5; border: 1.5px solid #10b981; border-left: 5px solid #047857; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px;">
+        <div style="font-size: 11px; font-weight: 800; color: #047857; text-transform: uppercase; letter-spacing: 0.8px;">
+          🏆 [Tracción &amp; Felicitación] • ${activeCount} / 9 Banderas Encendidas
+        </div>
+        <p style="margin: 6px 0 8px 0; font-size: 13px; color: #064e3b; line-height: 1.45;">
+          Gran tracción con ${activeCount} banderas encendidas. El impulso está de tu lado; mantén el ritmo y consolida la semana.
+        </p>
+        <div style="font-size: 11.5px; color: #065f46; line-height: 1.5;">
+          <strong>Frentes activos:</strong> ${activeFlags.join(" · ")}
+        </div>
+      </div>
+    `;
+  }
+
+  // 3) ORÁCULO ESTOICO ALINEADO AL ESTADO DEL DÍA
+  const reconstructionOracles = [
+    { q: "No te avergüences de volver a empezar: levántate con cabeza fría y cumple el siguiente deber pequeño con dignidad.", a: "Marco Aurelio • Fuerza y Reconstrucción" },
+    { q: "Cada día que rompes la inercia con una sola acción concreta, la mente recupera su trono.", a: "Epicteto • Discursos" },
+    { q: "No es la caída lo que define al caballero, sino la rapidez y serenidad con la que vuelve a empuñar el timón.", a: "Séneca • Cartas a Lucilio" }
+  ];
+  const consolidationOracles = [
+    { q: "No gastes más tiempo argumentando lo que debería ser un buen hombre. Sé uno hoy mismo y sostén el impulso.", a: "Marco Aurelio • Meditaciones X, 16" },
+    { q: "La constancia convierte la disciplina diaria en carácter inquebrantable. Consolida hoy lo que ya encendiste.", a: "Séneca • Sobre la Firmeza del Sabio" },
+    { q: "El alma se tiñe del color de sus pensamientos y de sus actos repetidos. Mantén el ritmo.", a: "Marco Aurelio • Meditaciones V, 16" }
+  ];
+
+  const isZeroState = (noPornDays <= 0 || activeCount === 0);
+  const oraclePool = isZeroState ? reconstructionOracles : consolidationOracles;
+  const oracle = oraclePool[now.getDate() % oraclePool.length];
+
   const todayBlocks = schedules[dayName] || schedules["LUNES"];
-  const oracle = oracles[now.getDate() % oracles.length];
   const dayOfMonth = now.getDate();
   const mainMission = (todayBlocks[1] || todayBlocks[0]).title;
   const mainTime = (todayBlocks[1] || todayBlocks[0]).time;
@@ -628,6 +768,8 @@ function sendDailyMorningJaguarEmail() {
           <div style="font-size: 11px; font-weight: 800; color: #92400e; margin-top: 4px;">— ${oracle.a}</div>
         </div>
         ${tkAlert}
+        ${reto21Html}
+        ${banderasHtml}
         ${gcalTodayHtml}
         <div style="text-align: center; margin-bottom: 20px;">
           <a href="${appUrl}" style="display: inline-block; background: linear-gradient(135deg, #15803d, #0d9488); color: #fff; text-decoration: none; font-weight: 800; font-size: 14px; padding: 14px 26px; border-radius: 99px;">
@@ -636,9 +778,6 @@ function sendDailyMorningJaguarEmail() {
         </div>
         <div style="font-size: 12px; font-weight: 800; color: #065f46; text-transform: uppercase; margin-bottom: 8px;">🎯 Tus 4 Bloques Tácticos de Hoy (${dayName}):</div>
         ${blocksHtml}
-        <div style="background: #f5efe2; border: 1px solid #d6cbb5; border-radius: 10px; padding: 12px 14px; margin-top: 14px; font-size: 12.5px; color: #44403c;">
-          🦅 <strong>Reto 21 Días &amp; 9 Banderines:</strong> Día 100% Limpio (0 Porno), 3.2L de agua y marca tus prioridades cumplidas desde el celular.
-        </div>
       </div>
     </div>
   `;

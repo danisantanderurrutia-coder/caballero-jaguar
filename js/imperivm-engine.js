@@ -4517,6 +4517,7 @@ const imperivmEngine = {
     if (gcalChk && gcalChk.checked) {
       this.syncTaskToGoogleCalendar(newTask, gcalTimeInput ? gcalTimeInput.value : "09:00", isSpecificDay ? rawScope : null);
     }
+    this.syncRealStateToEmailCloud(true);
 
     this.closeAddTaskModal();
     if (typeof renderTasks === "function") renderTasks();
@@ -5046,6 +5047,105 @@ const imperivmEngine = {
   // ==========================================================================
   // CENTRO DE CORREO MATUTINO AM (MOTOR HEADHUNTER + GOOGLE APPS SCRIPT)
   // ==========================================================================
+  getRealMorningStateSnapshot() {
+    const P = window.CJProgress;
+    const weeklyAuraXP = P && typeof P.xpByAura === "function" ? P.xpByAura(7) : {};
+    const auraCatalog = [
+      { key: "vida", label: "👑 Vida" },
+      { key: "exploracion", label: "🧭 Exploración" },
+      { key: "amor", label: "💖 Amor" },
+      { key: "salud", label: "🌿 Salud" },
+      { key: "soberania", label: "🪙 Soberanía" },
+      { key: "espiritualidad", label: "🕯️ Espíritu" },
+      { key: "naturaleza", label: "🌲 Naturaleza" },
+      { key: "deporte", label: "🥊 Deporte" },
+      { key: "mente", label: "🧠 Mente" }
+    ];
+    const activeFlags = auraCatalog.filter(a => Number(weeklyAuraXP[a.key] || 0) > 0);
+    const shadowFlags = auraCatalog.filter(a => Number(weeklyAuraXP[a.key] || 0) <= 0);
+
+    const rey = window.reyJaguarState;
+    const actionsMap = (rey && rey.dailyChallengeActions && typeof rey.dailyChallengeActions === "object")
+      ? rey.dailyChallengeActions
+      : {};
+    const hasLoggedAction = Object.keys(actionsMap).length > 0;
+    const rawDays = rey && rey.character ? Number(rey.character.noPornDays || 0) : 0;
+    const ledger = P && typeof P.snapshot === "function" ? (P.snapshot().ledger || []) : [];
+    const hasVirtueLedger = ledger.some(entry => entry && (entry.type === "virtue_day" || entry.source === "virtue"));
+    const noPornMarked = hasLoggedAction || hasVirtueLedger || rawDays > 1;
+    const noPornDays = noPornMarked ? Math.max(0, rawDays) : 0;
+
+    let banderasTag = "Alerta de Inercia";
+    let banderasMsg = "Campamento frío. Elige UNA sola bandera hoy —ej. 20 min de deporte o foco— y sal del cero.";
+    let banderasColor = "#991B1B";
+    if (activeFlags.length >= 4) {
+      banderasTag = "Tracción & Felicitación";
+      banderasMsg = `Gran tracción con ${activeFlags.length} banderas encendidas. El impulso está de tu lado; mantén el ritmo y consolida la semana.`;
+      banderasColor = "#065F46";
+    } else if (activeFlags.length >= 1) {
+      banderasTag = "Chequeo Táctico";
+      banderasMsg = `Llevas ${activeFlags.length} frentes activos, pero el resto sigue en sombra. ¿Dónde está el cuello de botella o fuga de energía? Reconquista un flanco hoy.`;
+      banderasColor = "#92400E";
+    }
+
+    const isZeroState = noPornDays === 0 && activeFlags.length === 0;
+    const oracleQuote = isZeroState
+      ? {
+          text: "No se trata de cuántas veces caes o encuentras el campamento frío, sino de volver a empuñar el escudo hoy mismo con cabeza fría y cero excusas.",
+          author: "Oráculo de Reconstrucción • Marco Aurelio (adapt.)"
+        }
+      : {
+          text: "La inercia ya juega a tu favor. Protege tu templanza, no cedas terreno ganado y consolida hoy lo que empezaste con disciplina.",
+          author: "Oráculo de Consolidación • Séneca (adapt.)"
+        };
+
+    return {
+      noPornDays,
+      noPornMarked,
+      weeklyAuraXP,
+      activeFlags,
+      shadowFlags,
+      banderasTag,
+      banderasMsg,
+      banderasColor,
+      isZeroState,
+      oracleQuote
+    };
+  },
+
+  async syncRealStateToEmailCloud(silent = false) {
+    const webhookUrl = localStorage.getItem("CJ_APPS_SCRIPT_URL") || (typeof financeState !== "undefined" ? financeState.googleSheetUrl : "");
+    if (!webhookUrl || !webhookUrl.includes("/exec")) {
+      if (!silent && typeof showNotification === "function") {
+        showNotification("⚠️ Pega primero la URL WebApp (/exec) de Google Apps Script para sincronizar tu estado real.", "warning");
+      }
+      return false;
+    }
+
+    const real = this.getRealMorningStateSnapshot();
+    try {
+      await fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({
+          action: "sync_jaguar_state",
+          noPornDays: real.noPornDays,
+          noPornMarked: real.noPornMarked,
+          weeklyAuraXP: real.weeklyAuraXP
+        })
+      });
+      if (!silent && typeof showNotification === "function") {
+        showNotification(`🔄 Estado real sincronizado: Día ${real.noPornDays}/21 • ${real.activeFlags.length}/9 banderas activas.`);
+      }
+      return true;
+    } catch (err) {
+      if (!silent && typeof showNotification === "function") {
+        showNotification("❌ No se pudo sincronizar con Apps Script: " + err.message, "error");
+      }
+      return false;
+    }
+  },
+
   openMorningEmailModal() {
     const modal = document.getElementById("morning-email-modal");
     const content = document.getElementById("morning-email-modal-content");
@@ -5053,66 +5153,64 @@ const imperivmEngine = {
 
     const todayKey = this.getTodayKey();
     const todayIso = window.cjToday ? window.cjToday() : new Date().toISOString().slice(0, 10);
-    const P = window.CJProgress;
-    const snap = P ? P.snapshot() : { xp: 350, streak: { days: 1 } };
     const savedEmail = localStorage.getItem("CJ_MORNING_EMAIL_TO") || "danisantander.urrutia@gmail.com";
     const savedHour = localStorage.getItem("CJ_MORNING_EMAIL_HOUR") || "09:00";
-
-    const dayOrder = ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"];
-    const tomorrowKey = dayOrder[(dayOrder.indexOf(todayKey) + 1) % 7];
 
     let currentMood = localStorage.getItem("CABALLERO_WEEKLY_MOOD") || imperivmState.weeklyMood || "fresh";
     const scheduleData = (typeof WEEKLY_STRATEGY_SCHEDULE !== "undefined") ? (WEEKLY_STRATEGY_SCHEDULE[currentMood] || WEEKLY_STRATEGY_SCHEDULE.fresh) : null;
     const todayPlan = (scheduleData && scheduleData.days && scheduleData.days[todayKey]) ? scheduleData.days[todayKey] : { focus: "Fuerza Base & Presencia", blocks: [] };
-    const tomorrowPlan = (scheduleData && scheduleData.days && scheduleData.days[tomorrowKey]) ? scheduleData.days[tomorrowKey] : { focus: "Presencia & Avance", blocks: [] };
     const blocks = (todayPlan.blocks || []).slice(0, 4);
-    const tomorrowBlocks = (tomorrowPlan.blocks || []).slice(0, 4);
-    const quoteObj = STOIC_QUOTES[new Date().getDate() % STOIC_QUOTES.length];
+
+    const real = this.getRealMorningStateSnapshot();
+    const pct21 = Math.min(100, Math.round((real.noPornDays / 21) * 100));
+    const reto21Preview = real.noPornDays > 0
+      ? `<div style="background:#ECFDF5;border:1px solid #10B981;border-radius:8px;padding:9px 10px;margin-bottom:8px;">
+          <div style="font-size:10px;font-weight:800;color:#065F46;">🛡️ RETO 21 DÍAS SIN FAP • [Día ${real.noPornDays} de 21] (${pct21}%)</div>
+          <div style="background:#D1FAE5;height:8px;border-radius:999px;margin:5px 0;overflow:hidden;"><div style="width:${pct21}%;height:100%;background:#059669;"></div></div>
+          <div style="font-size:11px;color:#064E3B;">Templanza activa. Protege tu energía hoy sin negociar con impulsos.</div>
+        </div>`
+      : `<div style="background:#FEF2F2;border:1px solid #DC2626;border-radius:8px;padding:9px 10px;margin-bottom:8px;">
+          <div style="font-size:10px;font-weight:800;color:#991B1B;">🛡️ RETO 21 DÍAS SIN FAP • Racha en pausa / 0 días</div>
+          <div style="font-size:11px;color:#7F1D1D;">Racha en pausa / 0 días. Si te mantuviste firme y olvidaste marcarlo, entra a reconciliar con honores; si hubo caída, hoy es tu nuevo Día 1 con cabeza fría.</div>
+        </div>`;
+
+    const banderasPreview = `
+      <div style="background:#FFFFFF;border:1px solid #E6DEC8;border-left:4px solid ${real.banderasColor};border-radius:8px;padding:9px 10px;margin-bottom:8px;">
+        <div style="font-size:10px;font-weight:800;color:${real.banderasColor};">🚩 [${real.banderasTag}] • ${real.activeFlags.length}/9 Banderas con XP esta semana</div>
+        <div style="font-size:11px;color:#1C1917;margin-top:3px;">${real.banderasMsg}</div>
+        <div style="font-size:10px;color:#57534E;margin-top:4px;">
+          Activas: ${real.activeFlags.length ? real.activeFlags.map(a => a.label).join(" • ") : "Ninguna todavía"}
+        </div>
+      </div>
+    `;
 
     content.innerHTML = `
       <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; border-bottom: 2px solid rgba(197, 154, 40, 0.35); padding-bottom: 14px; margin-bottom: 18px;">
         <div>
-          <span class="badge-tag badge-gold" style="font-size: 0.72rem;">☀️ 09:00 AM (GITHUB) + 🌙 09:00 PM (GMAIL / GOOGLE)</span>
-          <h2 style="font-family: 'Cinzel', serif; font-size: 1.5rem; margin: 6px 0 2px 0;">Centro de Correos Diarios • Caballero Jaguar</h2>
+          <span class="badge-tag badge-gold" style="font-size: 0.72rem;">☀️ SOLO MAÑANA • 09:00 AM (EUROPE/BERLIN)</span>
+          <h2 style="font-family: 'Cinzel', serif; font-size: 1.5rem; margin: 6px 0 2px 0;">Centro de Correo Matutino • Caballero Jaguar</h2>
           <p style="font-size: 0.85rem; opacity: 0.85; margin: 0;">
-            Sistema dual: el despertar de las <strong>09:00 AM</strong> con GitHub Actions y la preparación de las <strong>09:00 PM</strong> con Gmail para el día siguiente.
+            Correo único diario a las <strong>09:00 AM</strong> con lectura honesta de tu Reto 21 Días, Protocolo Táctico de Banderas y Oráculo Estoico.
           </p>
         </div>
         <button class="btn-close-modal" onclick="imperivmEngine.closeMorningEmailModal()">✕</button>
       </div>
 
-      <!-- EXPLICACIÓN DEL SISTEMA DUAL: 9 AM GITHUB + 9 PM GOOGLE APPS SCRIPT -->
-      <div style="background: rgba(15, 23, 42, 0.88); border: 1.5px solid rgba(197, 154, 40, 0.45); border-radius: 12px; padding: 16px 18px; margin-bottom: 18px;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px;">
-          <div style="background: rgba(10, 14, 22, 0.92); border: 1.5px solid rgba(197, 154, 40, 0.5); border-radius: 10px; padding: 12px 14px; color: #F1F5F9;">
-            <div style="font-weight: 800; font-size: 0.86rem; color: #F3D079; margin-bottom: 4px;">
-              ☀️ 09:00 AM • Correo de la Mañana (GitHub Actions)
-            </div>
-            <p style="font-size: 0.78rem; color: #CBD5E1; line-height: 1.45; margin: 0;">
-              Corre en <code>.github/workflows/daily_morning_jaguar.yml</code> todos los días a las <strong>09:00 AM</strong> con tus 4 bloques del día, oráculo estoico y check-in.
-            </p>
-          </div>
-          <div style="background: rgba(10, 14, 22, 0.92); border: 1.5px solid #9B2335; border-radius: 10px; padding: 12px 14px; color: #F1F5F9;">
-            <div style="font-weight: 800; font-size: 0.86rem; color: #E8A0A8; margin-bottom: 4px;">
-              🌙 09:00 PM • Correo de la Noche (Gmail / Google)
-            </div>
-            <p style="font-size: 0.78rem; color: #CBD5E1; line-height: 1.45; margin: 0;">
-              Gestionado directo por tu Gmail vía Google Apps Script a las <strong>21:00 (9:00 PM)</strong>. Te muestra el plan de <strong>mañana (${tomorrowKey.toUpperCase()})</strong> para dejar todo listo antes de dormir.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <!-- CONFIGURACIÓN RÁPIDA: CORREO + WEBHOOK GOOGLE CALENDAR -->
+      <!-- CONFIGURACIÓN RÁPIDA: CORREO + SYNC ESTADO REAL -->
       <div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; background: rgba(0,0,0,0.28); padding: 14px 16px; border-radius: 10px; border: 1px solid rgba(197,154,40,0.28);">
         <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between;">
           <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
             <label style="font-size: 0.8rem; font-weight: 700;">📬 Destinatario:</label>
             <input type="text" id="morning-email-input-to" value="${savedEmail}" style="padding: 6px 10px; border-radius: 6px; font-size: 0.82rem; min-width: 220px;">
+            <label style="font-size: 0.78rem; font-weight: 700; color: #F3D079;">⏰ Hora:</label>
+            <input type="time" id="morning-email-input-hour" value="${savedHour}" style="padding: 6px 10px; border-radius: 6px;">
           </div>
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
             <button class="btn-solar-action" onclick="imperivmEngine.copyAppsScriptMorningCode()">
-              🌙 Copiar Script Google 9PM + Calendar
+              ☀️ Copiar Script Google 9AM (soloCorreo9AM)
+            </button>
+            <button class="btn-solar-action-outline" onclick="imperivmEngine.syncRealStateToEmailCloud(false)">
+              🔄 Sincronizar Estado Real
             </button>
             <button class="btn-solar-action-outline" onclick="imperivmEngine.sendMorningEmailTestNow()">
               📧 Enviarme Prueba Ahora
@@ -5120,67 +5218,35 @@ const imperivmEngine = {
           </div>
         </div>
         <div style="display: flex; flex-wrap: wrap; gap: 8px; align-items: center; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 10px;">
-          <label style="font-size: 0.78rem; font-weight: 700; color: #93C5FD;">📅 URL WebApp Google Calendar (opcional, para sync silenciosa):</label>
+          <label style="font-size: 0.78rem; font-weight: 700; color: #93C5FD;">📅 URL WebApp Google Apps Script (sync estado + Calendar):</label>
           <input type="text" id="gcal-webhook-url-input" value="${localStorage.getItem("CJ_APPS_SCRIPT_URL") || ""}" placeholder="https://script.google.com/macros/s/.../exec" style="flex: 1; min-width: 220px; padding: 5px 10px; border-radius: 6px; font-size: 0.78rem;">
-          <button class="btn-solar-action-outline" style="padding: 5px 12px; font-size: 0.76rem;" onclick="const u=document.getElementById('gcal-webhook-url-input').value.trim(); localStorage.setItem('CJ_APPS_SCRIPT_URL', u); if(typeof showNotification==='function') showNotification('📅 Enlace de Google Calendar guardado.');">
-            💾 Guardar URL
+          <button class="btn-solar-action-outline" style="padding: 5px 12px; font-size: 0.76rem;" onclick="const u=document.getElementById('gcal-webhook-url-input').value.trim(); localStorage.setItem('CJ_APPS_SCRIPT_URL', u); imperivmEngine.syncRealStateToEmailCloud(false);">
+            💾 Guardar & Sincronizar
           </button>
         </div>
       </div>
 
-      <!-- VISTA PREVIA DUAL (APPROACH 1 + 2 VISUAL): MAÑANA 9 AM + NOCHE 9 PM -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px;">
-        <div>
-          <div style="font-size: 0.74rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; color: #F3D079;">
-            ☀️ 09:00 AM (GitHub) • Despertar de Acción
-          </div>
-          <div style="background: #faf6ee; border: 1.5px solid #c59a28; border-radius: 12px; overflow: hidden; color: #1c1917; font-family: -apple-system, sans-serif;">
-            <div style="background: linear-gradient(180deg, rgba(6,78,59,0.75), rgba(15,118,110,0.9)), url('assets/img_jaguar_jungle_landing.jpg') center/cover; padding: 14px; text-align: center; color: #fff;">
-              <div style="font-size: 14px; font-weight: 800;">☀️ ¡Buenos días, Daniel! (09:00 AM)</div>
-              <div style="font-size: 11px; color: #d1fae5;">${todayKey.toUpperCase()} (${todayIso})</div>
-            </div>
-            <div style="padding: 12px;">
-              <div style="background: #064e3b; color: #fff; border: 1.5px solid #f59e0b; border-radius: 8px; padding: 9px 10px; margin-bottom: 8px;">
-                <div style="font-size: 10px; font-weight: 800; color: #fde047;">👑 MISIÓN PRINCIPAL DE HOY</div>
-                <div style="font-size: 12px; font-weight: 700;">${(blocks[1] || blocks[0] || {}).title || 'Bloque de Foco Principal'}</div>
-              </div>
-              <div style="font-size: 11px; font-style: italic; background: #fffbeb; border: 1px solid #f59e0b; padding: 8px; border-radius: 8px; margin-bottom: 8px;">
-                "${quoteObj.text}" — <strong>${quoteObj.author}</strong>
-              </div>
-              ${blocks.map((b, i) => `
-                <div style="background: #fff; border: 1px solid #e6dec8; border-left: 3px solid #15803d; border-radius: 6px; padding: 6px 9px; margin-bottom: 5px; font-size: 11px;">
-                  <strong style="color:#0f766e;">#${i + 1} ${b.time}</strong> • ${b.title}
-                </div>
-              `).join("")}
-            </div>
-          </div>
+      <!-- VISTA PREVIA DEL CORREO MATUTINO ÚNICO (09:00 AM • EUROPE/BERLIN) CON ESTADO REAL -->
+      <div>
+        <div style="font-size: 0.74rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; color: #F3D079;">
+          ☀️ 09:00 AM (Europe/Berlin) • Correo Matutino Único con Estado Real
         </div>
-
-        <div>
-          <div style="font-size: 0.74rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; color: #E8A0A8;">
-            🌙 09:00 PM (Gmail) • Víspera + Google Calendar + Outfit
+        <div style="background: #faf6ee; border: 1.5px solid #c59a28; border-radius: 12px; overflow: hidden; color: #1c1917; font-family: -apple-system, sans-serif;">
+          <div style="background: linear-gradient(180deg, rgba(6,78,59,0.78), rgba(15,118,110,0.92)), url('assets/img_jaguar_jungle_landing.jpg') center/cover; padding: 14px; text-align: center; color: #fff;">
+            <div style="font-size: 14px; font-weight: 800;">☀️ ¡Buenos días, Daniel! (09:00 AM)</div>
+            <div style="font-size: 11px; color: #d1fae5;">${todayKey.toUpperCase()} (${todayIso})</div>
           </div>
-          <div style="background: #0B0E17; border: 1.5px solid #C59A28; border-radius: 12px; overflow: hidden; color: #F4F6F9; font-family: -apple-system, sans-serif;">
-            <div style="background: linear-gradient(180deg, rgba(14,14,24,0.72), rgba(11,14,23,0.96)), url('assets/stoic_roman_bg.jpg') center/cover; padding: 14px; text-align: center; color: #fff;">
-              <div style="font-size: 14px; font-weight: 800;">🌙 Buenas noches, Daniel (09:00 PM)</div>
-              <div style="font-size: 11px; color: #F3D079;">Prepara tu mañana: ${tomorrowKey.toUpperCase()}</div>
+          <div style="padding: 12px;">
+            ${reto21Preview}
+            ${banderasPreview}
+            <div style="font-size: 11px; font-style: italic; background: #fffbeb; border: 1px solid #f59e0b; padding: 8px; border-radius: 8px; margin-bottom: 8px;">
+              "${real.oracleQuote.text}" — <strong>${real.oracleQuote.author}</strong>
             </div>
-            <div style="padding: 12px;">
-              <div style="background: rgba(59,130,246,0.14); border: 1px solid rgba(96,165,250,0.4); border-radius: 8px; padding: 7px 10px; margin-bottom: 8px; font-size: 11px; color: #93C5FD;">
-                📆 <strong>Google Calendar Mañana:</strong> Lee automáticamente tus reuniones reales desde tu calendario.
+            ${blocks.map((b, i) => `
+              <div style="background: #fff; border: 1px solid #e6dec8; border-left: 3px solid #15803d; border-radius: 6px; padding: 6px 9px; margin-bottom: 5px; font-size: 11px;">
+                <strong style="color:#0f766e;">#${i + 1} ${b.time}</strong> • ${b.title}
               </div>
-              <div style="display: flex; align-items: center; gap: 10px; background: #131826; border: 1px solid rgba(197,154,40,0.35); border-radius: 8px; padding: 8px; margin-bottom: 8px;">
-                <img src="${IMPERIVM_MEDIA['outfit_' + tomorrowKey] || IMPERIVM_MEDIA.outfit}" alt="Outfit de mañana" style="width: 48px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid #C59A28;">
-                <div style="font-size: 11px; color: #E2E8F0;">
-                  <strong style="color:#F3D079;">👔 Outfit de Mañana (${tomorrowKey.toUpperCase()})</strong><br>Deja tu ropa lista antes de dormir.
-                </div>
-              </div>
-              ${tomorrowBlocks.map((b, i) => `
-                <div style="background: #131826; border: 1px solid rgba(197,154,40,0.25); border-left: 3px solid #9B2335; border-radius: 6px; padding: 6px 9px; margin-bottom: 5px; font-size: 11px; color: #F4F6F9;">
-                  <strong style="color:#F3D079;">#${i + 1} ${b.time}</strong> • ${b.title}
-                </div>
-              `).join("")}
-            </div>
+            `).join("")}
           </div>
         </div>
       </div>
@@ -5201,7 +5267,7 @@ const imperivmEngine = {
     const toInput = document.getElementById("morning-email-input-to");
     const hourInput = document.getElementById("morning-email-input-hour");
     const email = toInput ? toInput.value.trim() : "danisantander.urrutia@gmail.com";
-    const hour = hourInput ? hourInput.value : "07:30";
+    const hour = hourInput ? hourInput.value : "09:00";
     localStorage.setItem("CJ_MORNING_EMAIL_TO", email);
     localStorage.setItem("CJ_MORNING_EMAIL_HOUR", hour);
 
@@ -5211,13 +5277,18 @@ const imperivmEngine = {
     const scheduleData = (typeof WEEKLY_STRATEGY_SCHEDULE !== "undefined") ? (WEEKLY_STRATEGY_SCHEDULE[currentMood] || WEEKLY_STRATEGY_SCHEDULE.fresh) : null;
     const todayPlan = (scheduleData && scheduleData.days && scheduleData.days[this.getTodayKey()]) ? scheduleData.days[this.getTodayKey()] : { focus: "Presencia y Avance", blocks: [] };
     const blocksText = (todayPlan.blocks || []).slice(0, 4).map((b, i) => `${i + 1}. [${b.time}] ${b.title}`).join("\n");
+    const real = this.getRealMorningStateSnapshot();
+    const retoText = real.noPornDays > 0
+      ? `🛡️ RETO 21 DÍAS SIN FAP: [Día ${real.noPornDays} de 21] — Templanza activa.`
+      : `🛡️ RETO 21 DÍAS SIN FAP: Racha en pausa / 0 días. Si te mantuviste firme y olvidaste marcarlo, entra a reconciliar con honores; si hubo caída, hoy es tu nuevo Día 1 con cabeza fría.`;
 
-    const subject = encodeURIComponent(`☀️ [Caballero Jaguar • ${todayKey}] Mi Plan de Vida y 3 Prioridades (${todayIso})`);
+    const subject = encodeURIComponent(`☀️ [Caballero Jaguar • ${todayKey}] Despertar Real (${todayIso})`);
     const body = encodeURIComponent(
       `🌿 SANTUARIO SOLAR • CABALLERO JAGUAR (${todayKey} ${todayIso})\n\n` +
-      `🎯 Enfoque de Hoy: ${todayPlan.focus}\n\n` +
-      `⚡ MIS BLOQUES PRIORITARIOS DE HOY:\n${blocksText}\n\n` +
-      `🦅 COMPROMISO DE TEMPLANZA:\n- Día 100% Limpio (0 Porno)\n- Hidratación 3.2L Agua\n- Iluminar al menos 3 de los 9 Estandartes\n\n` +
+      `${retoText}\n\n` +
+      `🚩 [${real.banderasTag}] (${real.activeFlags.length}/9 banderas con XP esta semana):\n${real.banderasMsg}\n\n` +
+      `🏛️ ORÁCULO ESTOICO:\n"${real.oracleQuote.text}" — ${real.oracleQuote.author}\n\n` +
+      `⚡ PLAN DEL DÍA (${todayPlan.focus}):\n${blocksText}\n\n` +
       `📱 Entrar directo desde el celular:\nhttps://danisantanderurrutia-coder.github.io/caballero-jaguar/`
     );
 
@@ -5231,105 +5302,32 @@ const imperivmEngine = {
     const toInput = document.getElementById("morning-email-input-to");
     const recipient = (toInput ? toInput.value.trim() : "") || localStorage.getItem("CJ_MORNING_EMAIL_TO") || "danisantander.urrutia@gmail.com";
     const code = `// ============================================================================
-// CABALLERO JAGUAR • CORREO NOCTURNO 9:00 PM PARA EL DÍA SIGUIENTE (GMAIL / GOOGLE)
+// CABALLERO JAGUAR • CORREO MATUTINO ÚNICO 9:00 AM (EUROPE/BERLIN)
 // ============================================================================
 // PASOS:
-// 1. Pega este código en https://script.google.com (Nuevo Proyecto).
-// 2. Arriba elige la función "activarCorreoNoche9PM" y pulsa "Ejecutar" (Run).
-// ¡Eso creará automáticamente el reloj diario a las 21:00 (9:00 PM) y te enviará uno de prueba!
+// 1. Pega el archivo completo finanzas/GoogleAppsScript_Sync.js en script.google.com
+// 2. Arriba elige la función "soloCorreo9AM" y pulsa "Ejecutar" (Run).
+// Destinatario configurado: ${recipient}
 
-function activarCorreoNoche9PM() {
+function soloCorreo9AM() {
   ScriptApp.getProjectTriggers().forEach(function(t) {
-    if (t.getHandlerFunction() === "sendDailyNightTomorrowEmail") ScriptApp.deleteTrigger(t);
+    var fn = t.getHandlerFunction();
+    if (fn === "sendDailyNightTomorrowEmail" || fn === "sendDailyMorningJaguarEmail") {
+      ScriptApp.deleteTrigger(t);
+    }
   });
-  ScriptApp.newTrigger("sendDailyNightTomorrowEmail")
+  ScriptApp.newTrigger("sendDailyMorningJaguarEmail")
     .timeBased()
+    .inTimezone("Europe/Berlin")
     .everyDays(1)
-    .atHour(21)
+    .atHour(9)
     .create();
-  sendDailyNightTomorrowEmail();
-}
-
-function sendDailyNightTomorrowEmail() {
-  var recipient = "${recipient}";
-  var now = new Date();
-  var tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
-  var days = ["DOMINGO", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO"];
-  var tomorrowName = days[tomorrow.getDay()];
-  var tomorrowDateStr = Utilities.formatDate(tomorrow, Session.getScriptTimeZone() || "Europe/Berlin", "dd/MM/yyyy");
-  var appUrl = "https://danisantanderurrutia-coder.github.io/caballero-jaguar/";
-
-  var schedules = {
-    "LUNES": [
-      { time: "09:00 - 09:30", title: "🥊 Activación Física: 100 Abs, 100 Sentadillas, 100 Flexiones o Running", badge: "🥊 Deporte", color: "#9B2335" },
-      { time: "09:30 - 12:45", title: "👑 Bloque Foco Dual: Empleo Profesión + Trabajos Locales Hannover", badge: "👑 Vida", color: "#B8860B" },
-      { time: "13:00 - 13:20", title: "🇩🇪 Alemán al Mediodía: 15 min Vocabulario Activo & Habla", badge: "🧠 Mente", color: "#4A79A7" },
-      { time: "14:30 - 17:30", title: "🧭 Proyectos: Paper Lauwersmeer (Modelación & Redacción)", badge: "🧭 Exploración", color: "#6D28D9" }
-    ],
-    "MARTES": [
-      { time: "09:00 - 09:30", title: "🏃 Activación Física: Cardio, Muay Thai Shadowboxing o Fuerza", badge: "🥊 Deporte", color: "#9B2335" },
-      { time: "09:30 - 12:45", title: "👑 Bloque Foco Dual: Postulaciones Profesionales (Alemania/Euskadi) + Hannover", badge: "👑 Vida", color: "#B8860B" },
-      { time: "13:00 - 13:20", title: "🇩🇪 Alemán B1: Escucha Activa & Frase en el Diario", badge: "🧠 Mente", color: "#4A79A7" },
-      { time: "19:30 - 21:00", title: "💖 Presencia en Pareja: Escucha Consciente, Cariño & Cero Pantallas", badge: "💖 Amor", color: "#BE185D" }
-    ],
-    "MIÉRCOLES": [
-      { time: "09:00 - 09:30", title: "🧘‍♂️ Movilidad Somática, Respiración 4x4 & Calistenia Base", badge: "🌿 Salud", color: "#15803D" },
-      { time: "09:30 - 12:45", title: "👑 Bloque Foco: Avance Profesional, CV/Entrevistas & Gestión Vital", badge: "👑 Vida", color: "#B8860B" },
-      { time: "13:00 - 13:20", title: "🇩🇪 Alemán al Mediodía + 🎺 20 min Trompeta / Música", badge: "🧭 Exploración", color: "#4A79A7" },
-      { time: "14:30 - 17:30", title: "🌱 Chile Agrotech (AgriTwin) & ReWild Bosque Nativo", badge: "🌲 Naturaleza", color: "#15803D" }
-    ],
-    "JUEVES": [
-      { time: "09:00 - 09:30", title: "🏋️‍♂️ Fuerza & Potencia: Circuito de Caballería (100x3)", badge: "🥊 Deporte", color: "#9B2335" },
-      { time: "09:30 - 12:45", title: "👑 Bloque Foco: Empleo Hannover / Bilbao & Trámites Estratégicos", badge: "👑 Vida", color: "#B8860B" },
-      { time: "14:30 - 17:30", title: "🧭 Proyectos: Maule Red / Museo de la Memoria / Ciencia & Territorio", badge: "🧭 Exploración", color: "#6D28D9" },
-      { time: "20:00 - 21:30", title: "💆 Aftercare, Masajes en Pareja & Descompresión Somática", badge: "💖 Amor", color: "#BE185D" }
-    ],
-    "VIERNES": [
-      { time: "09:00 - 09:30", title: "🥊 Sparring / Cardio Matutino & Ducha Fría", badge: "🥊 Deporte", color: "#9B2335" },
-      { time: "09:30 - 12:45", title: "👑 Cierre de Semana Laboral: Seguimiento de Postulaciones & Objetivos", badge: "👑 Vida", color: "#B8860B" },
-      { time: "16:00 - 18:00", title: "🌲 Caminata en Bosque / Naturaleza Viva & Desconexión Digital", badge: "🌲 Naturaleza", color: "#15803D" },
-      { time: "20:00 - 23:00", title: "🍷 Cita de Viernes con Mi Novia: Goce, Conversación & Conexión", badge: "💖 Amor", color: "#BE185D" }
-    ],
-    "SÁBADO": [
-      { time: "09:30 - 11:00", title: "🧗‍♂️ Deporte Outdoor, Escalada, Ciclismo o Entrenamiento Libre", badge: "🥊 Deporte", color: "#9B2335" },
-      { time: "11:30 - 13:30", title: "🎨 Exploración Creativa: Pintura al Óleo, Fotografía o Cómic Piratas", badge: "🧭 Exploración", color: "#6D28D9" },
-      { time: "16:00 - 18:30", title: "🌲 Conexión Tierra / Paseo Exterior & Recarga Solar", badge: "🌲 Naturaleza", color: "#15803D" },
-      { time: "20:30 - 22:30", title: "🕯️ Presencia Íntima, Tantra & Disfrute Consciente", badge: "💖 Amor", color: "#BE185D" }
-    ],
-    "DOMINGO": [
-      { time: "10:00 - 10:45", title: "🪙 Auditoría Dominical: Cuentas Sparkasse (€), Banco Chile ($) & Cero Gastos Tontos", badge: "🪙 Soberanía", color: "#B8860B" },
-      { time: "11:00 - 12:30", title: "🕯️ Rito Ancestral, Meditación & Planificación de la Nueva Semana", badge: "🕯️ Espíritu", color: "#6D28D9" },
-      { time: "13:00 - 14:30", title: "👨‍🍳 Cocina con Afecto & Meal Prep Nutritivo", badge: "🌿 Salud", color: "#15803D" },
-      { time: "18:00 - 20:00", title: "📖 Lectura Estoica, Diario Hypomnémata & Sueño Reparador Temprano", badge: "🧠 Mente", color: "#4A79A7" }
-    ]
-  };
-
-  var tomorrowBlocks = schedules[tomorrowName] || schedules["LUNES"];
-  var blocksHtml = tomorrowBlocks.map(function(b, idx) {
-    return '<div style="background:#131826;border:1px solid rgba(197,154,40,0.28);border-left:4px solid ' + b.color + ';border-radius:8px;padding:12px 14px;margin-bottom:10px;">' +
-      '<div style="font-size:11px;font-weight:800;color:#F3D079;margin-bottom:3px;">#' + (idx + 1) + ' • ⏱️ ' + b.time + ' (' + b.badge + ')</div>' +
-      '<div style="font-size:13.5px;font-weight:700;color:#F4F6F9;">' + b.title + '</div></div>';
-  }).join("");
-
-  var htmlBody = '<div style="font-family:sans-serif;max-width:600px;margin:0 auto;background:#0B0E17;border:2px solid #C59A28;border-radius:14px;overflow:hidden;color:#F4F6F9;">' +
-    '<div style="background:linear-gradient(135deg,#1E1B2E 0%,#4E1022 55%,#0D121D 100%);padding:26px 20px;text-align:center;">' +
-    '<div style="font-size:11px;font-weight:800;letter-spacing:1.5px;color:#F3D079;">🌙 VÍSPERA IMPERIAL • CABALLERO JAGUAR</div>' +
-    '<h1 style="margin:6px 0 4px 0;font-size:21px;color:#fff;">🌙 Buenas noches, Daniel (09:00 PM)</h1>' +
-    '<p style="margin:0;font-size:13px;color:#CBD5E1;">Tu hoja de ruta para mañana: <strong style="color:#F3D079;">' + tomorrowName + ' • ' + tomorrowDateStr + '</strong></p></div>' +
-    '<div style="padding:22px 18px;">' + blocksHtml +
-    '<div style="text-align:center;margin-top:20px;"><a href="' + appUrl + '" style="display:inline-block;background:linear-gradient(135deg,#9B2335,#C59A28);color:#fff;text-decoration:none;font-weight:800;font-size:13.5px;padding:13px 24px;border-radius:8px;">📱 VER OUTFIT Y PLAN DE MAÑANA &rarr;</a></div>' +
-    '</div></div>';
-
-  MailApp.sendEmail({
-    to: recipient,
-    subject: "🌙 [Caballero Jaguar 9:00 PM] Prepara tu Mañana: " + tomorrowName + " (" + tomorrowDateStr + ")",
-    htmlBody: htmlBody
-  });
+  sendDailyMorningJaguarEmail();
 }`;
     if (navigator.clipboard) {
       navigator.clipboard.writeText(code).then(() => {
         if (typeof showNotification === "function") {
-          showNotification("🌙 ¡Script Nocturno 9:00 PM copiado! Pégalo en script.google.com y ejecuta activarCorreoNoche9PM");
+          showNotification("☀️ ¡Instrucción soloCorreo9AM copiada! Pega finanzas/GoogleAppsScript_Sync.js en script.google.com y ejecuta soloCorreo9AM.");
         }
       });
     }

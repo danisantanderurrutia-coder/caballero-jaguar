@@ -85,15 +85,46 @@ DAILY_SCHEDULE = {
     ]
 }
 
-STOIC_ORACLES = [
-    {"quote": "Al amanecer, cuando te cueste levantarte, dite a ti mismo: me despierto para hacer la obra de un ser humano.", "author": "Marco Aurelio • Meditaciones V, 1"},
-    {"quote": "No gastes más tiempo argumentando lo que debería ser un buen hombre. Sé uno hoy mismo.", "author": "Marco Aurelio • Meditaciones X, 16"},
-    {"quote": "Primero di a ti mismo quién quieres ser; y luego haz con alegría lo que tengas que hacer.", "author": "Epicteto • Discursos"},
-    {"quote": "Cada nuevo día es una vida entera en miniatura: despierta con propósito, actúa con presencia y descansa en paz.", "author": "Séneca • Cartas a Lucilio"},
-    {"quote": "El alma se tiñe del color de sus pensamientos. Tiñe hoy tu mente de luz, enfoque y templanza.", "author": "Marco Aurelio • Meditaciones V, 16"},
-    {"quote": "La verdadera libertad es el dominio sobre tus propios impulsos y el cuidado amoroso de tu energía vital.", "author": "Séneca • Sobre la Vida Feliz"},
-    {"quote": "Caminar en belleza (Hózhó): que haya belleza delante de ti, detrás de ti y en cada paso que des hoy.", "author": "Tradición Navajo Diné • Rito del Jaguar"}
+RECONSTRUCTION_ORACLES = [
+    {"quote": "No te avergüences de volver a empezar: levántate con cabeza fría y cumple el siguiente deber pequeño con dignidad.", "author": "Marco Aurelio • Fuerza y Reconstrucción"},
+    {"quote": "Cada día que rompes la inercia con una sola acción concreta, la mente recupera su trono.", "author": "Epicteto • Discursos"},
+    {"quote": "No es la caída lo que define al caballero, sino la rapidez y serenidad con la que vuelve a empuñar el timón.", "author": "Séneca • Cartas a Lucilio"}
 ]
+
+CONSOLIDATION_ORACLES = [
+    {"quote": "No gastes más tiempo argumentando lo que debería ser un buen hombre. Sé uno hoy mismo y sostén el impulso.", "author": "Marco Aurelio • Meditaciones X, 16"},
+    {"quote": "La constancia convierte la disciplina diaria en carácter inquebrantable. Consolida hoy lo que ya encendiste.", "author": "Séneca • Sobre la Firmeza del Sabio"},
+    {"quote": "El alma se tiñe del color de sus pensamientos y de sus actos repetidos. Mantén el ritmo.", "author": "Marco Aurelio • Meditaciones V, 16"}
+]
+
+AURA_DEFS = [
+    ("vida", "👑 Vida"),
+    ("exploracion", "🧭 Exploración"),
+    ("amor", "💖 Amor"),
+    ("mente", "🧠 Mente"),
+    ("salud", "🌿 Salud"),
+    ("deporte", "🥊 Deporte"),
+    ("soberania", "🪙 Soberanía"),
+    ("naturaleza", "🌲 Naturaleza"),
+    ("espiritualidad", "🕯️ Espíritu")
+]
+
+
+def load_real_user_state() -> dict:
+    """Lee el estado real si fue provisto vía JAGUAR_STATE_JSON; si no hay registro, devuelve 0 sin asumir progreso."""
+    raw = os.getenv("JAGUAR_STATE_JSON", "").strip()
+    if raw:
+        try:
+            data = json.loads(raw)
+            if isinstance(data, dict):
+                return {
+                    "noPornDays": max(0, int(data.get("noPornDays", 0) or 0)),
+                    "noPornMarked": bool(data.get("noPornMarked", False)),
+                    "weeklyAuraXP": data.get("weeklyAuraXP", {}) if isinstance(data.get("weeklyAuraXP"), dict) else {}
+                }
+        except Exception:
+            pass
+    return {"noPornDays": 0, "noPornMarked": False, "weeklyAuraXP": {}}
 
 
 def build_morning_html(recipient: str) -> tuple[str, str]:
@@ -103,8 +134,97 @@ def build_morning_html(recipient: str) -> tuple[str, str]:
     day_key = DAYS_ES[weekday_idx]
     day_title = DAYS_DISPLAY[day_key]
     blocks = DAILY_SCHEDULE[day_key]
-    oracle = STOIC_ORACLES[now.timetuple().tm_yday % len(STOIC_ORACLES)]
     date_str = now.strftime("%d/%m/%Y")
+
+    state = load_real_user_state()
+    no_porn_days = state["noPornDays"] if state["noPornMarked"] else 0
+    weekly_xp = state["weeklyAuraXP"]
+
+    # 1) Regla Reto 21 Días Sin Fap
+    if no_porn_days <= 0:
+        reto_21_html = """
+        <div style="background: #fef2f2; border: 1.5px solid #ef4444; border-left: 5px solid #b91c1c; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px;">
+            <div style="font-size: 11px; font-weight: 800; color: #b91c1c; text-transform: uppercase; letter-spacing: 0.8px;">
+                🦅 Reto 21 Días Sin Fap • Racha en pausa / 0 días
+            </div>
+            <p style="margin: 6px 0 0 0; font-size: 13px; color: #7f1d1d; line-height: 1.45;">
+                Racha en pausa / 0 días. Si te mantuviste firme y olvidaste marcarlo, entra a reconciliar con honores; si hubo caída, hoy es tu nuevo Día 1 con cabeza fría.
+            </p>
+        </div>
+        """
+    else:
+        capped = min(21, no_porn_days)
+        bar_text = ("■ " * capped + "□ " * max(0, 21 - capped)).strip()
+        reto_21_html = f"""
+        <div style="background: #ecfdf5; border: 1.5px solid #10b981; border-left: 5px solid #047857; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px;">
+            <div style="font-size: 11px; font-weight: 800; color: #065f46; text-transform: uppercase; letter-spacing: 0.8px;">
+                🦅 Reto 21 Días Sin Fap • [Día {no_porn_days} de 21]
+            </div>
+            <div style="font-size: 13px; letter-spacing: 2px; color: #059669; font-weight: 900; margin: 6px 0;">
+                {bar_text}
+            </div>
+            <p style="margin: 0; font-size: 12.5px; color: #064e3b; line-height: 1.45;">
+                Templanza activa ({no_porn_days} día(s) firme(s)). Mente limpia, energía preservada y dominio sobre el impulso.
+            </p>
+        </div>
+        """
+
+    # 2) Protocolo Táctico de Banderas Semanales
+    active_flags = []
+    shadow_flags = []
+    for k, label in AURA_DEFS:
+        xp_val = float(weekly_xp.get(k, 0) or 0)
+        if xp_val > 0:
+            active_flags.append(f"{label} ({int(xp_val)} XP)")
+        else:
+            shadow_flags.append(label)
+    active_count = len(active_flags)
+
+    if active_count == 0:
+        banderas_html = """
+        <div style="background: #fff7ed; border: 1.5px solid #f97316; border-left: 5px solid #c2410c; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px;">
+            <div style="font-size: 11px; font-weight: 800; color: #c2410c; text-transform: uppercase; letter-spacing: 0.8px;">
+                🚩 [Alerta de Inercia] • 0 / 9 Banderas Activadas Esta Semana
+            </div>
+            <p style="margin: 6px 0 0 0; font-size: 13px; color: #7c2d12; line-height: 1.45;">
+                Campamento frío. Elige UNA sola bandera hoy —ej. 20 min de deporte o foco— y sal del cero.
+            </p>
+        </div>
+        """
+    elif active_count <= 3:
+        banderas_html = f"""
+        <div style="background: #fefce8; border: 1.5px solid #eab308; border-left: 5px solid #a16207; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px;">
+            <div style="font-size: 11px; font-weight: 800; color: #a16207; text-transform: uppercase; letter-spacing: 0.8px;">
+                ⚔️ [Chequeo Táctico] • {active_count} / 9 Banderas Activadas Esta Semana
+            </div>
+            <p style="margin: 6px 0 8px 0; font-size: 13px; color: #713f12; line-height: 1.45;">
+                Llevas {active_count} frente(s) activo(s), pero el resto sigue en sombra. ¿Dónde está el cuello de botella o fuga de energía? Reconquista un flanco hoy.
+            </p>
+            <div style="font-size: 11.5px; color: #422006; line-height: 1.5;">
+                <strong>Encendidas:</strong> {" · ".join(active_flags)}<br>
+                <strong>En sombra (0 XP):</strong> {" · ".join(shadow_flags)}
+            </div>
+        </div>
+        """
+    else:
+        banderas_html = f"""
+        <div style="background: #ecfdf5; border: 1.5px solid #10b981; border-left: 5px solid #047857; border-radius: 12px; padding: 14px 16px; margin-bottom: 18px;">
+            <div style="font-size: 11px; font-weight: 800; color: #047857; text-transform: uppercase; letter-spacing: 0.8px;">
+                🏆 [Tracción &amp; Felicitación] • {active_count} / 9 Banderas Encendidas
+            </div>
+            <p style="margin: 6px 0 8px 0; font-size: 13px; color: #064e3b; line-height: 1.45;">
+                Gran tracción con {active_count} banderas encendidas. El impulso está de tu lado; mantén el ritmo y consolida la semana.
+            </p>
+            <div style="font-size: 11.5px; color: #065f46; line-height: 1.5;">
+                <strong>Frentes activos:</strong> {" · ".join(active_flags)}
+            </div>
+        </div>
+        """
+
+    # 3) Oráculo Estoico alineado al estado real
+    is_zero_state = (no_porn_days <= 0 or active_count == 0)
+    pool = RECONSTRUCTION_ORACLES if is_zero_state else CONSOLIDATION_ORACLES
+    oracle = pool[now.timetuple().tm_yday % len(pool)]
 
     # Alerta inteligente de pago TK entre el día 11 y 15 del mes
     tk_banner_html = ""
@@ -197,6 +317,8 @@ def build_morning_html(recipient: str) -> tuple[str, str]:
             </div>
 
             {tk_banner_html}
+            {reto_21_html}
+            {banderas_html}
 
             <!-- BOTÓN DIRECTO AL CELULAR -->
             <div style="text-align: center; margin-bottom: 22px;">
@@ -211,30 +333,6 @@ def build_morning_html(recipient: str) -> tuple[str, str]:
                     🎯 Tus 4 Bloques Tácticos de Hoy ({day_key.capitalize()})
                 </div>
                 {blocks_html}
-            </div>
-
-            <!-- SECCIÓN 2: RETO 21 DÍAS & LOS 9 BANDERINES -->
-            <div style="background: #f5efe2; border: 1px solid #d6cbb5; border-radius: 12px; padding: 16px; margin-bottom: 20px;">
-                <div style="font-size: 12px; font-weight: 800; color: #78350f; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px;">
-                    🦅 Reto 21 Días (Templanza) &amp; 9 Banderines
-                </div>
-                <div style="font-size: 13px; letter-spacing: 3px; color: #15803d; margin-bottom: 8px; font-weight: 900;">
-                    ■ ■ ■ ■ ■ □ □ □ □ □ □ □ □ □ □ □ □ □ □ □ □
-                </div>
-                <p style="margin: 0 0 10px 0; font-size: 12.5px; color: #44403c; line-height: 1.45;">
-                    Día 100% limpio (0 Porno) + 3.2L de agua. Elige al menos 3 banderines para iluminar hoy en la app:
-                </p>
-                <div style="font-size: 12px; color: #292524; line-height: 1.8;">
-                    <span style="display:inline-block; background:#fff; padding:2px 8px; border-radius:6px; margin:2px; border:1px solid #e7e5e4;">👑 Vida</span>
-                    <span style="display:inline-block; background:#fff; padding:2px 8px; border-radius:6px; margin:2px; border:1px solid #e7e5e4;">🧭 Exploración</span>
-                    <span style="display:inline-block; background:#fff; padding:2px 8px; border-radius:6px; margin:2px; border:1px solid #e7e5e4;">💖 Amor</span>
-                    <span style="display:inline-block; background:#fff; padding:2px 8px; border-radius:6px; margin:2px; border:1px solid #e7e5e4;">🧠 Mente</span>
-                    <span style="display:inline-block; background:#fff; padding:2px 8px; border-radius:6px; margin:2px; border:1px solid #e7e5e4;">🌿 Salud</span>
-                    <span style="display:inline-block; background:#fff; padding:2px 8px; border-radius:6px; margin:2px; border:1px solid #e7e5e4;">🥊 Deporte</span>
-                    <span style="display:inline-block; background:#fff; padding:2px 8px; border-radius:6px; margin:2px; border:1px solid #e7e5e4;">🪙 Soberanía</span>
-                    <span style="display:inline-block; background:#fff; padding:2px 8px; border-radius:6px; margin:2px; border:1px solid #e7e5e4;">🌲 Naturaleza</span>
-                    <span style="display:inline-block; background:#fff; padding:2px 8px; border-radius:6px; margin:2px; border:1px solid #e7e5e4;">🕯️ Espíritu</span>
-                </div>
             </div>
 
             <!-- PIE DEL CORREO -->
