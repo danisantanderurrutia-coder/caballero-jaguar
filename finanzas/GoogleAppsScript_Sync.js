@@ -467,7 +467,28 @@ function activarAmbosCorreos9AMy9PM() {
 }
 
 function activarCorreo9AM() {
-  activarAmbosCorreos9AMy9PM();
+  const triggers = ScriptApp.getProjectTriggers();
+  triggers.forEach(t => {
+    const fn = t.getHandlerFunction();
+    if (fn === "sendDailyMorningJaguarEmail" || fn === "sendDailyNightTomorrowEmail") {
+      ScriptApp.deleteTrigger(t);
+    }
+  });
+
+  ScriptApp.newTrigger("sendDailyMorningJaguarEmail")
+    .timeBased()
+    .everyDays(1)
+    .atHour(9)
+    .nearMinute(0)
+    .inTimezone("Europe/Berlin")
+    .create();
+
+  sendDailyMorningJaguarEmail();
+  Logger.log("✅ Solo Correo Matutino 09:00 AM (Europe/Berlin) activo. Correo nocturno desactivado.");
+}
+
+function soloCorreo9AM() {
+  activarCorreo9AM();
 }
 
 function sendDailyMorningJaguarEmail() {
