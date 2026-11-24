@@ -162,6 +162,37 @@ function doPost(e) {
   }
 }
 
+function getStoredCaballeroState() {
+  try {
+    const raw = PropertiesService.getUserProperties().getProperty("CABALLERO_JAGUAR_STATE");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === "object") {
+        return {
+          noPornDays: Math.max(0, Number(parsed.noPornDays) || 0),
+          noPornMarked: Boolean(parsed.noPornMarked),
+          weeklyAuraXP: (parsed.weeklyAuraXP && typeof parsed.weeklyAuraXP === "object") ? parsed.weeklyAuraXP : {}
+        };
+      }
+    }
+  } catch (e) {}
+  return {
+    noPornDays: 0,
+    noPornMarked: false,
+    weeklyAuraXP: {
+      vida: 0,
+      exploracion: 0,
+      amor: 0,
+      mente: 0,
+      salud: 0,
+      deporte: 0,
+      soberania: 0,
+      naturaleza: 0,
+      espiritualidad: 0
+    }
+  };
+}
+
 
 // --- 3. LECTOR AUTOMÁTICO DE NOTIFICACIONES DE GMAIL ---
 function processBankNotificationEmails() {
@@ -447,6 +478,222 @@ function sendDailyNightTomorrowEmail() {
     htmlBody: htmlBody
   });
 }
+
+
+// ==============================================================================
+// 7. MOTOR NOCTURNO AUTOMÁTICO DE WHATSAPP 21:00 (GREEN-API)
+// ==============================================================================
+// INSTRUCCIÓN DE ACTIVACIÓN EN 1 CLIC:
+// 1. En Google Apps Script (script.google.com), selecciona la función `activarReporteNocturnoWhatsApp9PM`.
+// 2. Haz clic en "Ejecutar" (Run).
+// ¡Eso creará automáticamente el reloj diario a las 21:00 (Europe/Berlin) y te enviará uno de prueba a tu WhatsApp!
+
+const GREEN_API_CONFIG = {
+  idInstance: "710722811758",
+  apiTokenInstance: "18d1ccd9e09e486daa60f195ea879bdfe5c63bff2fa046d08d",
+  chatId: "4917676497440@c.us"
+};
+
+function activarReporteNocturnoWhatsApp9PM() {
+  const triggers = ScriptApp.getProjectTriggers();
+  triggers.forEach(t => {
+    if (t.getHandlerFunction() === "sendDailyNightTomorrowWhatsApp") {
+      ScriptApp.deleteTrigger(t);
+    }
+  });
+
+  // Disparo automático diario a las 21:00 hora de Alemania (Europe/Berlin)
+  ScriptApp.newTrigger("sendDailyNightTomorrowWhatsApp")
+    .timeBased()
+    .everyDays(1)
+    .atHour(21)
+    .nearMinute(0)
+    .inTimezone("Europe/Berlin")
+    .create();
+
+  // Enviar mensaje de prueba inmediato a WhatsApp
+  sendDailyNightTomorrowWhatsApp();
+  Logger.log("✅ Reporte Nocturno de WhatsApp 21:00 (Green-API) activado con éxito.");
+}
+
+function sendDailyNightTomorrowWhatsApp() {
+  const tz = "Europe/Berlin";
+  const now = new Date();
+  const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+  const daysIso = ["", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO", "DOMINGO"];
+  const tomorrowName = daysIso[parseInt(Utilities.formatDate(tomorrow, tz, "u"), 10)];
+  const tomorrowDateStr = Utilities.formatDate(tomorrow, tz, "dd/MM/yyyy");
+  const appUrl = "https://danisantanderurrutia-coder.github.io/caballero-jaguar/";
+
+  const schedules = {
+    "LUNES": [
+      { time: "09:00 - 09:30", title: "🥊 Activación Física: 100 Abs, 100 Sentadillas, 100 Flexiones o Running", badge: "Deporte" },
+      { time: "09:30 - 12:45", title: "👑 Bloque Foco Dual: Empleo Profesión + Trabajos Locales Hannover", badge: "Vida" },
+      { time: "13:00 - 13:20", title: "🇩🇪 Alemán al Mediodía: 15 min Vocabulario Activo & Habla", badge: "Mente" },
+      { time: "14:30 - 17:30", title: "🧭 Proyectos: Paper Lauwersmeer (Modelación & Redacción)", badge: "Exploración" }
+    ],
+    "MARTES": [
+      { time: "09:00 - 09:30", title: "🏃 Activación Física: Cardio, Muay Thai Shadowboxing o Fuerza", badge: "Deporte" },
+      { time: "09:30 - 12:45", title: "👑 Bloque Foco Dual: Postulaciones Profesionales (Alemania/Euskadi) + Hannover", badge: "Vida" },
+      { time: "13:00 - 13:20", title: "🇩🇪 Alemán B1: Escucha Activa & Frase en el Diario", badge: "Mente" },
+      { time: "19:30 - 21:00", title: "💖 Presencia en Pareja: Escucha Consciente, Cariño & Cero Pantallas", badge: "Amor" }
+    ],
+    "MIÉRCOLES": [
+      { time: "09:00 - 09:30", title: "🧘‍♂️ Movilidad Somática, Respiración 4x4 & Calistenia Base", badge: "Salud" },
+      { time: "09:30 - 12:45", title: "👑 Bloque Foco: Avance Profesional, CV/Entrevistas & Gestión Vital", badge: "Vida" },
+      { time: "13:00 - 13:20", title: "🇩🇪 Alemán al Mediodía + 🎺 20 min Trompeta / Música", badge: "Exploración" },
+      { time: "14:30 - 17:30", title: "🌱 Chile Agrotech (AgriTwin) & ReWild Bosque Nativo", badge: "Naturaleza" }
+    ],
+    "JUEVES": [
+      { time: "09:00 - 09:30", title: "🏋️‍♂️ Fuerza & Potencia: Circuito de Caballería (100x3)", badge: "Deporte" },
+      { time: "09:30 - 12:45", title: "👑 Bloque Foco: Empleo Hannover / Bilbao & Trámites Estratégicos", badge: "Vida" },
+      { time: "14:30 - 17:30", title: "🧭 Proyectos: Maule Red / Museo de la Memoria / Ciencia & Territorio", badge: "Exploración" },
+      { time: "20:00 - 21:30", title: "💆 Aftercare, Masajes en Pareja & Descompresión Somática", badge: "Amor" }
+    ],
+    "VIERNES": [
+      { time: "09:00 - 09:30", title: "🥊 Sparring / Cardio Matutino & Ducha Fría", badge: "Deporte" },
+      { time: "09:30 - 12:45", title: "👑 Cierre de Semana Laboral: Seguimiento de Postulaciones & Objetivos", badge: "Vida" },
+      { time: "16:00 - 18:00", title: "🌲 Caminata en Bosque / Naturaleza Viva & Desconexión Digital", badge: "Naturaleza" },
+      { time: "20:00 - 23:00", title: "🍷 Cita de Viernes con Mi Novia: Goce, Conversación & Conexión", badge: "Amor" }
+    ],
+    "SÁBADO": [
+      { time: "09:30 - 11:00", title: "🧗‍♂️ Deporte Outdoor, Escalada, Ciclismo o Entrenamiento Libre", badge: "Deporte" },
+      { time: "11:30 - 13:30", title: "🎨 Exploración Creativa: Pintura al Óleo, Fotografía o Cómic Piratas", badge: "Exploración" },
+      { time: "16:00 - 18:30", title: "🌲 Conexión Tierra / Paseo Exterior & Recarga Solar", badge: "Naturaleza" },
+      { time: "20:30 - 22:30", title: "🕯️ Presencia Íntima, Tantra & Disfrute Consciente", badge: "Amor" }
+    ],
+    "DOMINGO": [
+      { time: "10:00 - 10:45", title: "🪙 Auditoría Dominical: Cuentas Sparkasse (€), Banco Chile ($) & Cero Gastos Tontos", badge: "Soberanía" },
+      { time: "11:00 - 12:30", title: "🕯️ Rito Ancestral, Meditación & Planificación de la Nueva Semana", badge: "Espíritu" },
+      { time: "13:00 - 14:30", title: "👨‍🍳 Cocina con Afecto & Meal Prep Nutritivo", badge: "Salud" },
+      { time: "18:00 - 20:00", title: "📖 Lectura Estoica, Diario Hypomnémata & Sueño Reparador Temprano", badge: "Mente" }
+    ]
+  };
+
+  const nightReflections = [
+    { q: "Antes de dormir, revisa tu día con serenidad: ¿qué hiciste bien, qué puedes mejorar mañana y qué carga puedes soltar ahora?", a: "Séneca • De la Ira III, 36" },
+    { q: "Prepara esta noche el terreno de mañana: ropa lista, mente limpia y descanso reparador para despertar como comandante.", a: "Marco Aurelio • Meditaciones" },
+    { q: "Quien ordena su mañana desde la noche anterior despierta libre de fricción y con soberanía sobre su tiempo.", a: "Códice Caballero Jaguar" },
+    { q: "La disciplina de la noche es el cimiento de la victoria matutina. Cuida tu sueño como el templo de tu fuerza.", a: "Epicteto • Manual de Vida" }
+  ];
+
+  // Leer estado real sincronizado desde la app web (o defaults)
+  const realState = getStoredCaballeroState();
+  const noPornDays = Number(realState.noPornDays) || 0;
+
+  // 1) PROTOCOLO DINÁMICO DE BANDERAS SEMANALES
+  const auraDefs = [
+    { key: "vida", label: "👑 Vida" },
+    { key: "exploracion", label: "🧭 Exploración" },
+    { key: "amor", label: "💖 Amor" },
+    { key: "mente", label: "🧠 Mente" },
+    { key: "salud", label: "🌿 Salud" },
+    { key: "deporte", label: "🥊 Deporte" },
+    { key: "soberania", label: "🪙 Soberanía" },
+    { key: "naturaleza", label: "🌲 Naturaleza" },
+    { key: "espiritualidad", label: "🕯️ Espíritu" }
+  ];
+
+  const activeFlags = [];
+  auraDefs.forEach(a => {
+    const xpVal = Number(realState.weeklyAuraXP[a.key]) || 0;
+    if (xpVal > 0) activeFlags.push(`${a.label} (${xpVal} XP)`);
+  });
+  const activeCount = activeFlags.length;
+
+  let protocolStatus = "";
+  let protocolFeedback = "";
+  if (activeCount === 0) {
+    protocolStatus = "🚨 *ESTADO SEMANAL: CAMPAMENTO FRÍO (0 Banderas)*";
+    protocolFeedback = "⚠️ *Alerta de Inercia:* No hay banderas encendidas todavía esta semana.\nLa inercia pesa si la dejas crecer, pero el primer paso la destruye al instante. Elige UNA sola bandera mañana (ej. 20 min de Deporte o Foco) y pon el primer punto en la tabla.";
+  } else if (activeCount <= 3) {
+    protocolStatus = `⚠️ *ESTADO SEMANAL: COMBATE PARCIAL (${activeCount}/9 Banderas)*`;
+    protocolFeedback = `Tienes frentes activos (${activeFlags.join(" · ")}), pero la mayoría sigue en sombra.\n¿Qué está pasando con los otros flancos? ¿Dónde está el cuello de botella o la fuga de energía? Mañana reconquista al menos un frente descuidado.`;
+  } else {
+    protocolStatus = `🔥 *ESTADO SEMANAL: ALTA TRACCIÓN (${activeCount}/9 Banderas)*`;
+    protocolFeedback = `¡Excelente tracción! Llevas ${activeCount} banderas encendidas (${activeFlags.join(" · ")}).\nEl impulso está de tu lado; no te confíes ni bajes la guardia. Sigue sumando y consolida la victoria de la semana como un verdadero Caballero Jaguar.`;
+  }
+
+  // 2) ESTADO DEL DESAFÍO 21 DÍAS (NO FAP / TEMPLANZA)
+  let nofapVisual = "";
+  let nofapMsg = "";
+  if (noPornDays <= 0) {
+    nofapVisual = "░░░░░░░░░░░░░░░░░░░░░ *[Racha en pausa / 0 Días]*";
+    nofapMsg = "⚠️ *Alerta de Guardia:* No hay marcas activas registradas en la app.\n• ¿Te mantuviste firme y solo olvidaste marcarlo? ➡️ Entra a la app y pulsa *Reconciliar con Honores*.\n• ¿Hubo quiebre o desconexión? ➡️ Asumir con serenidad estoica y consagrar mañana el *Nuevo Día 1*.";
+  } else {
+    const filled = Math.min(21, noPornDays);
+    const empty = 21 - filled;
+    const pct = Math.round((filled / 21) * 100);
+    const bar = "▓".repeat(filled) + "░".repeat(empty);
+    nofapVisual = `${bar} *[Día ${filled} de 21]* (${pct}%)`;
+    nofapMsg = "🛡️ *Templanza Activa:* Sistema nervioso en calma, energía vital protegida y voluntad soberana al mando.";
+  }
+
+  // 3) PLANES PARA MAÑANA (HORARIOS TÁCTICOS)
+  const tomorrowBlocks = schedules[tomorrowName] || schedules["LUNES"];
+  const blocksLines = tomorrowBlocks.map((b, idx) => `• *${b.time}* [${b.badge}] ${b.title}`).join("\n");
+
+  // 4) AGENDA REAL GOOGLE CALENDAR
+  let calLines = "• 📅 Agenda libre de reuniones externas — Día ideal para Deep Work.";
+  try {
+    const cal = CalendarApp.getDefaultCalendar();
+    const events = cal.getEventsForDay(tomorrow);
+    if (events && events.length > 0) {
+      calLines = events.map(ev => {
+        const startStr = ev.isAllDayEvent() ? "Todo el día" : Utilities.formatDate(ev.getStartTime(), tz, "HH:mm");
+        const endStr = ev.isAllDayEvent() ? "" : (" - " + Utilities.formatDate(ev.getEndTime(), tz, "HH:mm"));
+        return `• 📅 *${startStr}${endStr}* • ${ev.getTitle()}`;
+      }).join("\n");
+    }
+  } catch (e) {}
+
+  // 5) REFLEXIÓN NOCTURNA ESTOICA
+  const reflection = nightReflections[now.getDate() % nightReflections.length];
+
+  // Ensamblar mensaje final de WhatsApp
+  const messageText = `🌙 *CABALLERO JAGUAR • REPORTE DE LAS 21:00*
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+📅 *Víspera: Preparando ${tomorrowName} (${tomorrowDateStr})*
+
+${protocolStatus}
+${protocolFeedback}
+
+🔥 *DESAFÍO 21 DÍAS (TEMPLANZA & NO FAP):*
+${nofapVisual}
+${nofapMsg}
+
+⚔️ *MISIÓN DE ASALTO PARA MAÑANA (${tomorrowName}):*
+${blocksLines}
+
+📆 *GOOGLE CALENDAR (MAÑANA):*
+${calLines}
+
+🏛️ *REFLEXIÓN NOCTURNA DEL ESTRATEGA:*
+_"${reflection.q}"_
+— ${reflection.a}
+
+👔 *Rito de la Noche:* Deja tu ropa lista, apaga pantallas temprano y entra al santuario:
+📲 ${appUrl}`;
+
+  // Envío a WhatsApp vía Green-API
+  const url = `https://api.green-api.com/waInstance${GREEN_API_CONFIG.idInstance}/sendMessage/${GREEN_API_CONFIG.apiTokenInstance}`;
+  const payload = {
+    chatId: GREEN_API_CONFIG.chatId,
+    message: messageText
+  };
+
+  const options = {
+    method: "post",
+    contentType: "application/json",
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  };
+
+  const response = UrlFetchApp.fetch(url, options);
+  Logger.log("Green-API WhatsApp response: " + response.getContentText());
+  return response;
+}
+
 
 // --- 5. ACTIVADOR MAESTRO DUAL (09:00 AM + 09:00 PM EN GOOGLE APPS SCRIPT) ---
 function activarAmbosCorreos9AMy9PM() {
@@ -788,3 +1035,219 @@ function sendDailyMorningJaguarEmail() {
     htmlBody: htmlBody
   });
 }
+
+
+// ==============================================================================
+// 7. MOTOR NOCTURNO AUTOMÁTICO DE WHATSAPP 21:00 (GREEN-API)
+// ==============================================================================
+// INSTRUCCIÓN DE ACTIVACIÓN EN 1 CLIC:
+// 1. En Google Apps Script (script.google.com), selecciona la función `activarReporteNocturnoWhatsApp9PM`.
+// 2. Haz clic en "Ejecutar" (Run).
+// ¡Eso creará automáticamente el reloj diario a las 21:00 (Europe/Berlin) y te enviará uno de prueba a tu WhatsApp!
+
+const GREEN_API_CONFIG = {
+  idInstance: "710722811758",
+  apiTokenInstance: "18d1ccd9e09e486daa60f195ea879bdfe5c63bff2fa046d08d",
+  chatId: "4917676497440@c.us"
+};
+
+function activarReporteNocturnoWhatsApp9PM() {
+  const triggers = ScriptApp.getProjectTriggers();
+  triggers.forEach(t => {
+    if (t.getHandlerFunction() === "sendDailyNightTomorrowWhatsApp") {
+      ScriptApp.deleteTrigger(t);
+    }
+  });
+
+  // Disparo automático diario a las 21:00 hora de Alemania (Europe/Berlin)
+  ScriptApp.newTrigger("sendDailyNightTomorrowWhatsApp")
+    .timeBased()
+    .everyDays(1)
+    .atHour(21)
+    .nearMinute(0)
+    .inTimezone("Europe/Berlin")
+    .create();
+
+  // Enviar mensaje de prueba inmediato a WhatsApp
+  sendDailyNightTomorrowWhatsApp();
+  Logger.log("✅ Reporte Nocturno de WhatsApp 21:00 (Green-API) activado con éxito.");
+}
+
+function sendDailyNightTomorrowWhatsApp() {
+  const tz = "Europe/Berlin";
+  const now = new Date();
+  const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+  const daysIso = ["", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO", "DOMINGO"];
+  const tomorrowName = daysIso[parseInt(Utilities.formatDate(tomorrow, tz, "u"), 10)];
+  const tomorrowDateStr = Utilities.formatDate(tomorrow, tz, "dd/MM/yyyy");
+  const appUrl = "https://danisantanderurrutia-coder.github.io/caballero-jaguar/";
+
+  const schedules = {
+    "LUNES": [
+      { time: "09:00 - 09:30", title: "🥊 Activación Física: 100 Abs, 100 Sentadillas, 100 Flexiones o Running", badge: "Deporte" },
+      { time: "09:30 - 12:45", title: "👑 Bloque Foco Dual: Empleo Profesión + Trabajos Locales Hannover", badge: "Vida" },
+      { time: "13:00 - 13:20", title: "🇩🇪 Alemán al Mediodía: 15 min Vocabulario Activo & Habla", badge: "Mente" },
+      { time: "14:30 - 17:30", title: "🧭 Proyectos: Paper Lauwersmeer (Modelación & Redacción)", badge: "Exploración" }
+    ],
+    "MARTES": [
+      { time: "09:00 - 09:30", title: "🏃 Activación Física: Cardio, Muay Thai Shadowboxing o Fuerza", badge: "Deporte" },
+      { time: "09:30 - 12:45", title: "👑 Bloque Foco Dual: Postulaciones Profesionales (Alemania/Euskadi) + Hannover", badge: "Vida" },
+      { time: "13:00 - 13:20", title: "🇩🇪 Alemán B1: Escucha Activa & Frase en el Diario", badge: "Mente" },
+      { time: "19:30 - 21:00", title: "💖 Presencia en Pareja: Escucha Consciente, Cariño & Cero Pantallas", badge: "Amor" }
+    ],
+    "MIÉRCOLES": [
+      { time: "09:00 - 09:30", title: "🧘‍♂️ Movilidad Somática, Respiración 4x4 & Calistenia Base", badge: "Salud" },
+      { time: "09:30 - 12:45", title: "👑 Bloque Foco: Avance Profesional, CV/Entrevistas & Gestión Vital", badge: "Vida" },
+      { time: "13:00 - 13:20", title: "🇩🇪 Alemán al Mediodía + 🎺 20 min Trompeta / Música", badge: "Exploración" },
+      { time: "14:30 - 17:30", title: "🌱 Chile Agrotech (AgriTwin) & ReWild Bosque Nativo", badge: "Naturaleza" }
+    ],
+    "JUEVES": [
+      { time: "09:00 - 09:30", title: "🏋️‍♂️ Fuerza & Potencia: Circuito de Caballería (100x3)", badge: "Deporte" },
+      { time: "09:30 - 12:45", title: "👑 Bloque Foco: Empleo Hannover / Bilbao & Trámites Estratégicos", badge: "Vida" },
+      { time: "14:30 - 17:30", title: "🧭 Proyectos: Maule Red / Museo de la Memoria / Ciencia & Territorio", badge: "Exploración" },
+      { time: "20:00 - 21:30", title: "💆 Aftercare, Masajes en Pareja & Descompresión Somática", badge: "Amor" }
+    ],
+    "VIERNES": [
+      { time: "09:00 - 09:30", title: "🥊 Sparring / Cardio Matutino & Ducha Fría", badge: "Deporte" },
+      { time: "09:30 - 12:45", title: "👑 Cierre de Semana Laboral: Seguimiento de Postulaciones & Objetivos", badge: "Vida" },
+      { time: "16:00 - 18:00", title: "🌲 Caminata en Bosque / Naturaleza Viva & Desconexión Digital", badge: "Naturaleza" },
+      { time: "20:00 - 23:00", title: "🍷 Cita de Viernes con Mi Novia: Goce, Conversación & Conexión", badge: "Amor" }
+    ],
+    "SÁBADO": [
+      { time: "09:30 - 11:00", title: "🧗‍♂️ Deporte Outdoor, Escalada, Ciclismo o Entrenamiento Libre", badge: "Deporte" },
+      { time: "11:30 - 13:30", title: "🎨 Exploración Creativa: Pintura al Óleo, Fotografía o Cómic Piratas", badge: "Exploración" },
+      { time: "16:00 - 18:30", title: "🌲 Conexión Tierra / Paseo Exterior & Recarga Solar", badge: "Naturaleza" },
+      { time: "20:30 - 22:30", title: "🕯️ Presencia Íntima, Tantra & Disfrute Consciente", badge: "Amor" }
+    ],
+    "DOMINGO": [
+      { time: "10:00 - 10:45", title: "🪙 Auditoría Dominical: Cuentas Sparkasse (€), Banco Chile ($) & Cero Gastos Tontos", badge: "Soberanía" },
+      { time: "11:00 - 12:30", title: "🕯️ Rito Ancestral, Meditación & Planificación de la Nueva Semana", badge: "Espíritu" },
+      { time: "13:00 - 14:30", title: "👨‍🍳 Cocina con Afecto & Meal Prep Nutritivo", badge: "Salud" },
+      { time: "18:00 - 20:00", title: "📖 Lectura Estoica, Diario Hypomnémata & Sueño Reparador Temprano", badge: "Mente" }
+    ]
+  };
+
+  const nightReflections = [
+    { q: "Antes de dormir, revisa tu día con serenidad: ¿qué hiciste bien, qué puedes mejorar mañana y qué carga puedes soltar ahora?", a: "Séneca • De la Ira III, 36" },
+    { q: "Prepara esta noche el terreno de mañana: ropa lista, mente limpia y descanso reparador para despertar como comandante.", a: "Marco Aurelio • Meditaciones" },
+    { q: "Quien ordena su mañana desde la noche anterior despierta libre de fricción y con soberanía sobre su tiempo.", a: "Códice Caballero Jaguar" },
+    { q: "La disciplina de la noche es el cimiento de la victoria matutina. Cuida tu sueño como el templo de tu fuerza.", a: "Epicteto • Manual de Vida" }
+  ];
+
+  // Leer estado real sincronizado desde la app web (o defaults)
+  const realState = getStoredCaballeroState();
+  const noPornDays = Number(realState.noPornDays) || 0;
+
+  // 1) PROTOCOLO DINÁMICO DE BANDERAS SEMANALES
+  const auraDefs = [
+    { key: "vida", label: "👑 Vida" },
+    { key: "exploracion", label: "🧭 Exploración" },
+    { key: "amor", label: "💖 Amor" },
+    { key: "mente", label: "🧠 Mente" },
+    { key: "salud", label: "🌿 Salud" },
+    { key: "deporte", label: "🥊 Deporte" },
+    { key: "soberania", label: "🪙 Soberanía" },
+    { key: "naturaleza", label: "🌲 Naturaleza" },
+    { key: "espiritualidad", label: "🕯️ Espíritu" }
+  ];
+
+  const activeFlags = [];
+  auraDefs.forEach(a => {
+    const xpVal = Number(realState.weeklyAuraXP[a.key]) || 0;
+    if (xpVal > 0) activeFlags.push(`${a.label} (${xpVal} XP)`);
+  });
+  const activeCount = activeFlags.length;
+
+  let protocolStatus = "";
+  let protocolFeedback = "";
+  if (activeCount === 0) {
+    protocolStatus = "🚨 *ESTADO SEMANAL: CAMPAMENTO FRÍO (0 Banderas)*";
+    protocolFeedback = "⚠️ *Alerta de Inercia:* No hay banderas encendidas todavía esta semana.\nLa inercia pesa si la dejas crecer, pero el primer paso la destruye al instante. Elige UNA sola bandera mañana (ej. 20 min de Deporte o Foco) y pon el primer punto en la tabla.";
+  } else if (activeCount <= 3) {
+    protocolStatus = `⚠️ *ESTADO SEMANAL: COMBATE PARCIAL (${activeCount}/9 Banderas)*`;
+    protocolFeedback = `Tienes frentes activos (${activeFlags.join(" · ")}), pero la mayoría sigue en sombra.\n¿Qué está pasando con los otros flancos? ¿Dónde está el cuello de botella o la fuga de energía? Mañana reconquista al menos un frente descuidado.`;
+  } else {
+    protocolStatus = `🔥 *ESTADO SEMANAL: ALTA TRACCIÓN (${activeCount}/9 Banderas)*`;
+    protocolFeedback = `¡Excelente tracción! Llevas ${activeCount} banderas encendidas (${activeFlags.join(" · ")}).\nEl impulso está de tu lado; no te confíes ni bajes la guardia. Sigue sumando y consolida la victoria de la semana como un verdadero Caballero Jaguar.`;
+  }
+
+  // 2) ESTADO DEL DESAFÍO 21 DÍAS (NO FAP / TEMPLANZA)
+  let nofapVisual = "";
+  let nofapMsg = "";
+  if (noPornDays <= 0) {
+    nofapVisual = "░░░░░░░░░░░░░░░░░░░░░ *[Racha en pausa / 0 Días]*";
+    nofapMsg = "⚠️ *Alerta de Guardia:* No hay marcas activas registradas en la app.\n• ¿Te mantuviste firme y solo olvidaste marcarlo? ➡️ Entra a la app y pulsa *Reconciliar con Honores*.\n• ¿Hubo quiebre o desconexión? ➡️ Asumir con serenidad estoica y consagrar mañana el *Nuevo Día 1*.";
+  } else {
+    const filled = Math.min(21, noPornDays);
+    const empty = 21 - filled;
+    const pct = Math.round((filled / 21) * 100);
+    const bar = "▓".repeat(filled) + "░".repeat(empty);
+    nofapVisual = `${bar} *[Día ${filled} de 21]* (${pct}%)`;
+    nofapMsg = "🛡️ *Templanza Activa:* Sistema nervioso en calma, energía vital protegida y voluntad soberana al mando.";
+  }
+
+  // 3) PLANES PARA MAÑANA (HORARIOS TÁCTICOS)
+  const tomorrowBlocks = schedules[tomorrowName] || schedules["LUNES"];
+  const blocksLines = tomorrowBlocks.map((b, idx) => `• *${b.time}* [${b.badge}] ${b.title}`).join("\n");
+
+  // 4) AGENDA REAL GOOGLE CALENDAR
+  let calLines = "• 📅 Agenda libre de reuniones externas — Día ideal para Deep Work.";
+  try {
+    const cal = CalendarApp.getDefaultCalendar();
+    const events = cal.getEventsForDay(tomorrow);
+    if (events && events.length > 0) {
+      calLines = events.map(ev => {
+        const startStr = ev.isAllDayEvent() ? "Todo el día" : Utilities.formatDate(ev.getStartTime(), tz, "HH:mm");
+        const endStr = ev.isAllDayEvent() ? "" : (" - " + Utilities.formatDate(ev.getEndTime(), tz, "HH:mm"));
+        return `• 📅 *${startStr}${endStr}* • ${ev.getTitle()}`;
+      }).join("\n");
+    }
+  } catch (e) {}
+
+  // 5) REFLEXIÓN NOCTURNA ESTOICA
+  const reflection = nightReflections[now.getDate() % nightReflections.length];
+
+  // Ensamblar mensaje final de WhatsApp
+  const messageText = `🌙 *CABALLERO JAGUAR • REPORTE DE LAS 21:00*
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+📅 *Víspera: Preparando ${tomorrowName} (${tomorrowDateStr})*
+
+${protocolStatus}
+${protocolFeedback}
+
+🔥 *DESAFÍO 21 DÍAS (TEMPLANZA & NO FAP):*
+${nofapVisual}
+${nofapMsg}
+
+⚔️ *MISIÓN DE ASALTO PARA MAÑANA (${tomorrowName}):*
+${blocksLines}
+
+📆 *GOOGLE CALENDAR (MAÑANA):*
+${calLines}
+
+🏛️ *REFLEXIÓN NOCTURNA DEL ESTRATEGA:*
+_"${reflection.q}"_
+— ${reflection.a}
+
+👔 *Rito de la Noche:* Deja tu ropa lista, apaga pantallas temprano y entra al santuario:
+📲 ${appUrl}`;
+
+  // Envío a WhatsApp vía Green-API
+  const url = `https://api.green-api.com/waInstance${GREEN_API_CONFIG.idInstance}/sendMessage/${GREEN_API_CONFIG.apiTokenInstance}`;
+  const payload = {
+    chatId: GREEN_API_CONFIG.chatId,
+    message: messageText
+  };
+
+  const options = {
+    method: "post",
+    contentType: "application/json",
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  };
+
+  const response = UrlFetchApp.fetch(url, options);
+  Logger.log("Green-API WhatsApp response: " + response.getContentText());
+  return response;
+}
+

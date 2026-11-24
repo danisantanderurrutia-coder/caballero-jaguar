@@ -5146,6 +5146,97 @@ const imperivmEngine = {
     }
   },
 
+  async sendNightWhatsAppNow() {
+    const real = this.getRealMorningStateSnapshot();
+    const now = new Date();
+    const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    const daysCap = ["DOMINGO", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO"];
+    const tomorrowName = daysCap[tomorrow.getDay()];
+    const tomorrowDateStr = tomorrow.toLocaleDateString("es-ES", { day: "2-digit", month: "2-digit", year: "numeric" });
+    const tomorrowKey = ["domingo", "lunes", "martes", "miercoles", "jueves", "viernes", "sabado"][tomorrow.getDay()];
+    
+    let currentMood = localStorage.getItem("CABALLERO_WEEKLY_MOOD") || imperivmState.weeklyMood || "fresh";
+    const scheduleData = (typeof WEEKLY_STRATEGY_SCHEDULE !== "undefined") ? (WEEKLY_STRATEGY_SCHEDULE[currentMood] || WEEKLY_STRATEGY_SCHEDULE.fresh) : null;
+    const tomorrowPlan = (scheduleData && scheduleData.days && scheduleData.days[tomorrowKey]) ? scheduleData.days[tomorrowKey] : { focus: "Estrategia & Disciplina", blocks: [] };
+    const tomorrowBlocks = (tomorrowPlan.blocks || []).slice(0, 4);
+
+    // Protocolo dinámico de banderas
+    let protocolStatus = "";
+    let protocolFeedback = "";
+    if (real.activeFlags.length === 0) {
+      protocolStatus = "🚨 *ESTADO SEMANAL: CAMPAMENTO FRÍO (0 Banderas)*";
+      protocolFeedback = "⚠️ *Alerta de Inercia:* No hay banderas encendidas todavía esta semana.\nLa inercia pesa si la dejas crecer, pero el primer paso la destruye al instante. Elige UNA sola bandera mañana (ej. 20 min de Deporte o Foco) y pon el primer punto en la tabla.";
+    } else if (real.activeFlags.length <= 3) {
+      protocolStatus = `⚠️ *ESTADO SEMANAL: COMBATE PARCIAL (${real.activeFlags.length}/9 Banderas)*`;
+      protocolFeedback = `Tienes frentes activos (${real.activeFlags.join(" · ")}), pero la mayoría sigue en sombra.\n¿Qué está pasando con los otros flancos? ¿Dónde está el cuello de botella o la fuga de energía? Mañana reconquista al menos un frente descuidado.`;
+    } else {
+      protocolStatus = `🔥 *ESTADO SEMANAL: ALTA TRACCIÓN (${real.activeFlags.length}/9 Banderas)*`;
+      protocolFeedback = `¡Excelente tracción! Llevas ${real.activeFlags.length} banderas encendidas (${real.activeFlags.join(" · ")}).\nEl impulso está de tu lado; no te confíes ni bajes la guardia. Sigue sumando y consolida la victoria de la semana como un verdadero Caballero Jaguar.`;
+    }
+
+    // Desafío 21 días (No Fap / Templanza)
+    let nofapVisual = "";
+    let nofapMsg = "";
+    if (real.noPornDays <= 0) {
+      nofapVisual = "░░░░░░░░░░░░░░░░░░░░░ *[Racha en pausa / 0 Días]*";
+      nofapMsg = "⚠️ *Alerta de Guardia:* No hay marcas activas registradas en la app.\n• ¿Te mantuviste firme y solo olvidaste marcarlo? ➡️ Entra a la app y pulsa *Reconciliar con Honores*.\n• ¿Hubo quiebre o desconexión? ➡️ Asumir con serenidad estoica y consagrar mañana el *Nuevo Día 1*.";
+    } else {
+      const filled = Math.min(21, real.noPornDays);
+      const empty = 21 - filled;
+      const pct = Math.round((filled / 21) * 100);
+      const bar = "▓".repeat(filled) + "░".repeat(empty);
+      nofapVisual = `${bar} *[Día ${filled} de 21]* (${pct}%)`;
+      nofapMsg = "🛡️ *Templanza Activa:* Sistema nervioso en calma, energía vital protegida y voluntad soberana al mando.";
+    }
+
+    const blocksLines = tomorrowBlocks.map((b, idx) => `• *${b.time}* [${b.badge || "Táctico"}] ${b.title}`).join("\n") || "• 09:00 - 12:45 [Foco] Postulaciones y Avance Profesional";
+
+    const messageText = `🌙 *CABALLERO JAGUAR • REPORTE DE LAS 21:00*
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+📅 *Víspera: Preparando ${tomorrowName} (${tomorrowDateStr})*
+
+${protocolStatus}
+${protocolFeedback}
+
+🔥 *DESAFÍO 21 DÍAS (TEMPLANZA & NO FAP):*
+${nofapVisual}
+${nofapMsg}
+
+⚔️ *MISIÓN DE ASALTO PARA MAÑANA (${tomorrowName}):*
+${blocksLines}
+
+📆 *GOOGLE CALENDAR (MAÑANA):*
+• 📅 Agenda libre de reuniones externas — Día ideal para Deep Work.
+
+🏛️ *REFLEXIÓN NOCTURNA DEL ESTRATEGA:*
+_"${real.oracleQuote.text}"_
+— ${real.oracleQuote.author}
+
+👔 *Rito de la Noche:* Deja tu ropa lista, apaga pantallas temprano y entra al santuario:
+📲 https://danisantanderurrutia-coder.github.io/caballero-jaguar/`;
+
+    try {
+      if (typeof showNotification === "function") showNotification("📲 Enviando reporte a tu WhatsApp...", "info");
+      const resp = await fetch("https://api.green-api.com/waInstance710722811758/sendMessage/18d1ccd9e09e486daa60f195ea879bdfe5c63bff2fa046d08d", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          chatId: "4917676497440@c.us",
+          message: messageText
+        })
+      });
+      const data = await resp.json();
+      if (data && data.idMessage) {
+        if (typeof showNotification === "function") showNotification("✅ ¡Reporte de las 21:00 entregado en tu WhatsApp!", "success");
+      } else {
+        throw new Error(JSON.stringify(data));
+      }
+    } catch (e) {
+      console.error("[WhatsApp] Error:", e);
+      if (typeof showNotification === "function") showNotification("❌ Error enviando a WhatsApp: " + e.message, "error");
+    }
+  },
+
   openMorningEmailModal() {
     const modal = document.getElementById("morning-email-modal");
     const content = document.getElementById("morning-email-modal-content");
@@ -5206,6 +5297,9 @@ const imperivmEngine = {
             <input type="time" id="morning-email-input-hour" value="${savedHour}" style="padding: 6px 10px; border-radius: 6px;">
           </div>
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="btn-solar-action" style="background: linear-gradient(135deg, #10B981, #059669); border-color: #34D399; color: #FFF; font-weight: 800;" onclick="imperivmEngine.sendNightWhatsAppNow()">
+              📲 WhatsApp 21:00 Ahora
+            </button>
             <button class="btn-solar-action" onclick="imperivmEngine.copyAppsScriptMorningCode()">
               ☀️ Copiar Script Google 9AM (soloCorreo9AM)
             </button>
